@@ -1,0 +1,221 @@
+Good. This is a serious, sensible palette. I’ll critique it like a product designer building for students under stress, not like Dribbble aesthetics.
+
+
+---
+
+Overall verdict
+
+This palette is solid and appropriate for a CBT/exam app.
+No childish colors, no distractions, no ego choices. Bien joué.
+
+Now let’s go layer by layer and tighten it.
+
+
+---
+
+1. Primary blue — #2563EB
+
+Use: buttons, selected answers, CTA
+Verdict: ✅ Excellent choice
+
+Trustworthy
+
+Academic
+
+Familiar (feels “official”)
+
+Strong contrast on light backgrounds
+
+
+One rule:
+Don’t use this blue everywhere. Reserve it strictly for:
+
+Primary CTA (Start Exam, Next)
+
+Selected option highlight
+
+
+If it’s everywhere, it loses authority.
+
+
+---
+
+2. Background — #F8FAFC
+
+Verdict: ✅ Perfect
+
+Calm
+
+Easy on the eyes
+
+Doesn’t fight content
+
+Good for long sessions
+
+
+This is exactly what exam tools should use. Do not darken it.
+
+
+---
+
+3. Cards — #FFFFFF
+
+Verdict: ✅ Correct
+
+White cards on a soft gray background = clarity + hierarchy.
+
+Suggestion (tiny): Add very subtle shadow or border:
+
+Border: #E5E7EB
+
+Shadow: low opacity
+
+
+Don’t float them too much — this is not a dashboard app.
+
+
+---
+
+4. Text — #1F2937
+
+Verdict: ✅ Excellent
+
+This is one of the best choices you made.
+
+Not pure black → less eye strain
+
+Still very readable
+
+Professional
+
+
+Use this for:
+
+Questions
+
+Options
+
+Labels
+
+
+For secondary text (course name, hints):
+
+Drop opacity or use #6B7280
+
+
+
+---
+
+5. Secondary accent (cyan) — #06B6D4
+
+Verdict: ⚠️ Use carefully
+
+Cyan is nice, but:
+
+It attracts attention fast
+
+It can feel “techy” if overused
+
+
+Use it ONLY for:
+
+Links
+
+Small highlights
+
+Maybe progress indicator fill (light use)
+
+
+Do not use it for:
+
+Main buttons
+
+Important actions
+
+Error states
+
+
+This keeps it classy.
+
+
+---
+
+6. Status colors (this is important)
+
+✅ Correct — #16A34A
+
+Perfect. Calm green, not celebratory. Good.
+
+❌ Wrong — #DC2626
+
+Strong red — good, but:
+
+Don’t use it for big backgrounds
+
+Use it for:
+
+Icons
+
+Borders
+
+Text indicators
+
+
+
+Avoid flashing red blocks. That stresses users.
+
+⚠️ Timer / warning — #F59E0B
+
+Good choice if:
+
+It only appears when time is almost up
+
+Default timer stays neutral (gray)
+
+
+Don’t show orange from the start — that creates anxiety.
+
+
+---
+
+7. One missing piece (important)
+
+You didn’t mention a neutral border / divider color.
+
+Add:
+
+Border / divider: #E5E7EB or #CBD5E1
+
+
+This helps structure without adding noise.
+
+
+---
+
+Final product advice (this matters)
+
+Your palette says:
+
+> “This is serious, helpful, and calm.”
+
+
+
+That’s exactly what you want for exams.
+
+Do not chase beauty now.
+Consistency > creativity.
+
+Lock this palette.
+Don’t tweak it for 2 weeks.
+
+Next step should not be colors anymore — it should be building one screen using these tokens.
+
+If you want, next I can:
+
+Map these colors to Tailwind classes cleanly, or
+
+Tell you exactly which colors go on which elements (button states, options, results)
+
+
+But don’t redesign again.
+This part is done.

@@ -1,0 +1,47 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		// ==== Editor basics ====
+		"editor.tabSize": 2,
+		"editor.insertSpaces": true,
+		"editor.formatOnSave": true,
+		"files.autoSave": "onWindowChange",
+
+		// ==== Tailwind CSS support ====
+		"editor.quickSuggestions": {
+			"strings": true
+		},
+		"tailwindCSS.includeLanguages": {
+			"plaintext": "html",
+			"javascript": "javascript",
+			"javascriptreact": "javascriptreact",
+			"typescriptreact": "typescriptreact"
+		},
+
+		// ==== File ignoring ====
+		"files.exclude": {
+			"node_modules": true,
+			".git": true,
+			".DS_Store": true
+		},
+		"search.exclude": {
+			"node_modules": true,
+			".git": true
+		},
+
+		// ==== Git ====
+		"git.autofetch": true,
+
+		// ==== Terminal ====
+		"terminal.integrated.defaultProfile.windows": "Git Bash",
+
+		// ==== JSX & Prettier ====
+		"prettier.singleQuote": true,
+		"prettier.semi": false,
+		"prettier.trailingComma": "es5"
+	}
+}
