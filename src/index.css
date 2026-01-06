@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 body {
-  @apply text-[#1F2937] bg-[#F8FAFC];
+  @apply text-[#1F2937] bg-gray-200;
 }
 
 @layer utilities {
