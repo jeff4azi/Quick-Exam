@@ -1,1 +1,5 @@
-export default ["Chicken", "Oregano", "Tomatoes"]
+export const courses = [
+  "EDU 101",
+  "GST 111",
+  "GNS 113"
+]

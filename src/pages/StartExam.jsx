@@ -3,7 +3,7 @@ import ChooseCourseOverlay from "../components/ChooseCourseOverlay"
 
 const StartExam = () => {
   const [showChooseCourseOverlay, setShowChooseCourseOverlay] = useState(false)
-
+  
   return (
     <div className="relative h-[100dvh] max-h-screen flex items-center justify-center">
       <div> 

@@ -1,0 +1,546 @@
+[
+  {
+    "question": "Teaching is best described as",
+    "a": "an all-corner affair",
+    "b": "a universal activity",
+    "c": "rigorous, deliberate, planned, and conscious exercise.",
+    "d": "a synonym of instruction, training, indoctrination, and propaganda",
+    "answer": "c"
+  },
+  {
+    "question": "Teaching involves all the under listed except ------",
+    "a": "establishing the entry behavior of the learner",
+    "b": "conveying the teacher as a reservoir of knowledge",
+    "c": "guiding the learning activities",
+    "d": "evaluating the learning outcomes",
+    "answer": "b"
+  },
+  {
+    "question": "Which of the following is not a component of teaching as a process of communication?",
+    "a": "objectives",
+    "b": "teacher",
+    "c": "learner",
+    "d": "content",
+    "answer": "a"
+  },
+  {
+    "question": "A process that depends on experience and leads to long-term changes in behavior is known as",
+    "a": "learning",
+    "b": "education",
+    "c": "excursion",
+    "d": "training",
+    "answer": "a"
+  },
+  {
+    "question": "Someone who carries out activities of education, instructions, and teaching is a/an",
+    "a": "indoctrinator",
+    "b": "teacher",
+    "c": "chief",
+    "d": "all of the above",
+    "answer": "b"
+  },
+  {
+    "question": "Learning can succeed in the absence of necessary instructional materials.",
+    "a": "false",
+    "b": "true",
+    "c": "not sure",
+    "d": "totally correct.",
+    "answer": "a"
+  },
+  {
+    "question": "One of the following is a condition that must be satisfied before we can say we have successful teaching.",
+    "a": "It must be mythical (imaginary or not real)",
+    "b": "It must be teacher-centered",
+    "c": "It must be learner-centered",
+    "d": "It must be totally arbitrary",
+    "answer": "c"
+  },
+  {
+    "question": "In the process of communication, the substitute name for the channel is",
+    "a": "evaluation",
+    "b": "learner",
+    "c": "method",
+    "d": "teacher",
+    "answer": "c"
+  },
+  {
+    "question": "Teaching as a cycle of communication has how many processes?",
+    "a": "3",
+    "b": "4",
+    "c": "5",
+    "d": "6",
+    "answer": "c"
+  },
+  {
+    "question": "Teaching entails",
+    "a": "arbitraries",
+    "b": "promotion of dogma",
+    "c": "conscious and deliberate attempt at disseminating dogma without resistance from the recipient learners",
+    "d": "conscious and deliberate process of communication of content of instruction by the teacher to the learners.",
+    "answer": "d"
+  },
+  {
+    "question": "The process of passing information to the learner to carry out some laid down activities by the teacher:",
+    "a": "indoctrination",
+    "b": "self-directed learning",
+    "c": "instruction",
+    "d": "training",
+    "answer": "c"
+  },
+  {
+    "question": "------ is the teacher's guide as to how the whole process of teaching can be approached within a specific time allocated for that subject on the timetable.",
+    "a": "lesson plan",
+    "b": "scheme of work",
+    "c": "syllabus",
+    "d": "curriculum",
+    "answer": "b"
+  },
+  {
+    "question": "is a relatively permanent change in behavior or in behavioral potential that results from experience and cannot be attributed to temporary body states such as those induced by illness, fatigue, or drugs.",
+    "a": "indoctrination",
+    "b": "instruction",
+    "c": "learning",
+    "d": "teaching",
+    "answer": "c"
+  },
+  {
+    "question": "Indoctrination is a concept synonymous with teaching.",
+    "a": "false",
+    "b": "true",
+    "c": "not sure",
+    "d": "totally correct",
+    "answer": "a"
+  },
+  {
+    "question": "Any dysfunction in the process of communication cannot cumulatively affect the process.",
+    "a": "false",
+    "b": "true",
+    "c": "not sure",
+    "d": "totally correct",
+    "answer": "a"
+  },
+  {
+    "question": "To what extent can we say teaching is a profession?",
+    "a": "Teachers are well-respected and held in high esteem.",
+    "b": "Teaching is an exclusive privilege of teachers.",
+    "c": "Teaching requires expertise, skills, and competencies.",
+    "d": "Teaching enjoys juicy conditions of service.",
+    "answer": "c"
+  },
+  {
+    "question": "How best can we describe teaching in Nigeria?",
+    "a": "Teaching is a profession.",
+    "b": "Teaching is not a profession.",
+    "c": "Teaching is an occupation.",
+    "d": "Teaching is a halfway profession.",
+    "answer": "d"
+  },
+  {
+    "question": "Teaching, driving, medicine, engineering, and farming are better described as -------.",
+    "a": "professions",
+    "b": "careers",
+    "c": "vocations",
+    "d": "trades",
+    "answer": "a"
+  },
+  {
+    "question": "The idea that teaching as an activity is one not restricted by professional tutelage is a correct one.",
+    "a": "true",
+    "b": "untrue",
+    "c": "half-true",
+    "d": "none of the above.",
+    "answer": "b"
+  },
+  {
+    "question": "------- is a group of people in a learned occupation. The members of which agree to abide by specified rules of conduct when practiced.",
+    "a": "occupation",
+    "b": "work",
+    "c": "labor",
+    "d": "profession",
+    "answer": "d"
+  },
+  {
+    "question": "Profession differs from occupation in that ---------.",
+    "a": "occupation is subsumed in profession.",
+    "b": "profession is subsumed in occupation.",
+    "c": "teaching is a profession and not an occupation.",
+    "d": "teaching is an occupation and not a profession.",
+    "answer": "b"
+  },
+  {
+    "question": "A career is accorded a professional status when ------",
+    "a": "it applies for it at the ministry of labor.",
+    "b": "it involves the use of formal languages.",
+    "c": "it involves a long period of training.",
+    "d": "it involves a certificate of proficiency.",
+    "answer": "c"
+  },
+  {
+    "question": "The anticipated learning outcomes in classroom instruction is known as ------",
+    "a": "behavioral objectives",
+    "b": "broad objectives",
+    "c": "goals",
+    "d": "benchmark",
+    "answer": "a"
+  },
+  {
+    "question": "What makes instructional objectives measurable?",
+    "a": "amount of time",
+    "b": "amount of material",
+    "c": "amount of resources",
+    "d": "amount of knowledge",
+    "answer": "d"
+  },
+  {
+    "question": "Cognitive, affective, and psychomotor domains of learning respectively imply -------",
+    "a": "knowledge, feelings, and movement of the body",
+    "b": "knowledge, attitude, and manipulation",
+    "c": "cognition, emotion, and manipulation",
+    "d": "intelligence, emotion, and movement of the body",
+    "answer": "a"
+  },
+  {
+    "question": "It relates to the recall of factual information. This statement describes --------",
+    "a": "Knowledge",
+    "b": "comprehension",
+    "c": "application",
+    "d": "analysis",
+    "answer": "a"
+  },
+  {
+    "question": "This relates to the acceptance of worth attached to an object, idea, or concept. This assertion describes ---------",
+    "a": "responding",
+    "b": "valuing",
+    "c": "organization",
+    "d": "receiving",
+    "answer": "b"
+  },
+  {
+    "question": "Objectives and evaluation are complementary in the following ways except --------",
+    "a": "objectives provide direction for evaluation.",
+    "b": "evaluation improves the quality of objectives",
+    "c": "objectives protect the quality of evaluation.",
+    "d": "evaluation validates instructional objectives",
+    "answer": "c"
+  },
+  {
+    "question": "All of the following except one are appropriate methods of questioning for synthesis as a cognition level.",
+    "a": "integrate",
+    "b": "interpret",
+    "c": "modify",
+    "d": "create",
+    "answer": "c"
+  },
+  {
+    "question": "The highest level of the psychomotor domain is -----------",
+    "a": "basic movement",
+    "b": "physical ability",
+    "c": "non-discursive communication",
+    "d": "perpetual ability",
+    "answer": "c"
+  },
+  {
+    "question": "The willingness of the learner to react to the stimulus perceived is a description of ----------",
+    "a": "organization",
+    "b": "valuing",
+    "c": "responding",
+    "d": "receiving",
+    "answer": "c"
+  },
+  {
+    "question": "What, label, collect, when, and identify are appropriate clues for -------",
+    "a": "knowledge",
+    "b": "perception",
+    "c": "comprehension",
+    "d": "analysis",
+    "answer": "a"
+  },
+  {
+    "question": "Adopt, enforce, preserve, endorse, contribute are appropriate verbs suitable for the description of ----------",
+    "a": "receiving",
+    "b": "responding",
+    "c": "valuing",
+    "d": "organization",
+    "answer": "b"
+  },
+  {
+    "question": "Which of these is not a hierarchical level of affective objective?",
+    "a": "receiving",
+    "b": "responding",
+    "c": "valuing",
+    "d": "reflection",
+    "answer": "d"
+  },
+  {
+    "question": "Holding a pen to write and using a hand fork by a school pupil are typical examples of -------",
+    "a": "basic fundamental movement",
+    "b": "skilled movement",
+    "c": "reflex movement",
+    "d": "physical abilities",
+    "answer": "a"
+  },
+  {
+    "question": "All but one of the following is appropriate. At the end of the lesson, the students should be able to:",
+    "a": "state five characteristics of living things",
+    "b": "understand five characteristics of living things",
+    "c": "know five characteristics of living things",
+    "d": "demonstrate five characteristics of living things",
+    "answer": "a"
+  },
+  {
+    "question": "----- can be described as noticeable behavioral change that should manifest in a learner after being exposed to a period of instruction.",
+    "a": "scheme of work",
+    "b": "instructional materials",
+    "c": "instruction",
+    "d": "instructional objectives",
+    "answer": "b"
+  },
+  {
+    "question": "-------- provide a specific statement of what pupils will do at the end of instruction.",
+    "a": "aims",
+    "b": "objectives",
+    "c": "missions",
+    "d": "goals",
+    "answer": "b"
+  },
+  {
+    "question": "----- are general statements of intentions.",
+    "a": "aims",
+    "b": "goals",
+    "c": "objectives",
+    "d": "missions",
+    "answer": "b"
+  },
+  {
+    "question": "----- state how the intent may be realized.",
+    "a": "aims",
+    "b": "goals",
+    "c": "objectives",
+    "d": "missions",
+    "answer": "c"
+  },
+  {
+    "question": "The domain that is concerned with the impact of knowledge and thinking skills of learners is -----",
+    "a": "affective",
+    "b": "cognitive",
+    "c": "psychomotor",
+    "d": "emotional",
+    "answer": "b"
+  },
+  {
+    "question": "The assessment of the extent to which the teaching-learning process has been gratified or realized is -----",
+    "a": "introspection",
+    "b": "assessment",
+    "c": "evaluation",
+    "d": "appraisal",
+    "answer": "c"
+  },
+  {
+    "question": "One of these is not a guideline for effective questioning technique.",
+    "a": "Questions should be posted at the entire class.",
+    "b": "Questions should not be ambiguous.",
+    "c": "Chorus answers to questions should not be entertained.",
+    "d": "Questions should be of higher-order level of cognition.",
+    "answer": "d"
+  },
+  {
+    "question": "Which of these is not an advantage of questioning technique in classroom instruction?",
+    "a": "It makes the teacher more relaxed and free from stress.",
+    "b": "It promotes meaningful classroom dialogue.",
+    "c": "It makes learners more alert in the classroom.",
+    "d": "It helps to keep the teaching-learning process on track.",
+    "answer": "a"
+  },
+  {
+    "question": "Why should a teacher not engage in the habit of not repeating the questions asked in classroom instruction?",
+    "a": "to make the teacher save energy",
+    "b": "to make the learner develop good listening skills",
+    "c": "to punish the learners for not listening",
+    "d": "to make the teacher command respect from the learners",
+    "answer": "b"
+  },
+  {
+    "question": "Which of the following is not a quality of a good question?",
+    "a": "It must be clearly stated.",
+    "b": "It must be in sequence.",
+    "c": "It must be stated audibly.",
+    "d": "It must be apathetic.",
+    "answer": "d"
+  },
+  {
+    "question": "One of the guidelines for good questioning techniques in classroom instruction is that it -----",
+    "a": "must not be double-barreled",
+    "b": "must be limited to brilliant teachers.",
+    "c": "must reflect a high level of language.",
+    "d": "must satisfy the interest of the learners.",
+    "answer": "a"
+  },
+  {
+    "question": "Which of the following is not an appropriate teaching method at the primary school?",
+    "a": "lecture method",
+    "b": "discussion method",
+    "c": "discovery method",
+    "d": "demonstration method",
+    "answer": "a"
+  },
+  {
+    "question": "Which of these is not a teaching method?",
+    "a": "Problem-solving",
+    "b": "Team teaching",
+    "c": "Field trip",
+    "d": "Teaching for cooperative learning",
+    "answer": "d"
+  },
+  {
+    "question": "It provides firsthand experience of what is taught in the classroom. This statement relates to:",
+    "a": "Play way method",
+    "b": "Field trip method",
+    "c": "Discussion method",
+    "d": "Team teaching method",
+    "answer": "b"
+  },
+  {
+    "question": "The teaching method that involves continuous delivery of content by the teacher is ------",
+    "a": "Discussion method",
+    "b": "Lecture method",
+    "c": "Dramatization method",
+    "d": "Demonstration method",
+    "answer": "b"
+  },
+  {
+    "question": "The teaching method in which two or more teachers are involved in the teaching of a subject according to their expertise and competence is known as ------",
+    "a": "Play way method",
+    "b": "Concept mapping",
+    "c": "Team teaching method",
+    "d": "Teaching for cooperative learning",
+    "answer": "c"
+  },
+  {
+    "question": "Which of these is most suitable for teaching addition with carrying in mathematics to a primary two class?",
+    "a": "play way methods",
+    "b": "lecture method",
+    "c": "Field trip method",
+    "d": "Discussion method",
+    "answer": "a"
+  },
+  {
+    "question": "Team teaching entails ------",
+    "a": "arrangement of pupils into two groups for a contest.",
+    "b": "use of two or more teachers for a particular subject.",
+    "c": "invitation of external subject specialists.",
+    "d": "illustration involving the use of different interest groups.",
+    "answer": "b"
+  },
+  {
+    "question": "One of the following is the odd one.",
+    "a": "lecture method",
+    "b": "team teaching method",
+    "c": "excursion method",
+    "d": "acoustic method",
+    "answer": "d"
+  },
+  {
+    "question": "The two types of motivation are ------- and ------------.",
+    "a": "extrinsic and intrinsic",
+    "b": "external and internal",
+    "c": "exterior and interior",
+    "d": "within and without",
+    "answer": "a"
+  },
+  {
+    "question": "In the theory of motivation, as one need is gratified -------",
+    "a": "individual needs become satisfied.",
+    "b": "other needs are gratified.",
+    "c": "a higher need comes up.",
+    "d": "the individual becomes accepted.",
+    "answer": "c"
+  },
+  {
+    "question": "One of the underlying assumptions of motivation is that the previously gratified need becomes secondary and ------",
+    "a": "so many are always in a state of need.",
+    "b": "many others become primary and complex.",
+    "c": "too inconsequential to warrant any special attention.",
+    "d": "insignificant to many people.",
+    "answer": "c"
+  },
+  {
+    "question": "He is enthusiastic to learn, can handle abstractions, and is always ready to take up challenges. The above perfectly describes ------.",
+    "a": "an emotional learner.",
+    "b": "a well-motivated learner.",
+    "c": "a high potential learner.",
+    "d": "a learner with a level of cognition.",
+    "answer": "b"
+  },
+  {
+    "question": "According to Maslow, human needs can be categorized into ------ and ---------.",
+    "a": "growth and development needs",
+    "b": "growth and deficiency needs",
+    "c": "social and basic needs",
+    "d": "physical and spiritual needs",
+    "answer": "b"
+  },
+  {
+    "question": "Need for love, affection, and recognition indicate ----------",
+    "a": "Psychological needs",
+    "b": "safety needs",
+    "c": "social needs",
+    "d": "self-esteem",
+    "answer": "c"
+  },
+  {
+    "question": "The peak of Maslow's theory hierarchy of need is --------",
+    "a": "self-actualization needs",
+    "b": "self-esteem needs",
+    "c": "social needs",
+    "d": "safety needs",
+    "answer": "a"
+  },
+  {
+    "question": "The application of theories of motivation to classroom instruction involves ------",
+    "a": "the use of negative reinforcement only.",
+    "b": "the use of positive reinforcement only",
+    "c": "efforts from teachers making his subject interesting",
+    "d": "indiscriminate use of incentives by the teacher.",
+    "answer": "c"
+  },
+  {
+    "question": "Which of these is not true about motivation?",
+    "a": "Every human being is always in a state of need.",
+    "b": "The state of complete satisfaction is unattainable.",
+    "c": "All human needs can be satisfied.",
+    "d": "As one need is gratified, a higher need comes up.",
+    "answer": "c"
+  },
+  {
+    "question": "An individual who decided to pursue a post-graduate program is probably seeking the satisfaction of -------",
+    "a": "safety need",
+    "b": "social need",
+    "c": "esteem need",
+    "d": "self-actualization need",
+    "answer": "d"
+  },
+  {
+    "question": "The inner urge or drive that accounts for the arousal, selection, direction, and continuation of behavior is --------",
+    "a": "intelligence",
+    "b": "instinct",
+    "c": "motivation",
+    "d": "none of the above.",
+    "answer": "c"
+  },
+  {
+    "question": "To retain learners in school, the following should be observed except.",
+    "a": "school environment should be triadic",
+    "b": "instructional materials should be available",
+    "c": "the time school opens should be flexible",
+    "d": "teachers should be friendly and accommodating",
+    "answer": "c"
+  },
+  {
+    "question": "To achieve optimum impact in the classroom, a teacher needs to -----",
+    "a": "be aggressive",
+    "b": "be domineering",
+    "c": "provide necessary conditions that will enhance learning",
+    "d": "all of the above.",
+    "answer": "c"
+  }
+]

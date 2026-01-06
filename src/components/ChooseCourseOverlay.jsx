@@ -1,8 +1,12 @@
-import React from 'react'
+import { useState } from "react"
+import { useNavigate } from "react-router-dom"
+import { courses } from "../data"
 
-const ChooseCourseOverlay = ({setShowChooseCourseOverlay}) => {
+const ChooseCourseOverlay = ({ setShowChooseCourseOverlay }) => {
+  const [selectedCourse, setSelectedCourse] = useState("")
+
   return (
-    <div onClick={() => setShowChooseCourseOverlay(false)}  className="fixed inset-0 bg-black/50 flex items-center justify-center">
+    <div onClick={() => setShowChooseCourseOverlay(false)} className="fixed inset-0 bg-black/50 flex items-center justify-center">
       <div onClick={e => e.stopPropagation()} className="w-[90%] max-w-md bg-white rounded-2xl p-6">
         <div className="flex justify-between items-center mb-5">
           <h2 className="text-3xl font-semibold">Select Course</h2>
@@ -26,12 +30,7 @@ const ChooseCourseOverlay = ({setShowChooseCourseOverlay}) => {
         </div>
 
         <div className="max-h-80 overflow-y-auto space-y-3 no-scrollbar">
-          <button className="course-button">CSC 101</button>
-          <button className="course-button">MTH 102</button>
-          <button className="course-button">PHY 103</button>
-          <button className="course-button">CHM 104</button>
-          <button className="course-button">BIO 105</button>
-          <button className="course-button">ENG 106</button>
+          {courses.map(course => <button key={course} onClick={() => setSelectedCourse(course)} className={`w-full py-4 rounded-lg ${selectedCourse === course ? "bg-gray-400" : "bg-gray-100 hover:bg-gray-200 duration-200 ease-in  active:bg-gray-300"}`}>{course.toUpperCase()}</button>)}
         </div>
       </div>
     </div>
