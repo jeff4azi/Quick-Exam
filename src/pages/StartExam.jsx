@@ -5,7 +5,7 @@ const StartExam = () => {
   const [showChooseCourseOverlay, setShowChooseCourseOverlay] = useState(false)
 
   return (
-    <div className="relative h-[100vh] max-h-screen flex items-center justify-center">
+    <div className="relative h-[100dvh] max-h-screen flex items-center justify-center">
       <div> 
         <h1 className="text-6xl text-center font-semibold tracking-tight mb-3">Quick Exam</h1>
         <p className="text-center text-gray-600 max-w-md">Practice past questions and get instant results</p>
