@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+body {
+  @apply text-[#1F2937] bg-[#F8FAFC];
+}
+
+@layer utilities {
+  /* Hide scrollbar but keep scrolling */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE & Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+}
