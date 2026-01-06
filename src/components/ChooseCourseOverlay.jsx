@@ -4,6 +4,11 @@ import { courses } from "../data"
 
 const ChooseCourseOverlay = ({ setShowChooseCourseOverlay }) => {
   const [selectedCourse, setSelectedCourse] = useState("")
+  const navigate = useNavigate();
+
+  const startExam = () => {
+    navigate("/exam")
+  }
 
   return (
     <div onClick={() => setShowChooseCourseOverlay(false)} className="fixed inset-0 bg-black/50 flex items-center justify-center">
@@ -30,7 +35,7 @@ const ChooseCourseOverlay = ({ setShowChooseCourseOverlay }) => {
         </div>
 
         <div className="max-h-80 overflow-y-auto space-y-3 no-scrollbar">
-          {courses.map(course => <button key={course} onClick={() => setSelectedCourse(course)} className={`w-full py-4 rounded-lg ${selectedCourse === course ? "bg-gray-400" : "bg-gray-100 hover:bg-gray-200 duration-200 ease-in  active:bg-gray-300"}`}>{course.toUpperCase()}</button>)}
+          {courses.map(course => <button key={course} onClick={() => { setSelectedCourse(course);  startExam()}} className={`w-full py-4 rounded-lg ${selectedCourse === course ? "bg-gray-400" : "bg-gray-100 hover:bg-gray-200 duration-200 ease-in  active:bg-gray-300"}`}>{course.toUpperCase()}</button>)}
         </div>
       </div>
     </div>
