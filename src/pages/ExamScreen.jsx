@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 
 import ProgressBar from "../components/ProgressBar"
@@ -6,7 +6,7 @@ import Timer from "../components/Timer"
 import { edu101Questions } from "../../edu-101questions"
 
 const ExamScreen = () => {
-  const [shuffled30edu101Questions, setShuffle30edu101Questions] = useState(getRandom30(edu101Questions))
+  const [shuffled30edu101Questions, _] = useState(getRandom30(edu101Questions))
 
   function getRandom30(arr) {
     const copy = [...arr];
@@ -18,11 +18,18 @@ const ExamScreen = () => {
 
     return copy.slice(0, 30);
   }
+
+  function onOptionClick(option) {
+    const newAnswers = [...answers]
+    newAnswers[currentIndex] = option
+    setAnswers(newAnswers)
+  }
  
   const navigate = useNavigate()
 
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [selectedOption, setSelectedOption] = useState(null)
+  const [answers, setAnswers] = useState([])
+  const selectedOption = answers[currentIndex]
 
   const currentQuestion = shuffled30edu101Questions[currentIndex]
   const totalQuestions = shuffled30edu101Questions.length
@@ -32,7 +39,6 @@ const ExamScreen = () => {
   const nextQuestion = () => {
     if (currentIndex < totalQuestions - 1) {
       setCurrentIndex(prev => prev + 1)
-      setSelectedOption(null)
     } else {
       navigate("/results")
     }
@@ -41,7 +47,6 @@ const ExamScreen = () => {
   const prevQuestion = () => {
     if (currentIndex > 0) {
       setCurrentIndex(prev => prev - 1)
-      setSelectedOption(null)
     }
   }
 
@@ -80,7 +85,7 @@ const ExamScreen = () => {
           {currentQuestion.options.map((option, index) => (
             <button
               key={index}
-              onClick={() => setSelectedOption(option)}
+              onClick={() => onOptionClick(option)}
               className={`py-3 px-4 w-full rounded-xl ring-2 transition
                 ${
                   selectedOption === option
