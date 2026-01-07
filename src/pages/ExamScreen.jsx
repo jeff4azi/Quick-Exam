@@ -1,72 +1,115 @@
-import ProgressBar from "../components/ProgressBar"
-import correctIcon from "../images/correctIcon.png"
-import clockIcon from "../images/clock.png"
-
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 
-const ExamScreen = () => {
-  const navigate = useNavigate();
+import ProgressBar from "../components/ProgressBar"
+import Timer from "../components/Timer"
+import { edu101Questions } from "../../edu-101questions"
 
-  const gotoStartExam = () => navigate("/")
+const ExamScreen = () => {
+  const [shuffled30edu101Questions, setShuffle30edu101Questions] = useState(getRandom30(edu101Questions))
+
+  function getRandom30(arr) {
+    const copy = [...arr];
+
+    for (let i = 0; i < 30; i++) {
+      const j = i + Math.floor(Math.random() * (copy.length - i));
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+
+    return copy.slice(0, 30);
+  }
+ 
+  const navigate = useNavigate()
+
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [selectedOption, setSelectedOption] = useState(null)
+
+  const currentQuestion = shuffled30edu101Questions[currentIndex]
+  const totalQuestions = shuffled30edu101Questions.length
+
+  const goHome = () => navigate("/")
+
+  const nextQuestion = () => {
+    if (currentIndex < totalQuestions - 1) {
+      setCurrentIndex(prev => prev + 1)
+      setSelectedOption(null)
+    } else {
+      navigate("/results")
+    }
+  }
+
+  const prevQuestion = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex(prev => prev - 1)
+      setSelectedOption(null)
+    }
+  }
+
+  const progress = ((currentIndex + 1) / totalQuestions) * 100
+
   return (
-    <div className="">
-      <div className='flex justify-between items-center my-7 mx-5'>
-        <button onClick={gotoStartExam}  className='bg-gray-100 p-2 rounded-xl'>
+    <div>
+      {/* Top bar */}
+      <div className="flex justify-between items-center my-7 mx-5">
+        <button onClick={goHome} className="bg-gray-100 p-2 rounded-xl">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
           </svg>
         </button>
-        <div className='font-medium absolute left-1/2 transform -translate-x-1/2'>02 of 10</div>
-        <div>
-          <div className='flex items-center justify-between gap-2 bg-white w-[100px] h-[35px] font-medium rounded-full px-3'>
-            <div>
-              <img className="size-6" src={clockIcon} alt="clockIcon" />
-            </div>
-            03:58
-          </div>
+
+        <div className="font-medium absolute left-1/2 -translate-x-1/2">
+          {currentIndex + 1} of {totalQuestions}
         </div>
-       
+
+        <Timer initialMinutes={10} initialSeconds={0} />
       </div>
 
       <div className="mx-5">
-        <ProgressBar progress={20} />
+        <ProgressBar progress={progress} />
       </div>
 
+      {/* Question Card */}
       <div className="bg-white mx-5 p-5 rounded-2xl my-7">
-        <div className="text-gray-400 mb-2">EDU 101</div> {/* holds the course name */}
-        <div className="text-xl font-medium mb-7">Who among the following doesn't have the record of the most World Cup?</div> {/* holds the question */}
-        {/* options */}
-        <div className="space-y-5">
-          <button className="py-3 px-4 ring-2 ring-gray-300 rounded-xl w-full flex justify-between items-center">
-            <span className="font-medium text-lg">Antonio Carbajal</span>{/* option */}
-            <div>
-              <img className="size-6" src={correctIcon} alt="icon" />
-            </div>{/* icon */}
-          </button>
-          <button className="py-3 px-4 ring-2 ring-gray-300 rounded-xl w-full flex justify-between items-center">
-            <span className="font-medium text-lg">Antonio Carbajal</span>{/* option */}
-            <div>
-              <img className="size-6" src={correctIcon} alt="icon" />
-            </div>{/* icon */}
-          </button>
-          <button className="py-3 px-4 ring-2 ring-gray-300 rounded-xl w-full flex justify-between items-center">
-            <span className="font-medium text-lg">Antonio Carbajal</span>{/* option */}
-            <div>
-              <img className="size-6" src={correctIcon} alt="icon" />
-            </div>{/* icon */}
-          </button>
-          <button className="py-3 px-4 ring-2 ring-gray-300 rounded-xl w-full flex justify-between items-center">
-            <span className="font-medium text-lg">Antonio Carbajal</span>{/* option */}
-            <div>
-              <img className="size-6" src={correctIcon} alt="icon" />
-            </div>{/* icon */}
-          </button>
+        <div className="text-gray-400 mb-2">EDU 101</div>
+
+        <div className="text-xl font-medium mb-7">
+          {currentQuestion.question}
+        </div>
+
+        <div className="space-y-4">
+          {currentQuestion.options.map((option, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedOption(option)}
+              className={`py-3 px-4 w-full rounded-xl ring-2 transition
+                ${
+                  selectedOption === option
+                    ? "ring-[#2563EB]/60"
+                    : "ring-gray-300"
+                }`}
+            >
+              <span className="text-lg font-medium">{option}</span>
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="mx-7 flex justify-between items-center">
-        <button className="bg-red-400 h-[50px] w-[150px] rounded-xl font-medium text-white">Previous</button>
-        <button className="bg-green-400 h-[50px] w-[150px] rounded-xl font-medium text-white">Next</button>
+      {/* Navigation */}
+      <div className="mx-7 flex justify-between">
+        <button
+          onClick={prevQuestion}
+          disabled={currentIndex === 0}
+          className="bg-red-500 disabled:opacity-40 h-[50px] w-[150px] rounded-xl font-medium text-white"
+        >
+          Previous
+        </button>
+
+        <button
+          onClick={nextQuestion}
+          className="bg-green-500 h-[50px] w-[150px] rounded-xl font-medium text-white"
+        >
+          {currentIndex === totalQuestions - 1 ? "Submit" : "Next"}
+        </button>
       </div>
     </div>
   )
