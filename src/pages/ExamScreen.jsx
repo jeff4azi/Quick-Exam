@@ -28,6 +28,7 @@ const ExamScreen = ({ answers, setAnswers, shuffled30edu101Questions, onSubmit }
       setCurrentIndex(prev => prev + 1)
     } else {
       onSubmit()
+      navigate("/results")
     }
   }
 
@@ -55,7 +56,7 @@ const ExamScreen = ({ answers, setAnswers, shuffled30edu101Questions, onSubmit }
           {currentIndex + 1} of {totalQuestions}
         </div>
 
-        <Timer initialMinutes={10} initialSeconds={0} />
+        <Timer initialMinutes={15} initialSeconds={0} onSubmit={onSubmit} />
       </div>
 
       <div className="mx-5">

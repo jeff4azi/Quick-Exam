@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react"
 import clockIcon from "../images/clock.png"
+import { useNavigate } from "react-router-dom"
 
-const Timer = ({ initialMinutes = 3, initialSeconds = 58 }) => {
+const Timer = ({ initialMinutes = 3, initialSeconds = 58, onSubmit }) => {
+  const navigate = useNavigate()
   const [time, setTime] = useState(
     initialMinutes * 60 + initialSeconds
   )
 
   useEffect(() => {
-    if (time <= 0) return
+    if (time <= 0) { 
+      onSubmit()
+      navigate("/results")
+      return
+     }
 
     const interval = setInterval(() => {
       setTime((prev) => prev - 1)

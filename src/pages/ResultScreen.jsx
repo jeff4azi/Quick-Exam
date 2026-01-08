@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 
-const ResultScreen = () => {
+const ResultScreen = ({results}) => {
   const navigate = useNavigate()
 
   return (
@@ -8,7 +8,7 @@ const ResultScreen = () => {
       {/* score */}
       <div className='bg-white flex flex-col justify-center items-center size-[220px] rounded-full place-self-center m-15 text-[#2563EB] border-2 '>
         <span className='font-medium opacity-55 -translate-y-1'>Your Score</span>
-        <span className='text-5xl font-semibold -translate-y-2'>70<span className='text-3xl font-bold'>%</span></span>
+        <span className='text-5xl font-semibold -translate-y-2'>{Math.round((results.correct / 30) * 100)}<span className='text-3xl font-bold'>%</span></span>
       </div>
 
       {/* extra result details */}
@@ -16,8 +16,8 @@ const ResultScreen = () => {
         <div className='flex gap-2'>
           <div className='size-[7px] rounded-full bg-[#2563EB] translate-y-3'></div>
           <div className='flex flex-col text-sm'>
-            <span className='text-lg font-medium text-[#2563EB]'>100%</span>
-            Completion
+            <span className='text-lg font-medium text-[#2563EB]'>{results.answered}</span>
+            Answered Questions
           </div>
         </div>
         <div className='flex gap-2'>
@@ -30,14 +30,14 @@ const ResultScreen = () => {
         <div className='flex gap-2'>
           <div className='size-[7px] rounded-full bg-green-500 translate-y-3'></div>
           <div className='flex flex-col text-sm'>
-            <span className='text-lg font-medium text-green-500'>25</span>
+            <span className='text-lg font-medium text-green-500'>{results.correct}</span>
             Correct
           </div>
         </div>
         <div className='flex gap-2'>
           <div className='size-[7px] rounded-full bg-red-500 translate-y-3'></div>
           <div className='flex flex-col text-sm'>
-            <span className='text-lg font-medium text-red-500'>05</span>
+            <span className='text-lg font-medium text-red-500'>{results.wrong}</span>
             Wrong
           </div>
         </div>
@@ -68,7 +68,7 @@ const ResultScreen = () => {
         </div>
         <div className='text-xs flex flex-col items-center justify-center gap-2'>
           <div>
-            <button className='p-2 bg-purple-400 rounded-full text-white'>
+            <button className='p-2 bg-purple-400 rounded-full text-white' onClick={() => navigate("/")}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
               </svg>

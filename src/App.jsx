@@ -3,7 +3,6 @@ import { useState } from "react";
 import StartExam from "./pages/StartExam";
 import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
-import { useNavigate } from "react-router-dom"
 
 import { edu101Questions } from "./edu-101questions"
 
@@ -19,30 +18,39 @@ function App() {
     return copy.slice(0, 30);
   }
 
-  let correctCount = 0
-  let wrongCount = 0
-  let answeredCount = 0
-
   const [answers, setAnswers] = useState([])
   const [shuffled30edu101Questions, _] = useState(getRandom30(edu101Questions))
-  const navigate = useNavigate()
+  const [results, setResults] = useState({
+    correct: 0,
+    wrong: 0,
+    answered: 0,
+  })
 
-  const onSubmit = () => {
-    shuffled30edu101Questions.forEach((question, index) => {
-      const userAnswer = answers[index]
+const onSubmit = () => {
+  let newCorrect = 0;
+  let newWrong = 0;
+  let newAnswered = 0;
 
-      if (userAnswer !== undefined) {
-        answeredCount++
+  shuffled30edu101Questions.forEach((question, index) => {
+    const userAnswer = answers[index];
 
-        if (userAnswer === question.correct) {
-          correctCount++
-        } else {
-          wrongCount++
-        }
+    if (userAnswer !== undefined) {
+      newAnswered++;
+      if (userAnswer === question.correct) {
+        newCorrect++;
+      } else {
+        newWrong++;
       }
-    })
-    navigate("/results")
-  }
+    }
+  });
+
+  setResults({
+    correct: newCorrect,
+    wrong: newWrong,
+    answered: newAnswered,
+  });
+};
+
   
 
   const props = {
@@ -50,6 +58,7 @@ function App() {
     setAnswers,
     shuffled30edu101Questions,
     onSubmit,
+    results
   }
 
   return (
@@ -57,7 +66,7 @@ function App() {
       <Routes>
         <Route path="/" element={<StartExam />} />
         <Route path="/exam" element={<ExamScreen {...props} />} />
-        <Route path="/results" element={<ResultScreen />} />
+        <Route path="/results" element={<ResultScreen {...props} />} />
       </Routes>
     </Router>
   );
