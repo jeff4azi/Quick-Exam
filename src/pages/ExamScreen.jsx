@@ -3,32 +3,19 @@ import { useNavigate } from "react-router-dom"
 
 import ProgressBar from "../components/ProgressBar"
 import Timer from "../components/Timer"
-import { edu101Questions } from "../../edu-101questions"
 
-const ExamScreen = () => {
-  const [shuffled30edu101Questions, _] = useState(getRandom30(edu101Questions))
 
-  function getRandom30(arr) {
-    const copy = [...arr];
-
-    for (let i = 0; i < 30; i++) {
-      const j = i + Math.floor(Math.random() * (copy.length - i));
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-
-    return copy.slice(0, 30);
-  }
-
-  function onOptionClick(option) {
+const ExamScreen = ({ answers, setAnswers, shuffled30edu101Questions, onSubmit }) => {
+ function onOptionClick(option) {
     const newAnswers = [...answers]
     newAnswers[currentIndex] = option
     setAnswers(newAnswers)
   }
- 
+
   const navigate = useNavigate()
 
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [answers, setAnswers] = useState([])
+  
   const selectedOption = answers[currentIndex]
 
   const currentQuestion = shuffled30edu101Questions[currentIndex]
@@ -40,9 +27,11 @@ const ExamScreen = () => {
     if (currentIndex < totalQuestions - 1) {
       setCurrentIndex(prev => prev + 1)
     } else {
-      navigate("/results")
+      onSubmit()
     }
   }
+
+  
 
   const prevQuestion = () => {
     if (currentIndex > 0) {
@@ -87,10 +76,9 @@ const ExamScreen = () => {
               key={index}
               onClick={() => onOptionClick(option)}
               className={`py-3 px-4 w-full rounded-xl ring-2 transition
-                ${
-                  selectedOption === option
-                    ? "ring-[#2563EB]/60"
-                    : "ring-gray-300"
+                ${selectedOption === option
+                  ? "ring-[#2563EB]/60"
+                  : "ring-gray-300"
                 }`}
             >
               <span className="text-lg font-medium">{option}</span>
