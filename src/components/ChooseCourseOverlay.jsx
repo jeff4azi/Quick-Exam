@@ -1,9 +1,7 @@
-import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import { courses } from "../data"
 
-const ChooseCourseOverlay = ({ setShowChooseCourseOverlay }) => {
-  const [selectedCourse, setSelectedCourse] = useState("")
+const ChooseCourseOverlay = ({ setShowChooseCourseOverlay, setQuestions, getRandom30, courses, selectedCourse, setSelectedCourse }) => {
+  
   const navigate = useNavigate();
 
   const startExam = () => {
@@ -35,7 +33,26 @@ const ChooseCourseOverlay = ({ setShowChooseCourseOverlay }) => {
         </div>
 
         <div className="max-h-80 overflow-y-auto space-y-3 no-scrollbar">
-          {courses.map(course => <button key={course} onClick={() => { setSelectedCourse(course);  startExam()}} className={`w-full py-4 rounded-lg ${selectedCourse === course ? "bg-gray-400" : "bg-gray-100 hover:bg-gray-200 duration-200 ease-in  active:bg-gray-300"}`}>{course.toUpperCase()}</button>)}
+          {Array.isArray(courses) && courses.length > 0 ? (
+            courses.map(course => (
+              <button
+                key={course.id}
+                onClick={() => {
+                  setSelectedCourse(course);
+                  setQuestions(getRandom30(course.questions));
+                  startExam();
+                }}
+                className={`w-full py-4 rounded-lg ${selectedCourse?.id === course.id
+                    ? "bg-gray-400"
+                    : "bg-gray-100 hover:bg-gray-200 duration-200 ease-in active:bg-gray-300"
+                  }`}
+              >
+                {course.name.toUpperCase()}
+              </button>
+            ))
+          ) : (
+            <p className="text-center text-gray-500">No courses available</p>
+          )}
         </div>
       </div>
     </div>

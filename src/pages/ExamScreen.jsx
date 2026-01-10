@@ -5,7 +5,7 @@ import ProgressBar from "../components/ProgressBar"
 import Timer from "../components/Timer"
 
 
-const ExamScreen = ({ answers, setAnswers, shuffled30edu101Questions, onSubmit }) => {
+const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse }) => {
  function onOptionClick(option) {
     const newAnswers = [...answers]
     newAnswers[currentIndex] = option
@@ -18,8 +18,8 @@ const ExamScreen = ({ answers, setAnswers, shuffled30edu101Questions, onSubmit }
   
   const selectedOption = answers[currentIndex]
 
-  const currentQuestion = shuffled30edu101Questions[currentIndex]
-  const totalQuestions = shuffled30edu101Questions.length
+  const currentQuestion = questions[currentIndex]
+  const totalQuestions = questions.length
 
   const goHome = () => navigate("/")
 
@@ -65,7 +65,7 @@ const ExamScreen = ({ answers, setAnswers, shuffled30edu101Questions, onSubmit }
 
       {/* Question Card */}
       <div className="bg-white mx-5 p-5 rounded-2xl my-7">
-        <div className="text-gray-400 mb-2">EDU 101</div>
+        <div className="text-gray-400 mb-2">{selectedCourse.name}</div>
 
         <div className="text-xl font-medium mb-7">
           {currentQuestion.question}

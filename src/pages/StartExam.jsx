@@ -1,7 +1,7 @@
 import { useState } from "react"
 import ChooseCourseOverlay from "../components/ChooseCourseOverlay"
 
-const StartExam = () => {
+const StartExam = ({ setQuestions, getRandom30, courses, selectedCourse, setSelectedCourse }) => {
   const [showChooseCourseOverlay, setShowChooseCourseOverlay] = useState(false)
   
   return (
@@ -15,7 +15,7 @@ const StartExam = () => {
         onClick={() => setShowChooseCourseOverlay(true)} className="absolute bottom-10 bg-[#2563EB] py-5 px-7 rounded-full font-medium text-white text-2xl hover:scale-105 duration-200 ease-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300 focus:scale-105">Start Exam</button>
       
       {showChooseCourseOverlay &&
-        <ChooseCourseOverlay setShowChooseCourseOverlay={setShowChooseCourseOverlay} />
+        <ChooseCourseOverlay setShowChooseCourseOverlay={setShowChooseCourseOverlay} setQuestions={setQuestions} getRandom30={getRandom30} courses={courses} selectedCourse={selectedCourse} setSelectedCourse={setSelectedCourse} />
       }
     </div>
   )

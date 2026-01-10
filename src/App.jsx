@@ -5,6 +5,8 @@ import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
 
 import { edu101Questions } from "./edu-101questions"
+import { gns113Questions } from "./gns-113questions";
+import { gst111Questions } from "./gst-111questions"
 
 function App() {
   function getRandom30(arr) {
@@ -17,9 +19,27 @@ function App() {
 
     return copy.slice(0, 30);
   }
+ const courses = [
+    {
+      id: "EDU101",
+      name: "EDU 101",
+      questions: edu101Questions,
+    },
+    {
+      id: "GST111",
+      name: "GST 111",
+      questions: gst111Questions,
+    },
+    {
+      id: "GNS113",
+      name: "GNS 113",
+      questions: gns113Questions,
+    },
+  ];
 
   const [answers, setAnswers] = useState([])
-  const [shuffled30edu101Questions, _] = useState(getRandom30(edu101Questions))
+  const [selectedCourse, setSelectedCourse] = useState(courses[1])
+  const [questions, setQuestions] = useState(getRandom30(selectedCourse.questions))
   const [results, setResults] = useState({
     correct: 0,
     wrong: 0,
@@ -31,7 +51,7 @@ const onSubmit = () => {
   let newWrong = 0;
   let newAnswered = 0;
 
-  shuffled30edu101Questions.forEach((question, index) => {
+  questions.forEach((question, index) => {
     const userAnswer = answers[index];
 
     if (userAnswer !== undefined) {
@@ -56,15 +76,20 @@ const onSubmit = () => {
   const props = {
     answers,
     setAnswers,
-    shuffled30edu101Questions,
+    questions,
+    setQuestions,
     onSubmit,
-    results
+    results,
+    getRandom30,
+    courses,
+    selectedCourse,
+    setSelectedCourse
   }
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<StartExam />} />
+        <Route path="/" element={<StartExam {...props} />} />
         <Route path="/exam" element={<ExamScreen {...props} />} />
         <Route path="/results" element={<ResultScreen {...props} />} />
       </Routes>
