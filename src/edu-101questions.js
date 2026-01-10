@@ -182,4 +182,268 @@ export const edu101Questions = [
     ],
     correct: "extrinsic and intrinsic",
   },
+  {
+    question: "Indoctrination is one-way because it involves",
+    options: [
+      "transmission with dialogue",
+      "transmission without dialogue and leaves no room for disagreement",
+      "collaborative learning",
+      "critical thinking exercises",
+    ],
+    correct:
+      "transmission without dialogue and leaves no room for disagreement",
+  },
+  {
+    question: "Pedagogy is the study of",
+    options: [
+      "teaching adults",
+      "scientific research",
+      "teaching methods, including the aims of education",
+      "school management",
+    ],
+    correct: "teaching methods, including the aims of education",
+  },
+  {
+    question: "Andragogy refers to",
+    options: [
+      "teaching children",
+      "teaching adults who are self-directed",
+      "teaching infants",
+      "classroom decoration",
+    ],
+    correct: "teaching adults who are self-directed",
+  },
+  {
+    question: "The five 'p's of teaching include",
+    options: [
+      "preparation, patience, perseverance, passion, and personality",
+      "planning, playing, partying, praying, and posting",
+      "power, position, pride, profit, and popularity",
+      "punctuality, pen, paper, pupil, and principal",
+    ],
+    correct: "preparation, patience, perseverance, passion, and personality",
+  },
+  {
+    question: "The cognitive domain of Bloom's Taxonomy deals with",
+    options: [
+      "physical skills",
+      "feelings and emotions",
+      "intellectual skills and knowledge",
+      "manual labor",
+    ],
+    correct: "intellectual skills and knowledge",
+  },
+  {
+    question: "The affective domain involves",
+    options: [
+      "memory and recall",
+      "feelings, attitudes, and values",
+      "motor skills",
+      "writing abilities",
+    ],
+    correct: "feelings, attitudes, and values",
+  },
+  {
+    question: "The psychomotor domain focuses on",
+    options: [
+      "internal thoughts",
+      "emotional stability",
+      "physical or manual skills",
+      "vocabulary building",
+    ],
+    correct: "physical or manual skills",
+  },
+  {
+    question: "A teacher's primary role is that of a",
+    options: [
+      "facilitator of learning",
+      "disciplinarian only",
+      "clerk",
+      "source of all problems",
+    ],
+    correct: "facilitator of learning",
+  },
+  {
+    question: "Teaching is considered a profession because it requires",
+    options: [
+      "only a loud voice",
+      "skills, competencies, and expertise",
+      "expensive clothing",
+      "political connections",
+    ],
+    correct: "skills, competencies, and expertise",
+  },
+  {
+    question: "Teaching in Nigeria is best described as a",
+    options: [
+      "full profession",
+      "half-way profession",
+      "non-profession",
+      "hobby",
+    ],
+    correct: "half-way profession",
+  },
+  {
+    question: "The inner drive that directs behaviour is",
+    options: ["instruction", "motivation", "discipline", "evaluation"],
+    correct: "motivation",
+  },
+  {
+    question:
+      "According to Maslow, the highest level in the hierarchy of needs is",
+    options: [
+      "safety needs",
+      "social needs",
+      "self-actualization",
+      "physiological needs",
+    ],
+    correct: "self-actualization",
+  },
+  {
+    question:
+      "The branch of philosophy that deals with the nature of reality is",
+    options: ["Epistemology", "Ethics", "Metaphysics", "Logic"],
+    correct: "Metaphysics",
+  },
+  {
+    question: "Epistemology is the study of",
+    options: [
+      "values",
+      "knowledge and how it is acquired",
+      "the universe",
+      "moral behavior",
+    ],
+    correct: "knowledge and how it is acquired",
+  },
+  {
+    question: "Axiology is the branch of philosophy concerned with",
+    options: ["truth", "existence", "values and ethics", "reasoning"],
+    correct: "values and ethics",
+  },
+  {
+    question:
+      "Teaching as a specialized and professional activity is best described as",
+    options: [
+      "an all-corner affair",
+      "a universal activity",
+      "rigorous, deliberate, planned, and conscious exercise.",
+      "a synonym of instruction, training, indoctrination, and propaganda",
+    ],
+    correct: "rigorous, deliberate, planned, and conscious exercise.",
+  },
+  {
+    question:
+      "Instruction is the part of teaching which is mainly concerned with",
+    options: [
+      "moral development",
+      "manual skills",
+      "classroom management",
+      "the development of the intellect of the learner",
+    ],
+    correct: "the development of the intellect of the learner",
+  },
+  {
+    question:
+      "Which of these involves the use of threats, intimidation, or force to compel a learner?",
+    options: ["Training", "Indoctrination", "Propaganda", "Conditioning"],
+    correct: "Indoctrination",
+  },
+  {
+    question:
+      "The study of the aims of education and the methods of teaching is called",
+    options: ["Andragogy", "Pedagogy", "Psychology", "Sociology"],
+    correct: "Pedagogy",
+  },
+  {
+    question:
+      "In the 5 P's of teaching, which of the following represents the teacher's self-image and charisma?",
+    options: ["Preparation", "Passion", "Personality", "Perseverance"],
+    correct: "Personality",
+  },
+  {
+    question: "Cognitive domain objectives focus on",
+    options: [
+      "Attitudes and values",
+      "Physical and motor skills",
+      "Knowledge and intellectual skills",
+      "Emotions and feelings",
+    ],
+    correct: "Knowledge and intellectual skills",
+  },
+  {
+    question:
+      "Which domain of Bloom's Taxonomy is concerned with the growth of feelings, emotions, and attitudes?",
+    options: [
+      "Cognitive domain",
+      "Affective domain",
+      "Psychomotor domain",
+      "Reflective domain",
+    ],
+    correct: "Affective domain",
+  },
+  {
+    question: "The highest level of need in Maslow’s hierarchy is",
+    options: [
+      "Safety needs",
+      "Social needs",
+      "Esteem needs",
+      "Self-actualization needs",
+    ],
+    correct: "Self-actualization needs",
+  },
+  {
+    question:
+      "The internal urge or drive that accounts for the arousal and direction of behavior is",
+    options: ["Intelligence", "Instinct", "Motivation", "Personality"],
+    correct: "Motivation",
+  },
+  {
+    question:
+      "To retain learners in school, the following should be observed EXCEPT",
+    options: [
+      "school environment should be friendly",
+      "instructional materials should be available",
+      "the time school opens should be extremely flexible",
+      "teachers should be accommodating",
+    ],
+    correct: "the time school opens should be extremely flexible",
+  },
+  {
+    question:
+      "The branch of philosophy that deals with the nature of knowledge is",
+    options: ["Metaphysics", "Epistemology", "Axiology", "Logic"],
+    correct: "Epistemology",
+  },
+  {
+    question: "Ethics and Aesthetics are sub-branches of",
+    options: ["Metaphysics", "Epistemology", "Axiology", "Logic"],
+    correct: "Axiology",
+  },
+  {
+    question:
+      "The curriculum that consists of unwritten rules and unintended learning outcomes is the",
+    options: [
+      "Official curriculum",
+      "Hidden curriculum",
+      "Formal curriculum",
+      "Written curriculum",
+    ],
+    correct: "Hidden curriculum",
+  },
+  {
+    question: "Which of the following is an example of a special library?",
+    options: [
+      "National Library of Nigeria",
+      "OGD Library (TASUED)",
+      "International Institute of Tropical Agriculture (IITA) Library",
+      "State Public Library",
+    ],
+    correct: "International Institute of Tropical Agriculture (IITA) Library",
+  },
+  {
+    question:
+      "The process of getting information from a visual representation of written words is",
+    options: ["Scanning", "Skimming", "Reading", "Recall"],
+    correct: "Reading",
+  },
 ];

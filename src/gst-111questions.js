@@ -298,12 +298,12 @@ export const gst111Questions = [
     correct: "further",
   },
   {
-    question: "Misers are not loved by many people (Opposite)",
+    question: "MISERS are not loved by many people (Opposite)",
     options: ["spenders", "hoarders", "savers", "thieves"],
     correct: "spenders",
   },
   {
-    question: "Tolu had a Solid primary education. (Synonym)",
+    question: "Tolu had a SOLID primary education. (Synonym)",
     options: ["sound", "sordid", "weak", "shy"],
     correct: "sound",
   },
@@ -327,11 +327,6 @@ export const gst111Questions = [
     question: "The discussion became animated at last. (Opposite)",
     options: ["lively", "intellectual", "dull", "shaky"],
     correct: "dull",
-  },
-  {
-    question: "They will surely buy this idea.",
-    options: ["pay for", "accept", "trade in", "barter"],
-    correct: "accept",
   },
   {
     question: "The robbers surrendered their loot to the soldiers.",
@@ -460,5 +455,169 @@ export const gst111Questions = [
       "His Royal Highness",
     ],
     correct: "Your son",
+  },
+  {
+    question: "That episode ended in war between the two countries.",
+    options: ["Accident", "Incident", "Confrontation", "Accusation"],
+    correct: "Incident",
+  },
+  {
+    question: "The lecturer reiterated the main points.",
+    options: ["Summarized", "Announced", "Developed", "Repeated"],
+    correct: "Repeated",
+  },
+  {
+    question: "The offending soldier was subjected to a court-martial.",
+    options: [
+      "Military drill",
+      "Military trial",
+      "Military discipline",
+      "Legal discipline",
+    ],
+    correct: "Military trial",
+  },
+  {
+    question: "We are indebted to those who contributed.",
+    options: ["Owe", "Praise", "Thankful", "recognize"],
+    correct: "Owe",
+  },
+  {
+    question: "The damages are to be shared pro-rata.",
+    options: ["Proportionally", "Fractionally", "Respectively", "Rationally"],
+    correct: "Proportionally",
+  },
+  {
+    question: "There is a telephone booth near the market.",
+    options: ["Stand", "Stall", "Rank", "Kiosk"],
+    correct: "Kiosk",
+  },
+  {
+    question: "She became unconscious.",
+    options: ["Passed away", "Passed out", "Passed off", "Gave up"],
+    correct: "Passed out",
+  },
+  {
+    question: "A gentleman does not go back on his word",
+    options: [
+      "Fail to give up",
+      "Fail to return",
+      "Fail to keep",
+      "Fail to mention",
+    ],
+    correct: "Fail to keep",
+  },
+  {
+    question: "The company has decided to give in.",
+    options: ["Sympathize with", "Yield to", "Refer to", "Consider to"],
+    correct: "Yield to",
+  },
+  {
+    question: "The offender was given a severe punishment.",
+    options: ["Harsh", "Mild", "Drill", "Heavy"],
+    correct: "Harsh",
+  },
+  {
+    question: "They were compensated for the loss of their car.",
+    options: ["Rewarded", "Paid", "Penalized", "Rebuked"],
+    correct: "Paid",
+  },
+  {
+    question: "The party leader is considered a patriot.",
+    options: ["Nationalist", "Stooge", "Patron", "Rebel"],
+    correct: "Nationalist",
+  },
+  {
+    question: "Many people objected to the demolition of the building",
+    options: ["Obstruction", "Destruction", "Renovation", "Foundation"],
+    correct: "Destruction",
+  },
+  {
+    question: "Some customers are considered repugnant by foreigners.",
+    options: ["Tasteful", "Disgusting", "Suggestive", "Attractive"],
+    correct: "Disgusting",
+  },
+  {
+    question: "Love is priceless.",
+    options: ["Valuable", "Valueless", "Of little value", "Of no price"],
+    correct: "Valuable",
+  },
+  {
+    question: "All their plans fell through.",
+    options: ["Succeeded", "Materialized", "Passed through", "Failed"],
+    correct: "Failed",
+  },
+  {
+    question: "An ambiguous statement is",
+    options: [
+      "Confusing",
+      "Disappointing",
+      "Open to two or more interpretation",
+      "Meaningless",
+    ],
+    correct: "Open to two or more interpretation",
+  },
+  {
+    question: "The two terms of imprisonment will run together",
+    options: ["Simultaneously", "Concurrently", "Consecutively", "Parallel"],
+    correct: "Concurrently",
+  },
+  {
+    question:
+      "The mower is in front of the shed. The underlined group of word (in front of) is a",
+    options: ["Adverb", "Adjective", "Preposition", "Conjunction"],
+    correct: "Preposition",
+  },
+  {
+    question:
+      "The concert will start by nine barring rain. The underlined word (barring) is",
+    options: ["Noun", "Preposition", "Adverb", "Noun"],
+    correct: "Preposition",
+  },
+  {
+    question: "I know little about American. The underlined word (little) is",
+    options: ["Adverb", "Preposition", "Adjective", "Interjection"],
+    correct: "Adverb",
+  },
+  {
+    question: "I went there. The underlined word (there) is",
+    options: ["Adjective", "Adverb", "Conjunction", "Noun"],
+    correct: "Adverb",
+  },
+  {
+    question: "I like that. The underlined word (that) is",
+    options: ["Adjective", "Adverb", "Conjunction", "Pronoun"],
+    correct: "Pronoun",
+  },
+  {
+    question:
+      "He doesn't like the food that much. The underlined word (that much) is",
+    options: ["Adjective", "Adverb", "Verb", "Noun"],
+    correct: "Adverb",
+  },
+  {
+    question: "He said that the man would beg. The underlined word (that) is",
+    options: ["Adjective", "Adverb", "Conjunction", "Noun"],
+    correct: "Conjunction",
+  },
+  {
+    question:
+      "The census figures are usually controversial. The word usually is",
+    options: ["Verb", "An adverb", "An adjective", "A preposition"],
+    correct: "An adverb",
+  },
+  {
+    question: "That is not proper. The word proper is",
+    options: ["An adjective", "An adverb", "A noun", "A preposition"],
+    correct: "An adjective",
+  },
+  {
+    question: "The family income doubled within two years. The word doubled is",
+    options: ["A noun", "An adjective", "An adverb", "None of these"],
+    correct: "None of these", // Context: Note says verbs show action/state, doubled here is a verb.
+  },
+  {
+    question: "The argument is sound. The word sound is",
+    options: ["a verb", "an adjective", "an adverb", "a Clause"],
+    correct: "an adjective",
   },
 ];

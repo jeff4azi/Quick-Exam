@@ -1,58 +1,102 @@
 export const gns113Questions = [
   {
     question:
-      "Evaluation of information is essential to conducting quality research means",
-    options: ["Finding", "Critical Thinking", "Survey", "Appraisal"],
-    correct: "Critical Thinking",
+      "According to UNESCO, a book is a non-periodical publication consisting of at least how many pages?",
+    options: ["25 pages", "49 pages", "100 pages", "50 pages"],
+    correct: "49 pages",
   },
   {
-    question: "Type of library is responsible for issuing ISBN.",
+    question:
+      "Which type of library is responsible for issuing the International Standard Book Number (ISBN)?",
     options: [
+      "Academic Library",
       "Private Library",
-      "Special Library",
       "National Library",
-      "State Library",
+      "Special Library",
     ],
     correct: "National Library",
   },
   {
-    question: "Otunba Gbenga Daniel Library is a/an",
+    question: "The SQ3R study technique stands for:",
     options: [
-      "Academic Library",
-      "Private Library",
-      "Public Library",
-      "School Library",
+      "Survey, Query, Read, Recite, Review",
+      "Scan, Question, Read, Repeat, Review",
+      "Survey, Question, Read, Recite, Review",
+      "Search, Query, Read, Recite, Record",
     ],
-    correct: "Academic Library",
-  },
-  {
-    question: "Binding of final year project is to ___________ services",
-    options: ["Technical", "Serial", "Reserve", "Circulation"],
-    correct: "Technical",
-  },
-  {
-    question: "O.G.D Library uses ___________ Catalog type.",
-    options: ["Book", "Card", "Sheaf", "Electronic"],
-    correct: "Card",
+    correct: "Survey, Question, Read, Recite, Review",
   },
   {
     question:
-      "According to UNESCO, a ___________ is a publication consisting of 49 or more pages.",
-    options: ["Project", "Journal", "Article", "BOOK"],
-    correct: "BOOK",
-  },
-  {
-    question: "AGORA means",
+      "What is the name of the library at Tai Solarin University of Education?",
     options: [
-      "Access To Global Online Research In Agriculture",
-      "Active Global Online Research of Articles",
-      "Acceptable Online Research Application",
-      "Application to Global Online Research Access",
+      "Kenneth Dike Library",
+      "Otunba Gbenga Daniel Library",
+      "Nimbe Adedipe Library",
+      "Lagos Book Club",
     ],
-    correct: "Access To Global Online Research In Agriculture",
+    correct: "Otunba Gbenga Daniel Library",
   },
   {
-    question: "AJOL means",
+    question:
+      "The systematic listing of sources used by an author for further reading is called:",
+    options: ["Glossary", "Index", "Appendix", "Bibliography"],
+    correct: "Bibliography",
+  },
+  {
+    question: "Which of the following is an example of a 'Special Library'?",
+    options: [
+      "Tai Solarin University Library",
+      "Cocoa Research Institute of Nigeria (CRIN) Library",
+      "Lagos State Public Library",
+      "A Private Personal Library",
+    ],
+    correct: "Cocoa Research Institute of Nigeria (CRIN) Library",
+  },
+  {
+    question:
+      "In the Library of Congress Classification system, the letter 'K' represents:",
+    options: ["Science", "Fine Arts", "Law", "History"],
+    correct: "Law",
+  },
+  {
+    question:
+      "The process of copying other people's work without their consent is known as:",
+    options: ["Copyright", "Plagiarism", "Patent right", "Trademark"],
+    correct: "Plagiarism",
+  },
+  {
+    question: "The acronym 'OPAC' stands for:",
+    options: [
+      "Online Public Access Catalogs",
+      "Only Public Access Connection",
+      "Online Private Access Code",
+      "Open Public Archive Center",
+    ],
+    correct: "Online Public Access Catalogs",
+  },
+  {
+    question: "Which section of a book is usually numbered in Roman numerals?",
+    options: [
+      "Text Section",
+      "Auxiliary Section",
+      "Preliminary Section",
+      "Index Section",
+    ],
+    correct: "Preliminary Section",
+  },
+  {
+    question: "The 'network of networks' is a common definition for:",
+    options: [
+      "The Internet",
+      "Boolean Operators",
+      "Meta Engines",
+      "Library Catalogs",
+    ],
+    correct: "The Internet",
+  },
+  {
+    question: "The acronym 'AJOL' stands for:",
     options: [
       "African Journalist of Language",
       "African Journals Online",
@@ -62,302 +106,174 @@ export const gns113Questions = [
     correct: "African Journals Online",
   },
   {
-    question: "Directions includes all EXCEPT",
-    options: [
-      "www.yahoo.com",
-      "www.lycos.com",
-      "www.infoseek.com",
-      "www.Ask.Com",
-    ],
-    correct: "www.Ask.Com",
-  },
-  {
-    question: "Borrowing a book from a cooperating library is",
-    options: [
-      "Lending",
-      "Book loaning",
-      "Inter Library Loans",
-      "Interlibrary borrowing",
-    ],
-    correct: "Inter Library Loans",
-  },
-  {
-    question: "___________ is a pointer of information.",
-    options: ["Table Of Content", "Index", "appendices", "biography"],
-    correct: "Index",
+    question:
+      "A non-periodical literary publication of at least 49 pages (exclusive of cover pages) is defined as a 'book' by which organization?",
+    options: ["NUC", "IFLA", "UNESCO", "CILIP"],
+    correct: "UNESCO",
   },
   {
     question:
-      "___________ is a brief summary of findings, of not more than 250 words.",
-    options: ["Article", "Short Message", "Abstract", "Thesis"],
-    correct: "Abstract",
+      "Which of the following is NOT considered a type of book according to the study material?",
+    options: ["Trade books", "Reprints", "Textbooks", "Newspapers"],
+    correct: "Newspapers",
   },
   {
-    question: "Which is odd from the following.",
-    options: ["Questionnaire", "Surveys", "Interview", "Monologue"],
-    correct: "Monologue",
+    question: "In a book, the preliminary section is typically numbered using:",
+    options: ["Arabic numerals", "Roman numerals", "Letters", "Symbols"],
+    correct: "Roman numerals",
   },
   {
-    question: "Copy of other people's work without their consent is",
-    options: ["Plagiarism", "Copyright", "Patent right", "Trademark"],
-    correct: "Plagiarism",
-  },
-  {
-    question:
-      "The right to prevent people from copying their work which has been created by intellectual effort is",
-    options: ["Plagiarism", "Copyright", "Patent right", "Trademark"],
-    correct: "Copyright",
-  },
-  {
-    question: "Copyright protects not",
-    options: ["Book", "Articles", "Photographs", "Speech"],
-    correct: "Speech",
-  },
-  {
-    question:
-      "___________ is the process of looking at visual representation to get meaning from a written word.",
-    options: ["Skimming", "Glancing", "Reading", "Surfing"],
-    correct: "Reading",
-  },
-  {
-    question:
-      "___________ number of copies is the legal deposit to be passed to the National Library.",
-    options: ["5", "4", "2", "3"],
-    correct: "3",
-  },
-  {
-    question: "Lagos Book Club was established in what year?",
-    options: ["1920", "1950", "1953", "1940"],
-    correct: "1920",
-  },
-  {
-    question:
-      "___________ is a library formed owned and built by the taxpayers money.",
+    question: "The 'network of networks' is a term commonly used to describe:",
     options: [
-      "Special Library",
-      "Private Library",
-      "National library",
-      "Public Library",
+      "A local area network",
+      "The Internet",
+      "A library catalog",
+      "An electronic database",
     ],
-    correct: "Public Library",
-  },
-  {
-    question: "Tai Solarin University Staff School Library is headed by the",
-    options: [
-      "Academic Librarian",
-      "School Librarian",
-      "College Librarian",
-      "Principal",
-    ],
-    correct: "School Librarian",
+    correct: "The Internet",
   },
   {
     question:
-      "Cocoa Research Institute of Nigeria (CRIN) Library is an example of",
+      "Which library service allows a user to borrow materials from a different, cooperating library?",
     options: [
-      "Special Library",
-      "Private Library",
-      "National library",
-      "School Library",
+      "Lending service",
+      "Document delivery",
+      "Inter-Library Loan (ILL)",
+      "Technical service",
     ],
-    correct: "Special Library",
+    correct: "Inter-Library Loan (ILL)",
+  },
+  {
+    question: "The acronym 'ISSN' stands for:",
+    options: [
+      "International Standard Study Number",
+      "International Source Serial Number",
+      "International Standard Serial Number",
+      "International Serial Study Number",
+    ],
+    correct: "International Standard Serial Number",
   },
   {
     question:
-      "___________ type of library does not lend books and other materials to individuals.",
-    options: [
-      "Special Library",
-      "Private Library",
-      "National Library",
-      "Public Library",
-    ],
-    correct: "National Library",
-  },
-  {
-    question: "___________ is not among ways of acquiring library materials.",
-    options: ["Gift", "Purchase", "Donation", "Weeding"],
-    correct: "Weeding",
-  },
-  {
-    question: "The standard card size should be",
-    options: ['3" By 5"', '4" by 8"', '2" by 5"', '2" by 4"'],
-    correct: '3" By 5"',
-  },
-  {
-    question: "Accession number is issued by",
-    options: [
-      "Serial Unit",
-      "Technical Unit",
-      "Readers Unit",
-      "Circulation Unit",
-    ],
-    correct: "Technical Unit",
-  },
-  {
-    question: "In the Library of Congress Classification K is",
-    options: ["Law", "Science", "History", "Fine Arts"],
+      "In the Library of Congress Classification system, the letter 'K' represents which subject?",
+    options: ["Science", "History", "Law", "Fine Arts"],
     correct: "Law",
   },
   {
-    question: "___________ among the following is not a user of the library.",
-    options: ["Handicap", "Artisan", "Lecturers", "Imbecile"],
-    correct: "Imbecile",
-  },
-  {
-    question: "The permanent storage of Information is the function of",
-    options: ["High Aptitude", "LTM", "Stm", "l.q"],
-    correct: "LTM",
-  },
-  {
-    question: "The memory that holds information at the current moment is",
-    options: ["Ltm", "STM", "Consolidation", "Brain Capacitor"],
-    correct: "STM",
+    question:
+      "The 'SQ3R' study technique consists of Survey, Question, and the three Rs, which are:",
+    options: [
+      "Read, Recite, and Review",
+      "Recall, Read, and Recite",
+      "Read, Review, and Recall",
+      "Repeat, Read, and Review",
+    ],
+    correct: "Read, Recite, and Review",
   },
   {
     question:
-      "___________ is not among the factors that contribute to the nature of our intelligence.",
-    options: ["Hereditary Factor", "Environmental factor", "Dozing", "Emotion"],
-    correct: "Dozing",
-  },
-  {
-    question: "Loss of availability or accessibility causes",
-    options: ["Forgetting", "remembering", "recall", "recognition"],
-    correct: "Forgetting",
-  },
-  {
-    question:
-      "Materials borrowed in the Library lapse for ___________ days before it is returned or renewed.",
-    options: ["5", "7", "8", "3"],
-    correct: "7",
-  },
-  {
-    question:
-      "The ability to recall stored ideas or materials in the brain to the mind as postulated by (Adesemowo et al 1998) is",
-    options: ["Remembering", "recency", "recall", "associations"],
-    correct: "Remembering",
-  },
-  {
-    question: "ISBN and ISSN is issued by ___________ library",
-    options: [
-      "Special Library",
-      "Private Library",
-      "National Library",
-      "Public Library",
-    ],
-    correct: "National Library",
-  },
-  {
-    question: "Library of Congress, Dewey Decimal are examples of",
-    options: [
-      "Approaches to Library Material",
-      "Library Material Dimension",
-      "Classification Of Scheme",
-      "Classification of Library",
-    ],
-    correct: "Classification Of Scheme",
-  },
-  {
-    question: "Otunba Gbenga Daniel Library uses ___________ Classification Scheme.",
-    options: [
-      "Dewey Decimal Classification",
-      "Universal Dewey Classification",
-      "Colon Classification",
-      "Library Of Congress",
-    ],
-    correct: "Library Of Congress",
-  },
-  {
-    question: "SQ3R is a ___________ technique.",
-    options: ["Study", "Writing", "Reading", "Memorising"],
-    correct: "Study",
-  },
-  {
-    question: "The 3R in SQ3R are",
-    options: [
-      "Recall, Read and Recite",
-      "Read, Recite And Review",
-      "Read, Review and Recall",
-      "Repeat, Read and Review",
-    ],
-    correct: "Read, Recite And Review",
-  },
-  {
-    question:
-      "Learning again or going through information of what has been previously learnt is known as ___________.",
-    options: ["Recognition", "recall", "Re Learning", "learning"],
-    correct: "Re Learning",
-  },
-  {
-    question:
-      "The ability to bring back old experiences (original) could be referred to as ___________.",
-    options: ["Recall", "review", "re-learning", "repeat"],
-    correct: "Recall",
-  },
-  {
-    question:
-      "Discrimination between seen and unseen, known and unknown is called ___________.",
-    options: ["recall", "Recognition", "recites", "research"],
-    correct: "Recognition",
-  },
-  {
-    question: "OPAC means",
-    options: [
-      "Only Public Access Connection",
-      "Online Public Access Connection",
-      "Online Public Access Catalogs",
-      "Online Private Access Code",
-    ],
-    correct: "Online Public Access Catalogs",
-  },
-  {
-    question:
-      "___________ uses digital information technology to collect, store, search for and disseminate information to an unlimited number of people irrespective of time and place.",
-    options: [
-      "Internet",
-      "Email Networking",
-      "Electronic Library",
-      "Electronic Services",
-    ],
-    correct: "Electronic Library",
-  },
-  {
-    question: "A newly acquired book is given a ___________.",
-    options: [
-      "Registered Number",
-      "Purchase Number",
-      "Receiving Number",
-      "Accession Number",
-    ],
-    correct: "Accession Number",
-  },
-  {
-    question: "Ability to search many search engines is",
-    options: ["Tabing", "Meta Engines", "Booting", "Quo engines"],
-    correct: "Meta Engines",
-  },
-  {
-    question: "The use of the sign * or + when searching means",
-    options: ["Algorithms", "Quick searching", "Quick surfing", "Truncation"],
-    correct: "Truncation",
-  },
-  {
-    question: "AND, OR and NOT are ___________.",
-    options: [
-      "Boolean Operators",
-      "Search Kits",
-      "Search Keywords",
-      "Word Engines",
-    ],
-    correct: "Boolean Operators",
-  },
-  {
-    question: "A physical part of a book is",
-    options: ["2", "4", "3", "I don’t know"],
-    correct: "3",
-  },
-  {
-    question: "The last page of the body of a book is ___________.",
-    options: ["Bibliography", "Reference", "Index", "Appendix"],
+      "Which section of a book contains the alphabetical listing used to trace exact positions of items within the text?",
+    options: ["Glossary", "Bibliography", "Appendix", "Index"],
     correct: "Index",
+  },
+  {
+    question:
+      "The systematic process of finding unstructured materials (usually text) that satisfy an information need from within large collections is:",
+    options: [
+      "Information retrieval",
+      "Data processing",
+      "Information literacy",
+      "Cataloguing",
+    ],
+    correct: "Information retrieval",
+  },
+  {
+    question:
+      "Which of the following describes the 'hierarchical' system of operation in tertiary institution libraries?",
+    options: [
+      "Technical structure",
+      "Organizational structure",
+      "Reader's services",
+      "Lending system",
+    ],
+    correct: "Organizational structure",
+  },
+  {
+    question:
+      "The regular tendencies and practices an individual depicts during the process of gaining knowledge is known as:",
+    options: [
+      "Learning process",
+      "Study habit",
+      "Cognitive domain",
+      "Information literacy",
+    ],
+    correct: "Study habit",
+  },
+  {
+    question:
+      "According to the study material, which of the following is a benefit of setting goals?",
+    options: [
+      "Eliminating all distractions",
+      "Improving reading speed",
+      "Self-esteem and accomplishment",
+      "Memorizing textbooks",
+    ],
+    correct: "Self-esteem and accomplishment",
+  },
+  {
+    question:
+      "Libraries located in universities, polytechnics, and colleges are specifically called:",
+    options: [
+      "Special libraries",
+      "National libraries",
+      "Academic libraries",
+      "Public libraries",
+    ],
+    correct: "Academic libraries",
+  },
+  {
+    question:
+      "Which of these is NOT a suggested way to create a productive study environment?",
+    options: [
+      "Eliminate distractions",
+      "Clean up and organize study space",
+      "Listen to loud, fast-paced music",
+      "Working out when you wake up",
+    ],
+    correct: "Listen to loud, fast-paced music",
+  },
+  {
+    question:
+      "The framework on which an organization is patterned for coordinating and carving out tasks is the:",
+    options: [
+      "Instructional method",
+      "Organization structure",
+      "Technical service",
+      "Classification scheme",
+    ],
+    correct: "Organization structure",
+  },
+  {
+    question:
+      "Which of the following is a recommended study habit for students?",
+    options: [
+      "Learning with an empty stomach",
+      "Reading in a noisy environment",
+      "Identifying your limitations to read",
+      "Avoiding regular assignments",
+    ],
+    correct: "Identifying your limitations to read",
+  },
+  {
+    question:
+      "A task or piece of work allocated to a student as part of a course of study is an:",
+    options: ["Examination", "Assignment", "Objective", "Index"],
+    correct: "Assignment",
+  },
+  {
+    question:
+      "Which type of goal is described as a well-defined plan aimed at achieving a specific result?",
+    options: ["Immediate goal", "Short term goal", "Goal", "Long term goal"],
+    correct: "Goal",
   },
 ];
