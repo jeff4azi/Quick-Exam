@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 
-const ChooseCourseOverlay = ({ setShowChooseCourseOverlay, setQuestions, getRandom30, courses, selectedCourse, setSelectedCourse }) => {
+const ChooseCourseOverlay = ({ setShowChooseCourseOverlay, courses, selectedCourse, setSelectedCourse }) => {
   
   const navigate = useNavigate();
 
@@ -39,7 +39,6 @@ const ChooseCourseOverlay = ({ setShowChooseCourseOverlay, setQuestions, getRand
                 key={course.id}
                 onClick={() => {
                   setSelectedCourse(course);
-                  setQuestions(getRandom30(course.questions));
                   startExam();
                 }}
                 className={`w-full py-4 rounded-lg ${selectedCourse?.id === course.id

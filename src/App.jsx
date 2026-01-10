@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import StartExam from "./pages/StartExam";
 import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
@@ -7,6 +7,7 @@ import ResultScreen from "./pages/ResultScreen";
 import { edu101Questions } from "./edu-101questions"
 import { gns113Questions } from "./gns-113questions";
 import { gst111Questions } from "./gst-111questions"
+import ReviewAnswers from "./pages/ReviewAnswers";
 
 function App() {
   function getRandom30(arr) {
@@ -38,13 +39,20 @@ function App() {
   ];
 
   const [answers, setAnswers] = useState([])
-  const [selectedCourse, setSelectedCourse] = useState(courses[0])
-  const [questions, setQuestions] = useState(getRandom30(selectedCourse.questions))
+  const [selectedCourse, setSelectedCourse] = useState(null)
+  const [questions, setQuestions] = useState([]);
   const [results, setResults] = useState({
     correct: 0,
     wrong: 0,
     answered: 0,
   })
+
+  useEffect(() => {
+    if (selectedCourse) {
+      setQuestions(getRandom30(selectedCourse.questions));
+      setAnswers([]);
+    }
+  }, [selectedCourse]);
 
 const onSubmit = () => {
   let newCorrect = 0;
@@ -92,6 +100,7 @@ const onSubmit = () => {
         <Route path="/" element={<StartExam {...props} />} />
         <Route path="/exam" element={<ExamScreen {...props} />} />
         <Route path="/results" element={<ResultScreen {...props} />} />
+        <Route path="/review-answers" element={<ReviewAnswers {...props} />} />
       </Routes>
     </Router>
   );
