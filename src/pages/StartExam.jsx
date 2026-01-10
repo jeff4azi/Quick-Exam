@@ -10,7 +10,7 @@ const StartExam = ({ setQuestions, getRandom30, courses, selectedCourse, setSele
       <div> 
         <img src={logo} alt="QuizBolt Logo" className="size-[250px] place-self-center mb-10" />
         <h1 className="text-6xl text-center font-semibold tracking-tight mb-3">Quiz Bolt</h1>
-        <p className="text-center text-gray-600 max-w-[95%]">Practice past Tasued questions and get instant results</p>
+        <p className="text-center text-gray-600 max-w-[95%]">TASUED past questions made simple</p>
       </div>
 
       <button
