@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom"
 
-const ResultScreen = ({results, setAnswers, selectedCourse}) => {
+const ResultScreen = ({ results, setAnswers, selectedCourse }) => {
   const navigate = useNavigate()
+  const formatNum = (num) => String(num).padStart(2, '0');
 
   return (
     <div className='h-[100dvh] max-h-screen p-7 flex flex-col justify-between'>
@@ -16,38 +17,46 @@ const ResultScreen = ({results, setAnswers, selectedCourse}) => {
         <div className='flex gap-2'>
           <div className='size-[7px] rounded-full bg-[#2563EB] translate-y-3'></div>
           <div className='flex flex-col text-sm'>
-            <span className='text-lg font-medium text-[#2563EB]'>{results.answered}</span>
+            {/* Formatted Answered */}
+            <span className='text-lg font-medium text-[#2563EB]'>{formatNum(results.answered)}</span>
             Answered Questions
           </div>
         </div>
+
         <div className='flex gap-2'>
           <div className='size-[7px] rounded-full bg-[#2563EB] translate-y-3'></div>
           <div className='flex flex-col text-sm'>
-            <span className='text-lg font-medium text-[#2563EB]'>30</span>
+            {/* Formatted Total (assuming this is also a variable like results.total) */}
+            <span className='text-lg font-medium text-[#2563EB]'>{formatNum(30)}</span>
             Total Questions
           </div>
         </div>
+
         <div className='flex gap-2'>
           <div className='size-[7px] rounded-full bg-green-500 translate-y-3'></div>
           <div className='flex flex-col text-sm'>
-            <span className='text-lg font-medium text-green-500'>{results.correct}</span>
+            {/* Formatted Correct */}
+            <span className='text-lg font-medium text-green-500'>{formatNum(results.correct)}</span>
             Correct
           </div>
         </div>
+
         <div className='flex gap-2'>
           <div className='size-[7px] rounded-full bg-red-500 translate-y-3'></div>
           <div className='flex flex-col text-sm'>
-            <span className='text-lg font-medium text-red-500'>{results.wrong}</span>
+            {/* Formatted Wrong */}
+            <span className='text-lg font-medium text-red-500'>{formatNum(results.wrong)}</span>
             Wrong
           </div>
         </div>
       </div>
 
+
       {/* buttons for ... */}
       <div className='flex justify-between px-7 py-5 text-gray-600'>
         <div className='text-xs flex flex-col items-center justify-center gap-2'>
           <div>
-            <button className='p-2 bg-amber-400 rounded-full text-white' onClick={() => { navigate("/exam"); setAnswers([])}}>
+            <button className='p-2 bg-amber-400 rounded-full text-white' onClick={() => { navigate("/exam"); setAnswers([]) }}>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
               </svg>
