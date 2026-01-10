@@ -38,7 +38,7 @@ function App() {
   ];
 
   const [answers, setAnswers] = useState([])
-  const [selectedCourse, setSelectedCourse] = useState(courses[1])
+  const [selectedCourse, setSelectedCourse] = useState(courses[0])
   const [questions, setQuestions] = useState(getRandom30(selectedCourse.questions))
   const [results, setResults] = useState({
     correct: 0,
