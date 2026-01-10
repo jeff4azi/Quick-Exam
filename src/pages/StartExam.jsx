@@ -1,6 +1,6 @@
 import { useState } from "react"
 import ChooseCourseOverlay from "../components/ChooseCourseOverlay"
-import logo from "../images/BackgroundEraser_20260110_163141515.png"
+import logo from "../images/BackgroundEraser_20260110_163141515.webp"
 
 const StartExam = ({ setQuestions, getRandom30, courses, selectedCourse, setSelectedCourse }) => {
   const [showChooseCourseOverlay, setShowChooseCourseOverlay] = useState(false)

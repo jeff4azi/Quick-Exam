@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import clockIcon from "../images/clock.png"
+import clockIcon from "../images/clock.webp"
 import { useNavigate } from "react-router-dom"
 
 const Timer = ({ initialMinutes = 3, initialSeconds = 58, onSubmit }) => {
