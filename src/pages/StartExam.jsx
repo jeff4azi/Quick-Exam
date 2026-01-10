@@ -1,5 +1,6 @@
 import { useState } from "react"
 import ChooseCourseOverlay from "../components/ChooseCourseOverlay"
+import logo from "../images/BackgroundEraser_20260110_163141515.png"
 
 const StartExam = ({ setQuestions, getRandom30, courses, selectedCourse, setSelectedCourse }) => {
   const [showChooseCourseOverlay, setShowChooseCourseOverlay] = useState(false)
@@ -7,7 +8,8 @@ const StartExam = ({ setQuestions, getRandom30, courses, selectedCourse, setSele
   return (
     <div className="relative h-[100dvh] max-h-screen flex items-center justify-center">
       <div> 
-        <h1 className="text-6xl text-center font-semibold tracking-tight mb-3">Quick Exam</h1>
+        <img src={logo} alt="QuizBolt Logo" className="size-[250px] place-self-center" />
+        <h1 className="text-6xl text-center font-semibold tracking-tight mb-3">Quiz Bolt</h1>
         <p className="text-center text-gray-600 max-w-md">Practice past questions and get instant results</p>
       </div>
 
