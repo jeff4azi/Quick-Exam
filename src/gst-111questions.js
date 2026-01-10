@@ -151,7 +151,7 @@ export const gst111Questions = [
     correct: "imperative",
   },
   {
-    question: "The rich should help the poor. The underlined is the",
+    question: "The rich should help the poor. The underlined (the rich) is the",
     options: ["subject", "predicate", "object", "complement"],
     correct: "subject",
   },
@@ -298,12 +298,12 @@ export const gst111Questions = [
     correct: "further",
   },
   {
-    question: "MISERS are not loved by many people (Opposite)",
+    question: "Misers are not loved by many people (Opposite)",
     options: ["spenders", "hoarders", "savers", "thieves"],
     correct: "spenders",
   },
   {
-    question: "Tolu had a SOLID primary education. (Synonym)",
+    question: "Tolu had a solid primary education. (Synonym)",
     options: ["sound", "sordid", "weak", "shy"],
     correct: "sound",
   },

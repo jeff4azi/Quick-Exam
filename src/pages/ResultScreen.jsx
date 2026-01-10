@@ -1,14 +1,14 @@
 import { useNavigate } from "react-router-dom"
 
-const ResultScreen = ({results, setAnswers}) => {
+const ResultScreen = ({results, setAnswers, selectedCourse}) => {
   const navigate = useNavigate()
 
   return (
     <div className='h-[100dvh] max-h-screen p-7 flex flex-col justify-between'>
       {/* score */}
-      <div className='bg-white flex flex-col justify-center items-center size-[220px] rounded-full place-self-center m-15 text-[#2563EB] border-2 '>
-        <span className='font-medium opacity-55 -translate-y-1'>Your Score</span>
-        <span className='text-5xl font-semibold -translate-y-2'>{Math.round((results.correct / 30) * 100)}<span className='text-3xl font-bold'>%</span></span>
+      <div className='relative bg-white flex flex-col justify-center items-center size-[220px] rounded-full place-self-center m-15 text-[#2563EB] border-2 '>
+        <span className='text-6xl font-semibold -translate-y-2'>{Math.round((results.correct / 30) * 100)}<span className='text-3xl font-bold'>%</span></span>
+        <div className="absolute bottom-13 left-1/2 -translate-x-1/2 text-xl font-medium opacity-75">{selectedCourse.name}</div>
       </div>
 
       {/* extra result details */}
