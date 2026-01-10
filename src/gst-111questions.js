@@ -71,7 +71,7 @@ export const gst111Questions = [
     correct: "Arbitrary",
   },
   {
-    question: "____ occurs when a language is used to talk about language",
+    question: "___________ occurs when a language is used to talk about language",
     options: ["Semanticity", "Discreetness", "Creativity", "Reflexibility"],
     correct: "Reflexibility",
   },
@@ -96,17 +96,17 @@ export const gst111Questions = [
     correct: "among people of the same rank",
   },
   {
-    question: "Communication has ____ essential components",
+    question: "Communication has ___________ essential components",
     options: ["Six", "Nine", "Eight", "Twelve"],
     correct: "Eight",
   },
   {
-    question: "____ is a proper noun",
+    question: "___________ is a proper noun",
     options: ["Ada", "Knowledge", "Casts", "Markets"],
     correct: "Ada",
   },
   {
-    question: "There are six ____ in the garden",
+    question: "There are six ___________ in the garden",
     options: ["Ox", "Oxen", "Oxs", "Oxes"],
     correct: "Oxen",
   },
@@ -141,12 +141,12 @@ export const gst111Questions = [
     correct: "simple present tense",
   },
   {
-    question: "She congratulated him ____ his success at the polls",
+    question: "She congratulated him ___________ his success at the polls",
     options: ["for", "at", "on", "to"],
     correct: "on",
   },
   {
-    question: "'Do not go there' is a ____ sentence",
+    question: "'Do not go there' is a ___________ sentence",
     options: ["declarative", "imperative", "optative", "exclamatory"],
     correct: "imperative",
   },
@@ -233,7 +233,7 @@ export const gst111Questions = [
     correct: "inexperienced",
   },
   {
-    question: "He told him to go on ____ till six p.m.",
+    question: "He told him to go on ___________ till six p.m.",
     options: ["working", "worked", "works", "to work"],
     correct: "working",
   },
@@ -248,17 +248,17 @@ export const gst111Questions = [
     correct: "protected against it",
   },
   {
-    question: "You should make an ____ to improve the situation.",
+    question: "You should make an ___________ to improve the situation.",
     options: ["effect", "effort", "efficiency", "effectiveness"],
     correct: "effort",
   },
   {
-    question: "It is difficult these days to get a seat ____ the plane.",
+    question: "It is difficult these days to get a seat ___________ the plane.",
     options: ["inside", "in", "on", "into"],
     correct: "on",
   },
   {
-    question: "You surely want some ____ don't you?",
+    question: "You surely want some ___________ don't you?",
     options: ["loaves", "loafs", "loaf", "loaves"],
     correct: "loaves",
   },
@@ -268,17 +268,17 @@ export const gst111Questions = [
     correct: "accept",
   },
   {
-    question: "She acts ____ she is the Vice-Chancellor.",
+    question: "She acts ___________ she is the Vice-Chancellor.",
     options: ["as if", "if she", "that", "as"],
     correct: "as if",
   },
   {
-    question: "He travelled to Lagos ____ train.",
+    question: "He travelled to Lagos ___________ train.",
     options: ["by", "on", "with", "in"],
     correct: "by",
   },
   {
-    question: "She was reported ____ the lecturer.",
+    question: "She was reported ___________ the lecturer.",
     options: [
       "to be assaulting",
       "to have been assaulted",
@@ -288,12 +288,12 @@ export const gst111Questions = [
     correct: "to have assaulted",
   },
   {
-    question: "Although, he was invited ____ he was not welcome.",
+    question: "Although, he was invited ___________ he was not welcome.",
     options: ["but", "yet", "since", "so"],
     correct: "yet",
   },
   {
-    question: "I could not walk any ____",
+    question: "I could not walk any ___________",
     options: ["further", "furthest", "far", "farthest"],
     correct: "further",
   },
@@ -350,7 +350,7 @@ export const gst111Questions = [
   },
   {
     question:
-      "The National Assembly _______ Senate and House of Representative.",
+      "The National Assembly ___________ Senate and House of Representative.",
     options: ["comprises", "compose of", "comprise of", "consists of"],
     correct: "comprises",
   },
@@ -360,17 +360,17 @@ export const gst111Questions = [
     correct: "at",
   },
   {
-    question: "Jonah is a _______ man.",
+    question: "Jonah is a ___________ man.",
     options: ["trickish", "tricky", "tricked", "trickery"],
     correct: "tricky",
   },
   {
-    question: "The teacher's _______ is faulty.",
+    question: "The teacher's ___________ is faulty.",
     options: ["pronounciation", "pronunciation", "pronounce", "pronouncements"],
     correct: "pronunciation",
   },
   {
-    question: "We escaped with the skin of our teeth. This means we _______.",
+    question: "We escaped with the skin of our teeth. This means we ___________.",
     options: [
       "cut our skin",
       "got severely injured",
@@ -380,79 +380,79 @@ export const gst111Questions = [
     correct: "narrowly escaped",
   },
   {
-    question: "The university's _______ supplies are in order.",
+    question: "The university's ___________ supplies are in order.",
     options: ["stationery", "stationary", "stationaries", "stationeries"],
     correct: "stationery",
   },
   {
-    question: "One must protect _______ at all times.",
+    question: "One must protect ___________ at all times.",
     options: ["oneself", "ourselves", "himself", "one-selves"],
     correct: "oneself",
   },
   {
-    question: "He denied _______ the money.",
+    question: "He denied ___________ the money.",
     options: ["he did not steal", "stealing", "stolen", "stole"],
     correct: "stealing",
   },
   {
-    question: "He was always cheerful, _______?",
+    question: "He was always cheerful, ___________?",
     options: ["wasn't he?", "didn't he?", "was he?", "did he?"],
     correct: "wasn't he?",
   },
   {
-    question: "He noted that it was the _______ performance ever.",
+    question: "He noted that it was the ___________ performance ever.",
     options: ["worse", "worst", "most worst", "more worse"],
     correct: "worst",
   },
   {
-    question: "Without a/an _______, there is no public speaker.",
+    question: "Without a/an ___________, there is no public speaker.",
     options: ["audience", "paper", "auditorium", "chamber"],
     correct: "audience",
   },
   {
     question:
-      "_______ can improve one's confidence level during a speech delivery.",
+      "___________ can improve one's confidence level during a speech delivery.",
     options: ["eye contact", "nose contact", "a little wine", "drug"],
     correct: "eye contact",
   },
   {
-    question: "Back-tracking and rereading in reading simply refer to _______.",
+    question: "Back-tracking and rereading in reading simply refer to ___________.",
     options: ["completeness", "cohesion", "topicality", "coherence"],
     correct: "coherence",
   },
   {
-    question: "_______ is not a quality of a good paragraph.",
+    question: "___________ is not a quality of a good paragraph.",
     options: ["unity", "cohesion", "completeness", "topicality"],
     correct: "topicality",
   },
   {
-    question: "Structural wholeness refers to _______ in a good paragraph.",
+    question: "Structural wholeness refers to ___________ in a good paragraph.",
     options: ["unity", "cohesion", "completeness", "coherence"],
     correct: "unity",
   },
   {
-    question: "The thesis statement is found in the _______.",
+    question: "The thesis statement is found in the ___________.",
     options: ["essays", "letters", "introduction", "conclusion"],
     correct: "introduction",
   },
   {
-    question: "Letter writing can be grouped into _______.",
+    question: "Letter writing can be grouped into ___________.",
     options: ["three", "two", "five", "six"],
     correct: "three",
   },
   {
-    question: "The addressee's address does not feature in _______ letter.",
+    question: "The addressee's address does not feature in ___________ letter.",
     options: ["formal", "semi-formal", "informal", "all"],
     correct: "informal",
   },
   {
     question:
-      "Salutation is a conventional and polite way of starting _______.",
+      "Salutation is a conventional and polite way of starting ___________.",
     options: ["a letter", "an application", "an article", "an enquiry"],
     correct: "a letter",
   },
   {
-    question: "_______ is not a complimentary close in a letter.",
+    question: "___________ is not a complimentary close in a letter.",
     options: [
       "Yours faithfully",
       "Yours sincerely",

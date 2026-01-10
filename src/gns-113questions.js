@@ -26,18 +26,18 @@ export const gns113Questions = [
     correct: "Academic Library",
   },
   {
-    question: "Binding of final year project is to ____ services",
+    question: "Binding of final year project is to ___________ services",
     options: ["Technical", "Serial", "Reserve", "Circulation"],
     correct: "Technical",
   },
   {
-    question: "O.G.D Library uses ____ Catalog type.",
+    question: "O.G.D Library uses ___________ Catalog type.",
     options: ["Book", "Card", "Sheaf", "Electronic"],
     correct: "Card",
   },
   {
     question:
-      "According to UNESCO, a ____ is a publication consisting of 49 or more pages.",
+      "According to UNESCO, a ___________ is a publication consisting of 49 or more pages.",
     options: ["Project", "Journal", "Article", "BOOK"],
     correct: "BOOK",
   },
@@ -82,13 +82,13 @@ export const gns113Questions = [
     correct: "Inter Library Loans",
   },
   {
-    question: "____ is a pointer of information.",
+    question: "___________ is a pointer of information.",
     options: ["Table Of Content", "Index", "appendices", "biography"],
     correct: "Index",
   },
   {
     question:
-      "____ is a brief summary of findings, of not more than 250 words.",
+      "___________ is a brief summary of findings, of not more than 250 words.",
     options: ["Article", "Short Message", "Abstract", "Thesis"],
     correct: "Abstract",
   },
@@ -115,13 +115,13 @@ export const gns113Questions = [
   },
   {
     question:
-      "____ is the process of looking at visual representation to get meaning from a written word.",
+      "___________ is the process of looking at visual representation to get meaning from a written word.",
     options: ["Skimming", "Glancing", "Reading", "Surfing"],
     correct: "Reading",
   },
   {
     question:
-      "____ number of copies is the legal deposit to be passed to the National Library.",
+      "___________ number of copies is the legal deposit to be passed to the National Library.",
     options: ["5", "4", "2", "3"],
     correct: "3",
   },
@@ -132,7 +132,7 @@ export const gns113Questions = [
   },
   {
     question:
-      "____ is a library formed owned and built by the taxpayers money.",
+      "___________ is a library formed owned and built by the taxpayers money.",
     options: [
       "Special Library",
       "Private Library",
@@ -164,7 +164,7 @@ export const gns113Questions = [
   },
   {
     question:
-      "____ type of library does not lend books and other materials to individuals.",
+      "___________ type of library does not lend books and other materials to individuals.",
     options: [
       "Special Library",
       "Private Library",
@@ -174,7 +174,7 @@ export const gns113Questions = [
     correct: "National Library",
   },
   {
-    question: "____ is not among ways of acquiring library materials.",
+    question: "___________ is not among ways of acquiring library materials.",
     options: ["Gift", "Purchase", "Donation", "Weeding"],
     correct: "Weeding",
   },
@@ -199,7 +199,7 @@ export const gns113Questions = [
     correct: "Law",
   },
   {
-    question: "____ among the following is not a user of the library.",
+    question: "___________ among the following is not a user of the library.",
     options: ["Handicap", "Artisan", "Lecturers", "Imbecile"],
     correct: "Imbecile",
   },
@@ -215,7 +215,7 @@ export const gns113Questions = [
   },
   {
     question:
-      "____ is not among the factors that contribute to the nature of our intelligence.",
+      "___________ is not among the factors that contribute to the nature of our intelligence.",
     options: ["Hereditary Factor", "Environmental factor", "Dozing", "Emotion"],
     correct: "Dozing",
   },
@@ -226,7 +226,7 @@ export const gns113Questions = [
   },
   {
     question:
-      "Materials borrowed in the Library lapse for ____ days before it is returned or renewed.",
+      "Materials borrowed in the Library lapse for ___________ days before it is returned or renewed.",
     options: ["5", "7", "8", "3"],
     correct: "7",
   },
@@ -237,7 +237,7 @@ export const gns113Questions = [
     correct: "Remembering",
   },
   {
-    question: "ISBN and ISSN is issued by ____ library",
+    question: "ISBN and ISSN is issued by ___________ library",
     options: [
       "Special Library",
       "Private Library",
@@ -257,7 +257,7 @@ export const gns113Questions = [
     correct: "Classification Of Scheme",
   },
   {
-    question: "Otunba Gbenga Daniel Library uses ____ Classification Scheme.",
+    question: "Otunba Gbenga Daniel Library uses ___________ Classification Scheme.",
     options: [
       "Dewey Decimal Classification",
       "Universal Dewey Classification",
@@ -267,7 +267,7 @@ export const gns113Questions = [
     correct: "Library Of Congress",
   },
   {
-    question: "SQ3R is a _____ technique.",
+    question: "SQ3R is a ___________ technique.",
     options: ["Study", "Writing", "Reading", "Memorising"],
     correct: "Study",
   },
@@ -283,19 +283,19 @@ export const gns113Questions = [
   },
   {
     question:
-      "Learning again or going through information of what has been previously learnt is known as ____.",
+      "Learning again or going through information of what has been previously learnt is known as ___________.",
     options: ["Recognition", "recall", "Re Learning", "learning"],
     correct: "Re Learning",
   },
   {
     question:
-      "The ability to bring back old experiences (original) could be referred to as ____.",
+      "The ability to bring back old experiences (original) could be referred to as ___________.",
     options: ["Recall", "review", "re-learning", "repeat"],
     correct: "Recall",
   },
   {
     question:
-      "Discrimination between seen and unseen, known and unknown is called ____.",
+      "Discrimination between seen and unseen, known and unknown is called ___________.",
     options: ["recall", "Recognition", "recites", "research"],
     correct: "Recognition",
   },
@@ -311,7 +311,7 @@ export const gns113Questions = [
   },
   {
     question:
-      "_____ uses digital information technology to collect, store, search for and disseminate information to an unlimited number of people irrespective of time and place.",
+      "___________ uses digital information technology to collect, store, search for and disseminate information to an unlimited number of people irrespective of time and place.",
     options: [
       "Internet",
       "Email Networking",
@@ -321,7 +321,7 @@ export const gns113Questions = [
     correct: "Electronic Library",
   },
   {
-    question: "A newly acquired book is given a ____.",
+    question: "A newly acquired book is given a ___________.",
     options: [
       "Registered Number",
       "Purchase Number",
@@ -341,7 +341,7 @@ export const gns113Questions = [
     correct: "Truncation",
   },
   {
-    question: "AND, OR and NOT are ____.",
+    question: "AND, OR and NOT are ___________.",
     options: [
       "Boolean Operators",
       "Search Kits",
@@ -356,7 +356,7 @@ export const gns113Questions = [
     correct: "3",
   },
   {
-    question: "The last page of the body of a book is _____.",
+    question: "The last page of the body of a book is ___________.",
     options: ["Bibliography", "Reference", "Index", "Appendix"],
     correct: "Index",
   },
