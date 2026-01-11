@@ -1,6 +1,7 @@
 import { useState } from "react"
 import ChooseCourseOverlay from "../components/ChooseCourseOverlay"
 import logo from "../images/BackgroundEraser_20260110_163141515.webp"
+import whatsappFollow from "../images/whatsapp-follow.webp"
 
 const StartExam = ({ setQuestions, getRandom30, courses, selectedCourse, setSelectedCourse }) => {
   const [showChooseCourseOverlay, setShowChooseCourseOverlay] = useState(false)
@@ -11,6 +12,12 @@ const StartExam = ({ setQuestions, getRandom30, courses, selectedCourse, setSele
         <img src={logo} alt="QuizBolt Logo" className="size-[250px] place-self-center mb-10" />
         <h1 className="text-6xl text-center font-semibold tracking-tight mb-3">Quiz Bolt</h1>
         <p className="text-center text-gray-600 max-w-md">TASUED past questions made simple</p>
+      </div>
+
+      <div className="absolute left-4 -top-5">
+        <a href="https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f" target="_blank" rel="noopener noreferrer">
+          <img src={whatsappFollow} alt="Follow Channel" className="w-[130px]" />
+        </a>
       </div>
 
       <button
