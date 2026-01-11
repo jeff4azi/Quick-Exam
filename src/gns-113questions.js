@@ -276,4 +276,204 @@ export const gns113Questions = [
     options: ["Immediate goal", "Short term goal", "Goal", "Long term goal"],
     correct: "Goal",
   },
+  {
+    question: "Study techniques can best be defined as methods that enable students to:",
+    options: [
+      "Memorize facts without understanding",
+      "Acquire, process, and retain academic information effectively",
+      "Read textbooks faster than others",
+      "Avoid examination stress",
+    ],
+    correct: "Acquire, process, and retain academic information effectively",
+  },
+  {
+    question: "Which of the following best explains the importance of effective study habits?",
+    options: [
+      "They reduce the need for lecturers",
+      "They improve comprehension and academic performance",
+      "They eliminate examinations",
+      "They replace intelligence",
+    ],
+    correct: "They improve comprehension and academic performance",
+  },
+  {
+    question: "Which option represents a consequence of poor study habits?",
+    options: [
+      "Improved concentration",
+      "Better time management",
+      "Academic stress and failure",
+      "Increased motivation",
+    ],
+    correct: "Academic stress and failure",
+  },
+  {
+    question: "A well-lit and quiet study environment mainly improves:",
+    options: [
+      "Memory loss",
+      "Distraction",
+      "Focus and concentration",
+      "Emotional stress",
+    ],
+    correct: "Focus and concentration",
+  },
+  {
+    question: "Motivation and attitude are classified as:",
+    options: [
+      "Environmental factors",
+      "Physiological factors",
+      "Psychological factors",
+      "Academic factors",
+    ],
+    correct: "Psychological factors",
+  },
+  {
+    question: "Which of the following is considered a physiological factor influencing study?",
+    options: [
+      "Interest",
+      "Noise",
+      "Nutrition",
+      "Time schedule",
+    ],
+    correct: "Nutrition",
+  },
+  {
+    question: "Time management primarily involves:",
+    options: [
+      "Studying throughout the night",
+      "Allocating time effectively among activities",
+      "Avoiding leisure completely",
+      "Reading only during examinations",
+    ],
+    correct: "Allocating time effectively among activities",
+  },
+  {
+    question: "One major advantage of a study timetable is that it helps students to:",
+    options: [
+      "Study without rest",
+      "Balance academic and non-academic activities",
+      "Ignore other responsibilities",
+      "Depend on cramming",
+    ],
+    correct: "Balance academic and non-academic activities",
+  },
+  {
+    question: "Skimming as a reading technique is mainly used to:",
+    options: [
+      "Locate specific information",
+      "Understand language structure",
+      "Get the general idea of a text",
+      "Critically analyze arguments",
+    ],
+    correct: "Get the general idea of a text",
+  },
+  {
+    question: "When a student searches a text for a particular date or definition, the reading technique used is:",
+    options: [
+      "Skimming",
+      "Scanning",
+      "Intensive reading",
+      "Critical reading",
+    ],
+    correct: "Scanning",
+  },
+  {
+    question: "Intensive reading requires the reader to:",
+    options: [
+      "Read quickly without focus",
+      "Skip examples and illustrations",
+      "Read carefully with full concentration",
+      "Focus only on headings",
+    ],
+    correct: "Read carefully with full concentration",
+  },
+  {
+    question: "Critical reading differs from other reading methods because it involves:",
+    options: [
+      "Memorization of facts",
+      "Acceptance of information as presented",
+      "Evaluation and questioning of ideas",
+      "Speed reading",
+    ],
+    correct: "Evaluation and questioning of ideas",
+  },
+  {
+    question: "The SQ3R method is designed mainly to:",
+    options: [
+      "Increase reading speed",
+      "Reduce the volume of reading",
+      "Enhance comprehension and retention",
+      "Replace note-taking",
+    ],
+    correct: "Enhance comprehension and retention",
+  },
+  {
+    question: "Which of the following is NOT a stage in the SQ3R method?",
+    options: [
+      "Survey",
+      "Question",
+      "Rewrite",
+      "Review",
+    ],
+    correct: "Rewrite",
+  },
+  {
+    question: "Effective note-taking is important because it helps students to:",
+    options: [
+      "Copy textbooks word for word",
+      "Capture and organize main ideas",
+      "Avoid revision",
+      "Reduce understanding",
+    ],
+    correct: "Capture and organize main ideas",
+  },
+  {
+    question: "The Cornell note-taking system is known for:",
+    options: [
+      "Encouraging lengthy paragraphs",
+      "Promoting organization and easy recall",
+      "Eliminating the need for revision",
+      "Focusing only on diagrams",
+    ],
+    correct: "Promoting organization and easy recall",
+  },
+  {
+    question: "Concentration can best be described as the ability to:",
+    options: [
+      "Study many subjects at once",
+      "Focus attention on a task without distraction",
+      "Read continuously without breaks",
+      "Memorize information instantly",
+    ],
+    correct: "Focus attention on a task without distraction",
+  },
+  {
+    question: "Which of the following can negatively affect concentration?",
+    options: [
+      "Interest",
+      "Adequate rest",
+      "Emotional stress",
+      "Motivation",
+    ],
+    correct: "Emotional stress",
+  },
+  {
+    question: "Motivation that originates from personal satisfaction is referred to as:",
+    options: [
+      "Extrinsic motivation",
+      "External motivation",
+      "Intrinsic motivation",
+      "Social motivation",
+    ],
+    correct: "Intrinsic motivation",
+  },
+  {
+    question: "Self-discipline in studying mainly helps students to:",
+    options: [
+      "Avoid learning challenges",
+      "Sustain motivation and consistency",
+      "Eliminate academic goals",
+      "Depend on external rewards",
+    ],
+    correct: "Sustain motivation and consistency",
+  },
 ];
