@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react"
 import { useState, useEffect } from "react";
 import StartExam from "./pages/StartExam";
 import ExamScreen from "./pages/ExamScreen";
@@ -102,6 +103,7 @@ const onSubmit = () => {
         <Route path="/results" element={<ResultScreen {...props} />} />
         <Route path="/review-answers" element={<ReviewAnswers {...props} />} />
       </Routes>
+      <SpeedInsights />
     </Router>
   );
 }
