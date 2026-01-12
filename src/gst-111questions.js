@@ -988,7 +988,6 @@ export const gst111Questions = [
     ],
     correct: "Listening, speaking, reading, and writing"
   },
-  [attachment_0](attachment)
   {
     question: "Noise in communication refers to ___________",
     options: [
