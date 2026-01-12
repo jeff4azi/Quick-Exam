@@ -14,9 +14,9 @@ const StartExam = ({ setQuestions, getRandom30, courses, selectedCourse, setSele
         <p className="text-center text-gray-600 max-w-md">TASUED past questions made simple</p>
       </div>
 
-      <div className="absolute left-2 -top-5">
+      <div className="absolute left-5 -top-2">
         <a href="https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f" target="_blank" rel="noopener noreferrer">
-          <img src={whatsappFollow} alt="Follow Channel" className="w-[100px] lg:w-[130px]" />
+          <img src={whatsappFollow} alt="Follow Channel" className="w-[110px] lg:w-[130px]" />
         </a>
       </div>
 
