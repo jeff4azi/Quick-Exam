@@ -888,4 +888,755 @@ export const gst111Questions = [
     options: ["Solve problems", "Build relationships", "Avoid misunderstanding", "All of the above"],
     correct: "All of the above",
   },
+  {
+    question: "Effective listening involves ___________",
+    options: [
+      "Hearing sounds only",
+      "Paying attention and understanding",
+      "Interrupting the speaker",
+      "Writing everything down"
+    ],
+    correct: "Paying attention and understanding"
+  },
+  {
+    question: "Note-taking is important because it helps students to ___________",
+    options: [
+      "Copy textbooks",
+      "Remember key points",
+      "Avoid listening",
+      "Read faster"
+    ],
+    correct: "Remember key points"
+  },
+  {
+    question: "The main purpose of communication is to ___________",
+    options: [
+      "Use difficult words",
+      "Exchange ideas and information",
+      "Impress the audience",
+      "Speak loudly"
+    ],
+    correct: "Exchange ideas and information"
+  },
+  {
+    question: "Skimming a passage means ___________",
+    options: [
+      "Reading every word carefully",
+      "Reading only the introduction",
+      "Reading quickly for the main idea",
+      "Memorizing the passage"
+    ],
+    correct: "Reading quickly for the main idea"
+  },
+  {
+    question: "A good speech should have ___________",
+    options: [
+      "Only a body",
+      "Only a conclusion",
+      "An introduction, body, and conclusion",
+      "Difficult vocabulary"
+    ],
+    correct: "An introduction, body, and conclusion"
+  },
+  {
+    question: "Plagiarism can best be described as ___________",
+    options: [
+      "Studying hard",
+      "Using one’s own ideas",
+      "Presenting someone else’s work as yours",
+      "Writing clearly"
+    ],
+    correct: "Presenting someone else’s work as yours"
+  },
+  {
+    question: "Paraphrasing involves ___________",
+    options: [
+      "Copying word for word",
+      "Changing ideas completely",
+      "Rewriting ideas in your own words",
+      "Omitting the source"
+    ],
+    correct: "Rewriting ideas in your own words"
+  },
+  {
+    question: "An outline is useful because it helps to ___________",
+    options: [
+      "Confuse the reader",
+      "Organize ideas logically",
+      "Increase the number of pages",
+      "Avoid references"
+    ],
+    correct: "Organize ideas logically"
+  },
+  {
+    question: "In academic writing, references are used to ___________",
+    options: [
+      "Decorate the work",
+      "Acknowledge sources",
+      "Increase word count",
+      "Avoid plagiarism only"
+    ],
+    correct: "Acknowledge sources"
+  },
+  {
+    question: "Good communication skills include ___________",
+    options: [
+      "Listening, speaking, reading, and writing",
+      "Talking only",
+      "Writing only",
+      "Reading novels"
+    ],
+    correct: "Listening, speaking, reading, and writing"
+  },
+  [attachment_0](attachment)
+  {
+    question: "Noise in communication refers to ___________",
+    options: [
+      "Music in the background",
+      "Anything that interferes with the message",
+      "The speaker’s voice",
+      "The listener’s notebook"
+    ],
+    correct: "Anything that interferes with the message"
+  },
+  {
+    question: "The best way to improve vocabulary is to ___________",
+    options: [
+      "Avoid reading",
+      "Memorize the dictionary",
+      "Read widely and regularly",
+      "Speak slang"
+    ],
+    correct: "Read widely and regularly"
+  },
+  {
+    question: "Proofreading a written work helps to ___________",
+    options: [
+      "Add references",
+      "Correct errors",
+      "Increase plagiarism",
+      "Change the topic"
+    ],
+    correct: "Correct errors"
+  },
+  {
+    question: "The listener’s response to a message is called ___________",
+    options: [
+      "Noise",
+      "Feedback",
+      "Channel",
+      "Context"
+    ],
+    correct: "Feedback"
+  },
+  {
+    question: "A good learner is someone who ___________",
+    options: [
+      "Depends only on lectures",
+      "Is active and attentive",
+      "Avoids group discussions",
+      "Reads only before exams"
+    ],
+    correct: "Is active and attentive"
+  },
+  {
+    question: "Listening differs from hearing because listening involves ___________",
+    options: [
+      "Sound waves",
+      "Attention and understanding",
+      "Noise only",
+      "Speaking"
+    ],
+    correct: "Attention and understanding"
+  },
+  {
+    question: "The introduction of an essay mainly serves to ___________",
+    options: [
+      "Repeat the conclusion",
+      "Present the topic",
+      "List references",
+      "Add examples"
+    ],
+    correct: "Present the topic"
+  },
+  {
+    question: "The body of an essay should contain ___________",
+    options: [
+      "The topic only",
+      "Supporting ideas and explanations",
+      "The title",
+      "The conclusion"
+    ],
+    correct: "Supporting ideas and explanations"
+  },
+  {
+    question: "The conclusion of a written work should ___________",
+    options: [
+      "Introduce new ideas",
+      "Summarize main points",
+      "Contain references only",
+      "Be longer than the body"
+    ],
+    correct: "Summarize main points"
+  },
+  {
+    question: "Effective communication requires ___________",
+    options: [
+      "Only a speaker",
+      "Only a listener",
+      "Both a sender and a receiver",
+      "Only feedback"
+    ],
+    correct: "Both a sender and a receiver"
+  },
+  {
+    question: "The channel of communication refers to ___________",
+    options: [
+      "The message",
+      "The medium used",
+      "The feedback",
+      "The noise"
+    ],
+    correct: "The medium used"
+  },
+  {
+    question: "Scanning a text is best used when you want to ___________",
+    options: [
+      "Read for pleasure",
+      "Find specific information",
+      "Understand the main idea",
+      "Memorize content"
+    ],
+    correct: "Find specific information"
+  },
+  {
+    question: "Academic writing should be ___________",
+    options: [
+      "Informal and emotional",
+      "Clear and objective",
+      "Full of slang",
+      "Spoken English"
+    ],
+    correct: "Clear and objective"
+  },
+  {
+    question: "A topic sentence in a paragraph ___________",
+    options: [
+      "Ends the paragraph",
+      "Introduces the main idea",
+      "Gives examples",
+      "Summarizes the whole essay"
+    ],
+    correct: "Introduces the main idea"
+  },
+  {
+    question: "The use of transition words in writing helps to ___________",
+    options: [
+      "Increase grammar errors",
+      "Link ideas smoothly",
+      "Shorten the essay",
+      "Confuse the reader"
+    ],
+    correct: "Link ideas smoothly"
+  },
+  {
+    question: "One characteristic of a good speaker is the ability to ___________",
+    options: [
+      "Shout",
+      "Use clear and simple language",
+      "Speak very fast",
+      "Avoid eye contact"
+    ],
+    correct: "Use clear and simple language"
+  },
+  {
+    question: "Reading extensively helps students to ___________",
+    options: [
+      "Reduce vocabulary",
+      "Improve comprehension",
+      "Waste time",
+      "Avoid writing"
+    ],
+    correct: "Improve comprehension"
+  },
+  {
+    question: "An academic essay must avoid ___________",
+    options: [
+      "References",
+      "Clear structure",
+      "Plagiarism",
+      "Topic sentences"
+    ],
+    correct: "Plagiarism"
+  },
+  {
+    question: "Feedback in communication is important because it ___________",
+    options: [
+      "Ends communication",
+      "Shows the message is understood",
+      "Creates noise",
+      "Confuses the speaker"
+    ],
+    correct: "Shows the message is understood"
+  },
+  {
+    question: "A good listener should ___________",
+    options: [
+      "Interrupt frequently",
+      "Be attentive and patient",
+      "Focus on the speaker’s accent only",
+      "Ignore non-verbal cues"
+    ],
+    correct: "Be attentive and patient"
+  },
+  {
+    question: "Communication is said to be effective when the ___________",
+    options: [
+      "Message is long",
+      "Message is understood",
+      "Speaker uses big grammar",
+      "Listener agrees"
+    ],
+    correct: "Message is understood"
+  },
+  {
+    question: "The main idea of a passage is usually found in the ___________",
+    options: [
+      "Topic sentence",
+      "Last word",
+      "Title only",
+      "Reference list"
+    ],
+    correct: "Topic sentence"
+  },
+  {
+    question: "An essay title should be ___________",
+    options: [
+      "Long and complex",
+      "Clear and relevant",
+      "Written in a paragraph",
+      "A full sentence"
+    ],
+    correct: "Clear and relevant"
+  },
+  {
+    question: "The act of using someone else’s ideas without acknowledgment is ___________",
+    options: [
+      "Paraphrasing",
+      "Summarizing",
+      "Plagiarism",
+      "Editing"
+    ],
+    correct: "Plagiarism"
+  },
+  {
+    question: "Common knowledge does not require ___________",
+    options: [
+      "Explanation",
+      "Understanding",
+      "Citation",
+      "Examples"
+    ],
+    correct: "Citation"
+  },
+  {
+    question: "A summary should ___________",
+    options: [
+      "Include all details",
+      "Be shorter than the original text",
+      "Change the meaning",
+      "Add new ideas"
+    ],
+    correct: "Be shorter than the original text"
+  },
+  {
+    question: "One major barrier to communication is ___________",
+    options: [
+      "Feedback",
+      "Noise",
+      "Understanding",
+      "Listening"
+    ],
+    correct: "Noise"
+  },
+  {
+    question: "Non-verbal communication includes ___________",
+    options: [
+      "Emails",
+      "Gestures and facial expressions",
+      "Essays",
+      "Speeches"
+    ],
+    correct: "Gestures and facial expressions"
+  },
+  {
+    question: "Good study habits include ___________",
+    options: [
+      "Studying only at night",
+      "Regular reading and revision",
+      "Waiting till exams",
+      "Copying notes"
+    ],
+    correct: "Regular reading and revision"
+  },
+  {
+    question: "The purpose of proofreading is to ___________",
+    options: [
+      "Change the topic",
+      "Correct errors",
+      "Increase word count",
+      "Add references"
+    ],
+    correct: "Correct errors"
+  },
+  {
+    question: "An oral presentation should be ___________",
+    options: [
+      "Disorganized",
+      "Clear and well-structured",
+      "Read directly from notes",
+      "Too fast"
+    ],
+    correct: "Clear and well-structured"
+  },
+  {
+    question: "The receiver in communication is the person who ___________",
+    options: [
+      "Sends the message",
+      "Encodes the message",
+      "Receives and interprets the message",
+      "Creates noise"
+    ],
+    correct: "Receives and interprets the message"
+  },
+  {
+    question: "In note-making, symbols and abbreviations help to ___________",
+    options: [
+      "Waste time",
+      "Save time and space",
+      "Reduce understanding",
+      "Avoid listening"
+    ],
+    correct: "Save time and space"
+  },
+  {
+    question: "A paragraph should focus on ___________",
+    options: [
+      "Many ideas",
+      "One main idea",
+      "No idea",
+      "References only"
+    ],
+    correct: "One main idea"
+  },
+  {
+    question: "Reading for specific details is known as ___________",
+    options: [
+      "Skimming",
+      "Scanning",
+      "Extensive reading",
+      "Intensive listening"
+    ],
+    correct: "Scanning"
+  },
+  {
+    question: "The process of arranging ideas before writing is called ___________",
+    options: [
+      "Proofreading",
+      "Outlining",
+      "Referencing",
+      "Editing"
+    ],
+    correct: "Outlining"
+  },
+  {
+    question: "A good note should be ___________",
+    options: [
+      "Long and detailed",
+      "Clear and brief",
+      "Copied word for word",
+      "Untidy"
+    ],
+    correct: "Clear and brief"
+  },
+  {
+    question: "In communication, encoding refers to ___________",
+    options: [
+      "Receiving the message",
+      "Translating ideas into words",
+      "Understanding the message",
+      "Responding to the message"
+    ],
+    correct: "Translating ideas into words"
+  },
+  {
+    question: "One purpose of an outline is to ___________",
+    options: [
+      "Increase plagiarism",
+      "Guide writing logically",
+      "Add noise",
+      "Replace references"
+    ],
+    correct: "Guide writing logically"
+  },
+  {
+    question: "A speech delivered without preparation is likely to be ___________",
+    options: [
+      "Well organized",
+      "Confusing",
+      "Clear",
+      "Effective"
+    ],
+    correct: "Confusing"
+  },
+  {
+    question: "The formal style of writing is usually used in ___________",
+    options: [
+      "Text messages",
+      "Academic essays",
+      "Personal letters",
+      "Casual chats"
+    ],
+    correct: "Academic essays"
+  },
+  {
+    question: "The context of communication refers to ___________",
+    options: [
+      "The speaker’s voice",
+      "The situation in which communication occurs",
+      "The feedback",
+      "The channel"
+    ],
+    correct: "The situation in which communication occurs"
+  },
+  {
+    question: "Reading between the lines means ___________",
+    options: [
+      "Skipping lines",
+      "Understanding implied meaning",
+      "Reading loudly",
+      "Ignoring details"
+    ],
+    correct: "Understanding implied meaning"
+  },
+  {
+    question: "A good essay paragraph should contain ___________",
+    options: [
+      "A topic sentence and supporting details",
+      "Only examples",
+      "Only references",
+      "No structure"
+    ],
+    correct: "A topic sentence and supporting details"
+  },
+  {
+    question: "One way to avoid plagiarism is to ___________",
+    options: [
+      "Copy directly",
+      "Acknowledge sources",
+      "Omit references",
+      "Use difficult words"
+    ],
+    correct: "Acknowledge sources"
+  },
+  {
+    question: "Listening for specific information is known as ___________",
+    options: [
+      "Critical listening",
+      "Selective listening",
+      "Passive listening",
+      "Casual listening"
+    ],
+    correct: "Selective listening"
+  },
+  {
+    question: "The main aim of extensive reading is to ___________",
+    options: [
+      "Improve grammar only",
+      "Increase reading speed and enjoyment",
+      "Memorize texts",
+      "Avoid comprehension"
+    ],
+    correct: "Increase reading speed and enjoyment"
+  },
+  {
+    question: "Eye contact during a speech helps to ___________",
+    options: [
+      "Distract the audience",
+      "Maintain audience interest",
+      "Show fear",
+      "End communication"
+    ],
+    correct: "Maintain audience interest"
+  },
+  {
+    question: "The language used in academic writing should be ___________",
+    options: [
+      "Emotional",
+      "Clear and formal",
+      "Slang-filled",
+      "Ambiguous"
+    ],
+    correct: "Clear and formal"
+  },
+  {
+    question: "A good learner usually ___________",
+    options: [
+      "Waits for others to teach him/her",
+      "Takes responsibility for learning",
+      "Avoids asking questions",
+      "Studies only before exams"
+    ],
+    correct: "Takes responsibility for learning"
+  },
+  {
+    question: "The first step in effective writing is ___________",
+    options: [
+      "Proofreading",
+      "Planning",
+      "Editing",
+      "Publishing"
+    ],
+    correct: "Planning"
+  },
+  {
+    question: "A good listener avoids ___________",
+    options: [
+      "Concentration",
+      "Distractions",
+      "Note-taking",
+      "Feedback"
+    ],
+    correct: "Distractions"
+  },
+  {
+    question: "The main function of feedback in communication is to ___________",
+    options: [
+      "Delay communication",
+      "Confirm understanding",
+      "Create barriers",
+      "Replace the message"
+    ],
+    correct: "Confirm understanding"
+  },
+  {
+    question: "One feature of spoken communication is that it is ___________",
+    options: [
+      "Permanent",
+      "Immediate",
+      "Always formal",
+      "Carefully edited"
+    ],
+    correct: "Immediate"
+  },
+  {
+    question: "The purpose of a reference list is to ___________",
+    options: [
+      "Beautify the work",
+      "Show sources used",
+      "Increase pages",
+      "Replace conclusion"
+    ],
+    correct: "Show sources used"
+  },
+  {
+    question: "Reading carefully to understand details is called ___________",
+    options: [
+      "Skimming",
+      "Scanning",
+      "Intensive reading",
+      "Extensive reading"
+    ],
+    correct: "Intensive reading"
+  },
+  {
+    question: "An effective introduction should ___________",
+    options: [
+      "Bore the reader",
+      "Attract the reader’s interest",
+      "Contain references only",
+      "Summarize the essay"
+    ],
+    correct: "Attract the reader’s interest"
+  },
+  {
+    question: "The act of correcting grammar and spelling errors is known as ___________",
+    options: [
+      "Outlining",
+      "Editing",
+      "Referencing",
+      "Brainstorming"
+    ],
+    correct: "Editing"
+  },
+  {
+    question: "One barrier to effective listening is ___________",
+    options: [
+      "Attention",
+      "Noise",
+      "Feedback",
+      "Understanding"
+    ],
+    correct: "Noise"
+  },
+  {
+    question: "A well-organized essay should ___________",
+    options: [
+      "Lack paragraphs",
+      "Follow a logical order",
+      "Avoid topic sentences",
+      "Contain slang"
+    ],
+    correct: "Follow a logical order"
+  },
+  {
+    question: "The speaker’s posture and gestures are examples of ___________",
+    options: [
+      "Written communication",
+      "Non-verbal communication",
+      "Formal language",
+      "Feedback"
+    ],
+    correct: "Non-verbal communication"
+  },
+  {
+    question: "A good study timetable helps students to ___________",
+    options: [
+      "Waste time",
+      "Manage time effectively",
+      "Avoid reading",
+      "Study randomly"
+    ],
+    correct: "Manage time effectively"
+  },
+  {
+    question: "One quality of good academic writing is ___________",
+    options: [
+      "Ambiguity",
+      "Clarity",
+      "Informality",
+      "Emotional language"
+    ],
+    correct: "Clarity"
+  },
+  {
+    question: "A concluding paragraph should ___________",
+    options: [
+      "Introduce new arguments",
+      "Restate main ideas",
+      "Be longer than the essay",
+      "Contain examples only"
+    ],
+    correct: "Restate main ideas"
+  },
+  {
+    question: "Communication breakdown occurs when the ___________",
+    options: [
+      "Message is understood",
+      "Sender and receiver interact",
+      "Message is misunderstood",
+      "Feedback is given"
+    ],
+    correct: "Message is misunderstood"
+  }
 ];
