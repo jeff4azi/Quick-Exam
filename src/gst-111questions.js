@@ -620,4 +620,272 @@ export const gst111Questions = [
     options: ["a verb", "an adjective", "an adverb", "a Clause"],
     correct: "an adjective",
   },
+  {
+    question: "She ___ to the library yesterday.",
+    options: ["go", "goes", "went", "going"],
+    correct: "went",
+  },
+  {
+    question: "I am looking forward ___ the lecture tomorrow.",
+    options: ["attend", "to attend", "to attending", "attending"],
+    correct: "to attending",
+  },
+  {
+    question: "He usually ___ his assignments at night.",
+    options: ["write", "writes", "writing", "wrote"],
+    correct: "writes",
+  },
+  {
+    question: "They ___ English now.",
+    options: ["study", "studied", "are studying", "will study"],
+    correct: "are studying",
+  },
+  {
+    question: "By next week, I ___ my project.",
+    options: ["finish", "finished", "will finish", "will have finished"],
+    correct: "will have finished",
+  },
+  {
+    question: "She ___ (watch) TV when I called.",
+    options: ["was watching", "watched", "watches", "is watching"],
+    correct: "was watching",
+  },
+  {
+    question: "I ___ never seen such a beautiful place before.",
+    options: ["has", "have", "had", "will have"],
+    correct: "have",
+  },
+  {
+    question: "He ___ to school every day.",
+    options: ["go", "goes", "going", "went"],
+    correct: "goes",
+  },
+  {
+    question: "I ___ for two hours when he arrived.",
+    options: ["studied", "had studied", "had been studying", "am studying"],
+    correct: "had been studying",
+  },
+  {
+    question: "She ___ working at the library this week.",
+    options: ["is", "are", "was", "will"],
+    correct: "is",
+  },
+  {
+    question: "They ___ (play) football at 5 pm yesterday.",
+    options: ["played", "are playing", "were playing", "have played"],
+    correct: "were playing",
+  },
+  {
+    question: "By tomorrow, he ___ finished his homework.",
+    options: ["will", "will have", "has", "had"],
+    correct: "will have",
+  },
+  {
+    question: "I ___ English every day.",
+    options: ["am studying", "study", "studied", "studies"],
+    correct: "study",
+  },
+  {
+    question: "She ___ her assignment before the lecture.",
+    options: ["finished", "had finished", "has finished", "finishes"],
+    correct: "had finished",
+  },
+  {
+    question: "We ___ for the exam next week.",
+    options: ["study", "are studying", "will be studying", "studied"],
+    correct: "will be studying",
+  },
+
+  // Section 2: Vocabulary & Communication Terms
+  {
+    question: "The person who sends a message is called the ___.",
+    options: ["sender", "receiver", "messenger", "communicator"],
+    correct: "sender",
+  },
+  {
+    question: "The person who receives a message is called the ___.",
+    options: ["sender", "receiver", "transmitter", "speaker"],
+    correct: "receiver",
+  },
+  {
+    question: "Listening carefully and responding is called ___ listening.",
+    options: ["passive", "active", "selective", "reflective"],
+    correct: "active",
+  },
+  {
+    question: "Communication that uses gestures, facial expressions, and body movement is called ___.",
+    options: ["verbal communication", "formal communication", "non-verbal communication", "written communication"],
+    correct: "non-verbal communication",
+  },
+  {
+    question: "Words like “however,” “because,” and “although” are called ___.",
+    options: ["prepositions", "conjunctions", "interjections", "adverbs"],
+    correct: "conjunctions",
+  },
+  {
+    question: "A formal letter usually begins with ___.",
+    options: ["Hi friend", "Dear Sir/Madam", "Hello", "Good morning"],
+    correct: "Dear Sir/Madam",
+  },
+  {
+    question: "Feedback in communication means ___.",
+    options: ["sending a message", "receiving a message", "responding to a message", "ignoring the message"],
+    correct: "responding to a message",
+  },
+  {
+    question: "Clear communication helps to avoid ___.",
+    options: ["understanding", "confusion", "learning", "listening"],
+    correct: "confusion",
+  },
+  {
+    question: "The study of how words are used is called ___.",
+    options: ["syntax", "phonology", "morphology", "semantics"],
+    correct: "semantics",
+  },
+  {
+    question: "Using the right words in context is called ___.",
+    options: ["grammar", "vocabulary", "punctuation", "spelling"],
+    correct: "vocabulary",
+  },
+
+  // Section 3: Punctuation & Mechanics
+  {
+    question: "Which punctuation ends a sentence?",
+    options: ["Comma", "Full stop", "Question mark", "Semicolon"],
+    correct: "Full stop",
+  },
+  {
+    question: "Which punctuation shows possession?",
+    options: ["Comma", "Full stop", "Apostrophe", "Colon"],
+    correct: "Apostrophe",
+  },
+  {
+    question: "Correct this sentence: She said I will come tomorrow",
+    options: [
+      "She said I will come tomorrow.",
+      "She said, “I will come tomorrow.”",
+      "She said; I will come tomorrow.",
+      "She said: I will come tomorrow"
+    ],
+    correct: "She said, “I will come tomorrow.”",
+  },
+  {
+    question: "Which punctuation separates ideas in a sentence?",
+    options: ["Comma", "Full stop", "Question mark", "Apostrophe"],
+    correct: "Comma",
+  },
+  {
+    question: "Which punctuation shows a question?",
+    options: ["Full stop", "Comma", "Question mark", "Semicolon"],
+    correct: "Question mark",
+  },
+
+  // Section 4: Public Speaking & Presentation
+  {
+    question: "True or False: Eye contact is important during a presentation.",
+    options: ["True", "False"],
+    correct: "True",
+  },
+  {
+    question: "Which of these is important for a good presentation?",
+    options: ["Speak clearly", "Organize ideas", "Practice before presentation", "All of the above"],
+    correct: "All of the above",
+  },
+  {
+    question: "What is the first step in preparing a presentation?",
+    options: ["Speak immediately", "Organize ideas", "Ignore audience", "Read slides"],
+    correct: "Organize ideas",
+  },
+  {
+    question: "Public speaking skill helps in ___",
+    options: ["Communication", "Writing only", "Reading only", "Listening only"],
+    correct: "Communication",
+  },
+  {
+    question: "Confidence in public speaking is shown by ___.",
+    options: ["Looking down always", "Speaking clearly", "Mumbling words", "Ignoring the audience"],
+    correct: "Speaking clearly",
+  },
+
+  // Section 5: Mixed/General Knowledge
+  {
+    question: "Reading, writing, speaking, and listening are called the four main ___ of communication.",
+    options: ["skills", "lessons", "subjects", "topics"],
+    correct: "skills",
+  },
+  {
+    question: "Choose the correct article: “I saw ___ elephant at the zoo.”",
+    options: ["a", "an", "the", "no article"],
+    correct: "an",
+  },
+  {
+    question: "Choose the correct preposition: “She is good ___ writing essays.”",
+    options: ["on", "at", "in", "by"],
+    correct: "at",
+  },
+  {
+    question: "Which sentence is correct?",
+    options: [
+      "He don’t like mangoes.",
+      "He doesn’t like mangoes.",
+      "He not likes mangoes.",
+      "He isn’t like mangoes."
+    ],
+    correct: "He doesn’t like mangoes.",
+  },
+  {
+    question: "Non-verbal communication includes ___.",
+    options: ["Writing letters", "Gestures", "Reading books", "Listening"],
+    correct: "Gestures",
+  },
+  {
+    question: "A paragraph usually contains ___.",
+    options: ["One word", "One sentence", "Several sentences about a topic", "A question only"],
+    correct: "Several sentences about a topic",
+  },
+  {
+    question: "The main purpose of communication is to ___.",
+    options: ["Confuse", "Share ideas", "Write essays", "Learn grammar"],
+    correct: "Share ideas",
+  },
+  {
+    question: "Fill in the blank: The ___ is the person who receives the message.",
+    options: ["sender", "receiver", "writer", "speaker"],
+    correct: "receiver",
+  },
+  {
+    question: "Which of these is NOT a type of communication?",
+    options: ["Verbal", "Non-verbal", "Written", "Imaginary"],
+    correct: "Imaginary",
+  },
+  {
+    question: "Choose the correct sentence:",
+    options: [
+      "I has finished my homework.",
+      "I have finished my homework.",
+      "I has finish my homework.",
+      "I finished has my homework."
+    ],
+    correct: "I have finished my homework.",
+  },
+  {
+    question: "A conjunction joins ___.",
+    options: ["Words, phrases, or clauses", "Only words", "Only sentences", "Only paragraphs"],
+    correct: "Words, phrases, or clauses",
+  },
+  {
+    question: "Active listening requires ___.",
+    options: ["Nodding and ignoring", "Full attention and response", "Talking only", "Reading silently"],
+    correct: "Full attention and response",
+  },
+  {
+    question: "Which of these is correct?",
+    options: ["He going to school.", "He goes to school.", "He go school.", "He going school."],
+    correct: "He goes to school.",
+  },
+  {
+    question: "Good communication helps to ___.",
+    options: ["Solve problems", "Build relationships", "Avoid misunderstanding", "All of the above"],
+    correct: "All of the above",
+  },
 ];
