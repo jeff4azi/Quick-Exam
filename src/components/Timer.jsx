@@ -9,19 +9,20 @@ const Timer = ({ initialMinutes = 3, initialSeconds = 58, onSubmit }) => {
   )
 
   useEffect(() => {
-    if (time <= 0) { 
-      onSubmit()
-      navigate("/results")
-      return
-     }
-
     const interval = setInterval(() => {
-      setTime((prev) => prev - 1)
+      setTime((prev) => {
+        if (prev <= 1) {
+          onSubmit()
+          navigate("/results")
+          clearInterval(interval)
+          return 0
+        }
+        return prev - 1
+      })
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [time])
-
+  }, [onSubmit, navigate])
   const minutes = String(Math.floor(time / 60)).padStart(2, "0")
   const seconds = String(time % 60).padStart(2, "0")
 

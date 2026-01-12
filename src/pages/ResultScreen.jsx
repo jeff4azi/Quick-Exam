@@ -7,12 +7,12 @@ const ResultScreen = ({ results, setAnswers, selectedCourse }) => {
 
   return (
     <div className='h-[100dvh] max-h-screen p-7 flex flex-col justify-between lg:max-w-2xl mx-auto'>
-      <div className="absolute left-4 -top-5">
-              <a href="https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f" target="_blank" rel="noopener noreferrer">
-                <img src={whatsappFollow} alt="Follow Channel" className="w-[130px]" />
-              </a>
+      <div className="absolute left-2 -top-5">
+        <a href="https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f" target="_blank" rel="noopener noreferrer">
+          <img src={whatsappFollow} alt="Follow Channel" className="w-[100px] lg:w-[130px]" />
+        </a>
       </div>
-      
+
       {/* score */}
       <div className='relative bg-white flex flex-col justify-center items-center size-[220px] rounded-full place-self-center m-15 text-[#2563EB] border-2 shadow-sm active:scale-95 hover:scale-105 durations-200'>
         <span className='text-6xl font-semibold -translate-y-2'>{Math.round((results.correct / 30) * 100)}<span className='text-3xl font-bold'>%</span></span>
