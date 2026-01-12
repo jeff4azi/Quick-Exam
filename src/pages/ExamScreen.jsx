@@ -43,10 +43,10 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse }
   const progress = ((currentIndex + 1) / totalQuestions) * 100
 
   return (
-    <div>
+    <div className="lg:max-w-2xl mx-auto">
       {/* Top bar */}
       <div className="flex justify-between items-center my-7 mx-5">
-        <button onClick={goHome} className="bg-gray-100 p-2 rounded-xl">
+        <button onClick={goHome} className="bg-gray-100 p-2 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200 ">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
             <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
           </svg>
@@ -64,7 +64,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse }
       </div>
 
       {/* Question Card */}
-      <div className="bg-white mx-5 p-5 rounded-2xl my-7">
+      <div className="bg-white mx-5 p-5 rounded-2xl my-7 shadow-sm">
         <div className="text-gray-400 mb-2">{selectedCourse.name}</div>
 
         <div className="text-xl font-medium mb-7">
@@ -76,7 +76,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse }
             <button
               key={index}
               onClick={() => onOptionClick(option)}
-              className={`py-3 px-4 w-full rounded-xl ring-2 transition
+              className={`py-3 px-4 w-full rounded-xl ring-2 transition active:scale-95 hover:ring-[#2563EB]/40 duration-200 
                 ${selectedOption === option
                   ? "ring-[#2563EB]/60"
                   : "ring-gray-300"
@@ -93,14 +93,14 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse }
         <button
           onClick={prevQuestion}
           disabled={currentIndex === 0}
-          className="bg-red-500 disabled:opacity-40 h-[50px] w-[150px] rounded-xl font-medium text-white"
+          className="bg-red-500 disabled:opacity-40 h-[50px] w-[150px] rounded-xl font-medium text-white shadow-sm active:scale-95 hover:scale-105 duration-200 "
         >
           Previous
         </button>
 
         <button
           onClick={nextQuestion}
-          className="bg-green-500 h-[50px] w-[150px] rounded-xl font-medium text-white"
+          className="bg-green-500 h-[50px] w-[150px] rounded-xl font-medium text-white shadow-sm active:scale-95 hover:scale-105 duration-200 "
         >
           {currentIndex === totalQuestions - 1 ? "Submit" : "Next"}
         </button>
