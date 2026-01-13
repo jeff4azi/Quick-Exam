@@ -20,7 +20,7 @@ const ResultScreen = ({ results, setAnswers, selectedCourse }) => {
       </div>
 
 
-      <div className="absolute right-5 top-5 bg-gray-50 py-2 px-3 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"><span className="text-gray-700 text-sm">Duration:</span> <span className="font-medium text-[#2563EB] text-lg">{minutes}:{seconds}</span></div>
+      <div className="absolute right-5 top-6 bg-gray-50 py-2 px-3 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"><span className="text-gray-700 text-sm">Duration:</span> <span className="font-medium text-[#2563EB] text-lg">{minutes}:{seconds}</span></div>
 
       {/* score */}
       <div className='pt-7 relative bg-white flex flex-col justify-center items-center size-[220px] rounded-full place-self-center m-15 text-[#2563EB] border-2 shadow-sm active:scale-95 hover:scale-105 durations-200'>
