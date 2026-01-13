@@ -1,22 +1,31 @@
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import whatsappFollow from "../images/whatsapp-follow.webp"
 
 const ResultScreen = ({ results, setAnswers, selectedCourse }) => {
   const navigate = useNavigate()
   const formatNum = (num) => String(num).padStart(2, '0');
 
+  const { state } = useLocation()
+  const timeTaken = state?.timeTaken ?? 0 // in seconds
+
+  const minutes = String(Math.floor(timeTaken / 60)).padStart(2, "0")
+  const seconds = String(timeTaken % 60).padStart(2, "0")
+
   return (
     <div className='h-[100dvh] max-h-screen p-7 flex flex-col justify-between lg:max-w-2xl mx-auto'>
-      <div className="absolute left-2 -top-5">
+      <div className="absolute left-5 -top-2">
         <a href="https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f" target="_blank" rel="noopener noreferrer">
-          <img src={whatsappFollow} alt="Follow Channel" className="w-[100px] lg:w-[130px]" />
+          <img src={whatsappFollow} alt="Follow Channel" className="w-[110px] lg:w-[130px]" />
         </a>
       </div>
 
+
+      <div className="absolute right-5 top-5 bg-gray-50 py-2 px-3 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"><span className="text-gray-700 text-sm">Duration:</span> <span className="font-medium text-[#2563EB] text-lg">{minutes}:{seconds}</span></div>
+
       {/* score */}
-      <div className='relative bg-white flex flex-col justify-center items-center size-[220px] rounded-full place-self-center m-15 text-[#2563EB] border-2 shadow-sm active:scale-95 hover:scale-105 durations-200'>
+      <div className='pt-7 relative bg-white flex flex-col justify-center items-center size-[220px] rounded-full place-self-center m-15 text-[#2563EB] border-2 shadow-sm active:scale-95 hover:scale-105 durations-200'>
         <span className='text-6xl font-semibold -translate-y-2'>{Math.round((results.correct / 30) * 100)}<span className='text-3xl font-bold'>%</span></span>
-        <div className="absolute bottom-13 left-1/2 -translate-x-1/2 text-xl font-medium opacity-75">{selectedCourse.name}</div>
+        <div className="text-xl font-medium text-gray-400">{selectedCourse.name}</div>
       </div>
 
       {/* extra result details */}

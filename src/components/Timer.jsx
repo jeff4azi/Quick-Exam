@@ -1,34 +1,33 @@
 import { useEffect, useState } from "react"
 import clockIcon from "../images/clock.webp"
-import { useNavigate } from "react-router-dom"
 
-const Timer = ({ initialMinutes = 3, initialSeconds = 58, onSubmit }) => {
-  const navigate = useNavigate()
-  const [time, setTime] = useState(
-    initialMinutes * 60 + initialSeconds
-  )
+const Timer = ({ totalTime, onTimeUp, onTick }) => {
+  const [timeLeft, setTimeLeft] = useState(totalTime)
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTime((prev) => {
-        if (prev <= 1) {
-          onSubmit()
-          navigate("/results")
+      setTimeLeft(prev => {
+        if (prev <= 0) {
           clearInterval(interval)
+          onTimeUp(0) // pass 0 if time runs out
           return 0
         }
-        return prev - 1
+
+        const newTime = prev - 1
+        onTick(newTime) // notify parent of latest time
+        return newTime
       })
     }, 1000)
 
     return () => clearInterval(interval)
-  }, [onSubmit, navigate])
-  const minutes = String(Math.floor(time / 60)).padStart(2, "0")
-  const seconds = String(time % 60).padStart(2, "0")
+  }, [onTimeUp, onTick])
+
+  const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0")
+  const seconds = String(timeLeft % 60).padStart(2, "0")
 
   return (
-    <div className="flex items-center justify-between gap-2 bg-white w-[100px] h-[35px] font-medium rounded-full px-3 shadow-sm active:scale-95 hover:scale-105 duration-200 ">
-      <img className="size-6" src={clockIcon} alt="clockIcon" />
+    <div className="flex items-center justify-between gap-2 bg-white w-[100px] h-[35px] font-medium rounded-full px-3 shadow-sm">
+      <img className="size-6" src={clockIcon} alt="clock" />
       <span>{minutes}:{seconds}</span>
     </div>
   )

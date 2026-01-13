@@ -48,7 +48,7 @@ function App() {
     wrong: 0,
     answered: 0,
   })
-
+  
   useEffect(() => {
     if (selectedCourse) {
       setQuestions(getRandom30(selectedCourse.questions));
