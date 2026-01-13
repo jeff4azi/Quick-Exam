@@ -1,5 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom"
 import whatsappFollow from "../images/whatsapp-follow.webp"
+import WhatsAppCard from "../components/WhatsAppCard"
 
 const ResultScreen = ({ results, setAnswers, selectedCourse }) => {
   const navigate = useNavigate()
@@ -17,6 +18,10 @@ const ResultScreen = ({ results, setAnswers, selectedCourse }) => {
         <a href="https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f" target="_blank" rel="noopener noreferrer">
           <img src={whatsappFollow} alt="Follow Channel" className="w-[110px] lg:w-[130px]" />
         </a>
+      </div>
+
+      <div className="absolute z-100">
+        <WhatsAppCard />
       </div>
 
 
