@@ -1,14 +1,10 @@
 export const edu101Questions = [
   {
     id: "edu101-001",
-    question: "Teaching is best described as",
-    options: [
-      "an all-corner affair",
-      "a universal activity",
-      "rigorous, deliberate, planned, and conscious exercise.",
-      "a synonym of instruction, training, indoctrination, and propaganda",
-    ],
-    correct: "rigorous, deliberate, planned, and conscious exercise.",
+    question:
+      "The process of getting information from a visual representation of written words is",
+    options: ["Scanning", "Skimming", "Reading", "Recall"],
+    correct: "Reading",
   },
   {
     id: "edu101-002",
@@ -1593,13 +1589,6 @@ export const edu101Questions = [
   },
   {
     id: "edu101-153",
-    question:
-      "The process of getting information from a visual representation of written words is",
-    options: ["Scanning", "Skimming", "Reading", "Recall"],
-    correct: "Reading",
-  },
-  {
-    id: "edu101-153",
     question: "Teaching as a profession is mainly concerned with",
     options: [
       "selling knowledge",
@@ -1802,5 +1791,473 @@ export const edu101Questions = [
     correct: "socio-cultural theory",
     reason:
       "Socio-cultural theory stresses the role of society and interaction in learning.",
+  },
+  {
+    id: "edu101-170",
+    question:
+      "Learning can succeed in the absence of necessary instructional materials.",
+    options: ["false", "true", "not sure", "totally correct."],
+    correct: "false",
+  },
+  {
+    id: "edu101-171",
+    question:
+      "One of the following is a condition that must be satisfied before we can say we have a successful teaching.",
+    options: [
+      "It must be mythical (imaginary or not real)",
+      "It must be teacher-centred",
+      "It must be learner-centred",
+      "It must be totally arbitrary",
+    ],
+    correct: "It must be learner-centred",
+  },
+  {
+    id: "edu101-172",
+    question:
+      "In the process of communication, the substitute name for channel is ____",
+    options: ["evaluation", "learner", "method", "teacher"],
+    correct: "method",
+  },
+  {
+    id: "edu101-173",
+    question: "Teaching as a cycle of communication has how many processes.",
+    options: ["3", "4", "5", "6"],
+    correct: "5",
+  },
+  {
+    id: "edu101-174",
+    question: "Teaching entails ____",
+    options: [
+      "arbitraries",
+      "promotion of dogma",
+      "conscious and deliberate attempt at disseminating dogma without resistance from the recipient learners",
+      "conscious and deliberate process of communication of content of instruction by the teacher to the learners.",
+    ],
+    correct:
+      "conscious and deliberate process of communication of content of instruction by the teacher to the learners.",
+  },
+  {
+    id: "edu101-175",
+    question:
+      "The process of passing information to learner to carry out some laid down activities by the teacher.",
+    options: [
+      "indoctrination",
+      "self-directed learning",
+      "instruction",
+      "training",
+    ],
+    correct: "instruction",
+  },
+  {
+    id: "edu101-176",
+    question:
+      "____ is a relatively permanent change in behaviour or in behavioural potential that results from experience and cannot be attributed to temporary body states such as those induced by illness, fatigue or drugs.",
+    options: ["indoctrination", "instruction", "learning", "teaching"],
+    correct: "learning",
+  },
+  {
+    id: "edu101-177",
+    question: "Indoctrination is a concept synonymous to teaching.",
+    options: ["false", "true", "not sure", "totally correct"],
+    correct: "false",
+  },
+  {
+    id: "edu101-178",
+    question:
+      "Any dysfunction on the process of communication cannot cumulatively affect the process.",
+    options: ["false", "true", "not sure", "totally correct"],
+    correct: "false",
+  },
+  {
+    id: "edu101-179",
+    question:
+      "[TRCN] was established in 1993 with ____ primary goal of regulating and standardizing the teaching profession in Nigeria.",
+    options: ["FRSC", "NUT", "TRCN"],
+    correct: "TRCN",
+  },
+  {
+    id: "edu101-180",
+    question: "What makes instructional objectives measurable?",
+    options: [
+      "amount of time",
+      "amount of material",
+      "amount of resources",
+      "amount of knowledge",
+    ],
+    correct: "amount of knowledge",
+  },
+  {
+    id: "edu101-181",
+    question:
+      "It relates to the recall of factual information. This statement describes ____",
+    options: ["Knowledge", "comprehension", "application", "analysis"],
+    correct: "Knowledge",
+  },
+  {
+    id: "edu101-182",
+    question:
+      "This relates to the acceptance of worth attached to an object, idea or concept. This assertion describes ____",
+    options: ["responding", "valuing", "organization", "receiving"],
+    correct: "valuing",
+  },
+  {
+    id: "edu101-183",
+    question:
+      "Objectives and evaluation are complementary in the following ways except ____",
+    options: [
+      "objectives provide direction for evaluation.",
+      "evaluation improves the quality of objectives",
+      "objectives protect the quality of evaluation.",
+      "evaluation validates instructional objectives",
+    ],
+    correct: "objectives protect the quality of evaluation.",
+  },
+  {
+    id: "edu101-184",
+    question:
+      "All of the following except one are appropriate method question for synthesis as a cognition level.",
+    options: ["integrate", "interpret", "modify", "create"],
+    correct: "interpret",
+  },
+  {
+    id: "edu101-185",
+    question:
+      "The willingness of the learner to react to the stimulus perceived is a description of ____",
+    options: ["organization", "valuing", "responding", "receiving"],
+    correct: "responding",
+  },
+  {
+    id: "edu101-186",
+    question:
+      "What, label, collect, when and identify are appropriate clue for ____",
+    options: ["knowledge", "perception", "compression", "analysis"],
+    correct: "knowledge",
+  },
+  {
+    id: "edu101-187",
+    question:
+      "Adopt, enforce, preserve, endorse, contribute are appropriate verbs suitable for the description of ____",
+    options: ["receiving", "responding", "valuing", "organization"],
+    correct: "responding",
+  },
+  {
+    id: "edu101-188",
+    question:
+      "Which of these is not a hierarchical level of affective objective?",
+    options: ["receiving", "responding", "valuing", "reflection"],
+    correct: "reflection",
+  },
+  {
+    id: "edu101-189",
+    question:
+      "Holding of pen to write and use of hand fork by a school pupil are typical examples of ____",
+    options: [
+      "basic fundamental movement",
+      "skilled movement",
+      "reflex movement",
+      "physical abilities",
+    ],
+    correct: "basic fundamental movement",
+  },
+  {
+    id: "edu101-190",
+    question:
+      "All but one of the following is appropriate. At the end of the lesson, the students should be able to:",
+    options: [
+      "state five characteristics of living things",
+      "understanding five characteristics of living things",
+      "know five characteristics of living things",
+      "demonstrate five characteristics of living things",
+    ],
+    correct: "state five characteristics of living things",
+  },
+  {
+    id: "edu101-191",
+    question:
+      "The assessment of the extent to which teaching-learning process has been gratified or realized is ____",
+    options: ["introspection", "assessment", "evaluation", "appraisal"],
+    correct: "evaluation",
+  },
+  {
+    id: "edu101-192",
+    question:
+      "How many levels do we have in cognitive and affective domains respectively.",
+    options: ["5, 6", "6, 6", "7, 5", "6, 5"],
+    correct: "6, 5",
+  },
+  {
+    id: "edu101-193",
+    question: "____ is the lowest level in cognitive domain",
+    options: ["application", "knowledge", "evaluation", "understanding"],
+    correct: "knowledge",
+  },
+  {
+    id: "edu101-194",
+    question:
+      "One of these is not a guideline for effective questioning technique.",
+    options: [
+      "Questions should be posted at the entire class.",
+      "Questions should not be ambiguous.",
+      "Chorus answers to questions should not be entertained.",
+      "Questions should be of higher - order level of cognition.",
+    ],
+    correct: "Questions should be of higher - order level of cognition.",
+  },
+  {
+    id: "edu101-195",
+    question:
+      "Which of these is not an advantage of questioning technique in classroom instruction?",
+    options: [
+      "It makes the teacher more relax and free from stress.",
+      "It promote meaningful classroom dialogue.",
+      "It makes learners more alert in the classroom.",
+      "It helps to keep teaching-learning process on track.",
+    ],
+    correct: "It makes the teacher more relax and free from stress.",
+  },
+  {
+    id: "edu101-196",
+    question:
+      "Why should a teacher not engage in the habit of repeating the questions asked in the classroom instruction?",
+    options: [
+      "to make the teacher save energy",
+      "to make the learner develop good listening skills",
+      "to punish the learners for not listening",
+      "to make the teacher command respect from the learners",
+    ],
+    correct: "to make the learner develop good listening skills",
+  },
+  {
+    id: "edu101-197",
+    question: "Which of the following is not a quality of a good question?",
+    options: [
+      "It must be clearly stated.",
+      "It must be in sequence.",
+      "It must be stated audibly.",
+      "It must be apathetic.",
+    ],
+    correct: "It must be apathetic.",
+  },
+  {
+    id: "edu101-198",
+    question:
+      "One of the guidelines for good questioning techniques in the classroom instruction is that it ____",
+    options: [
+      "must not be double barrel",
+      "must be limited to brilliant teachers.",
+      "must reflect high level of language.",
+      "must satisfy the interest of the learners",
+    ],
+    correct: "must not be double barrel",
+  },
+  {
+    id: "edu101-199",
+    question:
+      "Which of the following is not an appropriate teaching method at the primary school?",
+    options: [
+      "lecture method",
+      "discussion method",
+      "discovery method",
+      "demonstration method",
+    ],
+    correct: "lecture method",
+  },
+  {
+    id: "edu101-200",
+    question: "Which of these is not a teaching method?",
+    options: [
+      "Problem solving",
+      "Team teaching",
+      "Field trip",
+      "Teaching for cooperative learning",
+    ],
+    correct: "Teaching for cooperative learning",
+  },
+  {
+    id: "edu101-201",
+    question:
+      "It provides firsthand experience of what is taught in the classroom. This statement relates to:",
+    options: [
+      "Play way method",
+      "Field trip method",
+      "Discussion method",
+      "Team teaching method",
+    ],
+    correct: "Field trip method",
+  },
+  {
+    id: "edu101-202",
+    question:
+      "Which of these is most suitable for teaching of addition with carrying in mathematics to primary two class?",
+    options: [
+      "play way methods",
+      "lecture method",
+      "Field trip method",
+      "Discussion method",
+    ],
+    correct: "play way methods",
+  },
+  {
+    id: "edu101-203",
+    question: "One of the following is the odd one.",
+    options: [
+      "lecture method",
+      "team teaching method",
+      "excursion method",
+      "acoustic method",
+    ],
+    correct: "acoustic method",
+  },
+  {
+    id: "edu101-204",
+    question: "In the theory of motivation, as one need is gratified ____",
+    options: [
+      "individual needs becomes satisfied.",
+      "other needs are gratified.",
+      "a higher need comes up",
+      "individual becomes accepted",
+    ],
+    correct: "a higher need comes up",
+  },
+  {
+    id: "edu101-205",
+    question:
+      "One of the underlying assumptions of motivation is that the previously gratified need becomes secondary and ____",
+    options: [
+      "so many are always in a state of need.",
+      "many others become primary and complex.",
+      "too inconsequential to warrant any special attention.",
+      "insignificant to many people.",
+    ],
+    correct: "too inconsequential to warrant any special attention.",
+  },
+  {
+    id: "edu101-206",
+    question:
+      "He is enthusiastic to learn, can handle abstractions and always ready to take up challenges. The above perfectly describes ____.",
+    options: [
+      "an emotional learner.",
+      "a well-motivated learner.",
+      "a high potential learner",
+      "a learner with level of cognition",
+    ],
+    correct: "a well-motivated learner",
+  },
+  {
+    id: "edu101-207",
+    question:
+      "According to Maslow, human needs can be categorized into ____ and ____",
+    options: [
+      "growth and development needs",
+      "growth and deficiency needs",
+      "social and basic needs",
+      "physical and spiritual needs",
+    ],
+    correct: "growth and deficiency needs",
+  },
+  {
+    id: "edu101-208",
+    question: "Need for love, affection and recognition indicate ____",
+    options: [
+      "Psychological needs",
+      "safety needs",
+      "social needs",
+      "self-esteem",
+    ],
+    correct: "social needs",
+  },
+  {
+    id: "edu101-209",
+    question: "The peak of Maslow's theory hierarchy of need is ____",
+    options: [
+      "self-actualization needs",
+      "self-esteem needs",
+      "social needs",
+      "safety needs",
+    ],
+    correct: "self-actualization needs",
+  },
+  {
+    id: "edu101-210",
+    question:
+      "The application of theories of motivation to classroom instruction involves ____",
+    options: [
+      "the use of negative reinforcement only.",
+      "the use of positive reinforcement only",
+      "efforts from teachers making his subject interesting",
+      "indiscriminate use of incentives by the teacher.",
+    ],
+    correct: "efforts from teachers making his subject interesting",
+  },
+  {
+    id: "edu101-211",
+    question: "Which of these is not true about motivation?",
+    options: [
+      "Every human being is always in a state of need.",
+      "The state of complete satisfaction is unattainable.",
+      "All human needs can be satisfied.",
+      "As one need is gratified a higher need comes up.",
+    ],
+    correct: "All human needs can be satisfied.",
+  },
+  {
+    id: "edu101-212",
+    question:
+      "An individual who decided to pursue a post graduate programme is probably seeking for the satisfaction of ____",
+    options: [
+      "safety need",
+      "social need",
+      "esteem need",
+      "self-actualization need",
+    ],
+    correct: "self-actualization need",
+  },
+  {
+    id: "edu101-213",
+    question:
+      "To achieve optimum impact in the classroom, a teacher needs to ____",
+    options: [
+      "be aggressive",
+      "be domineering",
+      "provide necessary condition that will enhance learning",
+      "all of the above.",
+    ],
+    correct: "provide necessary condition that will enhance learning",
+  },
+  {
+    id: "edu101-214",
+    question: "To what extent can we say teaching is a profession?",
+    options: [
+      "Teachers are well respected and held in high esteem.",
+      "Teaching is an exclusive privilege of teachers.",
+      "Teaching requires expertise, skills and competencies.",
+      "Teaching enjoys juicy condition of service.",
+    ],
+    correct: "Teaching requires expertise, skills and competencies.",
+  },
+  {
+    id: "edu101-215",
+    question:
+      "The idea that teaching as an activity is one not restricted by professional tutelage is a correct one.",
+    options: ["true", "untrue", "half-true", "none of the above."],
+    correct: "untrue",
+  },
+  {
+    id: "edu101-216",
+    question: "How best can we describe teaching in Nigeria?",
+    options: [
+      "Teaching is a profession.",
+      "Teaching is not a profession.",
+      "Teaching is an occupation.",
+      "Teaching is a half-way profession.",
+    ],
+    correct: "Teaching is a half-way profession.",
+  },
+  {
+    id: "edu101-217",
+    question:
+      "____ is based on scientific and philosophical facts required through scholarly endeavor.",
+    options: ["teaching", "indoctrination", "science", "profession"],
+    correct: "profession",
   },
 ];
