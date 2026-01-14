@@ -130,7 +130,7 @@ export const edu101Questions = [
       "instruction",
       "instructional objectives",
     ],
-    correct: "instructional materials",
+    correct: "instructional objectives",
   },
   {
     id: "edu101-015",
