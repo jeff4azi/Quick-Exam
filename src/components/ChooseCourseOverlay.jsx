@@ -9,7 +9,7 @@ const ChooseCourseOverlay = ({ setShowChooseCourseOverlay, courses, selectedCour
   }
 
   return (
-    <div onClick={() => setShowChooseCourseOverlay(false)} className="fixed inset-0 bg-black/50 flex items-center justify-center">
+    <div onClick={() => setShowChooseCourseOverlay(false)} className="fixed inset-0 bg-black/50 flex items-center justify-center z-52">
       <div onClick={e => e.stopPropagation()} className="w-[90%] max-w-md bg-white rounded-2xl p-6">
         <div className="flex justify-between items-center mb-5">
           <h2 className="text-3xl font-semibold">Select Course</h2>

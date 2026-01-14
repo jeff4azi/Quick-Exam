@@ -8,7 +8,8 @@ import ResultScreen from "./pages/ResultScreen";
 
 import { edu101Questions } from "./edu-101questions"
 import { gns113Questions } from "./gns-113questions";
-import { gst111Questions } from "./gst-111questions"
+import { gst111Questions } from "./gst-111questions";
+import { edu101revisionQuestions } from "./edu101revisionQuestions"
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
 
@@ -27,7 +28,7 @@ function App() {
     {
       id: "EDU101",
       name: "EDU 101",
-      questions: edu101Questions,
+      questions: [...edu101Questions, ...edu101revisionQuestions],
     },
     {
       id: "GST111",
@@ -109,6 +110,7 @@ const onSubmit = () => {
     edu101Questions,
     gst111Questions,
     gns113Questions,
+    edu101revisionQuestions
   }
 
   return (

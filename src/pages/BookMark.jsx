@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
-const BookMark = ({ bookmarks, edu101Questions, gns113Questions, gst111Questions, setBookmarks }) => {
+const BookMark = ({ bookmarks, edu101Questions, gns113Questions, gst111Questions, edu101revisionQuestions, setBookmarks }) => {
   const navigate = useNavigate();
 
   // Combine all questions
-  const allQuestions = [...edu101Questions, ...gst111Questions, ...gns113Questions];
+  const allQuestions = [...edu101Questions, ...gst111Questions, ...gns113Questions, ...edu101revisionQuestions];
 
   // Filter questions that are bookmarked
   const bookmarkedQuestions = allQuestions.filter(q => bookmarks.includes(q.id));
@@ -12,8 +12,20 @@ const BookMark = ({ bookmarks, edu101Questions, gns113Questions, gst111Questions
   // Function to get course code from question id
   const getCourseFromId = (id) => {
     if (!id) return "";
-    const prefix = id.split("-")[0]; // e.g., "edu101"
-    return prefix.toUpperCase().replace(/(\w{3})(\d{3})/, "$1 $2"); // "EDU101" -> "EDU 101"
+
+    const prefix = id.split("-")[0].toLowerCase();
+
+    // Handle revision EDU 101
+    if (prefix === "revedu101") {
+      return "REVISION EDU 101";
+    }
+
+    // Normal courses (edu101, gst111, gns113)
+    const match = prefix.match(/^([a-z]+)(\d+)$/i);
+    if (!match) return prefix.toUpperCase();
+
+    const [, code, number] = match;
+    return `${code.toUpperCase()} ${number}`;
   };
 
   // Remove a question from bookmarks
