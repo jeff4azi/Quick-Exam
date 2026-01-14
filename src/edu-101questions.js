@@ -1598,4 +1598,209 @@ export const edu101Questions = [
     options: ["Scanning", "Skimming", "Reading", "Recall"],
     correct: "Reading",
   },
+  {
+    id: "edu101-153",
+    question: "Teaching as a profession is mainly concerned with",
+    options: [
+      "selling knowledge",
+      "guiding learners to acquire knowledge and values",
+      "political activities",
+      "making profit",
+    ],
+    correct: "guiding learners to acquire knowledge and values",
+    reason:
+      "Teaching involves guiding learners to gain knowledge, skills, values, and attitudes for personal and societal development.",
+  },
+  {
+    id: "edu101-154",
+    question: "Which of the following makes teaching a profession",
+    options: ["entertainment", "code of ethics", "punishment", "politics"],
+    correct: "code of ethics",
+    reason:
+      "A profession is guided by ethical rules and standards, and teaching has a code of ethics.",
+  },
+  {
+    id: "edu101-155",
+    question: "Pedagogical content knowledge refers to",
+    options: [
+      "knowing only teaching methods",
+      "knowing only the subject matter",
+      "combining subject knowledge with teaching methods",
+      "memorizing textbooks",
+    ],
+    correct: "combining subject knowledge with teaching methods",
+    reason:
+      "Pedagogical content knowledge combines what to teach with how to teach it effectively.",
+  },
+  {
+    id: "edu101-156",
+    question:
+      "A teacher who can simplify difficult topics for learners shows good",
+    options: [
+      "social class",
+      "pedagogical content knowledge",
+      "classroom size",
+      "punishment skill",
+    ],
+    correct: "pedagogical content knowledge",
+    reason:
+      "Simplifying difficult topics shows the ability to teach content effectively.",
+  },
+  {
+    id: "edu101-157",
+    question:
+      "Which of the following is an intellectual competence of a teacher",
+    options: [
+      "lesson planning",
+      "classroom management",
+      "critical thinking",
+      "use of instructional materials",
+    ],
+    correct: "critical thinking",
+    reason:
+      "Critical thinking is a mental ability required for effective teaching.",
+  },
+  {
+    id: "edu101-158",
+    question: "Lesson planning and classroom management are examples of",
+    options: [
+      "emotional competences",
+      "intellectual competences",
+      "practical competences",
+      "social competences",
+    ],
+    correct: "practical competences",
+    reason: "They are hands-on skills used in real classroom situations.",
+  },
+  {
+    id: "edu101-159",
+    question: "Education contributes to national development by",
+    options: [
+      "encouraging ignorance",
+      "producing skilled manpower",
+      "increasing crime",
+      "discouraging innovation",
+    ],
+    correct: "producing skilled manpower",
+    reason:
+      "Education equips people with skills needed for economic and social development.",
+  },
+  {
+    id: "edu101-160",
+    question: "African traditional education was mainly",
+    options: [
+      "formal and classroom based",
+      "informal and community based",
+      "online based",
+      "examination oriented",
+    ],
+    correct: "informal and community based",
+    reason:
+      "African traditional education took place within the community and was informal.",
+  },
+  {
+    id: "edu101-161",
+    question: "Learning in African traditional education was mainly through",
+    options: [
+      "textbooks and notes",
+      "observation and imitation",
+      "computers",
+      "written examinations",
+    ],
+    correct: "observation and imitation",
+    reason: "Learners learned by watching elders and practicing skills.",
+  },
+  {
+    id: "edu101-162",
+    question: "Greek education emphasized",
+    options: [
+      "farming only",
+      "philosophy and reasoning",
+      "religious worship only",
+      "trading",
+    ],
+    correct: "philosophy and reasoning",
+    reason:
+      "Greek education focused on philosophy, logic, and development of the mind.",
+  },
+  {
+    id: "edu101-163",
+    question: "Which of the following was a Greek philosopher",
+    options: ["Vygotsky", "Skinner", "Plato", "Pavlov"],
+    correct: "Plato",
+    reason:
+      "Plato was a well-known Greek philosopher who contributed to education.",
+  },
+  {
+    id: "edu101-164",
+    question: "Educational psychology studies",
+    options: [
+      "school buildings",
+      "how learners learn",
+      "government policies",
+      "examination bodies",
+    ],
+    correct: "how learners learn",
+    reason:
+      "Educational psychology focuses on learning processes and learner behavior.",
+  },
+  {
+    id: "edu101-165",
+    question: "The behaviorist theory views learning as",
+    options: [
+      "thinking and reasoning",
+      "social interaction",
+      "change in observable behavior",
+      "imagination",
+    ],
+    correct: "change in observable behavior",
+    reason:
+      "Behaviorism defines learning as a change in observable behavior due to experience.",
+  },
+  {
+    id: "edu101-166",
+    question: "Which of the following is a behaviorist theorist",
+    options: ["Piaget", "Vygotsky", "Skinner", "Plato"],
+    correct: "Skinner",
+    reason: "Skinner was a major contributor to the behaviorist theory.",
+  },
+  {
+    id: "edu101-167",
+    question: "Reinforcement in learning helps to",
+    options: [
+      "stop learning",
+      "weaken learning",
+      "strengthen learning",
+      "confuse learners",
+    ],
+    correct: "strengthen learning",
+    reason:
+      "Reinforcement increases the likelihood of a behavior being repeated.",
+  },
+  {
+    id: "edu101-168",
+    question: "The cognitive theory of learning emphasizes",
+    options: [
+      "punishment",
+      "memory and thinking",
+      "reward only",
+      "imitation only",
+    ],
+    correct: "memory and thinking",
+    reason:
+      "Cognitive theory focuses on mental processes such as thinking and memory.",
+  },
+  {
+    id: "edu101-169",
+    question: "Learning through social interaction is emphasized by",
+    options: [
+      "behaviorist theory",
+      "idealism",
+      "socio-cultural theory",
+      "realism",
+    ],
+    correct: "socio-cultural theory",
+    reason:
+      "Socio-cultural theory stresses the role of society and interaction in learning.",
+  },
 ];
