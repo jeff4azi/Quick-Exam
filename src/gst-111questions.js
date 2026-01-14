@@ -398,7 +398,7 @@ export const gst111Questions = [
     id: "gst111-051",
     question: "Election ___________ the house begins at 5 p.m.",
     options: ["into", "at", "to", "for"],
-    correct: "into",
+    correct: "at",
   },
   {
     id: "gst111-052",
