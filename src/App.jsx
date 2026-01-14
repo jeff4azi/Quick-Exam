@@ -10,6 +10,7 @@ import { edu101Questions } from "./edu-101questions"
 import { gns113Questions } from "./gns-113questions";
 import { gst111Questions } from "./gst-111questions"
 import ReviewAnswers from "./pages/ReviewAnswers";
+import BookMark from "./pages/BookMark";
 
 function App() {
   function getRandom30(arr) {
@@ -43,6 +44,7 @@ function App() {
   const [answers, setAnswers] = useState([])
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [questions, setQuestions] = useState([]);
+  const [bookmarks, setBookmarks] = useState([])
   const [results, setResults] = useState({
     correct: 0,
     wrong: 0,
@@ -55,6 +57,14 @@ function App() {
       setAnswers([]);
     }
   }, [selectedCourse]);
+
+  /* ---------------- LOAD BOOKMARKS ---------------- */
+  useEffect(() => {
+    const saved = localStorage.getItem("bookmarkedQuestions")
+    if (saved) {
+      setBookmarks(JSON.parse(saved))
+    }
+  }, [])
 
 const onSubmit = () => {
   let newCorrect = 0;
@@ -93,7 +103,12 @@ const onSubmit = () => {
     getRandom30,
     courses,
     selectedCourse,
-    setSelectedCourse
+    setSelectedCourse,
+    bookmarks,
+    setBookmarks,
+    edu101Questions,
+    gst111Questions,
+    gns113Questions,
   }
 
   return (
@@ -103,6 +118,7 @@ const onSubmit = () => {
         <Route path="/exam" element={<ExamScreen {...props} />} />
         <Route path="/results" element={<ResultScreen {...props} />} />
         <Route path="/review-answers" element={<ReviewAnswers {...props} />} />
+        <Route path="/bookmarks" element={<BookMark {...props} />} />
       </Routes>
       <SpeedInsights />
       <Analytics />
