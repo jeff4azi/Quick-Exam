@@ -114,7 +114,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
           <button
             onClick={handleBookmarkClick}
             className={`${isBookmarked ? "text-blue-500" : "text-gray-400"
-              } hover:text-yellow-500 transition-colors`}
+              } hover:text-yellow-500 transition-colors -translate-y-1`}
             aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
           >
             <svg
