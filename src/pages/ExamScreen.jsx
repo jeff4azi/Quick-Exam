@@ -107,8 +107,8 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
 
       {/* ---------------- QUESTION CARD ---------------- */}
       <div className="bg-white mx-5 p-5 rounded-2xl my-7 shadow-sm">
-        <div className="flex justify-between items-center">
-          <div className="text-gray-400 mb-2">{selectedCourse.name}</div>
+        <div className="flex justify-between items-center mb-2">
+          <div className="text-gray-400">{selectedCourse.name}</div>
 
           {/* BOOKMARK BUTTON */}
           <button
