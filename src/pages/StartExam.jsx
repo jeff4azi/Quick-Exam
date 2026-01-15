@@ -153,7 +153,7 @@ const StartExam = ({
         />
       )}
 
-      <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(edu101revisionCourse); }} />
+      <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(getRandom30(edu101revisionCourse)); }} />
     </div>
   )
 }

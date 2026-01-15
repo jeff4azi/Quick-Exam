@@ -72,7 +72,7 @@ const RevisionTestModal = ({ onTakeTest }) => {
           <div className="flex items-center gap-2 text-sm">
             <span>❓</span>
             <span className="font-medium">Questions:</span>
-            <span>35 questions</span>
+            <span>30 questions</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
             <span>⏱</span>
