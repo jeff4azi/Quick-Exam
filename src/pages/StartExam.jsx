@@ -24,7 +24,7 @@ const StartExam = ({
   const edu101revisionCourse = {
     id: "R.EDU101",
     name: "R. EDU 101",
-    questions: edu101revisionQuestions,
+    questions: getRandom30(edu101revisionQuestions),
   }
 
   return (
@@ -153,7 +153,7 @@ const StartExam = ({
         />
       )}
 
-      <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(getRandom30(edu101revisionCourse)); }} />
+      <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(edu101revisionCourse); }} />
     </div>
   )
 }
