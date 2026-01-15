@@ -5,6 +5,8 @@ import Logo from "../images/Logo"
 import RevisionTestModal from "../components/RevisionTestModal"
 import { useNavigate } from "react-router-dom"
 
+import ReactGA from "react-ga4";
+
 const StartExam = ({
   setQuestions,
   getRandom30,
@@ -108,7 +110,14 @@ const StartExam = ({
               </div>
               About Quiz Bolt
             </li>
-            <li className="hover:text-blue-600 active:text-blue-600 duration-200 cursor-pointer gap-2 flex items-center" onClick={() => navigate("/bookmarks")}>
+            <li className="hover:text-blue-600 active:text-blue-600 duration-200 cursor-pointer gap-2 flex items-center" onClick={() => {
+              navigate("/bookmarks")
+              ReactGA.event({
+                category: "Engagement",
+                action: "Bookmark Question",
+                label: selectedCourse.id,
+              });
+            }}>
               <div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="lg:size-6" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0" />
@@ -135,7 +144,14 @@ const StartExam = ({
 
       {/* Start Exam button */}
       <button
-        onClick={() => setShowChooseCourseOverlay(true)}
+        onClick={() => {
+          setShowChooseCourseOverlay(true)
+          ReactGA.event({
+            category: "Exam",
+            action: "Start Exam",
+            label: selectedCourse.id || "none",
+          });
+        }}
         className="absolute bottom-10 bg-[#2563EB] py-5 px-7 rounded-full font-medium text-white text-2xl hover:scale-105 duration-200 ease-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300"
       >
         Start Exam

@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react"
-import { Analytics } from "@vercel/analytics/react";
+import RouteChangeTracker from "./components/RouteChangeTracker";
 import { useState, useEffect } from "react";
 import StartExam from "./pages/StartExam";
 import ExamScreen from "./pages/ExamScreen";
@@ -12,6 +12,7 @@ import { gst111Questions } from "./gst-111questions";
 import { edu101revisionQuestions } from "./edu101revisionQuestions"
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
+import ReactGA from "react-ga4";
 
 function App() {
   function getRandom30(arr) {
@@ -51,6 +52,10 @@ function App() {
     wrong: 0,
     answered: 0,
   })
+
+  useEffect(() => {
+    ReactGA.initialize("G-93T0BGL64Y");
+  }, []);
   
   useEffect(() => {
     if (selectedCourse) {
@@ -115,6 +120,7 @@ const onSubmit = () => {
 
   return (
     <Router>
+      <RouteChangeTracker />
       <Routes>
         <Route path="/" element={<StartExam {...props} />} />
         <Route path="/exam" element={<ExamScreen {...props} />} />
@@ -123,7 +129,6 @@ const onSubmit = () => {
         <Route path="/bookmarks" element={<BookMark {...props} />} />
       </Routes>
       <SpeedInsights />
-      <Analytics />
     </Router>
   );
 }

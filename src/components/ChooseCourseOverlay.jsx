@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom"
+import ReactGA from "react-ga4";
 
 const ChooseCourseOverlay = ({ setShowChooseCourseOverlay, courses, selectedCourse, setSelectedCourse }) => {
   
@@ -40,6 +41,11 @@ const ChooseCourseOverlay = ({ setShowChooseCourseOverlay, courses, selectedCour
                 onClick={() => {
                   setSelectedCourse(course);
                   startExam();
+                  ReactGA.event({
+                    category: "Course",
+                    action: "Select Course",
+                    label: course.id,
+                  });
                 }}
                 className={`w-full py-4 rounded-lg ${selectedCourse?.id === course.id
                     ? "bg-gray-400"

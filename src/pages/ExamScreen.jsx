@@ -4,9 +4,11 @@ import { useNavigate } from "react-router-dom"
 import ProgressBar from "../components/ProgressBar"
 import Timer from "../components/Timer"
 
+import ReactGA from "react-ga4";
+
 const TOTAL_TIME = 10 * 60 // 10 minutes
 
-const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, bookmarks, setBookmarks }) => {
+const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, bookmarks, setBookmarks, results }) => {
   const navigate = useNavigate()
 
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -51,6 +53,12 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
     navigate("/results", {
       state: { timeTaken: TOTAL_TIME - finalTime }
     })
+    ReactGA.event({
+      category: "Exam",
+      action: "Time Up auto Submit Exam",
+      label: selectedCourse.id,
+      value: results.correct,
+    });
   }
 
   /* ---------------- NAVIGATION ---------------- */
@@ -62,6 +70,12 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
       navigate("/results", {
         state: { timeTaken: TOTAL_TIME - timeLeft }
       })
+      ReactGA.event({
+        category: "Exam",
+        action: "Submit Exam",
+        label: selectedCourse.id,
+        value: results.correct,
+      });
     }
   }
 
