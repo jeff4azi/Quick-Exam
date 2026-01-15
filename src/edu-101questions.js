@@ -1814,7 +1814,7 @@ export const edu101Questions = [
   {
     id: "edu101-172",
     question:
-      "In the process of communication, the substitute name for channel is ____",
+      "In the process of communication, the substitute name for channel is ___________",
     options: ["evaluation", "learner", "method", "teacher"],
     correct: "method",
   },
@@ -1826,7 +1826,7 @@ export const edu101Questions = [
   },
   {
     id: "edu101-174",
-    question: "Teaching entails ____",
+    question: "Teaching entails ___________",
     options: [
       "arbitraries",
       "promotion of dogma",
@@ -1851,7 +1851,7 @@ export const edu101Questions = [
   {
     id: "edu101-176",
     question:
-      "____ is a relatively permanent change in behaviour or in behavioural potential that results from experience and cannot be attributed to temporary body states such as those induced by illness, fatigue or drugs.",
+      "___________ is a relatively permanent change in behaviour or in behavioural potential that results from experience and cannot be attributed to temporary body states such as those induced by illness, fatigue or drugs.",
     options: ["indoctrination", "instruction", "learning", "teaching"],
     correct: "learning",
   },
@@ -1871,8 +1871,8 @@ export const edu101Questions = [
   {
     id: "edu101-179",
     question:
-      "[TRCN] was established in 1993 with ____ primary goal of regulating and standardizing the teaching profession in Nigeria.",
-    options: ["FRSC", "NUT", "TRCN"],
+      "___________ was established in 1993 with the primary goal of regulating and standardizing the teaching profession in Nigeria.",
+    options: ["FRSC", "NUT", "TRCN", "ASUU"],
     correct: "TRCN",
   },
   {
@@ -1889,21 +1889,21 @@ export const edu101Questions = [
   {
     id: "edu101-181",
     question:
-      "It relates to the recall of factual information. This statement describes ____",
+      "It relates to the recall of factual information. This statement describes ___________",
     options: ["Knowledge", "comprehension", "application", "analysis"],
     correct: "Knowledge",
   },
   {
     id: "edu101-182",
     question:
-      "This relates to the acceptance of worth attached to an object, idea or concept. This assertion describes ____",
+      "This relates to the acceptance of worth attached to an object, idea or concept. This assertion describes ___________",
     options: ["responding", "valuing", "organization", "receiving"],
     correct: "valuing",
   },
   {
     id: "edu101-183",
     question:
-      "Objectives and evaluation are complementary in the following ways except ____",
+      "Objectives and evaluation are complementary in the following ways except ___________",
     options: [
       "objectives provide direction for evaluation.",
       "evaluation improves the quality of objectives",
@@ -1922,21 +1922,21 @@ export const edu101Questions = [
   {
     id: "edu101-185",
     question:
-      "The willingness of the learner to react to the stimulus perceived is a description of ____",
+      "The willingness of the learner to react to the stimulus perceived is a description of ___________",
     options: ["organization", "valuing", "responding", "receiving"],
     correct: "responding",
   },
   {
     id: "edu101-186",
     question:
-      "What, label, collect, when and identify are appropriate clue for ____",
+      "What, label, collect, when and identify are appropriate clue for ___________",
     options: ["knowledge", "perception", "compression", "analysis"],
     correct: "knowledge",
   },
   {
     id: "edu101-187",
     question:
-      "Adopt, enforce, preserve, endorse, contribute are appropriate verbs suitable for the description of ____",
+      "Adopt, enforce, preserve, endorse, contribute are appropriate verbs suitable for the description of ___________",
     options: ["receiving", "responding", "valuing", "organization"],
     correct: "responding",
   },
@@ -1950,7 +1950,7 @@ export const edu101Questions = [
   {
     id: "edu101-189",
     question:
-      "Holding of pen to write and use of hand fork by a school pupil are typical examples of ____",
+      "Holding of pen to write and use of hand fork by a school pupil are typical examples of ___________",
     options: [
       "basic fundamental movement",
       "skilled movement",
@@ -1974,7 +1974,7 @@ export const edu101Questions = [
   {
     id: "edu101-191",
     question:
-      "The assessment of the extent to which teaching-learning process has been gratified or realized is ____",
+      "The assessment of the extent to which teaching-learning process has been gratified or realized is ___________",
     options: ["introspection", "assessment", "evaluation", "appraisal"],
     correct: "evaluation",
   },
@@ -1987,7 +1987,7 @@ export const edu101Questions = [
   },
   {
     id: "edu101-193",
-    question: "____ is the lowest level in cognitive domain",
+    question: "___________ is the lowest level in cognitive domain",
     options: ["application", "knowledge", "evaluation", "understanding"],
     correct: "knowledge",
   },
@@ -2041,7 +2041,7 @@ export const edu101Questions = [
   {
     id: "edu101-198",
     question:
-      "One of the guidelines for good questioning techniques in the classroom instruction is that it ____",
+      "One of the guidelines for good questioning techniques in the classroom instruction is that it ___________",
     options: [
       "must not be double barrel",
       "must be limited to brilliant teachers.",
@@ -2110,7 +2110,7 @@ export const edu101Questions = [
   },
   {
     id: "edu101-204",
-    question: "In the theory of motivation, as one need is gratified ____",
+    question: "In the theory of motivation, as one need is gratified ___________",
     options: [
       "individual needs becomes satisfied.",
       "other needs are gratified.",
@@ -2122,7 +2122,7 @@ export const edu101Questions = [
   {
     id: "edu101-205",
     question:
-      "One of the underlying assumptions of motivation is that the previously gratified need becomes secondary and ____",
+      "One of the underlying assumptions of motivation is that the previously gratified need becomes secondary and ___________",
     options: [
       "so many are always in a state of need.",
       "many others become primary and complex.",
@@ -2134,7 +2134,7 @@ export const edu101Questions = [
   {
     id: "edu101-206",
     question:
-      "He is enthusiastic to learn, can handle abstractions and always ready to take up challenges. The above perfectly describes ____.",
+      "He is enthusiastic to learn, can handle abstractions and always ready to take up challenges. The above perfectly describes ___________.",
     options: [
       "an emotional learner.",
       "a well-motivated learner.",
@@ -2146,7 +2146,7 @@ export const edu101Questions = [
   {
     id: "edu101-207",
     question:
-      "According to Maslow, human needs can be categorized into ____ and ____",
+      "According to Maslow, human needs can be categorized into ___________ and ___________",
     options: [
       "growth and development needs",
       "growth and deficiency needs",
@@ -2157,7 +2157,7 @@ export const edu101Questions = [
   },
   {
     id: "edu101-208",
-    question: "Need for love, affection and recognition indicate ____",
+    question: "Need for love, affection and recognition indicate ___________",
     options: [
       "Psychological needs",
       "safety needs",
@@ -2168,7 +2168,7 @@ export const edu101Questions = [
   },
   {
     id: "edu101-209",
-    question: "The peak of Maslow's theory hierarchy of need is ____",
+    question: "The peak of Maslow's theory hierarchy of need is ___________",
     options: [
       "self-actualization needs",
       "self-esteem needs",
@@ -2180,7 +2180,7 @@ export const edu101Questions = [
   {
     id: "edu101-210",
     question:
-      "The application of theories of motivation to classroom instruction involves ____",
+      "The application of theories of motivation to classroom instruction involves ___________",
     options: [
       "the use of negative reinforcement only.",
       "the use of positive reinforcement only",
@@ -2203,7 +2203,7 @@ export const edu101Questions = [
   {
     id: "edu101-212",
     question:
-      "An individual who decided to pursue a post graduate programme is probably seeking for the satisfaction of ____",
+      "An individual who decided to pursue a post graduate programme is probably seeking for the satisfaction of ___________",
     options: [
       "safety need",
       "social need",
@@ -2215,7 +2215,7 @@ export const edu101Questions = [
   {
     id: "edu101-213",
     question:
-      "To achieve optimum impact in the classroom, a teacher needs to ____",
+      "To achieve optimum impact in the classroom, a teacher needs to ___________",
     options: [
       "be aggressive",
       "be domineering",
@@ -2256,8 +2256,31 @@ export const edu101Questions = [
   {
     id: "edu101-217",
     question:
-      "____ is based on scientific and philosophical facts required through scholarly endeavor.",
+      "___________ is based on scientific and philosophical facts required through scholarly endeavor.",
     options: ["teaching", "indoctrination", "science", "profession"],
     correct: "profession",
   },
+  {
+    id: "edu101-218",
+    question: "In which year was ASSU established?",
+    options: ["1978", "1980", "1975", "1985"],
+    correct: "1978"
+  },
+  {
+    id: "edu101-219",
+    question: "What does the term 'pedagogy' refer to?",
+    options: [
+      "The teaching of children or dependent personalities",
+      "A type of educational institution",
+      "A method of evaluating teachers",
+      "A system of school management"
+    ],
+    correct: "The teaching of children or dependent personalities"
+  },
+  {
+    id: "edu101-220",
+    question: "When was the Nigeria Union of Teachers (NUT) established?",
+    options: ["1931", "1945", "1920", "1950"],
+    correct: "1931"
+  }
 ];
