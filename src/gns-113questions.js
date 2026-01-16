@@ -514,5 +514,295 @@ export const gns113Questions = [
       "Depend on external rewards",
     ],
     correct: "Sustain motivation and consistency",
-  }
-]
+  },
+  {
+    id: "gns113-052",
+    question:
+      "A book that provides a list of names and addresses of people in an organization or institution is ___________",
+    options: ["Encyclopedia", "Directory", "Year book", "Almanacs"],
+    correct: "Directory",
+  },
+  {
+    id: "gns113-053",
+    question:
+      "___________ supports and co-ordinates the day to day activities of the Library",
+    options: [
+      "Readers' services",
+      "Technical services",
+      "Reference unit",
+      "General administration",
+    ],
+    correct: "General administration",
+  },
+  {
+    id: "gns113-054",
+    question: "Web documents can be evaluated by all except",
+    options: ["Accuracy", "Authority", "Objectivity", "Longevity"],
+    correct: "Longevity",
+  },
+  {
+    id: "gns113-055",
+    question:
+      "___________ is the process of grouping together items which have certain characteristics",
+    options: ["Catalogue", "Classification", "Colon", "Card"],
+    correct: "Classification",
+  },
+  {
+    id: "gns113-056",
+    question: "___________ is the descriptive of books",
+    options: ["Dictionary", "Bibliography", "Gazette", "Directories"],
+    correct: "Bibliography",
+  },
+  {
+    id: "gns113-057",
+    question:
+      "A library that belongs to a particular establishment is called ___________",
+    options: [
+      "Private Library",
+      "National Library",
+      "Research Library",
+      "International Library",
+    ],
+    correct: "Research Library",
+  },
+  {
+    id: "gns113-058",
+    question: "The general administration of the library does ___________",
+    options: [
+      "Treats issues with levity",
+      "Cooperates with indiscipline",
+      "Supports and co-ordinates the day to day activities of the Library",
+      "Purchases books for the Library",
+    ],
+    correct:
+      "Supports and co-ordinates the day to day activities of the Library",
+  },
+  {
+    id: "gns113-059",
+    question: "___________ is a pointer to information",
+    options: ["Loans", "Index", "Abstract", "Copyright"],
+    correct: "Index",
+  },
+  {
+    id: "gns113-060",
+    question:
+      "A brief summary of the findings and points of a periodical article is called ___________",
+    options: ["Information", "Library Service", "Abstract", "Book loan"],
+    correct: "Abstract",
+  },
+  {
+    id: "gns113-061",
+    question:
+      "Research Assistance is a service given to user to have proper ___________ to information",
+    options: ["Assistance", "Access", "Needs of information", "Explore"],
+    correct: "Access",
+  },
+  {
+    id: "gns113-062",
+    question:
+      "Collection of information held in some forms of computerized or electronic format is called ___________",
+    options: ["Projectors", "Film", "Machine Readable materials", "E-learning"],
+    correct: "Machine Readable materials",
+  },
+  {
+    id: "gns113-063",
+    question: "The following is a form of classification scheme except",
+    options: ["DDC", "UDC", "COLON", "Lending"],
+    correct: "Lending",
+  },
+  {
+    id: "gns113-064",
+    question:
+      "___________ enable user to find the contents of millions of web pages simultaneously",
+    options: ["Search engine", "Microchip", "Meta data", "Microform"],
+    correct: "Search engine",
+  },
+  {
+    id: "gns113-065",
+    question: "Boolean Operators uses combination of terms such as",
+    options: ["IN and OUT", "BUT and NOT", "AND, OR and NOT", "OR and TERMS"],
+    correct: "AND, OR and NOT",
+  },
+  {
+    id: "gns113-066",
+    question:
+      "___________ is the ability to identify likely sources of information",
+    options: [
+      "Resources",
+      "Information literate person",
+      "Information retrieval",
+      "Evaluate",
+    ],
+    correct: "Information literate person",
+  },
+  {
+    id: "gns113-067",
+    question:
+      "___________ is about selecting wide range of stock which will allow people to enrich and enjoy themselves academically",
+    options: [
+      "Information Retrieval",
+      "Information needs",
+      "Reading guidance",
+      "Lending",
+    ],
+    correct: "Reading guidance",
+  },
+  {
+    id: "gns113-068",
+    question:
+      "The connection to other Library enables ___________ to use other libraries",
+    options: ["Book use", "Users", "Patients", "Viewers"],
+    correct: "Users",
+  },
+  {
+    id: "gns113-069",
+    question:
+      "The use of Information Communication Technology in service delivery helps in ___________",
+    options: [
+      "Effective and higher percentage of inquiry resolution",
+      "Confusing the users needs",
+      "Promoting books displays",
+      "Readers' development",
+    ],
+    correct: "Effective and higher percentage of inquiry resolution",
+  },
+  {
+    id: "gns113-070",
+    question:
+      "The published record of conference, congress, and symposium is called ___________",
+    options: ["Proceedings", "Newspapers", "Journals", "Reports"],
+    correct: "Proceedings",
+  },
+  {
+    id: "gns113-071",
+    question:
+      "Library of Congress Classification uses ___________ and ___________",
+    options: [
+      "Alphabet and numbers",
+      "Alpha and letters",
+      "Arabic and numbers",
+      "English and French",
+    ],
+    correct: "Alphabet and numbers",
+  },
+  {
+    id: "gns113-072",
+    question:
+      "The following databases require subscription before you can have access to them except ___________",
+    options: ["EBSCHOST", "JSTOR", "AGORA", "TEXTBOOK"],
+    correct: "TEXTBOOK",
+  },
+  {
+    id: "gns113-073",
+    question:
+      "A demonstration of how information is sourced from e-book collection or other electronic sources is called ___________",
+    options: ["CD-ROM searches", "Metal engine", "On-line", "AGORA"],
+    correct: "CD-ROM searches",
+  },
+  {
+    id: "gns113-074",
+    question: "___________ is not an example of special library",
+    options: ["Cocoa House", "IITA", "FRIN", "CRIN"],
+    correct: "Cocoa House",
+  },
+  {
+    id: "gns113-075",
+    question:
+      "As a registered user of Gbenga Daniel Library you can only borrow ___________",
+    options: ["Three", "One", "Two", "Four"],
+    correct: "Two",
+  },
+  {
+    id: "gns113-076",
+    question:
+      "What are the standard dimensions (in inches) of a library catalog card?",
+    options: ["4 by 6", "5 by 8", "3 by 5", "2 by 4"],
+    correct: "3 by 5",
+  },
+  {
+    id: "gns113-077",
+    question:
+      "Which unit in the library is responsible for assigning an 'Accession Number' to a newly acquired book?",
+    options: [
+      "Reader's Service Unit",
+      "Technical Unit",
+      "Administrative Unit",
+      "Circulation Unit",
+    ],
+    correct: "Technical Unit",
+  },
+  {
+    id: "gns113-078",
+    question:
+      "What is the title of the head of the Tai Solarin University Staff School library?",
+    options: [
+      "University Librarian",
+      "School Librarian",
+      "Library Coordinator",
+      "Teacher Librarian",
+    ],
+    correct: "School Librarian",
+  },
+  {
+    id: "gns113-079",
+    question:
+      "Which of these is a 'pointer of information' that outlines the chapters or sections at the beginning of a book?",
+    options: ["Index", "Glossary", "Table of Content", "Bibliography"],
+    correct: "Table of Content",
+  },
+  {
+    id: "gns113-080",
+    question:
+      "In the context of technical services, what is 'mucilage' used for?",
+    options: [
+      "Sorting books by subject",
+      "Pasting and repairing books",
+      "Recording library statistics",
+      "Identifying stolen books",
+    ],
+    correct: "Pasting and repairing books",
+  },
+  {
+    id: "gns113-081",
+    question:
+      "According to the rules provided, how long does a borrowed material lapse before it is expected to be returned?",
+    options: ["3 days", "7 days", "14 days", "30 days"],
+    correct: "7 days",
+  },
+  {
+    id: "gns113-082",
+    question:
+      "Where is the physical binding of a student's final year project typically carried out within the library?",
+    options: [
+      "Reference Unit",
+      "Serials Unit",
+      "Technical Unit",
+      "Acquisition Unit",
+    ],
+    correct: "Technical Unit",
+  },
+  {
+    id: "gns113-083",
+    question:
+      "'Public library is a library formed, owned and built by the taxpayers money.' This definition highlights that the library is primarily funded by:",
+    options: [
+      "Private Donors",
+      "The University Management",
+      "The Government/Public",
+      "Religious Organizations",
+    ],
+    correct: "The Government/Public",
+  },
+  {
+    id: "gns113-084",
+    question:
+      "What is the specific title of the person who heads the Otunba Gbenga Daniel (OGD) Library?",
+    options: [
+      "School Librarian",
+      "University Librarian",
+      "Principal Librarian",
+      "Chief Library Officer",
+    ],
+    correct: "University Librarian",
+  },
+];
