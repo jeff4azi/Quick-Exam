@@ -2,7 +2,7 @@ import { useState } from "react"
 import ChooseCourseOverlay from "../components/ChooseCourseOverlay"
 import whatsappFollow from "../images/whatsapp-follow.webp"
 import Logo from "../images/Logo"
-import RevisionTestModal from "../components/RevisionTestModal"
+/* import RevisionTestModal from "../components/RevisionTestModal" */
 import { useNavigate } from "react-router-dom"
 
 import ReactGA from "react-ga4";
@@ -13,7 +13,7 @@ const StartExam = ({
   courses,
   selectedCourse,
   setSelectedCourse,
-  edu101revisionQuestions,
+ /*  edu101revisionQuestions, */
 }) => {
   const [showChooseCourseOverlay, setShowChooseCourseOverlay] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -23,11 +23,11 @@ const StartExam = ({
     setIsMenuOpen(prev => !prev)
   }
 
-  const edu101revisionCourse = {
+  /* const edu101revisionCourse = {
     id: "R.EDU101",
     name: "R. EDU 101",
     questions: getRandom30(edu101revisionQuestions),
-  }
+  } */
 
   return (
     <div className="relative h-[100dvh] max-h-screen flex items-center justify-center overflow-hidden">
@@ -169,7 +169,7 @@ const StartExam = ({
         />
       )}
 
-      <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(edu101revisionCourse); }} />
+{/*       <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(edu101revisionCourse); }} /> */}
     </div>
   )
 }
