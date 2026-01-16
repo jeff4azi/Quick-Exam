@@ -805,4 +805,786 @@ export const gns113Questions = [
     ],
     correct: "University Librarian",
   },
+  {
+    id: "gns113-085",
+    question:
+      "Print resources refer to the total acquired materials gathered by a library for its users.",
+    options: [
+      "Audiovisual materials",
+      "Digital resources",
+      "Print resources",
+      "Internet resources",
+    ],
+    correct: "Print resources",
+  },
+  {
+    id: "gns113-086",
+    question: "How many broad categories of library resources exist?",
+    options: ["One", "Two", "Three", "Four"],
+    correct: "Two",
+  },
+  {
+    id: "gns113-087",
+    question:
+      "Which of the following refers to printed texts such as textbooks and theses?",
+    options: [
+      "Electronic resources",
+      "Non-print resources",
+      "Audio materials",
+      "Books or print resources",
+    ],
+    correct: "Books or print resources",
+  },
+  {
+    id: "gns113-088",
+    question:
+      "A collection of leaves of paper fastened along one edge is called:",
+    options: ["Notebook", "Script", "Book", "Archive"],
+    correct: "Book",
+  },
+  {
+    id: "gns113-089",
+    question: "How many main kinds of books exist?",
+    options: ["Three", "Five", "Four", "Two"],
+    correct: "Four",
+  },
+  {
+    id: "gns113-090",
+    question: "Books written by specialists on different subjects are called:",
+    options: ["Novels", "Textbooks", "Reprints", "Journals"],
+    correct: "Textbooks",
+  },
+  {
+    id: "gns113-091",
+    question:
+      "Copies of an earlier edition reproduced after the original is exhausted are called:",
+    options: ["Trade books", "Manuals", "Reprints", "Supplements"],
+    correct: "Reprints",
+  },
+  {
+    id: "gns113-092",
+    question: "A book is made up of which sections?",
+    options: [
+      "Topic, reference, conclusion",
+      "Foreword, appendix, glossary",
+      "Preliminary, text, auxiliary",
+      "Cover, spine, index",
+    ],
+    correct: "Preliminary, text, auxiliary",
+  },
+  {
+    id: "gns113-093",
+    question: "The main content of a book is found in the:",
+    options: [
+      "Preliminary section",
+      "Text section",
+      "Auxiliary section",
+      "Introduction",
+    ],
+    correct: "Text section",
+  },
+  {
+    id: "gns113-094",
+    question: "The appendix, glossary and index are found in the:",
+    options: [
+      "Preliminary section",
+      "Central section",
+      "Auxiliary section",
+      "Core section",
+    ],
+    correct: "Auxiliary section",
+  },
+  {
+    id: "gns113-095",
+    question: "Blank pages next to endpapers are called:",
+    options: ["Title leaves", "Fly leaves", "Rear pages", "Spilt pages"],
+    correct: "Fly leaves",
+  },
+  {
+    id: "gns113-096",
+    question:
+      "A shortened or full title of a book, usually before the title page, is the:",
+    options: [
+      "ISBN page",
+      "Half-title page",
+      "Foreword page",
+      "Acknowledgment page",
+    ],
+    correct: "Half-title page",
+  },
+  {
+    id: "gns113-097",
+    question:
+      "The page that displays full title, author, edition and publisher is the:",
+    options: ["Cover", "Title page", "Index", "Appendix"],
+    correct: "Title page",
+  },
+  {
+    id: "gns113-098",
+    question: "The legal right page given to authors/publishers is the:",
+    options: ["ISBN page", "CIP page", "Copyright page", "Contents page"],
+    correct: "Copyright page",
+  },
+  {
+    id: "gns113-099",
+    question: "CIP stands for:",
+    options: [
+      "Classification in Print",
+      "Cataloguing in Publication",
+      "Cataloguing in Print",
+      "Collection in Publication",
+    ],
+    correct: "Cataloguing in Publication",
+  },
+  {
+    id: "gns113-100",
+    question:
+      "The page with the name(s) of those the author dedicates the book to is the:",
+    options: ["Preface", "Foreword", "Dedication page", "Title page"],
+    correct: "Dedication page",
+  },
+  {
+    id: "gns113-101",
+    question: "A comment written by someone other than the author is the:",
+    options: ["Preface", "Foreword", "Introduction", "Appendix"],
+    correct: "Foreword",
+  },
+  {
+    id: "gns113-102",
+    question: "The author's reason for writing a book is found in the:",
+    options: ["Acknowledgment", "Foreword", "Preface", "Contents"],
+    correct: "Preface",
+  },
+  {
+    id: "gns113-103",
+    question: "The page recognizing contributors is the:",
+    options: ["Dedication", "Copyright", "Acknowledgment", "Contents"],
+    correct: "Acknowledgment",
+  },
+  {
+    id: "gns113-104",
+    question: "The outer paper covering protecting the book is the:",
+    options: ["Jacket cover", "Dust jacket", "Title cover", "Hard cover"],
+    correct: "Dust jacket",
+  },
+  {
+    id: "gns113-105",
+    question: "Additional data that clarifies the text is found in the:",
+    options: ["Footnote", "Appendix", "Index", "Glossary"],
+    correct: "Appendix",
+  },
+  {
+    id: "gns113-106",
+    question:
+      "Technical terms and definitions in alphabetical order are found in the:",
+    options: ["Index", "Appendix", "Notes", "Glossary"],
+    correct: "Glossary",
+  },
+  {
+    id: "gns113-107",
+    question:
+      "A statement explaining a point or source of quotation is called a:",
+    options: ["Reference", "Note", "Extract", "Citation"],
+    correct: "Note",
+  },
+  {
+    id: "gns113-108",
+    question: "People who contributed to the book are found under:",
+    options: ["Dedication", "Contributors", "Acknowledgment", "Preface"],
+    correct: "Contributors",
+  },
+  {
+    id: "gns113-109",
+    question: "Publications issued in successive parts are called:",
+    options: ["Journals", "Serials", "Reports", "Articles"],
+    correct: "Serials",
+  },
+  {
+    id: "gns113-110",
+    question: "Materials in digital format accessible electronically are:",
+    options: [
+      "Print resources",
+      "Electronic resources",
+      "Serial resources",
+      "Archives",
+    ],
+    correct: "Electronic resources",
+  },
+  {
+    id: "gns113-111",
+    question: "OARE means:",
+    options: [
+      "Online Access to Research in Education",
+      "Online Access to Research in the Environment",
+      "Open Access Research Education",
+      "Online Academic Resource Engine",
+    ],
+    correct: "Online Access to Research in the Environment",
+  },
+  {
+    id: "gns113-112",
+    question: "DOAJ means:",
+    options: [
+      "Database of Open Access Journals",
+      "Directory of Open Access Journals",
+      "Digital Open Academic Journals",
+      "Department of Academic Journals",
+    ],
+    correct: "Directory of Open Access Journals",
+  },
+  {
+    id: "gns113-113",
+    question: "TEEAL means:",
+    options: [
+      "Technical Electronic Education Agriculture Library",
+      "The Essential Electronic Agriculture Library",
+      "The Educational Electronic Academic Library",
+      "The Essential Electronic Academic Library",
+    ],
+    correct: "The Essential Electronic Agriculture Library",
+  },
+  {
+    id: "gns113-114",
+    question: "CD-ROM means:",
+    options: [
+      "Compact Disk Research Memory",
+      "Computer Disk Read Memory",
+      "Compact Disk Read Only Memory",
+      "Computer Data Read Only Module",
+    ],
+    correct: "Compact Disk Read Only Memory",
+  },
+  {
+    id: "gns113-115",
+    question: "URL means:",
+    options: [
+      "Universal Resource Locator",
+      "Uniform Research Link",
+      "Universal Reading Link",
+      "United Resource Link",
+    ],
+    correct: "Universal Resource Locator",
+  },
+  {
+    id: "gns113-116",
+    question:
+      "A library is defined as a collection of resources selected, acquired, organized and preserved to meet users' information needs.",
+    options: ["Database", "Library", "Archive", "Documentation center"],
+    correct: "Library",
+  },
+  {
+    id: "gns113-117",
+    question: "Library services are grouped into which two major categories?",
+    options: [
+      "Technical and administrative",
+      "Reader's and lending",
+      "Technical and reader's",
+      "Reference and circulation",
+    ],
+    correct: "Technical and reader's",
+  },
+  {
+    id: "gns113-118",
+    question: "CAS in library services means:",
+    options: [
+      "Current Academic Service",
+      "Current Awareness System",
+      "Current Access Service",
+      "Current Awareness Service",
+    ],
+    correct: "Current Awareness Service",
+  },
+  {
+    id: "gns113-119",
+    question: "SDI stands for:",
+    options: [
+      "Selective Dissemination of Information",
+      "Standard Dissemination of Information",
+      "Systematic Data Integration",
+      "Scientific Data Information",
+    ],
+    correct: "Selective Dissemination of Information",
+  },
+  {
+    id: "gns113-120",
+    question: "ED stands for:",
+    options: [
+      "Electronic Data",
+      "Exhibition and Display",
+      "Education Department",
+      "Environmental Display",
+    ],
+    correct: "Exhibition and Display",
+  },
+  {
+    id: "gns113-121",
+    question:
+      "Supplying journal articles or documents to a requesting user or institution is known as:",
+    options: [
+      "Information sharing",
+      "Document delivery service",
+      "Circulation service",
+      "Reference forwarding",
+    ],
+    correct: "Document delivery service",
+  },
+  {
+    id: "gns113-122",
+    question:
+      "The service that allows users to duplicate a limited number of pages according to copyright law is:",
+    options: [
+      "Duplication service",
+      "Photocopy service",
+      "Reprographic service",
+      "Archival service",
+    ],
+    correct: "Reprographic service",
+  },
+  {
+    id: "gns113-123",
+    question:
+      "Library service that emphasizes providing books for home reading through mobile units is called:",
+    options: [
+      "Mobile library service",
+      "Home-library service",
+      "Field library service",
+      "Outreach service",
+    ],
+    correct: "Mobile library service",
+  },
+  {
+    id: "gns113-124",
+    question:
+      "Public display of books or artifacts in a physical or online space is known as:",
+    options: ["Demonstration", "Exhibition", "Cataloguing", "Classification"],
+    correct: "Exhibition",
+  },
+  {
+    id: "gns113-125",
+    question: "RS stands for:",
+    options: [
+      "Reading Service",
+      "Reprographic Service",
+      "Resource Service",
+      "Reference Section",
+    ],
+    correct: "Reprographic Service",
+  },
+  {
+    id: "gns113-126",
+    question: "LS stands for:",
+    options: [
+      "Library Service",
+      "Lending Service",
+      "Local Service",
+      "Literature Section",
+    ],
+    correct: "Lending Service",
+  },
+  {
+    id: "gns113-127",
+    question:
+      "Education is defined as the process of facilitating learning or acquiring knowledge, skills and values.",
+    options: ["Training", "Teaching", "Education", "Instruction"],
+    correct: "Education",
+  },
+  {
+    id: "gns113-128",
+    question: "CGPA stands for:",
+    options: [
+      "Cumulative Grade Performance Average",
+      "Continuous Grade Percentage Assessment",
+      "Cumulative Grade Point Average",
+      "Central Grading Point Assessment",
+    ],
+    correct: "Cumulative Grade Point Average",
+  },
+  {
+    id: "gns113-129",
+    question: "How many types of goals are there?",
+    options: ["Three", "Four", "Five", "Two"],
+    correct: "Four",
+  },
+  {
+    id: "gns113-130",
+    question: "Which of the following is not one of the types of goals?",
+    options: [
+      "Immediate goal",
+      "Short-term goal",
+      "Intermediary goal",
+      "Financial goal",
+    ],
+    correct: "Financial goal",
+  },
+  {
+    id: "gns113-131",
+    question:
+      "The two main classification schemes used globally in libraries are:",
+    options: ["LC and UDC", "DDC and LC", "UDC and MCS", "BCS and DDC"],
+    correct: "DDC and LC",
+  },
+  {
+    id: "gns113-132",
+    question: "Which tool helps users locate materials easily in the library?",
+    options: ["Shelves", "Journals", "Library catalogues", "Indexes"],
+    correct: "Library catalogues",
+  },
+  {
+    id: "gns113-133",
+    question:
+      "A catalogue listing all books in alphabetical order of their titles is called:",
+    options: [
+      "Classified catalogue",
+      "Title catalogue",
+      "Subject catalogue",
+      "Author catalogue",
+    ],
+    correct: "Title catalogue",
+  },
+  {
+    id: "gns113-134",
+    question:
+      "A catalogue listing books alphabetically by author’s name is called:",
+    options: [
+      "Title catalogue",
+      "Author catalogue",
+      "Subject catalogue",
+      "Classified catalogue",
+    ],
+    correct: "Author catalogue",
+  },
+  {
+    id: "gns113-135",
+    question:
+      "A catalogue that lists resources under a particular classification is known as:",
+    options: [
+      "Author catalogue",
+      "Title catalogue",
+      "Subject catalogue",
+      "Classified catalogue",
+    ],
+    correct: "Classified catalogue",
+  },
+  {
+    id: "gns113-136",
+    question:
+      "Study is defined as the application of the mind to acquire knowledge through reading, investigation or reflection.",
+    options: ["Learning", "Reading", "Study", "Understanding"],
+    correct: "Study",
+  },
+  {
+    id: "gns113-137",
+    question:
+      "Learning involves enjoying and manipulating objects, experiences and conversations to build mental models.",
+    options: ["Reading", "Memorization", "Learning", "Practice"],
+    correct: "Learning",
+  },
+  {
+    id: "gns113-138",
+    question:
+      "A process that gives learners opportunities to engage with ideas based on their needs is called:",
+    options: ["Reading", "Teaching", "Learning", "Assessment"],
+    correct: "Learning",
+  },
+  {
+    id: "gns113-139",
+    question:
+      "A continuous process that starts from what one knows and moves to what one wants to know is:",
+    options: ["Teaching", "Evaluation", "Reading", "Learning"],
+    correct: "Learning",
+  },
+  {
+    id: "gns113-140",
+    question:
+      "Learning depends on many factors including instructional method exposed to the learner.",
+    options: ["Emotional", "Instruction", "Practical", "Mental"],
+    correct: "Instructional",
+  },
+  {
+    id: "gns113-141",
+    question:
+      "Learning is defined as a relatively permanent change in behaviour resulting from experience.",
+    options: ["Reading", "Learning", "Teaching", "Training"],
+    correct: "Learning",
+  },
+  {
+    id: "gns113-142",
+    question:
+      "Learning involves the acquisition of habits, knowledge and attitudes.",
+    options: ["Understanding", "Reading", "Acquisition", "Evaluation"],
+    correct: "Acquisition",
+  },
+  {
+    id: "gns113-143",
+    question: "Higher levels of learning take place in which domains?",
+    options: [
+      "Motor, cognitive, emotional",
+      "Cognitive, affective, psychomotor",
+      "Practical, theoretical, behavioural",
+      "Sensory, visual, emotional",
+    ],
+    correct: "Cognitive, affective, psychomotor",
+  },
+  {
+    id: "gns113-144",
+    question: "Learning involves reading, listening, speaking and writing.",
+    options: ["Thinking", "Learning", "Teaching", "Observation"],
+    correct: "Learning",
+  },
+  {
+    id: "gns113-145",
+    question:
+      "Libraries funded by the local, state or federal government are called:",
+    options: [
+      "Private libraries",
+      "Academic libraries",
+      "Public libraries",
+      "School libraries",
+    ],
+    correct: "Public libraries",
+  },
+  {
+    id: "gns113-146",
+    question: "Libraries funded or maintained by organizations are:",
+    options: [
+      "Special libraries",
+      "Public libraries",
+      "Community libraries",
+      "Corporate libraries",
+    ],
+    correct: "Special libraries",
+  },
+  {
+    id: "gns113-147",
+    question: "A database of all information sources in a library is called:",
+    options: ["Catalogue", "Shelf list", "Index", "Record book"],
+    correct: "Catalogue",
+  },
+  {
+    id: "gns113-148",
+    question:
+      "Learning resources include all forms of information carriers used for teaching and learning.",
+    options: [
+      "Study tools",
+      "Information materials",
+      "Learning resources",
+      "Academic resources",
+    ],
+    correct: "Learning resources",
+  },
+  {
+    id: "gns113-149",
+    question: "Learning resources are classified into:",
+    options: [
+      "Visual and audio",
+      "Print and audio",
+      "Electronic and manual",
+      "Print and non-print",
+    ],
+    correct: "Print and non-print",
+  },
+  {
+    id: "gns113-150",
+    question:
+      "Information literacy refers to the intellectual abilities involved in using information effectively.",
+    options: [
+      "Data processing",
+      "Information literacy",
+      "Computer literacy",
+      "Digital competence",
+    ],
+    correct: "Information literacy",
+  },
+  {
+    id: "gns113-151",
+    question:
+      "The ability to access, evaluate, organize and use information to learn or solve problems is:",
+    options: [
+      "Reading literacy",
+      "Information literacy",
+      "Teaching literacy",
+      "Digital literacy",
+    ],
+    correct: "Information literacy",
+  },
+  {
+    id: "gns113-152",
+    question: "CILIP stands for:",
+    options: [
+      "Chartered Institute of Library and Information Practice",
+      "Council of International Library and Information Professionals",
+      "Chartered Institute of Library and Information Professionals",
+      "Central Institute of Library and Information Policy",
+    ],
+    correct: "Chartered Institute of Library and Information Professionals",
+  },
+  {
+    id: "gns113-153",
+    question:
+      "Which of the following is the first stage of the information retrieval process?",
+    options: [
+      "Query formulation",
+      "Information gap",
+      "Evaluation of results",
+      "Selection of database",
+    ],
+    correct: "Information gap",
+  },
+  {
+    id: "gns113-154",
+    question:
+      "Selecting the information retrieval system to use occurs at which stage?",
+    options: [
+      "Evaluation stage",
+      "Query stage",
+      "System selection stage",
+      "Analysis stage",
+    ],
+    correct: "System selection stage",
+  },
+  {
+    id: "gns113-155",
+    question: "Understanding the information problem occurs during:",
+    options: [
+      "Retrieval stage",
+      "Analysis stage",
+      "Problem clarification stage",
+      "Query formulation stage",
+    ],
+    correct: "Problem clarification stage",
+  },
+  {
+    id: "gns113-156",
+    question: "Formulating a search statement or keywords is known as:",
+    options: [
+      "Query formulation",
+      "Data analysis",
+      "Query modification",
+      "Data filtration",
+    ],
+    correct: "Query formulation",
+  },
+  {
+    id: "gns113-157",
+    question:
+      "The stage where search results are obtained from the database is the:",
+    options: [
+      "Retrieval stage",
+      "Evaluation stage",
+      "Data review stage",
+      "Query stage",
+    ],
+    correct: "Retrieval stage",
+  },
+  {
+    id: "gns113-158",
+    question:
+      "Assessing the relevance and usefulness of retrieved information is called:",
+    options: ["Review", "Interpretation", "Evaluation", "Validation"],
+    correct: "Evaluation",
+  },
+  {
+    id: "gns113-159",
+    question:
+      "Using the results obtained from the retrieval process is called:",
+    options: ["Application", "Utilization", "Execution", "Implementation"],
+    correct: "Utilization",
+  },
+  {
+    id: "gns113-160",
+    question:
+      "Information resources must be organized in a systematic way to ensure easy access.",
+    options: ["Random", "Flexible", "Systematic", "Manual"],
+    correct: "Systematic",
+  },
+  {
+    id: "gns113-161",
+    question: "Libraries organize their collections mainly through:",
+    options: [
+      "Shelving and arrangement",
+      "Cataloguing and classification",
+      "Indexing and binding",
+      "Sorting and labeling",
+    ],
+    correct: "Cataloguing and classification",
+  },
+  {
+    id: "gns113-162",
+    question:
+      "The bibliographic description of library holdings showing author, title, subject, publisher and other details is called:",
+    options: ["Shelf list", "Catalogue", "Index", "Abstract"],
+    correct: "Catalogue",
+  },
+  {
+    id: "gns113-163",
+    question: "Which of the following is NOT a type of catalogue?",
+    options: [
+      "Book catalogue",
+      "Card catalogue",
+      "Automated/online catalogue",
+      "Alphabetical shelf list",
+    ],
+    correct: "Alphabetical shelf list",
+  },
+  {
+    id: "gns113-164",
+    question:
+      "A library classification system arranges and orders information resources:",
+    options: ["Alphabetically", "Randomly", "Systematically", "Historically"],
+    correct: "Systematically",
+  },
+  {
+    id: "gns113-165",
+    question:
+      "The Library of Congress Classification Scheme is represented mainly by:",
+    options: ["Numbers", "Letters and numbers", "Roman numerals", "Symbols"],
+    correct: "Letters and numbers",
+  },
+  {
+    id: "gns113-166",
+    question: "The Dewey Decimal Classification Scheme was developed in:",
+    options: ["1890", "1901", "1876", "1869"],
+    correct: "1876",
+  },
+  {
+    id: "gns113-167",
+    question: "Who developed the Dewey Decimal Classification Scheme?",
+    options: [
+      "Charles Cutter",
+      "Melvil Dewey",
+      "S. R. Ranganathan",
+      "Henry Bliss",
+    ],
+    correct: "Melvil Dewey",
+  },
+  {
+    id: "gns113-168",
+    question:
+      "Which of the following is a widely used library classification scheme?",
+    options: [
+      "UNESCO Scheme",
+      "World Catalogue System",
+      "Universal Decimal Classification (UDC)",
+      "Digital Resource Classification Scheme",
+    ],
+    correct: "Universal Decimal Classification (UDC)",
+  },
+  {
+    id: "gns113-169",
+    question: "Bliss Classification Scheme is represented by:",
+    options: ["BCS", "BLS", "BSC", "BDC"],
+    correct: "BCS",
+  },
+  {
+    id: "gns113-170",
+    question:
+      "Which of the following classification schemes uses a combination of numbers and special symbols?",
+    options: [
+      "Dewey Decimal Classification",
+      "Library of Congress",
+      "Universal Decimal Classification",
+      "Bliss Classification",
+    ],
+    correct: "Universal Decimal Classification",
+  },
 ];
