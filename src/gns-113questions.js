@@ -275,11 +275,11 @@ export const gns113Questions = [
       "The framework on which an organization is patterned for coordinating and carving out tasks is the:",
     options: [
       "Instructional method",
-      "Organization structure",
+      "Organizational structure",
       "Technical service",
       "Classification scheme",
     ],
-    correct: "Organization structure",
+    correct: "Organizational structure",
   },
   {
     id: "gns113-029",
@@ -304,8 +304,8 @@ export const gns113Questions = [
     id: "gns113-031",
     question:
       "Which type of goal is described as a well-defined plan aimed at achieving a specific result?",
-    options: ["Immediate goal", "Short term goal", "Goal", "Long term goal"],
-    correct: "Goal",
+    options: ["Immediate goal", "Short term goal", "Specific/SMART Goal", "Long term goal"],
+    correct: "Specific/SMART Goal",
   },
   {
     id: "gns113-032",
@@ -549,7 +549,7 @@ export const gns113Questions = [
   },
   {
     id: "gns113-056",
-    question: "___________ is the descriptive of books",
+    question: "___________ is the systematic description of books and other published works.",
     options: ["Dictionary", "Bibliography", "Gazette", "Directories"],
     correct: "Bibliography",
   },
@@ -560,10 +560,10 @@ export const gns113Questions = [
     options: [
       "Private Library",
       "National Library",
-      "Research Library",
+      "Special Library",
       "International Library",
     ],
-    correct: "Research Library",
+    correct: "Special Library",
   },
   {
     id: "gns113-058",
@@ -614,7 +614,7 @@ export const gns113Questions = [
     id: "gns113-064",
     question:
       "___________ enable user to find the contents of millions of web pages simultaneously",
-    options: ["Search engine", "Microchip", "Meta data", "Microform"],
+    options: ["Search engine", "Microchip", "Metadata", "Microform"],
     correct: "Search engine",
   },
   {
@@ -689,14 +689,14 @@ export const gns113Questions = [
     id: "gns113-072",
     question:
       "The following databases require subscription before you can have access to them except ___________",
-    options: ["EBSCHOST", "JSTOR", "AGORA", "TEXTBOOK"],
+    options: ["EBSCOhost", "JSTOR", "AGORA", "TEXTBOOK"],
     correct: "TEXTBOOK",
   },
   {
     id: "gns113-073",
     question:
       "A demonstration of how information is sourced from e-book collection or other electronic sources is called ___________",
-    options: ["CD-ROM searches", "Metal engine", "On-line", "AGORA"],
+    options: ["CD-ROM searches", "Meta engine", "On-line", "AGORA"],
     correct: "CD-ROM searches",
   },
   {
@@ -747,8 +747,8 @@ export const gns113Questions = [
     id: "gns113-079",
     question:
       "Which of these is a 'pointer of information' that outlines the chapters or sections at the beginning of a book?",
-    options: ["Index", "Glossary", "Table of Content", "Bibliography"],
-    correct: "Table of Content",
+    options: ["Index", "Glossary", "Table of Contents", "Bibliography"],
+    correct: "Table of Contents",
   },
   {
     id: "gns113-080",
@@ -808,7 +808,7 @@ export const gns113Questions = [
   {
     id: "gns113-085",
     question:
-      "Print resources refer to the total acquired materials gathered by a library for its users.",
+      "Which of the following refers to the total acquired printed materials gathered by a library for its users?",
     options: [
       "Audiovisual materials",
       "Digital resources",
@@ -1058,17 +1058,17 @@ export const gns113Questions = [
     id: "gns113-115",
     question: "URL means:",
     options: [
-      "Universal Resource Locator",
+      "Uniform Resource Locator",
       "Uniform Research Link",
       "Universal Reading Link",
       "United Resource Link",
     ],
-    correct: "Universal Resource Locator",
+    correct: "Uniform Resource Locator",
   },
   {
     id: "gns113-116",
     question:
-      "A library is defined as a collection of resources selected, acquired, organized and preserved to meet users' information needs.",
+      "A ___________ is defined as a collection of resources selected, acquired, organized and preserved to meet users' information needs.",
     options: ["Database", "Library", "Archive", "Documentation center"],
     correct: "Library",
   },
@@ -1184,7 +1184,7 @@ export const gns113Questions = [
   {
     id: "gns113-127",
     question:
-      "Education is defined as the process of facilitating learning or acquiring knowledge, skills and values.",
+      "___________ is defined as the process of facilitating learning or acquiring knowledge, skills and values.",
     options: ["Training", "Teaching", "Education", "Instruction"],
     correct: "Education",
   },
@@ -1268,14 +1268,14 @@ export const gns113Questions = [
   {
     id: "gns113-136",
     question:
-      "Study is defined as the application of the mind to acquire knowledge through reading, investigation or reflection.",
+      "___________ is defined as the application of the mind to acquire knowledge through reading, investigation or reflection.",
     options: ["Learning", "Reading", "Study", "Understanding"],
     correct: "Study",
   },
   {
     id: "gns113-137",
     question:
-      "Learning involves enjoying and manipulating objects, experiences and conversations to build mental models.",
+      "___________ involves enjoying and manipulating objects, experiences and conversations to build mental models.",
     options: ["Reading", "Memorization", "Learning", "Practice"],
     correct: "Learning",
   },
@@ -1296,21 +1296,21 @@ export const gns113Questions = [
   {
     id: "gns113-140",
     question:
-      "Learning depends on many factors including instructional method exposed to the learner.",
-    options: ["Emotional", "Instruction", "Practical", "Mental"],
+      "Learning depends on many factors including ___________ method exposed to the learner.",
+    options: ["Emotional", "Instructional", "Practical", "Mental"],
     correct: "Instructional",
   },
   {
     id: "gns113-141",
     question:
-      "Learning is defined as a relatively permanent change in behaviour resulting from experience.",
+      "___________ is defined as a relatively permanent change in behaviour resulting from experience.",
     options: ["Reading", "Learning", "Teaching", "Training"],
     correct: "Learning",
   },
   {
     id: "gns113-142",
     question:
-      "Learning involves the acquisition of habits, knowledge and attitudes.",
+      "Learning involves the ___________ of habits, knowledge and attitudes.",
     options: ["Understanding", "Reading", "Acquisition", "Evaluation"],
     correct: "Acquisition",
   },
@@ -1327,7 +1327,7 @@ export const gns113Questions = [
   },
   {
     id: "gns113-144",
-    question: "Learning involves reading, listening, speaking and writing.",
+    question: "___________ involves reading, listening, speaking and writing.",
     options: ["Thinking", "Learning", "Teaching", "Observation"],
     correct: "Learning",
   },
@@ -1363,7 +1363,7 @@ export const gns113Questions = [
   {
     id: "gns113-148",
     question:
-      "Learning resources include all forms of information carriers used for teaching and learning.",
+      "___________ include all forms of information carriers used for teaching and learning.",
     options: [
       "Study tools",
       "Information materials",
@@ -1386,7 +1386,7 @@ export const gns113Questions = [
   {
     id: "gns113-150",
     question:
-      "Information literacy refers to the intellectual abilities involved in using information effectively.",
+      "___________ refers to the intellectual abilities involved in using information effectively.",
     options: [
       "Data processing",
       "Information literacy",
@@ -1493,7 +1493,7 @@ export const gns113Questions = [
   {
     id: "gns113-160",
     question:
-      "Information resources must be organized in a systematic way to ensure easy access.",
+      "Information resources must be organized in a ___________ way to ensure easy access.",
     options: ["Random", "Flexible", "Systematic", "Manual"],
     correct: "Systematic",
   },
