@@ -1,15 +1,17 @@
-export const gns113Questions = [
-  {
-    id: "gns113-001",
-    question:
-      "According to UNESCO, a book is a non-periodical publication consisting of at least how many pages?",
-    options: ["25 pages", "49 pages", "100 pages", "50 pages"],
-    correct: "49 pages",
-  },
+export const gns113Questions = [{
+  id: "gns113-001",
+  question:
+  "According to UNESCO, a book is a non-periodical publication consisting of at least how many pages?",
+  options: ["25 pages",
+    "49 pages",
+    "100 pages",
+    "50 pages"],
+  correct: "49 pages",
+},
   {
     id: "gns113-002",
     question:
-      "Which type of library is responsible for issuing the International Standard Book Number (ISBN)?",
+    "Which type of library is responsible for issuing the International Standard Book Number (ISBN)?",
     options: [
       "Academic Library",
       "Private Library",
@@ -32,7 +34,7 @@ export const gns113Questions = [
   {
     id: "gns113-004",
     question:
-      "What is the name of the library at Tai Solarin University of Education?",
+    "What is the name of the library at Tai Solarin University of Education?",
     options: [
       "Kenneth Dike Library",
       "Otunba Gbenga Daniel Library",
@@ -44,8 +46,11 @@ export const gns113Questions = [
   {
     id: "gns113-005",
     question:
-      "The systematic listing of sources used by an author for further reading is called:",
-    options: ["Glossary", "Index", "Appendix", "Bibliography"],
+    "The systematic listing of sources used by an author for further reading is called:",
+    options: ["Glossary",
+      "Index",
+      "Appendix",
+      "Bibliography"],
     correct: "Bibliography",
   },
   {
@@ -62,15 +67,21 @@ export const gns113Questions = [
   {
     id: "gns113-007",
     question:
-      "In the Library of Congress Classification system, the letter 'K' represents:",
-    options: ["Science", "Fine Arts", "Law", "History"],
+    "In the Library of Congress Classification system, the letter 'K' represents:",
+    options: ["Science",
+      "Fine Arts",
+      "Law",
+      "History"],
     correct: "Law",
   },
   {
     id: "gns113-008",
     question:
-      "The process of copying other people's work without their consent is known as:",
-    options: ["Copyright", "Plagiarism", "Patent right", "Trademark"],
+    "The process of copying other people's work without their consent is known as:",
+    options: ["Copyright",
+      "Plagiarism",
+      "Patent right",
+      "Trademark"],
     correct: "Plagiarism",
   },
   {
@@ -120,21 +131,30 @@ export const gns113Questions = [
   {
     id: "gns113-013",
     question:
-      "A non-periodical literary publication of at least 49 pages (exclusive of cover pages) is defined as a 'book' by which organization?",
-    options: ["NUC", "IFLA", "UNESCO", "CILIP"],
+    "A non-periodical literary publication of at least 49 pages (exclusive of cover pages) is defined as a 'book' by which organization?",
+    options: ["NUC",
+      "IFLA",
+      "UNESCO",
+      "CILIP"],
     correct: "UNESCO",
   },
   {
     id: "gns113-014",
     question:
-      "Which of the following is NOT considered a type of book according to the study material?",
-    options: ["Trade books", "Reprints", "Textbooks", "Newspapers"],
+    "Which of the following is NOT considered a type of book according to the study material?",
+    options: ["Trade books",
+      "Reprints",
+      "Textbooks",
+      "Newspapers"],
     correct: "Newspapers",
   },
   {
     id: "gns113-015",
     question: "In a book, the preliminary section is typically numbered using:",
-    options: ["Arabic numerals", "Roman numerals", "Letters", "Symbols"],
+    options: ["Arabic numerals",
+      "Roman numerals",
+      "Letters",
+      "Symbols"],
     correct: "Roman numerals",
   },
   {
@@ -151,7 +171,7 @@ export const gns113Questions = [
   {
     id: "gns113-017",
     question:
-      "Which library service allows a user to borrow materials from a different, cooperating library?",
+    "Which library service allows a user to borrow materials from a different, cooperating library?",
     options: [
       "Lending service",
       "Document delivery",
@@ -174,14 +194,17 @@ export const gns113Questions = [
   {
     id: "gns113-019",
     question:
-      "In the Library of Congress Classification system, the letter 'K' represents which subject?",
-    options: ["Science", "History", "Law", "Fine Arts"],
+    "In the Library of Congress Classification system, the letter 'K' represents which subject?",
+    options: ["Science",
+      "History",
+      "Law",
+      "Fine Arts"],
     correct: "Law",
   },
   {
     id: "gns113-020",
     question:
-      "The 'SQ3R' study technique consists of Survey, Question, and the three Rs, which are:",
+    "The 'SQ3R' study technique consists of Survey, Question, and the three Rs, which are:",
     options: [
       "Read, Recite, and Review",
       "Recall, Read, and Recite",
@@ -193,14 +216,17 @@ export const gns113Questions = [
   {
     id: "gns113-021",
     question:
-      "Which section of a book contains the alphabetical listing used to trace exact positions of items within the text?",
-    options: ["Glossary", "Bibliography", "Appendix", "Index"],
+    "Which section of a book contains the alphabetical listing used to trace exact positions of items within the text?",
+    options: ["Glossary",
+      "Bibliography",
+      "Appendix",
+      "Index"],
     correct: "Index",
   },
   {
     id: "gns113-022",
     question:
-      "The systematic process of finding unstructured materials (usually text) that satisfy an information need from within large collections is:",
+    "The systematic process of finding unstructured materials (usually text) that satisfy an information need from within large collections is:",
     options: [
       "Information retrieval",
       "Data processing",
@@ -212,7 +238,7 @@ export const gns113Questions = [
   {
     id: "gns113-023",
     question:
-      "Which of the following describes the 'hierarchical' system of operation in tertiary institution libraries?",
+    "Which of the following describes the 'hierarchical' system of operation in tertiary institution libraries?",
     options: [
       "Technical structure",
       "Organizational structure",
@@ -224,7 +250,7 @@ export const gns113Questions = [
   {
     id: "gns113-024",
     question:
-      "The regular tendencies and practices an individual depicts during the process of gaining knowledge is known as:",
+    "The regular tendencies and practices an individual depicts during the process of gaining knowledge is known as:",
     options: [
       "Learning process",
       "Study habit",
@@ -236,7 +262,7 @@ export const gns113Questions = [
   {
     id: "gns113-025",
     question:
-      "According to the study material, which of the following is a benefit of setting goals?",
+    "According to the study material, which of the following is a benefit of setting goals?",
     options: [
       "Eliminating all distractions",
       "Improving reading speed",
@@ -248,7 +274,7 @@ export const gns113Questions = [
   {
     id: "gns113-026",
     question:
-      "Libraries located in universities, polytechnics, and colleges are specifically called:",
+    "Libraries located in universities, polytechnics, and colleges are specifically called:",
     options: [
       "Special libraries",
       "National libraries",
@@ -260,7 +286,7 @@ export const gns113Questions = [
   {
     id: "gns113-027",
     question:
-      "Which of these is NOT a suggested way to create a productive study environment?",
+    "Which of these is NOT a suggested way to create a productive study environment?",
     options: [
       "Eliminate distractions",
       "Clean up and organize study space",
@@ -272,7 +298,7 @@ export const gns113Questions = [
   {
     id: "gns113-028",
     question:
-      "The framework on which an organization is patterned for coordinating and carving out tasks is the:",
+    "The framework on which an organization is patterned for coordinating and carving out tasks is the:",
     options: [
       "Instructional method",
       "Organizational structure",
@@ -284,7 +310,7 @@ export const gns113Questions = [
   {
     id: "gns113-029",
     question:
-      "Which of the following is a recommended study habit for students?",
+    "Which of the following is a recommended study habit for students?",
     options: [
       "Learning with an empty stomach",
       "Reading in a noisy environment",
@@ -296,21 +322,27 @@ export const gns113Questions = [
   {
     id: "gns113-030",
     question:
-      "A task or piece of work allocated to a student as part of a course of study is an:",
-    options: ["Examination", "Assignment", "Objective", "Index"],
+    "A task or piece of work allocated to a student as part of a course of study is an:",
+    options: ["Examination",
+      "Assignment",
+      "Objective",
+      "Index"],
     correct: "Assignment",
   },
   {
     id: "gns113-031",
     question:
-      "Which type of goal is described as a well-defined plan aimed at achieving a specific result?",
-    options: ["Immediate goal", "Short term goal", "Specific/SMART Goal", "Long term goal"],
+    "Which type of goal is described as a well-defined plan aimed at achieving a specific result?",
+    options: ["Immediate goal",
+      "Short term goal",
+      "Specific/SMART Goal",
+      "Long term goal"],
     correct: "Specific/SMART Goal",
   },
   {
     id: "gns113-032",
     question:
-      "Study techniques can best be defined as methods that enable students to:",
+    "Study techniques can best be defined as methods that enable students to:",
     options: [
       "Memorize facts without understanding",
       "Acquire, process, and retain academic information effectively",
@@ -322,7 +354,7 @@ export const gns113Questions = [
   {
     id: "gns113-033",
     question:
-      "Which of the following best explains the importance of effective study habits?",
+    "Which of the following best explains the importance of effective study habits?",
     options: [
       "They reduce the need for lecturers",
       "They improve comprehension and academic performance",
@@ -367,8 +399,11 @@ export const gns113Questions = [
   {
     id: "gns113-037",
     question:
-      "Which of the following is considered a physiological factor influencing study?",
-    options: ["Interest", "Noise", "Nutrition", "Time schedule"],
+    "Which of the following is considered a physiological factor influencing study?",
+    options: ["Interest",
+      "Noise",
+      "Nutrition",
+      "Time schedule"],
     correct: "Nutrition",
   },
   {
@@ -385,7 +420,7 @@ export const gns113Questions = [
   {
     id: "gns113-039",
     question:
-      "One major advantage of a study timetable is that it helps students to:",
+    "One major advantage of a study timetable is that it helps students to:",
     options: [
       "Study without rest",
       "Balance academic and non-academic activities",
@@ -408,8 +443,11 @@ export const gns113Questions = [
   {
     id: "gns113-041",
     question:
-      "When a student searches a text for a particular date or definition, the reading technique used is:",
-    options: ["Skimming", "Scanning", "Intensive reading", "Critical reading"],
+    "When a student searches a text for a particular date or definition, the reading technique used is:",
+    options: ["Skimming",
+      "Scanning",
+      "Intensive reading",
+      "Critical reading"],
     correct: "Scanning",
   },
   {
@@ -426,7 +464,7 @@ export const gns113Questions = [
   {
     id: "gns113-043",
     question:
-      "Critical reading differs from other reading methods because it involves:",
+    "Critical reading differs from other reading methods because it involves:",
     options: [
       "Memorization of facts",
       "Acceptance of information as presented",
@@ -449,13 +487,16 @@ export const gns113Questions = [
   {
     id: "gns113-045",
     question: "Which of the following is NOT a stage in the SQ3R method?",
-    options: ["Survey", "Question", "Rewrite", "Review"],
+    options: ["Survey",
+      "Question",
+      "Rewrite",
+      "Review"],
     correct: "Rewrite",
   },
   {
     id: "gns113-046",
     question:
-      "Effective note-taking is important because it helps students to:",
+    "Effective note-taking is important because it helps students to:",
     options: [
       "Copy textbooks word for word",
       "Capture and organize main ideas",
@@ -489,13 +530,16 @@ export const gns113Questions = [
   {
     id: "gns113-049",
     question: "Which of the following can negatively affect concentration?",
-    options: ["Interest", "Adequate rest", "Emotional stress", "Motivation"],
+    options: ["Interest",
+      "Adequate rest",
+      "Emotional stress",
+      "Motivation"],
     correct: "Emotional stress",
   },
   {
     id: "gns113-050",
     question:
-      "Motivation that originates from personal satisfaction is referred to as:",
+    "Motivation that originates from personal satisfaction is referred to as:",
     options: [
       "Extrinsic motivation",
       "External motivation",
@@ -518,14 +562,17 @@ export const gns113Questions = [
   {
     id: "gns113-052",
     question:
-      "A book that provides a list of names and addresses of people in an organization or institution is ___________",
-    options: ["Encyclopedia", "Directory", "Year book", "Almanacs"],
+    "A book that provides a list of names and addresses of people in an organization or institution is ",
+    options: ["Encyclopedia",
+      "Directory",
+      "Year book",
+      "Almanacs"],
     correct: "Directory",
   },
   {
     id: "gns113-053",
     question:
-      "___________ supports and co-ordinates the day to day activities of the Library",
+    " supports and co-ordinates the day to day activities of the Library",
     options: [
       "Readers' services",
       "Technical services",
@@ -537,26 +584,35 @@ export const gns113Questions = [
   {
     id: "gns113-054",
     question: "Web documents can be evaluated by all except",
-    options: ["Accuracy", "Authority", "Objectivity", "Longevity"],
+    options: ["Accuracy",
+      "Authority",
+      "Objectivity",
+      "Longevity"],
     correct: "Longevity",
   },
   {
     id: "gns113-055",
     question:
-      "___________ is the process of grouping together items which have certain characteristics",
-    options: ["Catalogue", "Classification", "Colon", "Card"],
+    "___________ is the process of grouping together items which have certain characteristics",
+    options: ["Catalogue",
+      "Classification",
+      "Colon",
+      "Card"],
     correct: "Classification",
   },
   {
     id: "gns113-056",
     question: "___________ is the systematic description of books and other published works.",
-    options: ["Dictionary", "Bibliography", "Gazette", "Directories"],
+    options: ["Dictionary",
+      "Bibliography",
+      "Gazette",
+      "Directories"],
     correct: "Bibliography",
   },
   {
     id: "gns113-057",
     question:
-      "A library that belongs to a particular establishment is called ___________",
+    "A library that belongs to a particular establishment is called ",
     options: [
       "Private Library",
       "National Library",
@@ -567,7 +623,7 @@ export const gns113Questions = [
   },
   {
     id: "gns113-058",
-    question: "The general administration of the library does ___________",
+    question: "The general administration of the library does ",
     options: [
       "Treats issues with levity",
       "Cooperates with indiscipline",
@@ -575,58 +631,79 @@ export const gns113Questions = [
       "Purchases books for the Library",
     ],
     correct:
-      "Supports and co-ordinates the day to day activities of the Library",
+    "Supports and co-ordinates the day to day activities of the Library",
   },
   {
     id: "gns113-059",
-    question: "___________ is a pointer to information",
-    options: ["Loans", "Index", "Abstract", "Copyright"],
+    question: " is a pointer to information",
+    options: ["Loans",
+      "Index",
+      "Abstract",
+      "Copyright"],
     correct: "Index",
   },
   {
     id: "gns113-060",
     question:
-      "A brief summary of the findings and points of a periodical article is called ___________",
-    options: ["Information", "Library Service", "Abstract", "Book loan"],
+    "A brief summary of the findings and points of a periodical article is called ",
+    options: ["Information",
+      "Library Service",
+      "Abstract",
+      "Book loan"],
     correct: "Abstract",
   },
   {
     id: "gns113-061",
     question:
-      "Research Assistance is a service given to user to have proper ___________ to information",
-    options: ["Assistance", "Access", "Needs of information", "Explore"],
+    "Research Assistance is a service given to user to have proper ___________ to information",
+    options: ["Assistance",
+      "Access",
+      "Needs of information",
+      "Explore"],
     correct: "Access",
   },
   {
     id: "gns113-062",
     question:
-      "Collection of information held in some forms of computerized or electronic format is called ___________",
-    options: ["Projectors", "Film", "Machine Readable materials", "E-learning"],
+    "Collection of information held in some forms of computerized or electronic format is called ",
+    options: ["Projectors",
+      "Film",
+      "Machine Readable materials",
+      "E-learning"],
     correct: "Machine Readable materials",
   },
   {
     id: "gns113-063",
     question: "The following is a form of classification scheme except",
-    options: ["DDC", "UDC", "COLON", "Lending"],
+    options: ["DDC",
+      "UDC",
+      "COLON",
+      "Lending"],
     correct: "Lending",
   },
   {
     id: "gns113-064",
     question:
-      "___________ enable user to find the contents of millions of web pages simultaneously",
-    options: ["Search engine", "Microchip", "Metadata", "Microform"],
+    " enable user to find the contents of millions of web pages simultaneously",
+    options: ["Search engine",
+      "Microchip",
+      "Metadata",
+      "Microform"],
     correct: "Search engine",
   },
   {
     id: "gns113-065",
     question: "Boolean Operators uses combination of terms such as",
-    options: ["IN and OUT", "BUT and NOT", "AND, OR and NOT", "OR and TERMS"],
+    options: ["IN and OUT",
+      "BUT and NOT",
+      "AND, OR and NOT",
+      "OR and TERMS"],
     correct: "AND, OR and NOT",
   },
   {
     id: "gns113-066",
     question:
-      "___________ is the ability to identify likely sources of information",
+    " is the ability to identify likely sources of information",
     options: [
       "Resources",
       "Information literate person",
@@ -638,7 +715,7 @@ export const gns113Questions = [
   {
     id: "gns113-067",
     question:
-      "___________ is about selecting wide range of stock which will allow people to enrich and enjoy themselves academically",
+    " is about selecting wide range of stock which will allow people to enrich and enjoy themselves academically",
     options: [
       "Information Retrieval",
       "Information needs",
@@ -650,14 +727,17 @@ export const gns113Questions = [
   {
     id: "gns113-068",
     question:
-      "The connection to other Library enables ___________ to use other libraries",
-    options: ["Book use", "Users", "Patients", "Viewers"],
+    "The connection to other Library enables ___________ to use other libraries",
+    options: ["Book use",
+      "Users",
+      "Patients",
+      "Viewers"],
     correct: "Users",
   },
   {
     id: "gns113-069",
     question:
-      "The use of Information Communication Technology in service delivery helps in ___________",
+    "The use of Information Communication Technology in service delivery helps in ",
     options: [
       "Effective and higher percentage of inquiry resolution",
       "Confusing the users needs",
@@ -669,14 +749,17 @@ export const gns113Questions = [
   {
     id: "gns113-070",
     question:
-      "The published record of conference, congress, and symposium is called ___________",
-    options: ["Proceedings", "Newspapers", "Journals", "Reports"],
+    "The published record of conference, congress, and symposium is called ",
+    options: ["Proceedings",
+      "Newspapers",
+      "Journals",
+      "Reports"],
     correct: "Proceedings",
   },
   {
     id: "gns113-071",
     question:
-      "Library of Congress Classification uses ___________ and ___________",
+    "Library of Congress Classification uses ___________ and ",
     options: [
       "Alphabet and numbers",
       "Alpha and letters",
@@ -688,41 +771,56 @@ export const gns113Questions = [
   {
     id: "gns113-072",
     question:
-      "The following databases require subscription before you can have access to them except ___________",
-    options: ["EBSCOhost", "JSTOR", "AGORA", "TEXTBOOK"],
+    "The following databases require subscription before you can have access to them except ",
+    options: ["EBSCOhost",
+      "JSTOR",
+      "AGORA",
+      "TEXTBOOK"],
     correct: "TEXTBOOK",
   },
   {
     id: "gns113-073",
     question:
-      "A demonstration of how information is sourced from e-book collection or other electronic sources is called ___________",
-    options: ["CD-ROM searches", "Meta engine", "On-line", "AGORA"],
+    "A demonstration of how information is sourced from e-book collection or other electronic sources is called ",
+    options: ["CD-ROM searches",
+      "Meta engine",
+      "On-line",
+      "AGORA"],
     correct: "CD-ROM searches",
   },
   {
     id: "gns113-074",
-    question: "___________ is not an example of special library",
-    options: ["Cocoa House", "IITA", "FRIN", "CRIN"],
+    question: " is not an example of special library",
+    options: ["Cocoa House",
+      "IITA",
+      "FRIN",
+      "CRIN"],
     correct: "Cocoa House",
   },
   {
     id: "gns113-075",
     question:
-      "As a registered user of Gbenga Daniel Library you can only borrow ___________",
-    options: ["Three", "One", "Two", "Four"],
+    "As a registered user of Gbenga Daniel Library you can only borrow ",
+    options: ["Three",
+      "One",
+      "Two",
+      "Four"],
     correct: "Two",
   },
   {
     id: "gns113-076",
     question:
-      "What are the standard dimensions (in inches) of a library catalog card?",
-    options: ["4 by 6", "5 by 8", "3 by 5", "2 by 4"],
+    "What are the standard dimensions (in inches) of a library catalog card?",
+    options: ["4 by 6",
+      "5 by 8",
+      "3 by 5",
+      "2 by 4"],
     correct: "3 by 5",
   },
   {
     id: "gns113-077",
     question:
-      "Which unit in the library is responsible for assigning an 'Accession Number' to a newly acquired book?",
+    "Which unit in the library is responsible for assigning an 'Accession Number' to a newly acquired book?",
     options: [
       "Reader's Service Unit",
       "Technical Unit",
@@ -734,7 +832,7 @@ export const gns113Questions = [
   {
     id: "gns113-078",
     question:
-      "What is the title of the head of the Tai Solarin University Staff School library?",
+    "What is the title of the head of the Tai Solarin University Staff School library?",
     options: [
       "University Librarian",
       "School Librarian",
@@ -746,14 +844,17 @@ export const gns113Questions = [
   {
     id: "gns113-079",
     question:
-      "Which of these is a 'pointer of information' that outlines the chapters or sections at the beginning of a book?",
-    options: ["Index", "Glossary", "Table of Contents", "Bibliography"],
+    "Which of these is a 'pointer of information' that outlines the chapters or sections at the beginning of a book?",
+    options: ["Index",
+      "Glossary",
+      "Table of Contents",
+      "Bibliography"],
     correct: "Table of Contents",
   },
   {
     id: "gns113-080",
     question:
-      "In the context of technical services, what is 'mucilage' used for?",
+    "In the context of technical services, what is 'mucilage' used for?",
     options: [
       "Sorting books by subject",
       "Pasting and repairing books",
@@ -765,14 +866,17 @@ export const gns113Questions = [
   {
     id: "gns113-081",
     question:
-      "According to the rules provided, how long does a borrowed material lapse before it is expected to be returned?",
-    options: ["3 days", "7 days", "14 days", "30 days"],
+    "According to the rules provided, how long does a borrowed material lapse before it is expected to be returned?",
+    options: ["3 days",
+      "7 days",
+      "14 days",
+      "30 days"],
     correct: "7 days",
   },
   {
     id: "gns113-082",
     question:
-      "Where is the physical binding of a student's final year project typically carried out within the library?",
+    "Where is the physical binding of a student's final year project typically carried out within the library?",
     options: [
       "Reference Unit",
       "Serials Unit",
@@ -784,7 +888,7 @@ export const gns113Questions = [
   {
     id: "gns113-083",
     question:
-      "'Public library is a library formed, owned and built by the taxpayers money.' This definition highlights that the library is primarily funded by:",
+    "'Public library is a library formed, owned and built by the taxpayers money.' This definition highlights that the library is primarily funded by:",
     options: [
       "Private Donors",
       "The University Management",
@@ -796,7 +900,7 @@ export const gns113Questions = [
   {
     id: "gns113-084",
     question:
-      "What is the specific title of the person who heads the Otunba Gbenga Daniel (OGD) Library?",
+    "What is the specific title of the person who heads the Otunba Gbenga Daniel (OGD) Library?",
     options: [
       "School Librarian",
       "University Librarian",
@@ -808,7 +912,7 @@ export const gns113Questions = [
   {
     id: "gns113-085",
     question:
-      "Which of the following refers to the total acquired printed materials gathered by a library for its users?",
+    "Which of the following refers to the total acquired printed materials gathered by a library for its users?",
     options: [
       "Audiovisual materials",
       "Digital resources",
@@ -820,13 +924,16 @@ export const gns113Questions = [
   {
     id: "gns113-086",
     question: "How many broad categories of library resources exist?",
-    options: ["One", "Two", "Three", "Four"],
+    options: ["One",
+      "Two",
+      "Three",
+      "Four"],
     correct: "Two",
   },
   {
     id: "gns113-087",
     question:
-      "Which of the following refers to printed texts such as textbooks and theses?",
+    "Which of the following refers to printed texts such as textbooks and theses?",
     options: [
       "Electronic resources",
       "Non-print resources",
@@ -838,27 +945,39 @@ export const gns113Questions = [
   {
     id: "gns113-088",
     question:
-      "A collection of leaves of paper fastened along one edge is called:",
-    options: ["Notebook", "Script", "Book", "Archive"],
+    "A collection of leaves of paper fastened along one edge is called:",
+    options: ["Notebook",
+      "Script",
+      "Book",
+      "Archive"],
     correct: "Book",
   },
   {
     id: "gns113-089",
     question: "How many main kinds of books exist?",
-    options: ["Three", "Five", "Four", "Two"],
+    options: ["Three",
+      "Five",
+      "Four",
+      "Two"],
     correct: "Four",
   },
   {
     id: "gns113-090",
     question: "Books written by specialists on different subjects are called:",
-    options: ["Novels", "Textbooks", "Reprints", "Journals"],
+    options: ["Novels",
+      "Textbooks",
+      "Reprints",
+      "Journals"],
     correct: "Textbooks",
   },
   {
     id: "gns113-091",
     question:
-      "Copies of an earlier edition reproduced after the original is exhausted are called:",
-    options: ["Trade books", "Manuals", "Reprints", "Supplements"],
+    "Copies of an earlier edition reproduced after the original is exhausted are called:",
+    options: ["Trade books",
+      "Manuals",
+      "Reprints",
+      "Supplements"],
     correct: "Reprints",
   },
   {
@@ -897,13 +1016,16 @@ export const gns113Questions = [
   {
     id: "gns113-095",
     question: "Blank pages next to endpapers are called:",
-    options: ["Title leaves", "Fly leaves", "Rear pages", "Spilt pages"],
+    options: ["Title leaves",
+      "Fly leaves",
+      "Rear pages",
+      "Spilt pages"],
     correct: "Fly leaves",
   },
   {
     id: "gns113-096",
     question:
-      "A shortened or full title of a book, usually before the title page, is the:",
+    "A shortened or full title of a book, usually before the title page, is the:",
     options: [
       "ISBN page",
       "Half-title page",
@@ -915,14 +1037,20 @@ export const gns113Questions = [
   {
     id: "gns113-097",
     question:
-      "The page that displays full title, author, edition and publisher is the:",
-    options: ["Cover", "Title page", "Index", "Appendix"],
+    "The page that displays full title, author, edition and publisher is the:",
+    options: ["Cover",
+      "Title page",
+      "Index",
+      "Appendix"],
     correct: "Title page",
   },
   {
     id: "gns113-098",
     question: "The legal right page given to authors/publishers is the:",
-    options: ["ISBN page", "CIP page", "Copyright page", "Contents page"],
+    options: ["ISBN page",
+      "CIP page",
+      "Copyright page",
+      "Contents page"],
     correct: "Copyright page",
   },
   {
@@ -939,64 +1067,94 @@ export const gns113Questions = [
   {
     id: "gns113-100",
     question:
-      "The page with the name(s) of those the author dedicates the book to is the:",
-    options: ["Preface", "Foreword", "Dedication page", "Title page"],
+    "The page with the name(s) of those the author dedicates the book to is the:",
+    options: ["Preface",
+      "Foreword",
+      "Dedication page",
+      "Title page"],
     correct: "Dedication page",
   },
   {
     id: "gns113-101",
     question: "A comment written by someone other than the author is the:",
-    options: ["Preface", "Foreword", "Introduction", "Appendix"],
+    options: ["Preface",
+      "Foreword",
+      "Introduction",
+      "Appendix"],
     correct: "Foreword",
   },
   {
     id: "gns113-102",
     question: "The author's reason for writing a book is found in the:",
-    options: ["Acknowledgment", "Foreword", "Preface", "Contents"],
+    options: ["Acknowledgment",
+      "Foreword",
+      "Preface",
+      "Contents"],
     correct: "Preface",
   },
   {
     id: "gns113-103",
     question: "The page recognizing contributors is the:",
-    options: ["Dedication", "Copyright", "Acknowledgment", "Contents"],
+    options: ["Dedication",
+      "Copyright",
+      "Acknowledgment",
+      "Contents"],
     correct: "Acknowledgment",
   },
   {
     id: "gns113-104",
     question: "The outer paper covering protecting the book is the:",
-    options: ["Jacket cover", "Dust jacket", "Title cover", "Hard cover"],
+    options: ["Jacket cover",
+      "Dust jacket",
+      "Title cover",
+      "Hard cover"],
     correct: "Dust jacket",
   },
   {
     id: "gns113-105",
     question: "Additional data that clarifies the text is found in the:",
-    options: ["Footnote", "Appendix", "Index", "Glossary"],
+    options: ["Footnote",
+      "Appendix",
+      "Index",
+      "Glossary"],
     correct: "Appendix",
   },
   {
     id: "gns113-106",
     question:
-      "Technical terms and definitions in alphabetical order are found in the:",
-    options: ["Index", "Appendix", "Notes", "Glossary"],
+    "Technical terms and definitions in alphabetical order are found in the:",
+    options: ["Index",
+      "Appendix",
+      "Notes",
+      "Glossary"],
     correct: "Glossary",
   },
   {
     id: "gns113-107",
     question:
-      "A statement explaining a point or source of quotation is called a:",
-    options: ["Reference", "Note", "Extract", "Citation"],
+    "A statement explaining a point or source of quotation is called a:",
+    options: ["Reference",
+      "Note",
+      "Extract",
+      "Citation"],
     correct: "Note",
   },
   {
     id: "gns113-108",
     question: "People who contributed to the book are found under:",
-    options: ["Dedication", "Contributors", "Acknowledgment", "Preface"],
+    options: ["Dedication",
+      "Contributors",
+      "Acknowledgment",
+      "Preface"],
     correct: "Contributors",
   },
   {
     id: "gns113-109",
     question: "Publications issued in successive parts are called:",
-    options: ["Journals", "Serials", "Reports", "Articles"],
+    options: ["Journals",
+      "Serials",
+      "Reports",
+      "Articles"],
     correct: "Serials",
   },
   {
@@ -1068,8 +1226,11 @@ export const gns113Questions = [
   {
     id: "gns113-116",
     question:
-      "A ___________ is defined as a collection of resources selected, acquired, organized and preserved to meet users' information needs.",
-    options: ["Database", "Library", "Archive", "Documentation center"],
+    "A ___________ is defined as a collection of resources selected, acquired, organized and preserved to meet users' information needs.",
+    options: ["Database",
+      "Library",
+      "Archive",
+      "Documentation center"],
     correct: "Library",
   },
   {
@@ -1119,7 +1280,7 @@ export const gns113Questions = [
   {
     id: "gns113-121",
     question:
-      "Supplying journal articles or documents to a requesting user or institution is known as:",
+    "Supplying journal articles or documents to a requesting user or institution is known as:",
     options: [
       "Information sharing",
       "Document delivery service",
@@ -1131,7 +1292,7 @@ export const gns113Questions = [
   {
     id: "gns113-122",
     question:
-      "The service that allows users to duplicate a limited number of pages according to copyright law is:",
+    "The service that allows users to duplicate a limited number of pages according to copyright law is:",
     options: [
       "Duplication service",
       "Photocopy service",
@@ -1143,7 +1304,7 @@ export const gns113Questions = [
   {
     id: "gns113-123",
     question:
-      "Library service that emphasizes providing books for home reading through mobile units is called:",
+    "Library service that emphasizes providing books for home reading through mobile units is called:",
     options: [
       "Mobile library service",
       "Home-library service",
@@ -1155,8 +1316,11 @@ export const gns113Questions = [
   {
     id: "gns113-124",
     question:
-      "Public display of books or artifacts in a physical or online space is known as:",
-    options: ["Demonstration", "Exhibition", "Cataloguing", "Classification"],
+    "Public display of books or artifacts in a physical or online space is known as:",
+    options: ["Demonstration",
+      "Exhibition",
+      "Cataloguing",
+      "Classification"],
     correct: "Exhibition",
   },
   {
@@ -1184,8 +1348,11 @@ export const gns113Questions = [
   {
     id: "gns113-127",
     question:
-      "___________ is defined as the process of facilitating learning or acquiring knowledge, skills and values.",
-    options: ["Training", "Teaching", "Education", "Instruction"],
+    " is defined as the process of facilitating learning or acquiring knowledge, skills and values.",
+    options: ["Training",
+      "Teaching",
+      "Education",
+      "Instruction"],
     correct: "Education",
   },
   {
@@ -1202,7 +1369,10 @@ export const gns113Questions = [
   {
     id: "gns113-129",
     question: "How many types of goals are there?",
-    options: ["Three", "Four", "Five", "Two"],
+    options: ["Three",
+      "Four",
+      "Five",
+      "Two"],
     correct: "Four",
   },
   {
@@ -1219,20 +1389,26 @@ export const gns113Questions = [
   {
     id: "gns113-131",
     question:
-      "The two main classification schemes used globally in libraries are:",
-    options: ["LC and UDC", "DDC and LC", "UDC and MCS", "BCS and DDC"],
+    "The two main classification schemes used globally in libraries are:",
+    options: ["LC and UDC",
+      "DDC and LC",
+      "UDC and MCS",
+      "BCS and DDC"],
     correct: "DDC and LC",
   },
   {
     id: "gns113-132",
     question: "Which tool helps users locate materials easily in the library?",
-    options: ["Shelves", "Journals", "Library catalogues", "Indexes"],
+    options: ["Shelves",
+      "Journals",
+      "Library catalogues",
+      "Indexes"],
     correct: "Library catalogues",
   },
   {
     id: "gns113-133",
     question:
-      "A catalogue listing all books in alphabetical order of their titles is called:",
+    "A catalogue listing all books in alphabetical order of their titles is called:",
     options: [
       "Classified catalogue",
       "Title catalogue",
@@ -1244,7 +1420,7 @@ export const gns113Questions = [
   {
     id: "gns113-134",
     question:
-      "A catalogue listing books alphabetically by author’s name is called:",
+    "A catalogue listing books alphabetically by author’s name is called:",
     options: [
       "Title catalogue",
       "Author catalogue",
@@ -1256,7 +1432,7 @@ export const gns113Questions = [
   {
     id: "gns113-135",
     question:
-      "A catalogue that lists resources under a particular classification is known as:",
+    "A catalogue that lists resources under a particular classification is known as:",
     options: [
       "Author catalogue",
       "Title catalogue",
@@ -1268,50 +1444,71 @@ export const gns113Questions = [
   {
     id: "gns113-136",
     question:
-      "___________ is defined as the application of the mind to acquire knowledge through reading, investigation or reflection.",
-    options: ["Learning", "Reading", "Study", "Understanding"],
+    " is defined as the application of the mind to acquire knowledge through reading, investigation or reflection.",
+    options: ["Learning",
+      "Reading",
+      "Study",
+      "Understanding"],
     correct: "Study",
   },
   {
     id: "gns113-137",
     question:
-      "___________ involves enjoying and manipulating objects, experiences and conversations to build mental models.",
-    options: ["Reading", "Memorization", "Learning", "Practice"],
+    " involves enjoying and manipulating objects, experiences and conversations to build mental models.",
+    options: ["Reading",
+      "Memorization",
+      "Learning",
+      "Practice"],
     correct: "Learning",
   },
   {
     id: "gns113-138",
     question:
-      "A process that gives learners opportunities to engage with ideas based on their needs is called:",
-    options: ["Reading", "Teaching", "Learning", "Assessment"],
+    "A process that gives learners opportunities to engage with ideas based on their needs is called:",
+    options: ["Reading",
+      "Teaching",
+      "Learning",
+      "Assessment"],
     correct: "Learning",
   },
   {
     id: "gns113-139",
     question:
-      "A continuous process that starts from what one knows and moves to what one wants to know is:",
-    options: ["Teaching", "Evaluation", "Reading", "Learning"],
+    "A continuous process that starts from what one knows and moves to what one wants to know is:",
+    options: ["Teaching",
+      "Evaluation",
+      "Reading",
+      "Learning"],
     correct: "Learning",
   },
   {
     id: "gns113-140",
     question:
-      "Learning depends on many factors including ___________ method exposed to the learner.",
-    options: ["Emotional", "Instructional", "Practical", "Mental"],
+    "Learning depends on many factors including ___________ method exposed to the learner.",
+    options: ["Emotional",
+      "Instructional",
+      "Practical",
+      "Mental"],
     correct: "Instructional",
   },
   {
     id: "gns113-141",
     question:
-      "___________ is defined as a relatively permanent change in behaviour resulting from experience.",
-    options: ["Reading", "Learning", "Teaching", "Training"],
+    " is defined as a relatively permanent change in behaviour resulting from experience.",
+    options: ["Reading",
+      "Learning",
+      "Teaching",
+      "Training"],
     correct: "Learning",
   },
   {
     id: "gns113-142",
     question:
-      "Learning involves the ___________ of habits, knowledge and attitudes.",
-    options: ["Understanding", "Reading", "Acquisition", "Evaluation"],
+    "Learning involves the ___________ of habits, knowledge and attitudes.",
+    options: ["Understanding",
+      "Reading",
+      "Acquisition",
+      "Evaluation"],
     correct: "Acquisition",
   },
   {
@@ -1327,14 +1524,17 @@ export const gns113Questions = [
   },
   {
     id: "gns113-144",
-    question: "___________ involves reading, listening, speaking and writing.",
-    options: ["Thinking", "Learning", "Teaching", "Observation"],
+    question: " involves reading, listening, speaking and writing.",
+    options: ["Thinking",
+      "Learning",
+      "Teaching",
+      "Observation"],
     correct: "Learning",
   },
   {
     id: "gns113-145",
     question:
-      "Libraries funded by the local, state or federal government are called:",
+    "Libraries funded by the local, state or federal government are called:",
     options: [
       "Private libraries",
       "Academic libraries",
@@ -1357,13 +1557,16 @@ export const gns113Questions = [
   {
     id: "gns113-147",
     question: "A database of all information sources in a library is called:",
-    options: ["Catalogue", "Shelf list", "Index", "Record book"],
+    options: ["Catalogue",
+      "Shelf list",
+      "Index",
+      "Record book"],
     correct: "Catalogue",
   },
   {
     id: "gns113-148",
     question:
-      "___________ include all forms of information carriers used for teaching and learning.",
+    "___________ include all forms of information carriers used for teaching and learning.",
     options: [
       "Study tools",
       "Information materials",
@@ -1386,7 +1589,7 @@ export const gns113Questions = [
   {
     id: "gns113-150",
     question:
-      "___________ refers to the intellectual abilities involved in using information effectively.",
+    "___________ refers to the intellectual abilities involved in using information effectively.",
     options: [
       "Data processing",
       "Information literacy",
@@ -1398,7 +1601,7 @@ export const gns113Questions = [
   {
     id: "gns113-151",
     question:
-      "The ability to access, evaluate, organize and use information to learn or solve problems is:",
+    "The ability to access, evaluate, organize and use information to learn or solve problems is:",
     options: [
       "Reading literacy",
       "Information literacy",
@@ -1421,7 +1624,7 @@ export const gns113Questions = [
   {
     id: "gns113-153",
     question:
-      "Which of the following is the first stage of the information retrieval process?",
+    "Which of the following is the first stage of the information retrieval process?",
     options: [
       "Query formulation",
       "Information gap",
@@ -1433,7 +1636,7 @@ export const gns113Questions = [
   {
     id: "gns113-154",
     question:
-      "Selecting the information retrieval system to use occurs at which stage?",
+    "Selecting the information retrieval system to use occurs at which stage?",
     options: [
       "Evaluation stage",
       "Query stage",
@@ -1467,7 +1670,7 @@ export const gns113Questions = [
   {
     id: "gns113-157",
     question:
-      "The stage where search results are obtained from the database is the:",
+    "The stage where search results are obtained from the database is the:",
     options: [
       "Retrieval stage",
       "Evaluation stage",
@@ -1479,22 +1682,31 @@ export const gns113Questions = [
   {
     id: "gns113-158",
     question:
-      "Assessing the relevance and usefulness of retrieved information is called:",
-    options: ["Review", "Interpretation", "Evaluation", "Validation"],
+    "Assessing the relevance and usefulness of retrieved information is called:",
+    options: ["Review",
+      "Interpretation",
+      "Evaluation",
+      "Validation"],
     correct: "Evaluation",
   },
   {
     id: "gns113-159",
     question:
-      "Using the results obtained from the retrieval process is called:",
-    options: ["Application", "Utilization", "Execution", "Implementation"],
+    "Using the results obtained from the retrieval process is called:",
+    options: ["Application",
+      "Utilization",
+      "Execution",
+      "Implementation"],
     correct: "Utilization",
   },
   {
     id: "gns113-160",
     question:
-      "Information resources must be organized in a ___________ way to ensure easy access.",
-    options: ["Random", "Flexible", "Systematic", "Manual"],
+    "Information resources must be organized in a ___________ way to ensure easy access.",
+    options: ["Random",
+      "Flexible",
+      "Systematic",
+      "Manual"],
     correct: "Systematic",
   },
   {
@@ -1511,8 +1723,11 @@ export const gns113Questions = [
   {
     id: "gns113-162",
     question:
-      "The bibliographic description of library holdings showing author, title, subject, publisher and other details is called:",
-    options: ["Shelf list", "Catalogue", "Index", "Abstract"],
+    "The bibliographic description of library holdings showing author, title, subject, publisher and other details is called:",
+    options: ["Shelf list",
+      "Catalogue",
+      "Index",
+      "Abstract"],
     correct: "Catalogue",
   },
   {
@@ -1529,21 +1744,30 @@ export const gns113Questions = [
   {
     id: "gns113-164",
     question:
-      "A library classification system arranges and orders information resources:",
-    options: ["Alphabetically", "Randomly", "Systematically", "Historically"],
+    "A library classification system arranges and orders information resources:",
+    options: ["Alphabetically",
+      "Randomly",
+      "Systematically",
+      "Historically"],
     correct: "Systematically",
   },
   {
     id: "gns113-165",
     question:
-      "The Library of Congress Classification Scheme is represented mainly by:",
-    options: ["Numbers", "Letters and numbers", "Roman numerals", "Symbols"],
+    "The Library of Congress Classification Scheme is represented mainly by:",
+    options: ["Numbers",
+      "Letters and numbers",
+      "Roman numerals",
+      "Symbols"],
     correct: "Letters and numbers",
   },
   {
     id: "gns113-166",
     question: "The Dewey Decimal Classification Scheme was developed in:",
-    options: ["1890", "1901", "1876", "1869"],
+    options: ["1890",
+      "1901",
+      "1876",
+      "1869"],
     correct: "1876",
   },
   {
@@ -1560,7 +1784,7 @@ export const gns113Questions = [
   {
     id: "gns113-168",
     question:
-      "Which of the following is a widely used library classification scheme?",
+    "Which of the following is a widely used library classification scheme?",
     options: [
       "UNESCO Scheme",
       "World Catalogue System",
@@ -1572,13 +1796,16 @@ export const gns113Questions = [
   {
     id: "gns113-169",
     question: "Bliss Classification Scheme is represented by:",
-    options: ["BCS", "BLS", "BSC", "BDC"],
+    options: ["BCS",
+      "BLS",
+      "BSC",
+      "BDC"],
     correct: "BCS",
   },
   {
     id: "gns113-170",
     question:
-      "Which of the following classification schemes uses a combination of numbers and special symbols?",
+    "Which of the following classification schemes uses a combination of numbers and special symbols?",
     options: [
       "Dewey Decimal Classification",
       "Library of Congress",
@@ -1587,4 +1814,315 @@ export const gns113Questions = [
     ],
     correct: "Universal Decimal Classification",
   },
-];
+  {
+    id: "gns113-171",
+    question: "The acronym 'AGORA' in library and research databases stands for:",
+    options: [
+      "Access to Global Online Research in Agriculture",
+      "African Global Online Research Access",
+      "Academic Global Online Resource Archive",
+      "Advanced Gateway of Research Access"
+    ],
+    correct: "Access to Global Online Research in Agriculture"
+  },
+  {
+    id: "gns113-172",
+    question: "Which subject area in LCC is represented by the letter 'A'?",
+    options: ["General Works",
+      "Philosophy",
+      "Science",
+      "Technology"],
+    correct: "General Works"
+  },
+  {
+    id: "gns113-173",
+    question: "Books on Philosophy, Psychology, and Religion are classified under which LCC letter?",
+    options: ["B",
+      "C",
+      "H",
+      "L"],
+    correct: "B"
+  },
+  {
+    id: "gns113-174",
+    question: "Auxiliary sciences of history, such as archaeology, fall under which LCC category?",
+    options: ["C",
+      "D",
+      "E",
+      "G"],
+    correct: "C"
+  },
+  {
+    id: "gns113-175",
+    question: "The history of the world outside the Americas is coded under which LCC letter?",
+    options: ["D",
+      "E",
+      "F",
+      "H"],
+    correct: "D"
+  },
+  {
+    id: "gns113-176",
+    question: "History of the Americas is covered in LCC under which letters?",
+    options: ["E–F",
+      "D",
+      "G",
+      "J"],
+    correct: "E–F"
+  },
+  {
+    id: "gns113-177",
+    question: "Subjects like Geography, Anthropology, and Recreation are assigned to which LCC category?",
+    options: ["G",
+      "H",
+      "P",
+      "Q"],
+    correct: "G"
+  },
+  {
+    id: "gns113-178",
+    question: "Social Sciences in the Library of Congress Classification system correspond to which letter?",
+    options: ["H",
+      "B",
+      "K",
+      "M"],
+    correct: "H"
+  },
+  {
+    id: "gns113-179",
+    question: "Education textbooks are catalogued under which LCC letter?",
+    options: ["L",
+      "N",
+      "S",
+      "T"],
+    correct: "L"
+  },
+  {
+    id: "gns113-180",
+    question: "Music-related works, such as scores and theory books, belong to which LCC section?",
+    options: ["M",
+      "N",
+      "P",
+      "Q"],
+    correct: "M"
+  },
+  {
+    id: "gns113-181",
+    question: "Fine Arts materials, including painting and sculpture, are classified under which letter in LCC?",
+    options: ["N",
+      "M",
+      "P",
+      "R"],
+    correct: "N"
+  },
+  {
+    id: "gns113-182",
+    question: "Language and Literature works are filed under which LCC code?",
+    options: ["P",
+      "Q",
+      "R",
+      "S"],
+    correct: "P"
+  },
+  {
+    id: "gns113-183",
+    question: "Scientific publications are organized in the Library of Congress Classification under which letter?",
+    options: ["Q",
+      "R",
+      "S",
+      "T"],
+    correct: "Q"
+  },
+  {
+    id: "gns113-184",
+    question: "Books on Medicine are classified under which LCC letter?",
+    options: ["R",
+      "S",
+      "Q",
+      "U"],
+    correct: "R"
+  },
+  {
+    id: "gns113-185",
+    question: "Agriculture-related texts fall under which letter in LCC?",
+    options: ["S",
+      "T",
+      "R",
+      "G"],
+    correct: "S"
+  },
+  {
+    id: "gns113-186",
+    question: "Works about Technology are placed under which LCC code?",
+    options: ["T",
+      "U",
+      "V",
+      "Q"],
+    correct: "T"
+  },
+  {
+    id: "gns113-187",
+    question: "Military Science books are organized under which LCC letter?",
+    options: ["U",
+      "V",
+      "T",
+      "S"],
+    correct: "U"
+  },
+  {
+    id: "gns113-188",
+    question: "Naval Science publications are filed under which LCC classification?",
+    options: ["V",
+      "U",
+      "T",
+      "Q"],
+    correct: "V"
+  },
+  {
+    id: "gns113-189",
+    question: "Bibliography and Library Science works are catalogued under which letter?",
+    options: ["Z",
+      "A",
+      "H",
+      "L"],
+    correct: "Z"
+  },
+  {
+    id: "gns113-190",
+    question: "Which type of catalogue is used in the Otunba Gbenga Daniel (OGD) Library?",
+    options: [
+      "Card catalogue",
+      "Title catalogue",
+      "Author catalogue",
+      "Subject catalogue"
+    ],
+    correct: "Card catalogue"
+  },
+  {
+    id: "gns113-191",
+    question: "In what year was the Lagos Book Club established?",
+    options: ["1910",
+      "1920",
+      "1930",
+      "1940"],
+    correct: "1920"
+  },
+  {
+    id: "gns113-192",
+    question: "Which of the following is a feature of a special library?",
+    options: [
+      "Does not lend books to individuals",
+      "Open to the general public",
+      "Primarily for primary/secondary school students",
+      "Maintains only fiction collections"
+    ],
+    correct: "Does not lend books to individuals"
+  },
+  {
+    id: "gns113-193",
+    question: "Going over previously learned information to reinforce understanding is called:",
+    options: ["Re-reading",
+      "Re-learning",
+      "Revision",
+      "Review"],
+    correct: "Re-learning"
+  },
+  {
+    id: "gns113-194",
+    question: "The ability to search multiple databases and engines simultaneously is called:",
+    options: ["Search engines",
+      "Meta engines",
+      "Boolean operators",
+      "Online catalogues"],
+    correct: "Meta engines"
+  },
+  {
+    id: "gns113-195",
+    question: "An electronic library that provides digital access to resources is also known as:",
+    options: ["Print library",
+      "Digital library",
+      "Special library",
+      "Public library"],
+    correct: "Digital library"
+  },
+  {
+    id: "gns113-196",
+    question: "___________ section contains the needed and most important content of a book:",
+    options: ["Preliminary",
+      "All of the above",
+      "Main text",
+      "Auxiliary"],
+    correct: "Main text"
+  },
+  {
+    id: "gns113-197",
+    question: "In LCC, the letters M, Q, and R represent which subjects respectively?",
+    options: ["Music, Quantum, Agriculture",
+      "None of the above",
+      "Farming, Medicine, Science",
+      "Music, Science, Medicine"],
+    correct: "Music, Science, Medicine"
+  },
+  {
+    id: "gns113-198",
+    question: "In the Dewey Decimal Classification, 500 stands for ___________:",
+    options: ["Music",
+      "Science",
+      "Geography",
+      "History"],
+    correct: "Science"
+  },
+  {
+    id: "gns113-199",
+    question: "All these are bad study habits except :",
+    options: ["Procrastination",
+      "Cramming",
+      "Memorization or reading",
+      "Aclimization or sourcing"],
+    correct: "Memorization or reading"
+  },
+  {
+    id: "gns113-200",
+    question: " section is responsible for registration and borrowing in the library:",
+    options: ["Circulation",
+      "Bindery",
+      "Serials",
+      "Registration"],
+    correct: "Circulation"
+  },
+  {
+    id: "gns113-201",
+    question: "The physical components of the ICT sectors in the library are known as ___________:",
+    options: ["Physical component",
+      "Major component",
+      "Software",
+      "Hardware"],
+    correct: "Hardware"
+  },
+  {
+    id: "gns113-202",
+    question: "All these are found in the preliminary pages except :",
+    options: ["Dedication",
+      "Reference",
+      "Half title page",
+      "Title page"],
+    correct: "Reference"
+  },
+  {
+    id: "gns113-203",
+    question: " is used for writing and reading by the sight-impaired:",
+    options: ["Braille",
+      "Seeing goggles",
+      "Graille",
+      "Special kalistenics"],
+    correct: "Braille"
+  },
+  {
+    id: "gns113-204",
+    question: "This unit takes care of torn or damaged materials and ensures they are properly repaired ___________:",
+    options: ["The library repair unit",
+      "Bindery unit",
+      "The maintenance unit",
+      "The acquisition unit"],
+    correct: "Bindery unit"
+  }];
