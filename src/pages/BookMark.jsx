@@ -1,10 +1,10 @@
 import { useNavigate } from "react-router-dom";
 
-const BookMark = ({ bookmarks, edu101Questions, gns113Questions, gst111Questions, edu101revisionQuestions, setBookmarks }) => {
+const BookMark = ({ bookmarks, edu101Questions, gns113Questions, gst111Questions, edu101revisionQuestions, setBookmarks, csc111Questions }) => {
   const navigate = useNavigate();
 
   // Combine all questions
-  const allQuestions = [...edu101Questions, ...gst111Questions, ...gns113Questions, ...edu101revisionQuestions];
+  const allQuestions = [...edu101Questions, ...gst111Questions, ...gns113Questions, ...edu101revisionQuestions, ...csc111Questions];
 
   // Filter questions that are bookmarked
   const bookmarkedQuestions = allQuestions.filter(q => bookmarks.includes(q.id));
