@@ -10,6 +10,7 @@ import AboutPage from "./pages/AboutPage";
 import { edu101Questions } from "./edu-101questions"
 import { gns113Questions } from "./gns-113questions";
 import { gst111Questions } from "./gst-111questions";
+import { csc111Questions } from "./csc-111questions";
 import { edu101revisionQuestions } from "./edu101revisionQuestions"
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
@@ -41,6 +42,11 @@ function App() {
       id: "GNS113",
       name: "GNS 113",
       questions: gns113Questions,
+    },
+    {
+      id: "CSC111",
+      name: "CSC 111",
+      questions: csc111Questions,
     },
   ];
 
