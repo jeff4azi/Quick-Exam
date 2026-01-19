@@ -572,7 +572,7 @@ export const gns113Questions = [{
   {
     id: "gns113-053",
     question:
-    " supports and co-ordinates the day to day activities of the Library",
+    "___________ supports and co-ordinates the day to day activities of the Library",
     options: [
       "Readers' services",
       "Technical services",
@@ -612,7 +612,7 @@ export const gns113Questions = [{
   {
     id: "gns113-057",
     question:
-    "A library that belongs to a particular establishment is called ",
+    "A library that belongs to a particular establishment is called ___________",
     options: [
       "Private Library",
       "National Library",
@@ -635,7 +635,7 @@ export const gns113Questions = [{
   },
   {
     id: "gns113-059",
-    question: " is a pointer to information",
+    question: "___________ is a pointer to information",
     options: ["Loans",
       "Index",
       "Abstract",
@@ -645,7 +645,7 @@ export const gns113Questions = [{
   {
     id: "gns113-060",
     question:
-    "A brief summary of the findings and points of a periodical article is called ",
+    "A brief summary of the findings and points of a periodical article is called ___________",
     options: ["Information",
       "Library Service",
       "Abstract",
@@ -665,7 +665,7 @@ export const gns113Questions = [{
   {
     id: "gns113-062",
     question:
-    "Collection of information held in some forms of computerized or electronic format is called ",
+    "Collection of information held in some forms of computerized or electronic format is called ___________",
     options: ["Projectors",
       "Film",
       "Machine Readable materials",
@@ -684,7 +684,7 @@ export const gns113Questions = [{
   {
     id: "gns113-064",
     question:
-    " enable user to find the contents of millions of web pages simultaneously",
+    "___________ enable user to find the contents of millions of web pages simultaneously",
     options: ["Search engine",
       "Microchip",
       "Metadata",
@@ -703,7 +703,7 @@ export const gns113Questions = [{
   {
     id: "gns113-066",
     question:
-    " is the ability to identify likely sources of information",
+    "___________ is the ability to identify likely sources of information",
     options: [
       "Resources",
       "Information literate person",
@@ -715,7 +715,7 @@ export const gns113Questions = [{
   {
     id: "gns113-067",
     question:
-    " is about selecting wide range of stock which will allow people to enrich and enjoy themselves academically",
+    "___________ is about selecting wide range of stock which will allow people to enrich and enjoy themselves academically",
     options: [
       "Information Retrieval",
       "Information needs",
@@ -781,7 +781,7 @@ export const gns113Questions = [{
   {
     id: "gns113-073",
     question:
-    "A demonstration of how information is sourced from e-book collection or other electronic sources is called ",
+    "A demonstration of how information is sourced from e-book collection or other electronic sources is called ___________",
     options: ["CD-ROM searches",
       "Meta engine",
       "On-line",
@@ -790,7 +790,7 @@ export const gns113Questions = [{
   },
   {
     id: "gns113-074",
-    question: " is not an example of special library",
+    question: "___________ is not an example of special library",
     options: ["Cocoa House",
       "IITA",
       "FRIN",
@@ -1348,7 +1348,7 @@ export const gns113Questions = [{
   {
     id: "gns113-127",
     question:
-    " is defined as the process of facilitating learning or acquiring knowledge, skills and values.",
+    "___________ is defined as the process of facilitating learning or acquiring knowledge, skills and values.",
     options: ["Training",
       "Teaching",
       "Education",
@@ -1444,7 +1444,7 @@ export const gns113Questions = [{
   {
     id: "gns113-136",
     question:
-    " is defined as the application of the mind to acquire knowledge through reading, investigation or reflection.",
+    "___________ is defined as the application of the mind to acquire knowledge through reading, investigation or reflection.",
     options: ["Learning",
       "Reading",
       "Study",
@@ -1454,7 +1454,7 @@ export const gns113Questions = [{
   {
     id: "gns113-137",
     question:
-    " involves enjoying and manipulating objects, experiences and conversations to build mental models.",
+    "___________ involves enjoying and manipulating objects, experiences and conversations to build mental models.",
     options: ["Reading",
       "Memorization",
       "Learning",
@@ -1524,7 +1524,7 @@ export const gns113Questions = [{
   },
   {
     id: "gns113-144",
-    question: " involves reading, listening, speaking and writing.",
+    question: "___________ involves reading, listening, speaking and writing.",
     options: ["Thinking",
       "Learning",
       "Teaching",
@@ -2083,7 +2083,7 @@ export const gns113Questions = [{
   },
   {
     id: "gns113-200",
-    question: " section is responsible for registration and borrowing in the library:",
+    question: "___________ section is responsible for registration and borrowing in the library:",
     options: ["Circulation",
       "Bindery",
       "Serials",
@@ -2110,7 +2110,7 @@ export const gns113Questions = [{
   },
   {
     id: "gns113-203",
-    question: " is used for writing and reading by the sight-impaired:",
+    question: "___________ is used for writing and reading by the sight-impaired:",
     options: ["Braille",
       "Seeing goggles",
       "Graille",
