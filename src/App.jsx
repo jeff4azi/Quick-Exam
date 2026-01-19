@@ -122,7 +122,8 @@ const onSubmit = () => {
     edu101Questions,
     gst111Questions,
     gns113Questions,
-    edu101revisionQuestions
+    edu101revisionQuestions,
+csc111Questions,
   }
 
   return (
