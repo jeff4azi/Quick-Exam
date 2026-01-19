@@ -6,6 +6,8 @@ import Logo from "../images/Logo"
 import { useNavigate } from "react-router-dom"
 
 import ReactGA from "react-ga4";
+import { SiTiktok, SiX } from "react-icons/si";
+import { FaFacebookF } from "react-icons/fa";
 
 const StartExam = ({
   setQuestions,
@@ -13,7 +15,7 @@ const StartExam = ({
   courses,
   selectedCourse,
   setSelectedCourse,
- /*  edu101revisionQuestions, */
+  /*  edu101revisionQuestions, */
 }) => {
   const [showChooseCourseOverlay, setShowChooseCourseOverlay] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -101,7 +103,14 @@ const StartExam = ({
 
           {/* Menu items (example placeholders) */}
           <ul className="space-y-4 lg:text-lg">
-            <li className="hover:text-blue-600 active:text-blue-600 duration-200 cursor-pointer gap-2 flex items-center">
+            <li className="hover:text-blue-600 active:text-blue-600 duration-200 cursor-pointer gap-2 flex items-center" onClick={() => {
+              navigate("/about-page")
+              ReactGA.event({
+                category: "Engagement",
+                action: "About Page",
+                label: selectedCourse.id,
+              });
+            }}>
               <div>
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="lg:size-6" viewBox="0 0 16 16">
                   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
@@ -126,7 +135,7 @@ const StartExam = ({
               </div>
               Bookmarked Questions
             </li>
-            <li className="hover:text-blue-600 active:text-green-500 duration-200">
+            <li className="hover:text-blue-600 active:text-green-500 duration-200 mb-5">
               <a href="https://chat.whatsapp.com/FMPmsBbwU9kL6t2vJ6C8qq"
                 target="_blank"
                 rel="noopener noreferrer" className="gap-2 flex items-center">
@@ -138,39 +147,58 @@ const StartExam = ({
                 Join WhatsApp Group
               </a>
             </li>
-          </ul>
-        </div>
+            <hr className="border-gray-500" />
+            <li className="hover:text-blue-600 active:text-green-500 duration-200 mt-5">
+              <a href="https://www.facebook.com/share/1FmCjg3WX8/"
+                target="_blank"
+                rel="noopener noreferrer" className="gap-2 flex items-center">
+                <FaFacebookF />
+                Like us on FaceBook
+              </a>
+            </li>
+            <li className="hover:text-blue-600 active:text-green-500 duration-200">
+              <a href="https://www.tiktok.com/@codejeffrey18?_r=1&_d=f0id5k11di62de&sec_uid=MS4wLjABAAAAs-74xQ5Lh5ye4lPBykPFOf5d8xTmiQ6KXiD3W8s7wbs2Ly6jEEKzBJZAj2j1Drez&share_author_id=7541936112290464785&sharer_language=en&source=h5_m&u_code=em3ai2acehdibb&timestamp=1768827516&user_id=7541936112290464785&sec_user_id=MS4wLjABAAAAs-74xQ5Lh5ye4lPBykPFOf5d8xTmiQ6KXiD3W8s7wbs2Ly6jEEKzBJZAj2j1Drez&item_author_type=1&utm_source=copy&utm_campaign=client_share&utm_medium=android&share_iid=7590731933664560917&share_link_id=095c0f9c-d1d1-4273-8804-6b6caec0d83b&share_app_id=1233&ugbiz_name=ACCOUNT&ug_btm=b8727%2Cb7360&social_share_type=5&enable_checksum=1"
+                target="_blank"
+                rel="noopener noreferrer" className="gap-2 flex items-center">
+              <SiTiktok className="hover:text-black transition" />
+              Follow us on Tiktok
+            </a>
+          </li>
+        </ul>
       </div>
-
-      {/* Start Exam button */}
-      <button
-        onClick={() => {
-          setShowChooseCourseOverlay(true)
-          ReactGA.event({
-            category: "Exam",
-            action: "Start Exam",
-            label: selectedCourse.id || "none",
-          });
-        }}
-        className="absolute bottom-10 bg-[#2563EB] py-5 px-7 rounded-full font-medium text-white text-2xl hover:scale-105 duration-200 ease-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300"
-      >
-        Start Exam
-      </button>
-
-      {/* Choose course overlay */}
-      {showChooseCourseOverlay && (
-        <ChooseCourseOverlay
-          setShowChooseCourseOverlay={setShowChooseCourseOverlay}
-          setQuestions={setQuestions}
-          getRandom30={getRandom30}
-          courses={courses}
-          selectedCourse={selectedCourse}
-          setSelectedCourse={setSelectedCourse}
-        />
-      )}
-
-{/*       <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(edu101revisionCourse); }} /> */}
     </div>
+
+      {/* Start Exam button */ }
+  <button
+    onClick={() => {
+      setShowChooseCourseOverlay(true)
+      ReactGA.event({
+        category: "Exam",
+        action: "Start Exam",
+        label: selectedCourse.id || "none",
+      });
+    }}
+    className="absolute bottom-10 bg-[#2563EB] py-5 px-7 rounded-full font-medium text-white text-2xl hover:scale-105 duration-200 ease-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300"
+  >
+    Start Exam
+  </button>
+
+  {/* Choose course overlay */ }
+  {
+    showChooseCourseOverlay && (
+      <ChooseCourseOverlay
+        setShowChooseCourseOverlay={setShowChooseCourseOverlay}
+        setQuestions={setQuestions}
+        getRandom30={getRandom30}
+        courses={courses}
+        selectedCourse={selectedCourse}
+        setSelectedCourse={setSelectedCourse}
+      />
+    )
+  }
+
+  {/*       <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(edu101revisionCourse); }} /> */ }
+    </div >
   )
 }
 

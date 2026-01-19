@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import StartExam from "./pages/StartExam";
 import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
+import AboutPage from "./pages/AboutPage";
 
 import { edu101Questions } from "./edu-101questions"
 import { gns113Questions } from "./gns-113questions";
@@ -127,6 +128,7 @@ const onSubmit = () => {
         <Route path="/results" element={<ResultScreen {...props} />} />
         <Route path="/review-answers" element={<ReviewAnswers {...props} />} />
         <Route path="/bookmarks" element={<BookMark {...props} />} />
+        <Route path="/about-page" element={<AboutPage {...props} />} />
       </Routes>
       <SpeedInsights />
     </Router>
