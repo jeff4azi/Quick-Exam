@@ -37,7 +37,7 @@ reason: "The DBMS processes raw data into organized and meaningful information f
 },
 {
 id: "csc111-004",
-question: "The word "data" comes from the word",
+question: "The word \"data\" comes from the word",
 options: [
 "Date",
 "Database",
