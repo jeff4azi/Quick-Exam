@@ -858,4 +858,322 @@ export const vos116Questions = [
     reason:
       "Separation operations exploit differences in size, density, or magnetic properties to isolate desired materials.",
   },
+  {
+    id: "vos116-071",
+    question:
+      "Which property mainly enables screening as a separation operation?",
+    options: ["Density", "Size difference", "Magnetism", "Color"],
+    correct: "Size difference",
+    reason:
+      "Screening separates materials based on differences in particle size.",
+  },
+  {
+    id: "vos116-072",
+    question: "Which unit operation usually comes first in food processing?",
+    options: ["Packaging", "Cleaning", "Mixing", "Evaporation"],
+    correct: "Cleaning",
+    reason:
+      "Raw materials must be cleaned first to remove contaminants before further processing.",
+  },
+  {
+    id: "vos116-073",
+    question: "Why is high moisture content undesirable in fruit preservation?",
+    options: [
+      "It improves taste",
+      "It encourages microbial growth",
+      "It reduces nutrient content",
+      "It increases acidity",
+    ],
+    correct: "It encourages microbial growth",
+    reason:
+      "Microorganisms thrive in moist environments, causing rapid spoilage.",
+  },
+  {
+    id: "vos116-074",
+    question: "Which of the following best describes winnowing?",
+    options: [
+      "Removal of metals using magnets",
+      "Separation using water",
+      "Removal of light materials using air",
+      "Sorting by color",
+    ],
+    correct: "Removal of light materials using air",
+    reason:
+      "Winnowing uses airflow to blow away lighter debris from heavier food materials.",
+  },
+  {
+    id: "vos116-075",
+    question: "Which unit operation improves efficiency of juice extraction?",
+    options: ["Sorting", "Size reduction", "Packaging", "Screening"],
+    correct: "Size reduction",
+    reason:
+      "Reducing particle size increases surface area for juice extraction.",
+  },
+  {
+    id: "vos116-076",
+    question: "Why must wastewater from wet cleaning be disposed of properly?",
+    options: [
+      "To improve taste",
+      "To prevent recontamination and pollution",
+      "To reduce cost",
+      "To increase shelf life",
+    ],
+    correct: "To prevent recontamination and pollution",
+    reason:
+      "Improper wastewater disposal can spread contaminants and harm hygiene standards.",
+  },
+  {
+    id: "vos116-077",
+    question: "Which physical characteristic is LEAST useful in sorting?",
+    options: ["Size", "Shape", "Color", "Chemical composition"],
+    correct: "Chemical composition",
+    reason:
+      "Sorting relies on visible physical properties, not chemical makeup.",
+  },
+  {
+    id: "vos116-078",
+    question: "Which operation ensures uniform heating during processing?",
+    options: ["Mixing", "Sorting", "Filtration", "Magnetic cleaning"],
+    correct: "Sorting",
+    reason:
+      "Uniform size from sorting allows even heat transfer during processing.",
+  },
+  {
+    id: "vos116-079",
+    question:
+      "What happens if metal contaminants are not removed during processing?",
+    options: [
+      "Improved product quality",
+      "Damage to processing equipment",
+      "Better shelf life",
+      "Higher juice yield",
+    ],
+    correct: "Damage to processing equipment",
+    reason:
+      "Metal fragments can damage grinders, cutters, and other machinery.",
+  },
+  {
+    id: "vos116-080",
+    question: "Which of the following is NOT a dry cleaning method?",
+    options: ["Abrasion", "Aspiration", "Magnetic cleaning", "Wet washing"],
+    correct: "Wet washing",
+    reason: "Wet washing uses water, unlike dry cleaning methods.",
+  },
+  {
+    id: "vos116-081",
+    question: "Why are fruits classified as botanical fruits?",
+    options: [
+      "They are sweet",
+      "They grow underground",
+      "They contain seeds",
+      "They are eaten raw",
+    ],
+    correct: "They contain seeds",
+    reason: "The presence of seeds defines a fruit botanically.",
+  },
+  {
+    id: "vos116-082",
+    question: "Which operation mainly improves product appearance?",
+    options: ["Sorting", "Evaporation", "Mixing", "Centrifugation"],
+    correct: "Sorting",
+    reason:
+      "Sorting groups materials by size and color, improving visual quality.",
+  },
+  {
+    id: "vos116-083",
+    question:
+      "Which unit operation separates pulp from juice based on density?",
+    options: ["Filtration", "Centrifugation", "Screening", "Mixing"],
+    correct: "Centrifugation",
+    reason:
+      "Centrifugation separates materials using rotational force and density differences.",
+  },
+  {
+    id: "vos116-084",
+    question: "Why is care required after washing raw materials?",
+    options: [
+      "To increase moisture",
+      "To prevent recontamination",
+      "To speed up fermentation",
+      "To improve sweetness",
+    ],
+    correct: "To prevent recontamination",
+    reason: "Improper handling after washing can undo the cleaning process.",
+  },
+  {
+    id: "vos116-085",
+    question:
+      "Which operation ensures the final product reaches consumers safely?",
+    options: ["Cleaning", "Packaging", "Sorting", "Screening"],
+    correct: "Packaging",
+    reason:
+      "Packaging protects the finished product from contamination and physical damage.",
+  },
+
+  {
+    id: "vos116-086",
+    question:
+      "Why are chilling and freezing considered effective historical preservation methods for fruit juices?",
+    options: [
+      "They improve flavour intensity",
+      "They increase sugar concentration",
+      "They slow down microbial and enzymatic activities",
+      "They remove contaminants",
+    ],
+    correct: "They slow down microbial and enzymatic activities",
+    reason:
+      "Low temperatures inhibit microbial growth and enzymatic reactions responsible for spoilage.",
+  },
+
+  {
+    id: "vos116-087",
+    question:
+      "Which unit operation directly affects both the texture and surface area of food materials?",
+    options: ["Sorting", "Screening", "Size reduction", "Packaging"],
+    correct: "Size reduction",
+    reason:
+      "Size reduction changes particle size, increasing surface area and altering texture.",
+  },
+
+  {
+    id: "vos116-088",
+    question:
+      "Why is screening classified as a separation operation rather than a cleaning method?",
+    options: [
+      "It uses water",
+      "It removes contaminants based on size differences",
+      "It involves mechanical abrasion",
+      "It improves product appearance",
+    ],
+    correct: "It removes contaminants based on size differences",
+    reason:
+      "Screening separates materials by size, which is the defining principle of separation operations.",
+  },
+
+  {
+    id: "vos116-089",
+    question:
+      "Which cleaning method is most suitable for removing metallic contaminants without altering food quality?",
+    options: [
+      "Abrasion cleaning",
+      "Wet cleaning",
+      "Aspiration cleaning",
+      "Magnetic cleaning",
+    ],
+    correct: "Magnetic cleaning",
+    reason:
+      "Magnetic cleaning removes metal fragments efficiently without direct contact with the food material.",
+  },
+
+  {
+    id: "vos116-090",
+    question:
+      "A major industrial advantage of sorting food materials before processing is that it:",
+    options: [
+      "Eliminates all contaminants",
+      "Reduces nutrient loss",
+      "Ensures uniform heat transfer",
+      "Increases shelf life directly",
+    ],
+    correct: "Ensures uniform heat transfer",
+    reason:
+      "Uniform size and characteristics allow even heat distribution during processing.",
+  },
+
+  {
+    id: "vos116-091",
+    question: "Why must wastewater from wet cleaning be properly disposed of?",
+    options: [
+      "To reduce production costs",
+      "To prevent recontamination and environmental issues",
+      "To improve flavour quality",
+      "To increase processing speed",
+    ],
+    correct: "To prevent recontamination and environmental issues",
+    reason:
+      "Improper disposal can lead to sanitation problems and environmental pollution.",
+  },
+
+  {
+    id: "vos116-092",
+    question:
+      "Which physical property is LEAST likely to be used in sorting raw food materials?",
+    options: ["Colour", "Weight", "Chemical composition", "Size"],
+    correct: "Chemical composition",
+    reason:
+      "Sorting relies on observable physical characteristics, not internal chemical properties.",
+  },
+
+  {
+    id: "vos116-093",
+    question:
+      "Aspiration cleaning is most effective when the contaminant differs from the food material in terms of:",
+    options: [
+      "Colour",
+      "Density and weight",
+      "Surface texture",
+      "Moisture content",
+    ],
+    correct: "Density and weight",
+    reason:
+      "Air streams remove lighter materials based on differences in weight and density.",
+  },
+
+  {
+    id: "vos116-094",
+    question:
+      "Why is cleaning considered a prerequisite for effective sorting?",
+    options: [
+      "It reduces processing time",
+      "It removes contaminants that may interfere with classification",
+      "It improves taste",
+      "It preserves nutrients",
+    ],
+    correct: "It removes contaminants that may interfere with classification",
+    reason:
+      "Contaminants can distort physical characteristics used for accurate sorting.",
+  },
+
+  {
+    id: "vos116-095",
+    question:
+      "Which sequence best represents proper preparation of raw fruits for processing?",
+    options: [
+      "Sorting → Cleaning → Packaging",
+      "Cleaning → Sorting → Further processing",
+      "Size reduction → Cleaning → Sorting",
+      "Packaging → Cleaning → Sorting",
+    ],
+    correct: "Cleaning → Sorting → Further processing",
+    reason:
+      "Contaminants must be removed first before classification and processing.",
+  },
+
+  {
+    id: "vos116-096",
+    question: "Why is abrasion cleaning unsuitable for delicate fruits?",
+    options: [
+      "It is expensive",
+      "It uses air streams",
+      "It may cause physical damage to the product",
+      "It cannot remove dirt",
+    ],
+    correct: "It may cause physical damage to the product",
+    reason:
+      "The rubbing action involved can bruise or damage soft fruit tissues.",
+  },
+  {
+    id: "vos116-097",
+    question:
+      "Which characteristic of fruits primarily explains their rapid spoilage rate?",
+    options: [
+      "High fibre content",
+      "Presence of seeds",
+      "High moisture and nutrient content",
+      "Botanical structure",
+    ],
+    correct: "High moisture and nutrient content",
+    reason:
+      "High moisture and nutrients create a favorable environment for microbial growth, leading to rapid spoilage.",
+  },
 ];
