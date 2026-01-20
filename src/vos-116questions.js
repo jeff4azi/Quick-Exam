@@ -1133,7 +1133,6 @@ export const vos116Questions = [
     reason:
       "Contaminants can distort physical characteristics used for accurate sorting.",
   },
-
   {
     id: "vos116-095",
     question:
@@ -1148,7 +1147,6 @@ export const vos116Questions = [
     reason:
       "Contaminants must be removed first before classification and processing.",
   },
-
   {
     id: "vos116-096",
     question: "Why is abrasion cleaning unsuitable for delicate fruits?",
