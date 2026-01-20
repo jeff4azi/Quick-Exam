@@ -107,7 +107,7 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
       </div>
 
       {/* Bookmarked Questions */}
-      <div className="space--6 px-5">
+      <div className="space-y-6 px-5">
         {bookmarkedQuestions.map((question, index) => (
           <div
             key={question.id || index}
