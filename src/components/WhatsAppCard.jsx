@@ -19,8 +19,10 @@ const WhatsAppCard = () => {
 
   return (
     <div
-      className={`fixed bottom-5 right-5 w-64 bg-gradient-to-r from-green-400 to-green-600 text-white rounded-xl shadow-lg p-4 flex items-center gap-3 cursor-pointer transform transition-transform duration-500
-      ${visible ? "translate-x-0" : "translate-x-[150%]"}`}
+      className={`fixed bottom-5 right-5 w-64 
+    bg-green-500 bg-gradient-to-r from-green-400 to-green-600 
+    text-white rounded-xl shadow-lg p-4 flex items-center gap-3 cursor-pointer transform transition-transform duration-500
+    ${visible ? "translate-x-0" : "translate-x-[150%]"}`}
     >
       {/* WhatsApp Link */}
       <a

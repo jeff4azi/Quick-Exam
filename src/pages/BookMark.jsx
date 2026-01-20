@@ -1,7 +1,18 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const BookMark = ({ bookmarks, courses, setBookmarks }) => {
   const navigate = useNavigate();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const allQuestions = courses.flatMap(course => course.questions);
 
@@ -67,9 +78,12 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 px-5 py-6">
+    <div className="min-h-screen bg-gray-50 pb-6">
       {/* Header */}
-      <div className="flex items-center gap-5 mb-6">
+      <div
+        className={`flex items-center gap-5 px-5 py-6 sticky top-0 right-0 left-0 bg-gray-50 z-50 transition-shadow duration-200 ${isScrolled ? "shadow-sm" : "shadow-none"
+          }`}
+      >
         <button
           className="bg-gray-100 p-2 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"
           onClick={() => navigate(-1)}
@@ -93,7 +107,7 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
       </div>
 
       {/* Bookmarked Questions */}
-      <div className="space-y-6">
+      <div className="space--6 px-5">
         {bookmarkedQuestions.map((question, index) => (
           <div
             key={question.id || index}
@@ -124,6 +138,18 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
               <span>Answer: </span>
               <span className="font-medium text-blue-600">{question.correct}</span>
             </div>
+
+            {/* Reason (if available) */}
+            {question.reason && (
+              <div className="mt-3 bg-gray-50 border-l-4 border-blue-500 p-3 rounded">
+                <div className="text-sm font-medium text-gray-700 mb-1">
+                  Reason:
+                </div>
+                <div className="text-sm text-gray-600">
+                  {question.reason}
+                </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
