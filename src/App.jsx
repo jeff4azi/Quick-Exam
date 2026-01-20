@@ -11,6 +11,7 @@ import { edu101Questions } from "./edu-101questions"
 import { gns113Questions } from "./gns-113questions";
 import { gst111Questions } from "./gst-111questions";
 import { csc111Questions } from "./csc-111questions";
+import { vos116Questions } from "./vos-116questions";
 import { edu101revisionQuestions } from "./edu101revisionQuestions"
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
@@ -27,7 +28,7 @@ function App() {
 
     return copy.slice(0, 30);
   }
- const courses = [
+  const courses = [
     {
       id: "EDU101",
       name: "EDU 101",
@@ -48,6 +49,11 @@ function App() {
       name: "CSC 111",
       questions: csc111Questions,
     },
+    {
+      id: "VOS116",
+      name: "VOS 116",
+      questions: vos116Questions,
+    },
   ];
 
   const [answers, setAnswers] = useState([])
@@ -63,7 +69,7 @@ function App() {
   useEffect(() => {
     ReactGA.initialize("G-93T0BGL64Y");
   }, []);
-  
+
   useEffect(() => {
     if (selectedCourse) {
       setQuestions(getRandom30(selectedCourse.questions));
@@ -79,32 +85,32 @@ function App() {
     }
   }, [])
 
-const onSubmit = () => {
-  let newCorrect = 0;
-  let newWrong = 0;
-  let newAnswered = 0;
+  const onSubmit = () => {
+    let newCorrect = 0;
+    let newWrong = 0;
+    let newAnswered = 0;
 
-  questions.forEach((question, index) => {
-    const userAnswer = answers[index];
+    questions.forEach((question, index) => {
+      const userAnswer = answers[index];
 
-    if (userAnswer !== undefined) {
-      newAnswered++;
-      if (userAnswer === question.correct) {
-        newCorrect++;
-      } else {
-        newWrong++;
+      if (userAnswer !== undefined) {
+        newAnswered++;
+        if (userAnswer === question.correct) {
+          newCorrect++;
+        } else {
+          newWrong++;
+        }
       }
-    }
-  });
+    });
 
-  setResults({
-    correct: newCorrect,
-    wrong: newWrong,
-    answered: newAnswered,
-  });
-};
+    setResults({
+      correct: newCorrect,
+      wrong: newWrong,
+      answered: newAnswered,
+    });
+  };
 
-  
+
 
   const props = {
     answers,
@@ -123,7 +129,7 @@ const onSubmit = () => {
     gst111Questions,
     gns113Questions,
     edu101revisionQuestions,
-csc111Questions,
+    csc111Questions,
   }
 
   return (
