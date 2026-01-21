@@ -12,6 +12,7 @@ import { gns113Questions } from "./gns-113questions";
 import { gst111Questions } from "./gst-111questions";
 import { csc111Questions } from "./csc-111questions";
 import { vos116Questions } from "./vos-116questions";
+import { vos117Questions } from "./vos-117questions";
 import { edu101revisionQuestions } from "./edu101revisionQuestions"
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
@@ -53,6 +54,11 @@ function App() {
       id: "VOS116",
       name: "VOS 116",
       questions: vos116Questions,
+    },
+    {
+      id: "VOS117",
+      name: "VOS 117",
+      questions: vos117Questions,
     },
   ];
 
