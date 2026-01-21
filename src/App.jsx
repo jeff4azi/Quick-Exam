@@ -30,7 +30,7 @@ function App() {
     return copy.slice(0, 30);
   }
   const courses = [
-    {
+    /* {
       id: "EDU101",
       name: "EDU 101",
       questions: [...edu101Questions, ...edu101revisionQuestions],
@@ -44,7 +44,7 @@ function App() {
       id: "GNS113",
       name: "GNS 113",
       questions: gns113Questions,
-    },
+    }, */
     {
       id: "CSC111",
       name: "CSC 111",
