@@ -88,13 +88,13 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
   const progress = ((currentIndex + 1) / totalQuestions) * 100
 
   return (
-    <div className="lg:max-w-2xl mx-auto">
+    <div className="lg:max-w-2xl mx-auto bg-gray-50 dark:bg-slate-900 min-h-screen">
 
       {/* ---------------- TOP BAR ---------------- */}
       <div className="flex justify-between items-center my-7 mx-5">
         <button
           onClick={() => navigate("/")}
-          className="bg-gray-100 p-2 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"
+          className="bg-gray-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 p-2 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none"
             viewBox="0 0 24 24" strokeWidth="1.5"
@@ -104,7 +104,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
           </svg>
         </button>
 
-        <div className="font-medium absolute left-1/2 -translate-x-1/2">
+        <div className="font-medium absolute left-1/2 -translate-x-1/2 text-slate-900 dark:text-slate-100">
           {currentIndex + 1} of {totalQuestions}
         </div>
 
@@ -120,15 +120,15 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
       </div>
 
       {/* ---------------- QUESTION CARD ---------------- */}
-      <div className="bg-white mx-5 p-5 rounded-2xl my-7 shadow-sm">
+      <div className="bg-white dark:bg-slate-800 mx-5 p-5 rounded-2xl my-7 shadow-sm">
         <div className="flex justify-between items-center mb-2">
-          <div className="text-gray-400">{selectedCourse.name}</div>
+          <div className="text-gray-400 dark:text-gray-300">{selectedCourse.name}</div>
 
           {/* BOOKMARK BUTTON */}
           <button
             onClick={handleBookmarkClick}
-            className={`${isBookmarked ? "text-blue-500" : "text-gray-400"
-              } hover:text-yellow-500 transition-colors -translate-y-1`}
+            className={`${isBookmarked ? "text-blue-500 dark:text-yellow-500" : "text-gray-400 dark:text-gray-300"
+              } hover:text-yellow-500/70 transition-colors -translate-y-1`}
             aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
           >
             <svg
@@ -148,7 +148,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
           </button>
         </div>
 
-        <div className="text-xl font-medium mb-7">
+        <div className="text-xl font-medium mb-7 text-slate-900 dark:text-slate-100">
           {currentQuestion.question}
         </div>
 
@@ -157,30 +157,31 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
             <button
               key={index}
               onClick={() => onOptionClick(option)}
-              className={`py-3 px-4 w-full rounded-xl ring-2 transition active:scale-95 hover:ring-[#2563EB]/40 duration-200 ${selectedOption === option
-                  ? "ring-[#2563EB]/60"
-                  : "ring-gray-300"
+              className={`py-3 px-4 w-full rounded-xl ring-2 transition active:scale-95 hover:ring-[#2563EB]/40 duration-200
+                ${selectedOption === option
+                  ? "ring-[#2563EB]/60 dark:ring-[#60A5FA]/80"
+                  : "ring-gray-300 dark:ring-gray-600"
                 }`}
             >
-              <span className="text-lg font-medium">{option}</span>
+              <span className="text-lg font-medium text-slate-900 dark:text-slate-100">{option}</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* ---------------- NAVIGATION ---------------- */}
-      <div className="mx-7 flex justify-between">
+      <div className="mx-7 flex justify-between mb-7">
         <button
           onClick={prevQuestion}
           disabled={currentIndex === 0}
-          className="bg-red-500 disabled:opacity-40 h-[50px] w-[150px] rounded-xl font-medium text-white shadow-sm active:scale-95 hover:scale-105 duration-200"
+          className="bg-red-500 dark:bg-red-600 disabled:opacity-40 h-[50px] w-[150px] rounded-xl font-medium text-white shadow-sm active:scale-95 hover:scale-105 duration-200"
         >
           Previous
         </button>
 
         <button
           onClick={nextQuestion}
-          className="bg-green-500 h-[50px] w-[150px] rounded-xl font-medium text-white shadow-sm active:scale-95 hover:scale-105 duration-200"
+          className="bg-green-500 dark:bg-green-600 h-[50px] w-[150px] rounded-xl font-medium text-white shadow-sm active:scale-95 hover:scale-105 duration-200"
         >
           {currentIndex === totalQuestions - 1 ? "Submit" : "Next"}
         </button>

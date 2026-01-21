@@ -1,6 +1,6 @@
 import { useState } from "react"
 import ChooseCourseOverlay from "../components/ChooseCourseOverlay"
-import whatsappFollow from "../images/whatsapp-follow.webp"
+import WhatsappFollowButton from "../images/whatsapp-follow"
 import Logo from "../images/Logo"
 /* import RevisionTestModal from "../components/RevisionTestModal" */
 import { useNavigate } from "react-router-dom"
@@ -32,37 +32,28 @@ const StartExam = ({
   } */
 
   return (
-    <div className="relative h-[100dvh] max-h-screen flex items-center justify-center overflow-hidden">
+    <div className="relative h-[100dvh] max-h-screen flex items-center justify-center overflow-hidden bg-white dark:bg-slate-900">
       {/* Main content */}
       <div>
         <Logo />
-        <h1 className="text-6xl text-center font-semibold tracking-tight mb-3">
+        <h1 className="text-6xl text-center font-semibold tracking-tight mb-3 text-slate-900 dark:text-slate-100">
           Quiz Bolt
         </h1>
-        <p className="text-center text-gray-600 max-w-md">
+
+        <p className="text-center text-gray-600 dark:text-gray-300 max-w-md">
           TASUED past questions made simple
         </p>
       </div>
 
       {/* WhatsApp follow */}
-      <div className="absolute left-5 -top-2">
-        <a
-          href="https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <img
-            src={whatsappFollow}
-            alt="Follow Channel"
-            className="w-[110px] lg:w-[130px]"
-          />
-        </a>
+      <div className="absolute left-5 top-5">
+        <WhatsappFollowButton />
       </div>
 
       {/* Hamburger button */}
       <button
         onClick={toggleMenu}
-        className="absolute right-5 top-5 bg-gray-50 p-3 rounded-xl z-51 active:scale-95"
+        className="absolute right-5 top-5 bg-gray-50 dark:bg-slate-800 p-3 rounded-xl z-51 active:scale-95"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -94,12 +85,12 @@ const StartExam = ({
 
       {/* Slide-in menu */}
       <div
-        className={`fixed top-0 right-0 h-full w-2/3 max-w-[400px] bg-white z-50 shadow-xl
-        transform transition-transform duration-300 ease-out
-        ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
+        className={`fixed top-0 right-0 h-full w-2/3 max-w-[400px] bg-white dark:bg-slate-800 z-50 shadow-xl
+    transform transition-transform duration-300 ease-out
+    ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="p-6">
-          <h2 className="text-2xl font-semibold mb-6">Menu</h2>
+          <h2 className="text-2xl font-semibold mb-6 text-slate-900 dark:text-slate-100">Menu</h2>
 
           {/* Menu items (example placeholders) */}
           <ul className="space-y-4 lg:text-lg">
@@ -160,44 +151,43 @@ const StartExam = ({
               <a href="https://www.tiktok.com/@codejeffrey18?_r=1&_d=f0id5k11di62de&sec_uid=MS4wLjABAAAAs-74xQ5Lh5ye4lPBykPFOf5d8xTmiQ6KXiD3W8s7wbs2Ly6jEEKzBJZAj2j1Drez&share_author_id=7541936112290464785&sharer_language=en&source=h5_m&u_code=em3ai2acehdibb&timestamp=1768827516&user_id=7541936112290464785&sec_user_id=MS4wLjABAAAAs-74xQ5Lh5ye4lPBykPFOf5d8xTmiQ6KXiD3W8s7wbs2Ly6jEEKzBJZAj2j1Drez&item_author_type=1&utm_source=copy&utm_campaign=client_share&utm_medium=android&share_iid=7590731933664560917&share_link_id=095c0f9c-d1d1-4273-8804-6b6caec0d83b&share_app_id=1233&ugbiz_name=ACCOUNT&ug_btm=b8727%2Cb7360&social_share_type=5&enable_checksum=1"
                 target="_blank"
                 rel="noopener noreferrer" className="gap-2 flex items-center">
-              <SiTiktok className="hover:text-black transition" />
-              Follow us on Tiktok
-            </a>
-          </li>
-        </ul>
+                <SiTiktok className="hover:text-black transition" />
+                Follow us on Tiktok
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
-    </div>
 
-      {/* Start Exam button */ }
-  <button
-    onClick={() => {
-      setShowChooseCourseOverlay(true)
-      ReactGA.event({
-        category: "Exam",
-        action: "Start Exam",
-        label: selectedCourse.id || "none",
-      });
-    }}
-    className="absolute bottom-10 bg-[#2563EB] py-5 px-7 rounded-full font-medium text-white text-2xl hover:scale-105 duration-200 ease-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300"
-  >
-    Start Exam
-  </button>
+      {/* Start Exam button */}
+      <button
+        onClick={() => {
+          setShowChooseCourseOverlay(true)
+          ReactGA.event({
+            category: "Exam",
+            action: "Start Exam",
+            label: selectedCourse.id || "none",
+          });
+        }}
+        className="absolute bottom-10 bg-[#2563EB] dark:bg-blue-700 py-5 px-7 rounded-full font-medium text-white text-2xl hover:scale-105 duration-200 ease-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300">
+        Start Exam
+      </button>
 
-  {/* Choose course overlay */ }
-  {
-    showChooseCourseOverlay && (
-      <ChooseCourseOverlay
-        setShowChooseCourseOverlay={setShowChooseCourseOverlay}
-        setQuestions={setQuestions}
-        getRandom30={getRandom30}
-        courses={courses}
-        selectedCourse={selectedCourse}
-        setSelectedCourse={setSelectedCourse}
-      />
-    )
-  }
+      {/* Choose course overlay */}
+      {
+        showChooseCourseOverlay && (
+          <ChooseCourseOverlay
+            setShowChooseCourseOverlay={setShowChooseCourseOverlay}
+            setQuestions={setQuestions}
+            getRandom30={getRandom30}
+            courses={courses}
+            selectedCourse={selectedCourse}
+            setSelectedCourse={setSelectedCourse}
+          />
+        )
+      }
 
-  {/*       <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(edu101revisionCourse); }} /> */ }
+      {/*       <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(edu101revisionCourse); }} /> */}
     </div >
   )
 }

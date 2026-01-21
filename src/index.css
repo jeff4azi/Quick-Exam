@@ -1,9 +1,14 @@
 @import "tailwindcss";
 
+/* Base body styles */
 body {
   @apply text-[#1F2937] bg-gray-200;
+
+  /* Dark mode override */
+  @apply dark:text-gray-100 dark:bg-gray-900;
 }
 
+/* Custom utilities */
 @layer utilities {
   /* Hide scrollbar but keep scrolling */
   .no-scrollbar::-webkit-scrollbar {
@@ -15,4 +20,3 @@ body {
     scrollbar-width: none; /* Firefox */
   }
 }
-

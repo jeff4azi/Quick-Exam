@@ -26,8 +26,8 @@ const Timer = ({ totalTime, onTimeUp, onTick }) => {
   const seconds = String(timeLeft % 60).padStart(2, "0")
 
   return (
-    <div className="flex items-center justify-between gap-2 bg-white w-[100px] h-[35px] font-medium rounded-full px-3 shadow-sm">
-      <img className="size-6" src={clockIcon} alt="clock" />
+    <div className="flex items-center justify-between gap-2 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 w-[100px] h-[35px] font-medium rounded-full px-3 shadow-sm">
+      <img className="size-6 dark:filter dark:brightness-200" src={clockIcon} alt="clock" />
       <span>{minutes}:{seconds}</span>
     </div>
   )
