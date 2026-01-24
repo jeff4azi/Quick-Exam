@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 
 import ProgressBar from "../components/ProgressBar"
@@ -6,13 +6,20 @@ import Timer from "../components/Timer"
 
 import ReactGA from "react-ga4";
 
-const TOTAL_TIME = 10 * 60 // 10 minutes
+const calculateTotalTime = (questionCount) => {
+  const timePer10 = 3.33 * 60; // minutes per 10 questions
+  return Math.ceil((questionCount / 10) * timePer10);
+};
 
 const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, bookmarks, setBookmarks, results }) => {
   const navigate = useNavigate()
 
   const [currentIndex, setCurrentIndex] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(TOTAL_TIME)
+  const [timeLeft, setTimeLeft] = useState(calculateTotalTime(questions.length));
+
+  useEffect(() => {
+    setTimeLeft(calculateTotalTime(questions.length));
+  }, [questions]);
 
   const currentQuestion = questions[currentIndex]
   const totalQuestions = questions.length
@@ -51,7 +58,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
   const handleTimeUp = (finalTime) => {
     onSubmit()
     navigate("/results", {
-      state: { timeTaken: TOTAL_TIME - finalTime }
+      state: { timeTaken: calculateTotalTime(questions.length) - finalTime }
     })
     ReactGA.event({
       category: "Exam",
@@ -68,7 +75,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
     } else {
       onSubmit()
       navigate("/results", {
-        state: { timeTaken: TOTAL_TIME - timeLeft }
+        state: { timeTaken: calculateTotalTime(questions.length) - timeLeft }
       })
       ReactGA.event({
         category: "Exam",
@@ -109,7 +116,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
         </div>
 
         <Timer
-          totalTime={TOTAL_TIME}
+          totalTime={calculateTotalTime(questions.length)}
           onTick={setTimeLeft}
           onTimeUp={handleTimeUp}
         />

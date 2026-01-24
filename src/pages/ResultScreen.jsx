@@ -4,7 +4,7 @@ import { useEffect } from "react"
 import ReactGA from "react-ga4"
 import WhatsappFollowButton from "../images/whatsapp-follow"
 
-const ResultScreen = ({ results, setAnswers, selectedCourse }) => {
+const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
   const navigate = useNavigate()
   const formatNum = (num) => String(num).padStart(2, '0');
 
@@ -43,7 +43,7 @@ const ResultScreen = ({ results, setAnswers, selectedCourse }) => {
       {/* Score Circle */}
       <div className='pt-7 relative bg-white dark:bg-gray-800 flex flex-col justify-center items-center size-[220px] rounded-full place-self-center m-15 text-[#2563EB] dark:text-[#22D3EE] border-2 shadow-sm active:scale-95 hover:scale-105 durations-200'>
         <span className='text-6xl font-semibold -translate-y-2'>
-          {Math.round((results.correct / 30) * 100)}
+          {Math.round((results.correct / questions.length) * 100)}
           <span className='text-3xl font-bold'>%</span>
         </span>
         <div className="text-xl font-medium text-gray-400 dark:text-gray-300">{selectedCourse.name}</div>
@@ -62,7 +62,7 @@ const ResultScreen = ({ results, setAnswers, selectedCourse }) => {
         <div className='flex gap-2'>
           <div className='size-[7px] rounded-full bg-[#2563EB] translate-y-3'></div>
           <div className='flex flex-col text-sm'>
-            <span className='text-lg font-medium text-[#2563EB] dark:text-[#22D3EE]'>{formatNum(30)}</span>
+            <span className='text-lg font-medium text-[#2563EB] dark:text-[#22D3EE]'>{formatNum(questions.length)}</span>
             Total Questions
           </div>
         </div>

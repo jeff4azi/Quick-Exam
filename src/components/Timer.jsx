@@ -9,13 +9,11 @@ const Timer = ({ totalTime, onTimeUp, onTick }) => {
       setTimeLeft(prev => {
         if (prev <= 0) {
           clearInterval(interval)
-          onTimeUp(0) // pass 0 if time runs out
+          onTimeUp(0)
           return 0
         }
-
-        const newTime = prev - 1
-        onTick(newTime) // notify parent of latest time
-        return newTime
+        onTick(prev - 1)
+        return prev - 1
       })
     }, 1000)
 

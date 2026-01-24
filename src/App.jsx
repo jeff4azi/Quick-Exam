@@ -75,6 +75,7 @@ function App() {
     wrong: 0,
     answered: 0,
   })
+  const [selectedQuestionCount, setSelectedQuestionCount] = useState(null);
 
   const toggleDarkMode = () => {
     setIsDarkMode(prev => !prev);
@@ -93,11 +94,19 @@ function App() {
   }, [isDarkMode])
 
   useEffect(() => {
-    if (selectedCourse) {
-      setQuestions(getRandom30(selectedCourse.questions));
+    if (selectedCourse && selectedQuestionCount) {
+      let count =
+        selectedQuestionCount === "All"
+          ? selectedCourse.questions.length
+          : selectedQuestionCount;
+
+      // Shuffle & slice
+      const shuffled = [...selectedCourse.questions].sort(() => 0.5 - Math.random());
+      setQuestions(shuffled.slice(0, count));
+
       setAnswers([]);
     }
-  }, [selectedCourse]);
+  }, [selectedCourse, selectedQuestionCount]);
 
   /* ---------------- LOAD BOOKMARKS ---------------- */
   useEffect(() => {
@@ -149,6 +158,8 @@ function App() {
     setBookmarks,
     isDarkMode,
     toggleDarkMode,
+    selectedQuestionCount,
+    setSelectedQuestionCount,
   }
 
   return (
