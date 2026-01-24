@@ -23,7 +23,7 @@ const ReviewAnswers = ({ questions, answers }) => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-6">
       {/* Header */}
       <div
-        className={`flex items-center gap-5 px-5 py-6 sticky top-0 left-0 right-0 z-50 transition-shadow duration-200 bg-gray-50 dark:bg-gray-800 ${isScrolled ? "shadow-sm" : "shadow-none"
+        className={`flex items-center gap-5 px-5 py-6 sticky top-0 right-0 left-0 bg-gray-50 dark:bg-gray-900 z-50 transition-shadow duration-200 ${isScrolled ? "shadow-sm dark:shadow-black/40" : "shadow-none"
           }`}
       >
         <button

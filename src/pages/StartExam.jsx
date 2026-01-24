@@ -1,23 +1,20 @@
 import { useState } from "react"
-import ChooseCourseOverlay from "../components/ChooseCourseOverlay"
 import WhatsappFollowButton from "../images/whatsapp-follow"
 import Logo from "../images/Logo"
 /* import RevisionTestModal from "../components/RevisionTestModal" */
 import { useNavigate } from "react-router-dom"
 
 import ReactGA from "react-ga4";
-import { SiTiktok, SiX } from "react-icons/si";
+import { SiTiktok } from "react-icons/si";
 import { FaFacebookF } from "react-icons/fa";
+import { HiOutlineMoon } from "react-icons/hi";
 
 const StartExam = ({
-  setQuestions,
-  getRandom30,
-  courses,
   selectedCourse,
-  setSelectedCourse,
+  isDarkMode,
+  toggleDarkMode,
   /*  edu101revisionQuestions, */
 }) => {
-  const [showChooseCourseOverlay, setShowChooseCourseOverlay] = useState(false)
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
 
@@ -41,9 +38,10 @@ const StartExam = ({
         </h1>
 
         <p className="text-center text-gray-600 dark:text-gray-300 max-w-md">
-          TASUED past questions made simple
+          TASUED PDFs questions made simple
         </p>
       </div>
+
 
       {/* WhatsApp follow */}
       <div className="absolute left-5 top-5">
@@ -99,7 +97,7 @@ const StartExam = ({
               ReactGA.event({
                 category: "Engagement",
                 action: "About Page",
-                label: selectedCourse.id,
+                label: selectedCourse.id || "none",
               });
             }}>
               <div>
@@ -115,7 +113,7 @@ const StartExam = ({
               ReactGA.event({
                 category: "Engagement",
                 action: "Bookmark Question",
-                label: selectedCourse.id,
+                label: selectedCourse.id || "none",
               });
             }}>
               <div>
@@ -155,6 +153,20 @@ const StartExam = ({
                 Follow us on Tiktok
               </a>
             </li>
+            <li className="fixed bottom-0 left-0 right-0 m-5 flex items-center justify-between mt-6 p-2 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-700 transition">
+              <span className="text-slate-900 dark:text-slate-100 font-medium flex items-center gap-2">
+                <HiOutlineMoon />
+                Dark Mode
+              </span>
+              <button
+                onClick={toggleDarkMode}
+                className={`w-12 h-6 flex items-center rounded-full p-1 duration-300 ${isDarkMode ? 'bg-blue-500' : 'bg-gray-400'}`}
+              >
+                <div
+                  className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ${isDarkMode ? 'translate-x-6' : ''}`}
+                />
+              </button>
+            </li>
           </ul>
         </div>
       </div>
@@ -162,7 +174,7 @@ const StartExam = ({
       {/* Start Exam button */}
       <button
         onClick={() => {
-          setShowChooseCourseOverlay(true)
+          navigate("/choose-course")
           ReactGA.event({
             category: "Exam",
             action: "Start Exam",
@@ -172,21 +184,6 @@ const StartExam = ({
         className="absolute bottom-10 bg-[#2563EB] dark:bg-blue-700 py-5 px-7 rounded-full font-medium text-white text-2xl hover:scale-105 duration-200 ease-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300">
         Start Exam
       </button>
-
-      {/* Choose course overlay */}
-      {
-        showChooseCourseOverlay && (
-          <ChooseCourseOverlay
-            setShowChooseCourseOverlay={setShowChooseCourseOverlay}
-            setQuestions={setQuestions}
-            getRandom30={getRandom30}
-            courses={courses}
-            selectedCourse={selectedCourse}
-            setSelectedCourse={setSelectedCourse}
-          />
-        )
-      }
-
       {/*       <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(edu101revisionCourse); }} /> */}
     </div >
   )

@@ -55,7 +55,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
     })
     ReactGA.event({
       category: "Exam",
-      action: "Time Up auto Submit Exam",
+      action: `Time Up auto Submit Exam ${selectedCourse.name}`,
       label: selectedCourse.id,
       value: results.correct,
     });
@@ -72,7 +72,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
       })
       ReactGA.event({
         category: "Exam",
-        action: "Submit Exam",
+        action: `Submit Exam ${selectedCourse.name}`,
         label: selectedCourse.id,
         value: results.correct,
       });
@@ -88,7 +88,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
   const progress = ((currentIndex + 1) / totalQuestions) * 100
 
   return (
-    <div className="lg:max-w-2xl mx-auto bg-gray-50 dark:bg-slate-900 min-h-screen">
+    <div className="lg:max-w-2xl mx-auto dark:bg-slate-900 relative">
 
       {/* ---------------- TOP BAR ---------------- */}
       <div className="flex justify-between items-center my-7 mx-5">
@@ -120,7 +120,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
       </div>
 
       {/* ---------------- QUESTION CARD ---------------- */}
-      <div className="bg-white dark:bg-slate-800 mx-5 p-5 rounded-2xl my-7 shadow-sm">
+      <div className="bg-white dark:bg-slate-800 mx-5 p-5 rounded-2xl my-7 shadow-sm mb-[100px]">
         <div className="flex justify-between items-center mb-2">
           <div className="text-gray-400 dark:text-gray-300">{selectedCourse.name}</div>
 
@@ -170,20 +170,29 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
       </div>
 
       {/* ---------------- NAVIGATION ---------------- */}
-      <div className="mx-7 flex justify-between mb-7">
+      <div className="px-7 py-5 flex items-center justify-between fixed bottom-0 right-0 left-0 bg-gray-200 dark:bg-gray-900 border-t border-gray-300 dark:border-gray-800 lg:max-w-2xl mx-auto">
+
+        {/* Previous Button - Smaller & Subtle */}
         <button
           onClick={prevQuestion}
           disabled={currentIndex === 0}
-          className="bg-red-500 dark:bg-red-600 disabled:opacity-40 h-[50px] w-[150px] rounded-xl font-medium text-white shadow-sm active:scale-95 hover:scale-105 duration-200"
+          className="bg-red-500 dark:bg-red-600 disabled:opacity-30 h-[48px] w-[130px] rounded-2xl font-semibold text-white shadow-md active:scale-95 hover:brightness-110 transition-all duration-200 ease-in-out"
         >
           Previous
         </button>
 
+        {/* Next/Submit Button - Larger & Dominant */}
         <button
           onClick={nextQuestion}
-          className="bg-green-500 dark:bg-green-600 h-[50px] w-[150px] rounded-xl font-medium text-white shadow-sm active:scale-95 hover:scale-105 duration-200"
+          className={`
+      bg-green-500 dark:bg-green-600 rounded-2xl font-bold text-white shadow-lg 
+      active:scale-95 hover:brightness-110 hover:shadow-green-500/20 
+      transition-all duration-300 ease-in-out
+      /* Dynamic sizing: wider and taller for the main action */
+      h-[58px] w-[200px] text-lg
+    `}
         >
-          {currentIndex === totalQuestions - 1 ? "Submit" : "Next"}
+          {currentIndex === totalQuestions - 1 ? "Submit Quiz" : "Next"}
         </button>
       </div>
     </div>

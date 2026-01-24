@@ -3,7 +3,7 @@ import { FaWhatsapp } from 'react-icons/fa';
 const WhatsappFollowButton = () => {
   return (
     <button
-      className="group relative flex items-center bg-gray-800 rounded-full p-1 pr-5 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-700 ring-1 ring-gray-600"
+      className="group relative flex items-center bg-white dark:bg-gray-800 rounded-full p-1 pr-5 shadow-md hover:shadow-lg transition-all duration-300 border border-gray-300 dark:border-gray-700 ring-1 ring-gray-600"
       onClick={() => window.open('https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f', '_blank')}
     >
       {/* Icon Container */}
@@ -12,7 +12,7 @@ const WhatsappFollowButton = () => {
       </div>
 
       {/* Text */}
-      <span className="ml-3 text-white font-bold text-xl tracking-tight pl-8">
+      <span className="ml-3 font-bold text-xl tracking-tight pl-8">
         Follow
       </span>
     </button>

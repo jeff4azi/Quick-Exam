@@ -6,6 +6,7 @@ import StartExam from "./pages/StartExam";
 import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
 import AboutPage from "./pages/AboutPage";
+import ChooseCourseScreen from "./pages/ChooseCourseScreen";
 
 import { edu101Questions } from "./edu-101questions"
 import { gns113Questions } from "./gns-113questions";
@@ -30,7 +31,7 @@ function App() {
     return copy.slice(0, 30);
   }
   const courses = [
-    /* {
+    {
       id: "EDU101",
       name: "EDU 101",
       questions: [...edu101Questions, ...edu101revisionQuestions],
@@ -44,7 +45,7 @@ function App() {
       id: "GNS113",
       name: "GNS 113",
       questions: gns113Questions,
-    }, */
+    },
     {
       id: "CSC111",
       name: "CSC 111",
@@ -66,15 +67,30 @@ function App() {
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [questions, setQuestions] = useState([]);
   const [bookmarks, setBookmarks] = useState([])
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  });
   const [results, setResults] = useState({
     correct: 0,
     wrong: 0,
     answered: 0,
   })
 
+  const toggleDarkMode = () => {
+    setIsDarkMode(prev => !prev);
+  };
+
   useEffect(() => {
     ReactGA.initialize("G-93T0BGL64Y");
   }, []);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark")
+    } else {
+      document.documentElement.classList.remove("dark")
+    }
+  }, [isDarkMode])
 
   useEffect(() => {
     if (selectedCourse) {
@@ -131,11 +147,8 @@ function App() {
     setSelectedCourse,
     bookmarks,
     setBookmarks,
-    edu101Questions,
-    gst111Questions,
-    gns113Questions,
-    edu101revisionQuestions,
-    csc111Questions,
+    isDarkMode,
+    toggleDarkMode,
   }
 
   return (
@@ -148,6 +161,7 @@ function App() {
         <Route path="/review-answers" element={<ReviewAnswers {...props} />} />
         <Route path="/bookmarks" element={<BookMark {...props} />} />
         <Route path="/about-page" element={<AboutPage {...props} />} />
+        <Route path="/choose-course" element={<ChooseCourseScreen {...props} />} />
       </Routes>
       <SpeedInsights />
     </Router>
