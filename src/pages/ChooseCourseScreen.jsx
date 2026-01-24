@@ -115,7 +115,7 @@ const ChooseCourseScreen = ({ selectedQuestionCount, setSelectedQuestionCount, c
 
       {/* Floating Overlay for Question Count */}
       {selectedCourse && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 z-50">
+        <div className="fixed inset-0 flex items-center justify-center bg-black/60 z-50 backdrop-blur-xs">
           <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-xl text-center w-11/12 max-w-md">
             <h3 className="mb-4 text-xl font-semibold text-gray-800 dark:text-gray-200">
               {selectedCourse.name}

@@ -11,6 +11,15 @@ const calculateTotalTime = (questionCount) => {
   return Math.ceil((questionCount / 10) * timePer10);
 };
 
+const shuffleArray = (array) => {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+};
+
 const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, bookmarks, setBookmarks, results }) => {
   const navigate = useNavigate()
 
@@ -22,6 +31,13 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
   }, [questions]);
 
   const currentQuestion = questions[currentIndex]
+  const [shuffledOptions, setShuffledOptions] = useState([]);
+
+  useEffect(() => {
+    if (currentQuestion) {
+      setShuffledOptions(shuffleArray(currentQuestion.options));
+    }
+  }, [currentQuestion]);
   const totalQuestions = questions.length
   const selectedOption = answers[currentIndex]
 
@@ -160,7 +176,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
         </div>
 
         <div className="space-y-4">
-          {currentQuestion.options.map((option, index) => (
+          {shuffledOptions.map((option, index) => (
             <button
               key={index}
               onClick={() => onOptionClick(option)}
