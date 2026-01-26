@@ -79,7 +79,7 @@ const StartExam = ({
       {isMenuOpen && (
         <div
           onClick={toggleMenu}
-          className="absolute inset-0 bg-black/40 z-40 transition-opacity"
+          className="absolute inset-0 bg-black/50 backdrop-blur-xs z-40 transition-opacity"
         />
       )}
 

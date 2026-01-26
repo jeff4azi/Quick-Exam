@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { FaArrowLeft, FaClipboardList, FaChevronRight, FaTrash } from "react-icons/fa";
+import { FaClipboardList, FaChevronRight, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import ConfirmOverlay from "../components/ConfirmOverlay";
 
 const HistoryScreen = () => {
   const navigate = useNavigate();
   const [historyData, setHistoryData] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isOverlayOpen, setOverlayOpen] = useState(false);
 
   // Fetch history from localStorage
   useEffect(() => {
@@ -45,7 +47,6 @@ const HistoryScreen = () => {
   };
 
   const clearAllHistory = () => {
-    if (!window.confirm("Are you sure you want to delete all exam history?")) return;
     setHistoryData([]);
     localStorage.removeItem("examHistory");
   };
@@ -78,8 +79,8 @@ const HistoryScreen = () => {
         </div>
         {totalExams > 0 && (
           <button
-            onClick={clearAllHistory}
-            className="bg-red-500 dark:bg-red-600 text-white p-2 rounded-xl shadow-sm active:scale-95 hover:brightness-110 transition duration-200"
+            className="bg-red-500 text-white px-4 py-2 rounded-xl"
+            onClick={() => setOverlayOpen(true)}
           >
             <FaTrash size={18} />
           </button>
@@ -161,6 +162,18 @@ const HistoryScreen = () => {
           )}
         </section>
       </main>
+
+      <ConfirmOverlay
+        isOpen={isOverlayOpen}
+        onClose={() => setOverlayOpen(false)}
+        onConfirm={clearAllHistory}
+        title="Delete All History?"
+        message="This will remove all saved exam history. Are you sure?"
+        confirmText="Delete"
+        cancelText="Cancel"
+        danger={true}
+      />
+
     </div>
   );
 };

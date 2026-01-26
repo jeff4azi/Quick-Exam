@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import ConfirmOverlay from "../components/ConfirmOverlay"; // adjust path if needed
 
 import ProgressBar from "../components/ProgressBar";
 import Timer from "../components/Timer";
@@ -37,10 +38,27 @@ const ExamScreen = ({
   const [timeLeft, setTimeLeft] = useState(calculateTotalTime(totalQuestions));
   const [shuffledOptions, setShuffledOptions] = useState([]);
   const [hasSaved, setHasSaved] = useState(false); // ✅ new flag
+  const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false);
+  const [isExitOverlayOpen, setExitOverlayOpen] = useState(false);
 
   const currentQuestion = questions[currentIndex];
   const selectedOption = answers[currentIndex];
   const isBookmarked = bookmarks.includes(currentQuestion?.id);
+
+  const handleSubmit = () => {
+    saveResult(); // safe
+    onSubmit();
+    setSubmitOverlayOpen(false)
+    navigate("/results", {
+      state: { timeTaken: calculateTotalTime(totalQuestions) - timeLeft }
+    });
+    ReactGA.event({
+      category: "Exam",
+      action: `Submit Exam ${selectedCourse.name}`,
+      label: selectedCourse.id,
+      value: results.correct
+    });
+  };
 
   // Shuffle options whenever question changes
   useEffect(() => {
@@ -112,22 +130,17 @@ const ExamScreen = ({
     if (currentIndex < totalQuestions - 1) {
       setCurrentIndex(prev => prev + 1);
     } else {
-      saveResult(); // safe
-      onSubmit();
-      navigate("/results", {
-        state: { timeTaken: calculateTotalTime(totalQuestions) - timeLeft }
-      });
-      ReactGA.event({
-        category: "Exam",
-        action: `Submit Exam ${selectedCourse.name}`,
-        label: selectedCourse.id,
-        value: results.correct
-      });
+      setSubmitOverlayOpen(true)
     }
   };
 
   const prevQuestion = () => {
     if (currentIndex > 0) setCurrentIndex(prev => prev - 1);
+  };
+
+  const handleExit = () => {
+    setExitOverlayOpen(false);
+    navigate("/"); // go back to homepage or wherever you want
   };
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
@@ -138,7 +151,7 @@ const ExamScreen = ({
       {/* ---------------- TOP BAR ---------------- */}
       <div className="flex justify-between items-center my-7 mx-5">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => setExitOverlayOpen(true)}
           className="bg-gray-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 p-2 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -225,6 +238,27 @@ const ExamScreen = ({
           {currentIndex === totalQuestions - 1 ? "Submit Quiz" : "Next"}
         </button>
       </div>
+
+      <ConfirmOverlay
+        isOpen={isSubmitOverlayOpen}
+        onClose={() => setSubmitOverlayOpen(false)}
+        onConfirm={handleSubmit}
+        title="Submit Exam?"
+        message="Are you sure you want to submit your exam?"
+        confirmText="Submit"
+        cancelText="Cancel"
+      />
+
+      <ConfirmOverlay
+        isOpen={isExitOverlayOpen}
+        onClose={() => setExitOverlayOpen(false)}
+        onConfirm={handleExit}
+        title="Exit Exam?"
+        message="Are you sure you want to exit? Your progress will not be saved."
+        confirmText="Exit"
+        cancelText="Cancel"
+        danger={true} // optional red styling
+      />
     </div>
   );
 };
