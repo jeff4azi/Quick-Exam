@@ -11,189 +11,127 @@ import { FiBookmark, FiInfo } from "react-icons/fi";
 import { HiOutlineMoon } from "react-icons/hi";
 import { MdOutlineHistory } from 'react-icons/md';
 
-const StartExam = ({
-  selectedCourse,
-  isDarkMode,
-  toggleDarkMode,
-  /*  edu101revisionQuestions, */
-}) => {
+const StartExam = ({ isDarkMode, toggleDarkMode }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const navigate = useNavigate()
 
-  const toggleMenu = () => {
-    setIsMenuOpen(prev => !prev)
-  }
+  const toggleMenu = () => setIsMenuOpen(prev => !prev)
 
-  /* const edu101revisionCourse = {
-    id: "R.EDU101",
-    name: "R. EDU 101",
-    questions: getRandom30(edu101revisionQuestions),
-  } */
+  // Sub-component for Menu Items to keep things clean
+  const MenuItem = ({ icon, label, onClick, href }) => {
+    const content = (
+      <div className="flex items-center gap-4 w-full p-3.5 rounded-2xl transition-all duration-200 hover:bg-gray-100 dark:hover:bg-slate-700/50 group active:scale-[0.98]">
+        <div className="text-xl text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          {icon}
+        </div>
+        <span className="text-slate-700 dark:text-slate-200 font-medium text-[15px]">
+          {label}
+        </span>
+      </div>
+    );
+
+    return href ? (
+      <li><a href={href} target="_blank" rel="noopener noreferrer" className="block">{content}</a></li>
+    ) : (
+      <li className="cursor-pointer" onClick={onClick}>{content}</li>
+    );
+  };
 
   return (
-    <div className="relative h-[100dvh] max-h-screen flex items-center justify-center overflow-hidden bg-white dark:bg-slate-900">
-      {/* Main content */}
-      <div>
-        <Logo />
-        <h1 className="text-6xl text-center font-semibold tracking-tight mb-3 text-slate-900 dark:text-slate-100">
+    <div className="relative h-[100dvh] flex flex-col items-center justify-center overflow-hidden bg-gray-50 dark:bg-slate-900 transition-colors duration-500">
+
+      {/* 1. Main Content Layer */}
+      <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
+        <div className="mb-6"><Logo /></div>
+        <h1 className="text-5xl font-black text-center tracking-tight text-slate-900 dark:text-white mb-2">
           Quiz Bolt
         </h1>
-
-        <p className="text-center text-gray-600 dark:text-gray-300 max-w-md">
+        <p className="text-gray-500 dark:text-gray-400 font-medium tracking-wide uppercase text-[10px]">
           TASUED PDFs questions made simple
         </p>
       </div>
 
-
-      {/* WhatsApp follow */}
-      <div className="absolute left-5 top-5">
-        <WhatsappFollowButton />
+      {/* 2. Top Navigation Bar */}
+      <div className="absolute top-0 inset-x-0 p-6 flex justify-between items-center">
+        
+        <button
+          onClick={toggleMenu}
+          className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-transform z-50"
+        >
+          {isMenuOpen ? (
+            <svg xmlns="http://www.w3.org/2000/svg" className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
+          ) : (
+            <svg xmlns="http://www.w3.org/2000/svg" className="size-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+          )}
+        </button>
       </div>
 
-      {/* Hamburger button */}
-      <button
-        onClick={toggleMenu}
-        className="absolute right-5 top-5 bg-gray-50 dark:bg-slate-800 p-3 rounded-xl z-51 active:scale-95"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="none"
-          viewBox="0 0 24 24"
-          strokeWidth="1.5"
-          stroke="currentColor"
-          className="size-6"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            d={
-              isMenuOpen
-                ? "M6 18 18 6M6 6l12 12"
-                : "M3.75 9h16.5m-16.5 6.75h16.5"
-            }
-          />
-        </svg>
-      </button>
-
-      {/* Dark overlay */}
-      {isMenuOpen && (
-        <div
-          onClick={toggleMenu}
-          className="absolute inset-0 bg-black/50 backdrop-blur-xs z-40 transition-opacity"
-        />
-      )}
-
-      {/* Slide-in menu */}
+      {/* 3. The Overlay (Blur effect) */}
       <div
-        className={`fixed top-0 right-0 h-full w-2/3 max-w-[400px] bg-white dark:bg-slate-800 z-50 shadow-xl
-    transform transition-transform duration-300 ease-out
-    ${isMenuOpen ? "translate-x-0" : "translate-x-full"}`}
-      >
-        <div className="p-6">
-          <h2 className="text-2xl font-semibold mb-6 text-slate-900 dark:text-slate-100">Menu</h2>
+        className={`fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 transition-opacity duration-300 ${isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+        onClick={toggleMenu}
+      />
 
-          {/* Menu items (example placeholders) */}
-          <ul className="space-y-4 lg:text-lg">
-            <li className="hover:text-blue-600 active:text-blue-600 duration-200 cursor-pointer gap-2 flex items-center" onClick={() => {
-              navigate("/about-page")
-              ReactGA.event({
-                category: "Engagement",
-                action: "About Page",
-                label: selectedCourse.id || "none",
-              });
-            }}>
-              <div>
-                <FiInfo />
+      {/* 4. The Modern Slide-in Menu (Left-aligned) */}
+      <div
+        className={`fixed top-0 left-0 h-full w-[85%] max-w-[380px] bg-white dark:bg-slate-900 z-50 shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] border-r border-gray-100 dark:border-slate-800 flex flex-col ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
+        <div className="p-8 flex flex-col h-full">
+          <div className="mb-10 pt-4">
+            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Menu</h2>
+            <div className="h-1.5 w-10 bg-blue-600 rounded-full mt-2" />
+          </div>
+
+          <nav className="flex-grow space-y-8 overflow-y-auto no-scrollbar">
+            {/* Nav Group 1 */}
+            <div>
+              <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-2">Navigation</h3>
+              <ul className="space-y-1">
+                <MenuItem icon={<FiInfo />} label="About Quiz Bolt" onClick={() => navigate("/about-page")} />
+                <MenuItem icon={<FiBookmark />} label="Bookmarks" onClick={() => navigate("/bookmarks")} />
+                <MenuItem icon={<MdOutlineHistory />} label="Exam History" onClick={() => navigate("/history")} />
+              </ul>
+            </div>
+
+            {/* Nav Group 2 */}
+            <div>
+              <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-2">Social Community</h3>
+              <ul className="space-y-1">
+                <MenuItem icon={<FaWhatsapp className="text-green-500" />} label="WhatsApp Group" href="https://chat.whatsapp.com/FMPmsBbwU9kL6t2vJ6C8qq" />
+                <MenuItem icon={<FaFacebookF className="text-blue-600" />} label="Facebook Page" href="https://www.facebook.com/share/17RabkxuWY/" />
+                <MenuItem icon={<SiTiktok className="dark:text-white text-black" />} label="TikTok Profile" href="https://www.tiktok.com/@codejeffrey18" />
+              </ul>
+            </div>
+          </nav>
+
+          {/* Bottom Settings */}
+          <div className="mt-auto pt-6 border-t border-gray-100 dark:border-slate-800">
+            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-800/50 rounded-2xl">
+              <div className="flex items-center gap-3">
+                <HiOutlineMoon className="text-xl dark:text-blue-400 text-gray-400" />
+                <span className="font-semibold text-sm dark:text-slate-200">Dark Mode</span>
               </div>
-              About Quiz Bolt
-            </li>
-            <li className="hover:text-blue-600 active:text-blue-600 duration-200 cursor-pointer gap-2 flex items-center" onClick={() => {
-              navigate("/bookmarks")
-              ReactGA.event({
-                category: "Engagement",
-                action: "Bookmark Question",
-                label: selectedCourse.id || "none",
-              });
-            }}>
-              <div>
-                <FiBookmark />
-              </div>
-              Bookmarked Questions
-            </li>
-            <li className="hover:text-blue-600 active:text-blue-600 duration-200 cursor-pointer gap-2 flex items-center" onClick={() => {
-              navigate("/history")
-              ReactGA.event({
-                category: "Engagement",
-                action: "Bookmark Question",
-                label: selectedCourse.id || "none",
-              });
-            }}>
-              <div>
-                <MdOutlineHistory />
-              </div>
-              Exam History
-            </li>
-            <li className="hover:text-blue-600 active:text-green-500 duration-200 mb-5">
-              <a href="https://chat.whatsapp.com/FMPmsBbwU9kL6t2vJ6C8qq"
-                target="_blank"
-                rel="noopener noreferrer" className="gap-2 flex items-center">
-                <div>
-                  <FaWhatsapp />
-                </div>
-                Join WhatsApp Group
-              </a>
-            </li>
-            <hr className="border-gray-500" />
-            <li className="hover:text-blue-600 active:text-green-500 duration-200 mt-5">
-              <a href="https://www.facebook.com/share/1FmCjg3WX8/"
-                target="_blank"
-                rel="noopener noreferrer" className="gap-2 flex items-center">
-                <FaFacebookF />
-                Like us on FaceBook
-              </a>
-            </li>
-            <li className="hover:text-blue-600 active:text-green-500 duration-200">
-              <a href="https://www.tiktok.com/@codejeffrey18?_r=1&_d=f0id5k11di62de&sec_uid=MS4wLjABAAAAs-74xQ5Lh5ye4lPBykPFOf5d8xTmiQ6KXiD3W8s7wbs2Ly6jEEKzBJZAj2j1Drez&share_author_id=7541936112290464785&sharer_language=en&source=h5_m&u_code=em3ai2acehdibb&timestamp=1768827516&user_id=7541936112290464785&sec_user_id=MS4wLjABAAAAs-74xQ5Lh5ye4lPBykPFOf5d8xTmiQ6KXiD3W8s7wbs2Ly6jEEKzBJZAj2j1Drez&item_author_type=1&utm_source=copy&utm_campaign=client_share&utm_medium=android&share_iid=7590731933664560917&share_link_id=095c0f9c-d1d1-4273-8804-6b6caec0d83b&share_app_id=1233&ugbiz_name=ACCOUNT&ug_btm=b8727%2Cb7360&social_share_type=5&enable_checksum=1"
-                target="_blank"
-                rel="noopener noreferrer" className="gap-2 flex items-center">
-                <SiTiktok className="hover:text-black transition" />
-                Follow us on Tiktok
-              </a>
-            </li>
-            <li className="fixed bottom-0 left-0 right-0 m-5 flex items-center justify-between mt-6 p-2 rounded-lg cursor-pointer hover:bg-gray-200 dark:hover:bg-slate-700 transition">
-              <span className="text-slate-900 dark:text-slate-100 font-medium flex items-center gap-2">
-                <HiOutlineMoon />
-                Dark Mode
-              </span>
               <button
                 onClick={toggleDarkMode}
-                className={`w-12 h-6 flex items-center rounded-full p-1 duration-300 ${isDarkMode ? 'bg-blue-500' : 'bg-gray-400'}`}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${isDarkMode ? 'bg-blue-600' : 'bg-gray-300'}`}
               >
-                <div
-                  className={`bg-white w-4 h-4 rounded-full shadow-md transform duration-300 ${isDarkMode ? 'translate-x-6' : ''}`}
-                />
+                <div className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${isDarkMode ? 'translate-x-6' : ''}`} />
               </button>
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Start Exam button */}
+      {/* 5. Primary Action Button */}
       <button
-        onClick={() => {
-          navigate("/choose-course")
-          ReactGA.event({
-            category: "Exam",
-            action: "Start Exam",
-            label: selectedCourse.id || "none",
-          });
-        }}
-        className="absolute bottom-10 bg-[#2563EB] dark:bg-blue-700 py-5 px-7 rounded-full font-medium text-white text-2xl hover:scale-105 duration-200 ease-out active:scale-95 focus:outline-none focus:ring-4 focus:ring-blue-300">
+        onClick={() => navigate("/choose-course")}
+        className="absolute bottom-10 bg-blue-600 dark:bg-blue-700 py-4 px-10 rounded-2xl font-bold text-white text-xl shadow-lg shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all hover:-translate-y-1 active:scale-95 active:translate-y-0"
+      >
         Start Exam
       </button>
-      {/*       <RevisionTestModal onTakeTest={() => { navigate("/exam"); setSelectedCourse(edu101revisionCourse); }} /> */}
-    </div >
+    </div>
   )
 }
+
 
 export default StartExam
