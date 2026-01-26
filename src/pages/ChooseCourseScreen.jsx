@@ -67,7 +67,7 @@ const ChooseCourseScreen = ({
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-6">
       {/* Header */}
       <div
-        className={`flex items-center gap-5 px-5 py-6 sticky top-0 z-50 bg-gray-50 dark:bg-gray-900 transition-shadow duration-200 ${isScrolled ? "shadow-sm dark:shadow-black/40" : ""
+        className={`flex items-center gap-5 px-5 pt-6 sticky top-0 z-50 bg-gray-50 dark:bg-gray-900 transition-shadow duration-200 ${isScrolled ? "shadow-sm dark:shadow-black/40 pb-6" : ""
           }`}
       >
         <button
