@@ -23,7 +23,7 @@ const ReviewAnswers = ({ questions, answers }) => {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-6">
       {/* Header */}
       <div
-        className={`flex items-center gap-5 px-5 py-6 sticky top-0 right-0 left-0 bg-gray-50 dark:bg-gray-900 z-50 transition-shadow duration-200 ${isScrolled ? "shadow-sm dark:shadow-black/40" : "shadow-none"
+        className={`flex items-center gap-5 px-5 pt-6 pb-2 sticky top-0 right-0 left-0 bg-gray-50 dark:bg-gray-900 z-50 transition-shadow duration-200 ${isScrolled ? "shadow-sm dark:shadow-black/40 pb-6" : "shadow-none"
           }`}
       >
         <button
@@ -62,38 +62,45 @@ const ReviewAnswers = ({ questions, answers }) => {
           return (
             <div
               key={index}
-              className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm"
+              className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
             >
               {/* Question */}
-              <div className="font-medium mb-3 dark:text-gray-200">
+              <div className="font-semibold text-gray-800 dark:text-gray-200 text-lg mb-4">
                 {index + 1}. {question.question}
               </div>
 
               {/* User Answer */}
-              <div className="mb-2">
-                <span className="font-medium dark:text-gray-200">Your answer: </span>
+              <div className="mb-2 flex items-center gap-2">
+                <span className="font-medium text-gray-700 dark:text-gray-200">
+                  Your answer:
+                </span>
                 {isAnswered ? (
-                  <span className={isCorrect ? "text-green-600" : "text-red-600"}>
+                  <span
+                    className={`font-medium ${isCorrect ? "text-green-600" : "text-red-500"
+                      }`}
+                  >
                     {userAnswer}
                   </span>
                 ) : (
-                  <span className="text-gray-400 dark:text-gray-500">Not answered</span>
+                  <span className="text-gray-400 dark:text-gray-500 italic">Not answered</span>
                 )}
               </div>
 
               {/* Correct Answer */}
               {!isCorrect && (
-                <div>
-                  <span className="font-medium dark:text-gray-200">Correct answer: </span>
-                  <span className="text-green-600">{correctAnswer}</span>
+                <div className="mb-2 flex items-center gap-2">
+                  <span className="font-medium text-gray-700 dark:text-gray-200">
+                    Correct answer:
+                  </span>
+                  <span className="text-green-600 font-semibold">{correctAnswer}</span>
                 </div>
               )}
 
-              {/* Reason / Explanation */}
+              {/* Explanation */}
               {!isCorrect && question.reason && (
-                <div className="mt-3 bg-gray-50 dark:bg-gray-700 border-l-4 border-green-500 p-3 rounded">
-                  <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                    Explanation:
+                <div className="mt-3 bg-gray-50 dark:bg-gray-700 border-l-4 border-green-500 p-4 rounded-lg">
+                  <div className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                    Explanation
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">
                     {question.reason}

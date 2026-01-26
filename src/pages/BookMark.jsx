@@ -66,7 +66,7 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
 
       {/* Header */}
       <div
-        className={`flex items-center gap-5 px-5 py-6 sticky top-0 right-0 left-0 bg-gray-50 dark:bg-gray-900 z-50 transition-shadow duration-200 ${isScrolled ? "shadow-sm dark:shadow-black/40" : "shadow-none"
+        className={`flex items-center gap-5 px-5 pt-6 pb-2 sticky top-0 right-0 left-0 bg-gray-50 dark:bg-gray-900 z-50 transition-shadow duration-200 ${isScrolled ? "shadow-sm dark:shadow-black/40 pb-6" : "shadow-none"
           }`}
       >
         <button
@@ -92,13 +92,15 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
         {bookmarkedQuestions.map((question, index) => (
           <div
             key={question.id || index}
-            className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200"
+            className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
           >
-            <div className="flex justify-between items-start mb-2">
+            <div className="flex justify-between items-start mb-3">
               {/* Course Code */}
-              <div className="text-gray-400 dark:text-gray-300 text-sm">{getCourseFromId(question.id)}</div>
+              <div className="text-gray-400 dark:text-gray-300 text-sm font-medium">
+                {getCourseFromId(question.id)}
+              </div>
 
-              {/* Delete Bookmark - Blended Button */}
+              {/* Delete Bookmark */}
               <button
                 onClick={() => handleDeleteBookmark(question.id)}
                 className="p-2 rounded-full bg-red-100 dark:bg-red-700 text-red-600 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-600 transition-colors active:scale-95"
@@ -109,21 +111,21 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
             </div>
 
             {/* Question */}
-            <div className="font-medium mb-3 text-gray-900 dark:text-gray-100">
+            <div className="font-semibold text-gray-800 dark:text-gray-100 text-lg mb-3">
               {index + 1}. {question.question}
             </div>
 
             {/* Answer */}
-            <div className="mb-2">
-              <span className="text-gray-800 dark:text-gray-200">Answer: </span>
-              <span className="font-medium text-blue-600 dark:text-blue-400">{question.correct}</span>
+            <div className="mb-2 flex items-center gap-2">
+              <span className="font-medium text-gray-700 dark:text-gray-200">Answer:</span>
+              <span className="font-semibold text-blue-600 dark:text-blue-400">{question.correct}</span>
             </div>
 
             {/* Reason */}
             {question.reason && (
-              <div className="mt-3 bg-gray-50 dark:bg-gray-700 border-l-4 border-blue-500 dark:border-blue-400 p-3 rounded">
-                <div className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Reason:
+              <div className="mt-3 bg-gray-50 dark:bg-gray-700 border-l-4 border-blue-500 dark:border-blue-400 p-4 rounded-lg">
+                <div className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
+                  Reason
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">
                   {question.reason}
