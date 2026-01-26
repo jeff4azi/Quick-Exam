@@ -146,7 +146,7 @@ const ExamScreen = ({
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
   return (
-    <div className="lg:max-w-2xl mx-auto dark:bg-slate-900 relative">
+    <div className="dark:bg-slate-900 relative">
 
       {/* ---------------- TOP BAR ---------------- */}
       <div className="flex justify-between items-center my-7 mx-5">
@@ -173,12 +173,12 @@ const ExamScreen = ({
         />
       </div>
 
-      <div className="mx-5">
+      <div className="lg:max-w-2xl lg:mx-auto mx-5">
         <ProgressBar progress={progress} />
       </div>
 
       {/* ---------------- QUESTION CARD ---------------- */}
-      <div className="bg-white dark:bg-slate-800 mx-5 p-5 rounded-2xl my-7 shadow-sm mb-[100px]">
+      <div className="lg:max-w-2xl lg:mx-auto bg-white dark:bg-slate-800 mx-5 p-5 rounded-2xl my-7 shadow-sm mb-[100px]">
         <div className="flex justify-between items-center mb-2">
           <div className="text-gray-400 dark:text-gray-300">{selectedCourse.name}</div>
 
