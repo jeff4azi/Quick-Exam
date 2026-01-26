@@ -7,14 +7,8 @@ import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
 import AboutPage from "./pages/AboutPage";
 import ChooseCourseScreen from "./pages/ChooseCourseScreen";
+import courses from "./courses.js"
 
-import { edu101Questions } from "./edu-101questions"
-import { gns113Questions } from "./gns-113questions";
-import { gst111Questions } from "./gst-111questions";
-import { csc111Questions } from "./csc-111questions";
-import { vos116Questions } from "./vos-116questions";
-import { vos117Questions } from "./vos-117questions";
-import { edu101revisionQuestions } from "./edu101revisionQuestions"
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
 import ReactGA from "react-ga4";
@@ -30,38 +24,7 @@ function App() {
 
     return copy.slice(0, 30);
   }
-  const courses = [
-    {
-      id: "EDU101",
-      name: "EDU 101",
-      questions: [...edu101Questions, ...edu101revisionQuestions],
-    },
-    {
-      id: "GST111",
-      name: "GST 111",
-      questions: gst111Questions,
-    },
-    {
-      id: "GNS113",
-      name: "GNS 113",
-      questions: gns113Questions,
-    },
-    {
-      id: "CSC111",
-      name: "CSC 111",
-      questions: csc111Questions,
-    },
-    {
-      id: "VOS116",
-      name: "VOS 116",
-      questions: vos116Questions,
-    },
-    {
-      id: "VOS117",
-      name: "VOS 117",
-      questions: vos117Questions,
-    },
-  ];
+  
 
   const [answers, setAnswers] = useState([])
   const [selectedCourse, setSelectedCourse] = useState(null)
