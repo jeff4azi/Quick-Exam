@@ -7,6 +7,7 @@ import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
 import AboutPage from "./pages/AboutPage";
 import ChooseCourseScreen from "./pages/ChooseCourseScreen";
+import HistoryScreen from "./pages/HistoryScreen.jsx"
 import courses from "./courses.js"
 
 import ReviewAnswers from "./pages/ReviewAnswers";
@@ -136,6 +137,7 @@ function App() {
         <Route path="/bookmarks" element={<BookMark {...props} />} />
         <Route path="/about-page" element={<AboutPage {...props} />} />
         <Route path="/choose-course" element={<ChooseCourseScreen {...props} />} />
+        <Route path="/history" element={<HistoryScreen {...props} />} />
       </Routes>
       <SpeedInsights />
     </Router>

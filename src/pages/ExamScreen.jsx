@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-import ProgressBar from "../components/ProgressBar"
-import Timer from "../components/Timer"
+import ProgressBar from "../components/ProgressBar";
+import Timer from "../components/Timer";
 
 import ReactGA from "react-ga4";
 
@@ -20,95 +20,117 @@ const shuffleArray = (array) => {
   return arr;
 };
 
-const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, bookmarks, setBookmarks, results }) => {
-  const navigate = useNavigate()
+const ExamScreen = ({
+  answers,
+  setAnswers,
+  questions,
+  onSubmit,
+  selectedCourse,
+  bookmarks,
+  setBookmarks,
+  results
+}) => {
+  const navigate = useNavigate();
+  const totalQuestions = questions.length;
 
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(calculateTotalTime(questions.length));
-
-  useEffect(() => {
-    setTimeLeft(calculateTotalTime(questions.length));
-  }, [questions]);
-
-  const currentQuestion = questions[currentIndex]
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(calculateTotalTime(totalQuestions));
   const [shuffledOptions, setShuffledOptions] = useState([]);
+  const [hasSaved, setHasSaved] = useState(false); // ✅ new flag
+
+  const currentQuestion = questions[currentIndex];
+  const selectedOption = answers[currentIndex];
+  const isBookmarked = bookmarks.includes(currentQuestion?.id);
+
+  // Shuffle options whenever question changes
+  useEffect(() => {
+    if (currentQuestion) setShuffledOptions(shuffleArray(currentQuestion.options));
+  }, [currentQuestion]);
 
   useEffect(() => {
-    if (currentQuestion) {
-      setShuffledOptions(shuffleArray(currentQuestion.options));
-    }
-  }, [currentQuestion]);
-  const totalQuestions = questions.length
-  const selectedOption = answers[currentIndex]
+    setTimeLeft(calculateTotalTime(totalQuestions));
+  }, [questions, totalQuestions]);
 
   /* ---------------- BOOKMARK LOGIC ---------------- */
-  const isBookmarked = bookmarks.includes(currentQuestion.id)
-
   const handleBookmarkClick = () => {
     setBookmarks(prev => {
-      let updated
+      const updated = prev.includes(currentQuestion.id)
+        ? prev.filter(id => id !== currentQuestion.id)
+        : [...prev, currentQuestion.id];
 
-      if (prev.includes(currentQuestion.id)) {
-        updated = prev.filter(id => id !== currentQuestion.id)
-      } else {
-        updated = [...prev, currentQuestion.id]
-      }
-
-      localStorage.setItem(
-        "bookmarkedQuestions",
-        JSON.stringify(updated)
-      )
-
-      return updated
-    })
-  }
+      localStorage.setItem("bookmarkedQuestions", JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   /* ---------------- ANSWERS ---------------- */
   const onOptionClick = (option) => {
-    const newAnswers = [...answers]
-    newAnswers[currentIndex] = option
-    setAnswers(newAnswers)
-  }
+    const newAnswers = [...answers];
+    newAnswers[currentIndex] = option;
+    setAnswers(newAnswers);
+  };
+
+  /* ---------------- SAVE RESULT ONCE ---------------- */
+  const saveResult = () => {
+    if (hasSaved) return; // prevent double saving
+    const correctCount = results.correct;
+
+    const newResult = {
+      id: Date.now(),
+      course: selectedCourse.name,
+      date: new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      }),
+      score: correctCount,
+      total: totalQuestions
+    };
+
+    const existingHistory = JSON.parse(localStorage.getItem("examHistory")) || [];
+    localStorage.setItem("examHistory", JSON.stringify([...existingHistory, newResult]));
+    setHasSaved(true); // mark as saved
+  };
 
   /* ---------------- TIMER ---------------- */
   const handleTimeUp = (finalTime) => {
-    onSubmit()
+    saveResult(); // safe
+    onSubmit();
     navigate("/results", {
-      state: { timeTaken: calculateTotalTime(questions.length) - finalTime }
-    })
+      state: { timeTaken: calculateTotalTime(totalQuestions) - finalTime }
+    });
     ReactGA.event({
       category: "Exam",
       action: `Time Up auto Submit Exam ${selectedCourse.name}`,
       label: selectedCourse.id,
-      value: results.correct,
+      value: results.correct
     });
-  }
+  };
 
   /* ---------------- NAVIGATION ---------------- */
   const nextQuestion = () => {
     if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex(prev => prev + 1)
+      setCurrentIndex(prev => prev + 1);
     } else {
-      onSubmit()
+      saveResult(); // safe
+      onSubmit();
       navigate("/results", {
-        state: { timeTaken: calculateTotalTime(questions.length) - timeLeft }
-      })
+        state: { timeTaken: calculateTotalTime(totalQuestions) - timeLeft }
+      });
       ReactGA.event({
         category: "Exam",
         action: `Submit Exam ${selectedCourse.name}`,
         label: selectedCourse.id,
-        value: results.correct,
+        value: results.correct
       });
     }
-  }
+  };
 
   const prevQuestion = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(prev => prev - 1)
-    }
-  }
+    if (currentIndex > 0) setCurrentIndex(prev => prev - 1);
+  };
 
-  const progress = ((currentIndex + 1) / totalQuestions) * 100
+  const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
   return (
     <div className="lg:max-w-2xl mx-auto dark:bg-slate-900 relative">
@@ -132,7 +154,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
         </div>
 
         <Timer
-          totalTime={calculateTotalTime(questions.length)}
+          totalTime={calculateTotalTime(totalQuestions)}
           onTick={setTimeLeft}
           onTimeUp={handleTimeUp}
         />
@@ -150,8 +172,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
           {/* BOOKMARK BUTTON */}
           <button
             onClick={handleBookmarkClick}
-            className={`${isBookmarked ? "text-blue-500 dark:text-yellow-500" : "text-gray-400 dark:text-gray-300"
-              } hover:text-yellow-500/70 transition-colors -translate-y-1`}
+            className={`${isBookmarked ? "text-blue-500 dark:text-yellow-500" : "text-gray-400 dark:text-gray-300"} hover:text-yellow-500/70 transition-colors -translate-y-1`}
             aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
           >
             <svg
@@ -162,9 +183,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
               stroke={isBookmarked ? "none" : "currentColor"}
               fill={isBookmarked ? "currentColor" : "none"}
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              <path strokeLinecap="round" strokeLinejoin="round"
                 d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
               />
             </svg>
@@ -181,10 +200,7 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
               key={index}
               onClick={() => onOptionClick(option)}
               className={`py-3 px-4 w-full rounded-xl ring-2 transition active:scale-95 hover:ring-[#2563EB]/40 duration-200
-                ${selectedOption === option
-                  ? "ring-[#2563EB]/60 dark:ring-[#60A5FA]/80"
-                  : "ring-gray-300 dark:ring-gray-600"
-                }`}
+                ${selectedOption === option ? "ring-[#2563EB]/60 dark:ring-[#60A5FA]/80" : "ring-gray-300 dark:ring-gray-600"}`}
             >
               <span className="text-lg font-medium text-slate-900 dark:text-slate-100">{option}</span>
             </button>
@@ -194,8 +210,6 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
 
       {/* ---------------- NAVIGATION ---------------- */}
       <div className="px-7 py-5 flex items-center justify-between fixed bottom-0 right-0 left-0 bg-gray-200 dark:bg-gray-900 border-t border-gray-300 dark:border-gray-800 lg:max-w-2xl mx-auto">
-
-        {/* Previous Button - Smaller & Subtle */}
         <button
           onClick={prevQuestion}
           disabled={currentIndex === 0}
@@ -204,22 +218,15 @@ const ExamScreen = ({ answers, setAnswers, questions, onSubmit, selectedCourse, 
           Previous
         </button>
 
-        {/* Next/Submit Button - Larger & Dominant */}
         <button
           onClick={nextQuestion}
-          className={`
-      bg-green-500 dark:bg-green-600 rounded-2xl font-bold text-white shadow-lg 
-      active:scale-95 hover:brightness-110 hover:shadow-green-500/20 
-      transition-all duration-300 ease-in-out
-      /* Dynamic sizing: wider and taller for the main action */
-      h-[58px] w-[200px] text-lg
-    `}
+          className={`bg-green-500 dark:bg-green-600 rounded-2xl font-bold text-white shadow-lg active:scale-95 hover:brightness-110 hover:shadow-green-500/20 transition-all duration-300 ease-in-out h-[58px] w-[200px] text-lg`}
         >
           {currentIndex === totalQuestions - 1 ? "Submit Quiz" : "Next"}
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ExamScreen
+export default ExamScreen;

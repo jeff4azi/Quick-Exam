@@ -41,7 +41,7 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
       </div>
 
       {/* Score Circle */}
-      <div className='pt-7 relative bg-white dark:bg-gray-800 flex flex-col justify-center items-center size-[220px] rounded-full place-self-center m-15 text-[#2563EB] dark:text-[#22D3EE] border-2 shadow-sm active:scale-95 hover:scale-105 durations-200'>
+      <div onClick={() => navigate("/history")} className='pt-7 relative bg-white dark:bg-gray-800 flex flex-col justify-center items-center size-[220px] rounded-full place-self-center m-15 text-[#2563EB] dark:text-[#22D3EE] border-2 shadow-sm active:scale-95 hover:scale-105 durations-200'>
         <span className='text-6xl font-semibold -translate-y-2'>
           {Math.round((results.correct / questions.length) * 100)}
           <span className='text-3xl font-bold'>%</span>

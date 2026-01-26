@@ -8,6 +8,7 @@ const ChooseCourseScreen = ({
   courses,
   selectedCourse,
   setSelectedCourse,
+  setAnswers,
 }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -60,6 +61,7 @@ const ChooseCourseScreen = ({
   const handleStartExam = () => {
     if (selectedCourse && selectedQuestionCount) {
       navigate("/exam");
+      setAnswers([]);
     }
   };
 

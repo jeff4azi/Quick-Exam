@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { FaTrash } from "react-icons/fa";
 
 const BookMark = ({ bookmarks, courses, setBookmarks }) => {
   const navigate = useNavigate();
@@ -12,11 +13,8 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
   }, []);
 
   const allQuestions = courses.flatMap(course => course.questions);
-
-  // Filter questions that are bookmarked
   const bookmarkedQuestions = allQuestions.filter(q => bookmarks.includes(q.id));
 
-  // Get course code from question id
   const getCourseFromId = (id) => {
     if (!id) return "";
     const prefix = id.split("-")[0].toLowerCase();
@@ -29,7 +27,6 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
     return `${code.toUpperCase()} ${number}`;
   };
 
-  // Remove a question from bookmarks
   const handleDeleteBookmark = (id) => {
     const updated = bookmarks.filter(b => b !== id);
     setBookmarks(updated);
@@ -52,11 +49,7 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
               stroke="currentColor"
               className="w-6 h-6"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
             </svg>
           </button>
           <h1 className="text-2xl font-semibold dark:text-white">Bookmarked Questions</h1>
@@ -70,6 +63,7 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-6">
+
       {/* Header */}
       <div
         className={`flex items-center gap-5 px-5 py-6 sticky top-0 right-0 left-0 bg-gray-50 dark:bg-gray-900 z-50 transition-shadow duration-200 ${isScrolled ? "shadow-sm dark:shadow-black/40" : "shadow-none"
@@ -87,35 +81,30 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
             stroke="currentColor"
             className="w-6 h-6"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
           </svg>
         </button>
         <h1 className="text-2xl font-semibold dark:text-white">Bookmarked Questions</h1>
       </div>
 
       {/* Bookmarked Questions */}
-      <div className="space-y-6 px-5">
+      <div className="space-y-6 px-5 mt-4">
         {bookmarkedQuestions.map((question, index) => (
           <div
             key={question.id || index}
             className="bg-white dark:bg-gray-800 p-5 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200"
           >
-            <div className="flex justify-between items-center mb-2">
+            <div className="flex justify-between items-start mb-2">
               {/* Course Code */}
               <div className="text-gray-400 dark:text-gray-300 text-sm">{getCourseFromId(question.id)}</div>
-              {/* Delete Bookmark */}
+
+              {/* Delete Bookmark - Blended Button */}
               <button
                 onClick={() => handleDeleteBookmark(question.id)}
-                className="bg-red-500 dark:bg-red-600 p-2 rounded-sm text-white hover:bg-red-600 dark:hover:bg-red-700 transition"
+                className="p-2 rounded-full bg-red-100 dark:bg-red-700 text-red-600 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-600 transition-colors active:scale-95"
                 title="Remove Bookmark"
               >
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="size-5" viewBox="0 0 16 16">
-                  <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0" />
-                </svg>
+                <FaTrash size={14} />
               </button>
             </div>
 

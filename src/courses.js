@@ -1,10 +1,10 @@
-import { edu101Questions } from "./edu-101questions"
-import { gns113Questions } from "./gns-113questions";
-import { gst111Questions } from "./gst-111questions";
-import { csc111Questions } from "./csc-111questions";
-import { vos116Questions } from "./vos-116questions";
-import { vos117Questions } from "./vos-117questions";
-import { edu101revisionQuestions } from "./edu101revisionQuestions"
+import { edu101Questions } from "./courses/edu-101questions"
+import { gns113Questions } from "./courses/gns-113questions";
+import { gst111Questions } from "./courses/gst-111questions";
+import { csc111Questions } from "./courses/csc-111questions";
+import { vos116Questions } from "./courses/vos-116questions";
+import { vos117Questions } from "./courses/vos-117questions";
+import { edu101revisionQuestions } from "./courses/edu101revisionQuestions"
 
 const courses = [
   {
