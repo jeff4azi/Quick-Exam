@@ -175,7 +175,7 @@ const ChooseCourseScreen = ({
                   key={num}
                   onClick={() => setSelectedQuestionCount(num)}
                   className={`px-5 py-2 rounded-xl font-semibold transition ${selectedQuestionCount === num
-                      ? "bg-red-500 text-white"
+                      ? "bg-blue-500 text-white"
                       : "bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 hover:bg-red-400 hover:text-white"
                     }`}
                 >
@@ -189,7 +189,7 @@ const ChooseCourseScreen = ({
                 onClick={handleStartExam}
                 disabled={!selectedQuestionCount}
                 className={`px-6 py-2 rounded-xl font-bold transition shadow-md ${selectedQuestionCount
-                    ? "bg-red-500 hover:bg-red-600 text-white"
+                    ? "bg-blue-500 hover:bg-blue-600 text-white"
                     : "bg-gray-300 text-gray-600 cursor-not-allowed"
                   }`}
               >
