@@ -5,6 +5,7 @@ import { csc111Questions } from "./courses/csc-111questions";
 import { vos116Questions } from "./courses/vos-116questions";
 import { vos117Questions } from "./courses/vos-117questions";
 import { cos101Questions } from "./courses/cos-101questions";
+import { math101Questions } from "./courses/math-101questions";
 import { edu101revisionQuestions } from "./courses/edu101revisionQuestions";
 
 const courses = [
@@ -42,6 +43,13 @@ const courses = [
     group: "departmental",
     colleges: ["COL_SCI"], // scalable
     questions: cos101Questions,
+  },
+  {
+    id: "MATH101",
+    name: "MATH 101",
+    group: "departmental",
+    colleges: ["COL_SCI"], // scalable
+    questions: math101Questions,
   },
   {
     id: "VOS116",
