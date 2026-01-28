@@ -11,7 +11,7 @@ const HistoryScreen = () => {
 
   // Fetch history from localStorage
   useEffect(() => {
-    const storedHistory = JSON.parse(localStorage.getItem("examHistory")) || [];
+    const storedHistory = (JSON.parse(localStorage.getItem("examHistory")) || []).reverse();
     setHistoryData(storedHistory);
   }, []);
 

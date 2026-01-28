@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ConfirmOverlay from "../components/ConfirmOverlay"; // adjust path if needed
+import ConfirmOverlay from "../components/ConfirmOverlay";
 
 import ProgressBar from "../components/ProgressBar";
 import Timer from "../components/Timer";
@@ -28,8 +28,7 @@ const ExamScreen = ({
   onSubmit,
   selectedCourse,
   bookmarks,
-  setBookmarks,
-  results
+  setBookmarks
 }) => {
   const navigate = useNavigate();
   const totalQuestions = questions.length;
@@ -37,7 +36,7 @@ const ExamScreen = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [timeLeft, setTimeLeft] = useState(calculateTotalTime(totalQuestions));
   const [shuffledOptions, setShuffledOptions] = useState([]);
-  const [hasSaved, setHasSaved] = useState(false); // ✅ new flag
+  const [hasSaved, setHasSaved] = useState(false);
   const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false);
   const [isExitOverlayOpen, setExitOverlayOpen] = useState(false);
 
@@ -45,53 +44,40 @@ const ExamScreen = ({
   const selectedOption = answers[currentIndex];
   const isBookmarked = bookmarks.includes(currentQuestion?.id);
 
-  const handleSubmit = () => {
-    saveResult(); // safe
-    onSubmit();
-    setSubmitOverlayOpen(false)
-    navigate("/results", {
-      state: { timeTaken: calculateTotalTime(totalQuestions) - timeLeft }
-    });
-    ReactGA.event({
-      category: "Exam",
-      action: `Submit Exam ${selectedCourse.name}`,
-      label: selectedCourse.id,
-      value: results.correct
-    });
-  };
-
-  // Shuffle options whenever question changes
+  // Pre-shuffle all questions once for consistent options
   useEffect(() => {
-    if (currentQuestion) setShuffledOptions(shuffleArray(currentQuestion.options));
-  }, [currentQuestion]);
+    if (currentQuestion && !shuffledOptions.length) {
+      setShuffledOptions(shuffleArray(currentQuestion.options));
+    }
+  }, [currentQuestion, shuffledOptions.length]);
 
   useEffect(() => {
     setTimeLeft(calculateTotalTime(totalQuestions));
   }, [questions, totalQuestions]);
 
-  /* ---------------- BOOKMARK LOGIC ---------------- */
   const handleBookmarkClick = () => {
     setBookmarks(prev => {
       const updated = prev.includes(currentQuestion.id)
         ? prev.filter(id => id !== currentQuestion.id)
         : [...prev, currentQuestion.id];
-
       localStorage.setItem("bookmarkedQuestions", JSON.stringify(updated));
       return updated;
     });
   };
 
-  /* ---------------- ANSWERS ---------------- */
   const onOptionClick = (option) => {
     const newAnswers = [...answers];
     newAnswers[currentIndex] = option;
     setAnswers(newAnswers);
   };
 
-  /* ---------------- SAVE RESULT ONCE ---------------- */
+  const calculateScore = () =>
+    questions.reduce((acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc), 0);
+
   const saveResult = () => {
-    if (hasSaved) return; // prevent double saving
-    const correctCount = results.correct;
+    if (hasSaved) return;
+
+    const correctCount = calculateScore();
 
     const newResult = {
       id: Date.now(),
@@ -107,31 +93,33 @@ const ExamScreen = ({
 
     const existingHistory = JSON.parse(localStorage.getItem("examHistory")) || [];
     localStorage.setItem("examHistory", JSON.stringify([...existingHistory, newResult]));
-    setHasSaved(true); // mark as saved
-  };
+    setHasSaved(true);
 
-  /* ---------------- TIMER ---------------- */
-  const handleTimeUp = (finalTime) => {
-    saveResult(); // safe
-    onSubmit();
-    navigate("/results", {
-      state: { timeTaken: calculateTotalTime(totalQuestions) - finalTime }
-    });
+    // GA tracking
     ReactGA.event({
       category: "Exam",
-      action: `Time Up auto Submit Exam ${selectedCourse.name}`,
+      action: `Submit Exam ${selectedCourse.name}`,
       label: selectedCourse.id,
-      value: results.correct
+      value: correctCount
     });
   };
 
-  /* ---------------- NAVIGATION ---------------- */
+  const handleSubmit = () => {
+    saveResult();
+    onSubmit();
+    setSubmitOverlayOpen(false);
+    navigate("/results", { state: { timeTaken: calculateTotalTime(totalQuestions) - timeLeft } });
+  };
+
+  const handleTimeUp = (finalTime) => {
+    saveResult();
+    onSubmit();
+    navigate("/results", { state: { timeTaken: calculateTotalTime(totalQuestions) - finalTime } });
+  };
+
   const nextQuestion = () => {
-    if (currentIndex < totalQuestions - 1) {
-      setCurrentIndex(prev => prev + 1);
-    } else {
-      setSubmitOverlayOpen(true)
-    }
+    if (currentIndex < totalQuestions - 1) setCurrentIndex(prev => prev + 1);
+    else setSubmitOverlayOpen(true);
   };
 
   const prevQuestion = () => {
@@ -140,15 +128,14 @@ const ExamScreen = ({
 
   const handleExit = () => {
     setExitOverlayOpen(false);
-    navigate("/"); // go back to homepage or wherever you want
+    navigate("/");
   };
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
   return (
     <div className="dark:bg-slate-900 relative">
-
-      {/* ---------------- TOP BAR ---------------- */}
+      {/* TOP BAR */}
       <div className="flex justify-between items-center my-7 mx-5">
         <button
           onClick={() => setExitOverlayOpen(true)}
@@ -177,28 +164,21 @@ const ExamScreen = ({
         <ProgressBar progress={progress} />
       </div>
 
-      {/* ---------------- QUESTION CARD ---------------- */}
+      {/* QUESTION CARD */}
       <div className="lg:max-w-2xl lg:mx-auto bg-white dark:bg-slate-800 mx-5 p-5 rounded-2xl my-7 shadow-sm mb-[100px]">
         <div className="flex justify-between items-center mb-2">
           <div className="text-gray-400 dark:text-gray-300">{selectedCourse.name}</div>
 
-          {/* BOOKMARK BUTTON */}
           <button
             onClick={handleBookmarkClick}
             className={`${isBookmarked ? "text-blue-500 dark:text-yellow-500" : "text-gray-400 dark:text-gray-300"} hover:text-yellow-500/70 transition-colors -translate-y-1`}
             aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              className="size-7"
-              stroke={isBookmarked ? "none" : "currentColor"}
-              fill={isBookmarked ? "currentColor" : "none"}
-            >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
+              strokeWidth="1.5" className="size-7"
+              stroke="currentColor" fill={isBookmarked ? "currentColor" : "none"}>
               <path strokeLinecap="round" strokeLinejoin="round"
-                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z"
-              />
+                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
             </svg>
           </button>
         </div>
@@ -221,7 +201,7 @@ const ExamScreen = ({
         </div>
       </div>
 
-      {/* ---------------- NAVIGATION ---------------- */}
+      {/* NAVIGATION */}
       <div className="px-7 py-5 flex items-center justify-between fixed bottom-0 right-0 left-0 bg-gray-200 dark:bg-gray-900 border-t border-gray-300 dark:border-gray-800 lg:max-w-2xl mx-auto">
         <button
           onClick={prevQuestion}
@@ -233,7 +213,7 @@ const ExamScreen = ({
 
         <button
           onClick={nextQuestion}
-          className={`bg-green-500 dark:bg-green-600 rounded-2xl font-bold text-white shadow-lg active:scale-95 hover:brightness-110 hover:shadow-green-500/20 transition-all duration-300 ease-in-out h-[58px] w-[200px] text-lg`}
+          className="bg-green-500 dark:bg-green-600 rounded-2xl font-bold text-white shadow-lg active:scale-95 hover:brightness-110 hover:shadow-green-500/20 transition-all duration-300 ease-in-out h-[58px] w-[200px] text-lg"
         >
           {currentIndex === totalQuestions - 1 ? "Submit Quiz" : "Next"}
         </button>
@@ -257,7 +237,7 @@ const ExamScreen = ({
         message="Are you sure you want to exit? Your progress will not be saved."
         confirmText="Exit"
         cancelText="Cancel"
-        danger={true} // optional red styling
+        danger={true}
       />
     </div>
   );
