@@ -13,6 +13,7 @@ import courses from "./courses.js"
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
 import ReactGA from "react-ga4";
+import ProtectedRoute from "./components/ProtectedRoutes";
 
 function App() {
   function getRandom30(arr) {
@@ -131,9 +132,34 @@ function App() {
       <RouteChangeTracker />
       <Routes>
         <Route path="/" element={<StartExam {...props} />} />
-        <Route path="/exam" element={<ExamScreen {...props} />} />
-        <Route path="/results" element={<ResultScreen {...props} />} />
-        <Route path="/review-answers" element={<ReviewAnswers {...props} />} />
+
+        <Route
+          path="/exam"
+          element={
+            <ProtectedRoute stateCheck={questions.length > 0 && selectedCourse}>
+              <ExamScreen {...props} />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/results"
+          element={
+            <ProtectedRoute stateCheck={results.answered > 0}>
+              <ResultScreen {...props} />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/review-answers"
+          element={
+            <ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}>
+              <ReviewAnswers {...props} />
+            </ProtectedRoute>
+          }
+        />
+
         <Route path="/bookmarks" element={<BookMark {...props} />} />
         <Route path="/about-page" element={<AboutPage {...props} />} />
         <Route path="/choose-course" element={<ChooseCourseScreen {...props} />} />

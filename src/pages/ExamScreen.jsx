@@ -44,12 +44,11 @@ const ExamScreen = ({
   const selectedOption = answers[currentIndex];
   const isBookmarked = bookmarks.includes(currentQuestion?.id);
 
-  // Pre-shuffle all questions once for consistent options
   useEffect(() => {
-    if (currentQuestion && !shuffledOptions.length) {
+    if (currentQuestion) {
       setShuffledOptions(shuffleArray(currentQuestion.options));
     }
-  }, [currentQuestion, shuffledOptions.length]);
+  }, [currentQuestion]);
 
   useEffect(() => {
     setTimeLeft(calculateTotalTime(totalQuestions));
