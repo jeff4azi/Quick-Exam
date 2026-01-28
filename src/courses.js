@@ -1,10 +1,11 @@
-import { edu101Questions } from "./courses/edu-101questions"
+import { edu101Questions } from "./courses/edu-101questions";
 import { gns113Questions } from "./courses/gns-113questions";
 import { gst111Questions } from "./courses/gst-111questions";
 import { csc111Questions } from "./courses/csc-111questions";
 import { vos116Questions } from "./courses/vos-116questions";
 import { vos117Questions } from "./courses/vos-117questions";
-import { edu101revisionQuestions } from "./courses/edu101revisionQuestions"
+import { cos101Questions } from "./courses/cos-101questions";
+import { edu101revisionQuestions } from "./courses/edu101revisionQuestions";
 
 const courses = [
   {
@@ -34,6 +35,13 @@ const courses = [
     group: "departmental",
     colleges: ["COL_SCI"], // scalable
     questions: csc111Questions,
+  },
+  {
+    id: "COS101",
+    name: "COS 101",
+    group: "departmental",
+    colleges: ["COL_SCI"], // scalable
+    questions: cos101Questions,
   },
   {
     id: "VOS116",
