@@ -5,8 +5,15 @@ const looksLikeMath = (text) => {
   return /\\[a-zA-Z]+|\\[\\\{\}\[\]\(\)]|[=^_+\-*/<>|]|\\frac|\\sum|\\pi|\\sqrt|\\sin|\\cos|\\tan|\\begin|\\end/.test(text);
 };
 
-export const RenderMathText = ({ text }) => {
+export const RenderMathText = ({ text, courseId }) => {
   if (typeof text !== "string") return text;
+
+  if (
+    typeof courseId !== "string" ||
+    !courseId.toUpperCase().startsWith("MTH101")
+  ) {
+    return <span>{text}</span>;
+  }
 
   // Split by space, but keep punctuation attached
   const parts = text.split(" ");

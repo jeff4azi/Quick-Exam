@@ -45,8 +45,8 @@ const courses = [
     questions: cos101Questions,
   },
   {
-    id: "MATH101",
-    name: "MATH 101",
+    id: "MTH101",
+    name: "MTH 101",
     group: "departmental",
     colleges: ["COL_SCI"], // scalable
     questions: math101Questions,

@@ -113,14 +113,14 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
 
             {/* Question */}
             <div className="font-semibold text-gray-800 dark:text-gray-100 text-lg mb-3">
-              {index + 1}. <RenderMathText text={question.question} />
+              {index + 1}. <RenderMathText text={question.question} courseId={question.id} />
             </div>
 
             {/* Answer */}
             <div className="mb-2 flex items-center gap-2">
               <span className="font-medium text-gray-700 dark:text-gray-200">Answer:</span>
               <span className="font-semibold text-blue-600 dark:text-blue-400">
-                <RenderMathText text={question.correct} />
+                <RenderMathText text={question.correct}  courseId={question.id}/>
               </span>
             </div>
 
@@ -131,7 +131,7 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
                   Reason
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">
-                  <RenderMathText text={question.reason} />
+                  <RenderMathText text={question.reason} courseId={question.id}/>
                 </div>
               </div>
             )}

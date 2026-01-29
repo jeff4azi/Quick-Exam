@@ -191,7 +191,7 @@ const ExamScreen = ({
         </div>
 
         <div className="text-xl font-medium mb-7 text-slate-900 dark:text-slate-100">
-          <RenderMathText text={currentQuestion.question} />
+          <RenderMathText text={currentQuestion.question} courseId={selectedCourse?.id} />
         </div>
 
         <div className="space-y-4">
@@ -203,7 +203,7 @@ const ExamScreen = ({
                 ${selectedOption === option ? "ring-[#2563EB]/60 dark:ring-[#60A5FA]/80" : "ring-gray-300 dark:ring-gray-600"}`}
             >
               <span className="text-lg font-medium text-slate-900 dark:text-slate-100">
-                <RenderMathText text={option} />
+                <RenderMathText text={option} courseId={selectedCourse?.id} />
               </span>
             </button>
           ))}
