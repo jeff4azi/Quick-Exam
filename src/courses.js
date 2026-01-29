@@ -6,12 +6,14 @@ import { vos116Questions } from "./courses/vos-116questions";
 import { vos117Questions } from "./courses/vos-117questions";
 import { cos101Questions } from "./courses/cos-101questions";
 import { math101Questions } from "./courses/math-101questions";
+import { bed112Questions } from "./courses/bed-112questions";
 import { edu101revisionQuestions } from "./courses/edu101revisionQuestions";
 
 const courses = [
   {
     id: "EDU101",
     name: "EDU 101",
+    title: "INTRODUCTION TO TEACHING AND FOUNDATION OF EDUCATION",
     group: "general", // general | departmental | vocational
     colleges: "all",
     questions: [...edu101Questions, ...edu101revisionQuestions],
@@ -19,6 +21,7 @@ const courses = [
   {
     id: "GST111",
     name: "GST 111",
+    title: "COMMUNICATION IN ENGLISH",
     group: "general",
     colleges: "all",
     questions: gst111Questions,
@@ -26,6 +29,7 @@ const courses = [
   {
     id: "GNS113",
     name: "GNS 113",
+    title: "USE OF LIBRARY AND STUDIES SKILLS",
     group: "general",
     colleges: "all",
     questions: gns113Questions,
@@ -33,27 +37,39 @@ const courses = [
   {
     id: "CSC111",
     name: "CSC 111",
+    title: "Introduction to database application",
     group: "departmental",
-    colleges: ["COL_SCI"], // scalable
+    colleges: ["COSIT"], // scalable
     questions: csc111Questions,
   },
   {
     id: "COS101",
     name: "COS 101",
+    title: "Introduction to computing science",
     group: "departmental",
-    colleges: ["COL_SCI"], // scalable
+    colleges: ["COSIT"], // scalable
     questions: cos101Questions,
   },
   {
     id: "MTH101",
     name: "MTH 101",
+    title: "Elementary Mathematics 1",
     group: "departmental",
-    colleges: ["COL_SCI"], // scalable
+    colleges: ["COSIT"], // scalable
     questions: math101Questions,
+  },
+  {
+    id: "BED112",
+    name: "BED 112",
+    title: "Computer Fundamental",
+    group: "departmental",
+    colleges: ["COVTED"], // scalable
+    questions: bed112Questions,
   },
   {
     id: "VOS116",
     name: "VOS 116",
+    title: "Fruit Juice and Non Alcoholic Beverage",
     group: "vocational",
     colleges: "all",
     questions: vos116Questions,
@@ -61,6 +77,7 @@ const courses = [
   {
     id: "VOS117",
     name: "VOS 117",
+    title: "Fish Farming",
     group: "vocational",
     colleges: "all",
     questions: vos117Questions,

@@ -126,14 +126,27 @@ const ChooseCourseScreen = ({
                     `}
                   >
                     <div className="flex items-center justify-between">
-                      <div className="space-y-1">
-                        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">
-                          {course.questions?.length || 0} Questions
-                        </p>
-                        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                          {course.name}
+                      <div className="space-y-0.5">
+                        {/* Course Code — PRIMARY */}
+                        <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                          {course.name.toUpperCase()}
                         </h2>
+
+                        {/* Course Title — SECONDARY, normalized to title case */}
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {course.title
+                            .toLowerCase()
+                            .split(" ")
+                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                            .join(" ")}
+                        </p>
+
+                        {/* Question Count — TERTIARY / METADATA */}
+                        <p className="mt-1 text-xs text-gray-500 dark:text-gray-500">
+                          {course.questions?.length || 0} questions available
+                        </p>
                       </div>
+
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
