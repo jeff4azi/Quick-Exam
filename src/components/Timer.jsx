@@ -1,24 +1,38 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import clockIcon from "../images/clock.webp"
 
 const Timer = ({ totalTime, onTimeUp, onTick }) => {
   const [timeLeft, setTimeLeft] = useState(totalTime)
+  const intervalRef = useRef(null)
 
   useEffect(() => {
-    const interval = setInterval(() => {
+    // Clear any existing interval
+    if (intervalRef.current) clearInterval(intervalRef.current)
+
+    intervalRef.current = setInterval(() => {
       setTimeLeft(prev => {
-        if (prev <= 0) {
-          clearInterval(interval)
-          onTimeUp(0)
-          return 0
-        }
-        onTick(prev - 1)
-        return prev - 1
+        const newTime = prev - 1
+
+        // Don't call onTick here inside setState callback
+        return newTime
       })
     }, 1000)
 
-    return () => clearInterval(interval)
-  }, [onTimeUp, onTick])
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+    }
+  }, [totalTime]) // Remove onTimeUp and onTick from dependencies
+
+  // Separate useEffect to handle timeLeft changes
+  useEffect(() => {
+    if (timeLeft <= 0) {
+      if (intervalRef.current) clearInterval(intervalRef.current)
+      onTimeUp(0)
+    } else {
+      // Call onTick here, outside of setState callback
+      onTick(timeLeft)
+    }
+  }, [timeLeft, onTimeUp, onTick])
 
   const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0")
   const seconds = String(timeLeft % 60).padStart(2, "0")
