@@ -15,6 +15,10 @@ import BookMark from "./pages/BookMark";
 import ReactGA from "react-ga4";
 import ProtectedRoute from "./components/ProtectedRoutes";
 
+import "katex/dist/katex.min.css";
+
+import TestKaTeX from "./pages/test-katex.jsx";
+
 function App() {
   function getRandom30(arr) {
     const copy = [...arr];
@@ -164,6 +168,8 @@ function App() {
         <Route path="/about-page" element={<AboutPage {...props} />} />
         <Route path="/choose-course" element={<ChooseCourseScreen {...props} />} />
         <Route path="/history" element={<HistoryScreen {...props} />} />
+        // In App.jsx, add a test route
+        <Route path="/test-katex" element={<TestKaTeX />} />
       </Routes>
       <SpeedInsights />
     </Router>

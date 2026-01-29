@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { RenderMathText } from "../utils/RenderMathText"
 
 const ReviewAnswers = ({ questions, answers }) => {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ const ReviewAnswers = ({ questions, answers }) => {
             >
               {/* Question */}
               <div className="font-semibold text-gray-800 dark:text-gray-200 text-lg mb-4">
-                {index + 1}. {question.question}
+                {index + 1}. <RenderMathText text={question.question} />
               </div>
 
               {/* User Answer */}
@@ -76,10 +77,9 @@ const ReviewAnswers = ({ questions, answers }) => {
                 </span>
                 {isAnswered ? (
                   <span
-                    className={`font-medium ${isCorrect ? "text-green-600" : "text-red-500"
-                      }`}
+                    className={`font-medium ${isCorrect ? "text-green-600" : "text-red-500"}`}
                   >
-                    {userAnswer}
+                    <RenderMathText text={userAnswer} />
                   </span>
                 ) : (
                   <span className="text-gray-400 dark:text-gray-500 italic">Not answered</span>
@@ -92,7 +92,9 @@ const ReviewAnswers = ({ questions, answers }) => {
                   <span className="font-medium text-gray-700 dark:text-gray-200">
                     Correct answer:
                   </span>
-                  <span className="text-green-600 font-semibold">{correctAnswer}</span>
+                  <span className="text-green-600 font-semibold">
+                   <RenderMathText text={correctAnswer} />
+                  </span>
                 </div>
               )}
 
@@ -103,7 +105,7 @@ const ReviewAnswers = ({ questions, answers }) => {
                     Explanation
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">
-                    {question.reason}
+                    <RenderMathText text={question.reason} />
                   </div>
                 </div>
               )}

@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaTrash } from "react-icons/fa";
+import { RenderMathText } from "../utils/RenderMathText"
 
 const BookMark = ({ bookmarks, courses, setBookmarks }) => {
   const navigate = useNavigate();
@@ -112,13 +113,15 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
 
             {/* Question */}
             <div className="font-semibold text-gray-800 dark:text-gray-100 text-lg mb-3">
-              {index + 1}. {question.question}
+              {index + 1}. <RenderMathText text={question.question} />
             </div>
 
             {/* Answer */}
             <div className="mb-2 flex items-center gap-2">
               <span className="font-medium text-gray-700 dark:text-gray-200">Answer:</span>
-              <span className="font-semibold text-blue-600 dark:text-blue-400">{question.correct}</span>
+              <span className="font-semibold text-blue-600 dark:text-blue-400">
+                <RenderMathText text={question.correct} />
+              </span>
             </div>
 
             {/* Reason */}
@@ -128,7 +131,7 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
                   Reason
                 </div>
                 <div className="text-sm text-gray-600 dark:text-gray-300">
-                  {question.reason}
+                  <RenderMathText text={question.reason} />
                 </div>
               </div>
             )}

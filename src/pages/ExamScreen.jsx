@@ -2,13 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 
+import {RenderMathText} from "../utils/RenderMathText"
 import ProgressBar from "../components/ProgressBar";
 import Timer from "../components/Timer";
 
 import ReactGA from "react-ga4";
 
-const calculateTotalTime = (questionCount) => {
-  const timePer10 = 3.33 * 60; // minutes per 10 questions
+const calculateTotalTime = (questionCount, isMath) => {
+  const timePer10 = isMath ? 6 * 60 : 3.33 * 60;
   return Math.ceil((questionCount / 10) * timePer10);
 };
 
@@ -30,11 +31,15 @@ const ExamScreen = ({
   bookmarks,
   setBookmarks
 }) => {
+  const isMathCourse = selectedCourse?.id === "MTH101";
   const navigate = useNavigate();
   const totalQuestions = questions.length;
 
+  // 1️⃣ Calculate total time once
+  const initialTotalTime = calculateTotalTime(totalQuestions, isMathCourse);
+
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(calculateTotalTime(totalQuestions));
+  const [timeLeft, setTimeLeft] = useState(initialTotalTime); // track countdown
   const [shuffledOptions, setShuffledOptions] = useState([]);
   const [hasSaved, setHasSaved] = useState(false);
   const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false);
@@ -50,9 +55,10 @@ const ExamScreen = ({
     }
   }, [currentQuestion]);
 
-  useEffect(() => {
-    setTimeLeft(calculateTotalTime(totalQuestions));
-  }, [questions, totalQuestions]);
+  // ✅ Remove this effect that reset timeLeft unnecessarily
+  // useEffect(() => {
+  //   setTimeLeft(calculateTotalTime(totalQuestions, isMathCourse));
+  // }, [questions, totalQuestions, isMathCourse]);
 
   const handleBookmarkClick = () => {
     setBookmarks(prev => {
@@ -94,7 +100,6 @@ const ExamScreen = ({
     localStorage.setItem("examHistory", JSON.stringify([...existingHistory, newResult]));
     setHasSaved(true);
 
-    // GA tracking
     ReactGA.event({
       category: "Exam",
       action: `Submit Exam ${selectedCourse.name}`,
@@ -107,13 +112,16 @@ const ExamScreen = ({
     saveResult();
     onSubmit();
     setSubmitOverlayOpen(false);
-    navigate("/results", { state: { timeTaken: calculateTotalTime(totalQuestions) - timeLeft } });
+    navigate("/results", { state: { timeTaken: initialTotalTime - timeLeft } });
   };
 
-  const handleTimeUp = (finalTime) => {
+  const handleTimeUp = () => {
+    console.log("Time up! Final time:", timeLeft);
     saveResult();
     onSubmit();
-    navigate("/results", { state: { timeTaken: calculateTotalTime(totalQuestions) - finalTime } });
+    navigate("/results", {
+      state: { timeTaken: initialTotalTime }
+    });
   };
 
   const nextQuestion = () => {
@@ -153,7 +161,7 @@ const ExamScreen = ({
         </div>
 
         <Timer
-          totalTime={calculateTotalTime(totalQuestions)}
+          totalTime={calculateTotalTime(totalQuestions, isMathCourse)}
           onTick={setTimeLeft}
           onTimeUp={handleTimeUp}
         />
@@ -183,7 +191,7 @@ const ExamScreen = ({
         </div>
 
         <div className="text-xl font-medium mb-7 text-slate-900 dark:text-slate-100">
-          {currentQuestion.question}
+          <RenderMathText text={currentQuestion.question} />
         </div>
 
         <div className="space-y-4">
@@ -194,7 +202,9 @@ const ExamScreen = ({
               className={`py-3 px-4 w-full rounded-xl ring-2 transition active:scale-95 hover:ring-[#2563EB]/40 duration-200
                 ${selectedOption === option ? "ring-[#2563EB]/60 dark:ring-[#60A5FA]/80" : "ring-gray-300 dark:ring-gray-600"}`}
             >
-              <span className="text-lg font-medium text-slate-900 dark:text-slate-100">{option}</span>
+              <span className="text-lg font-medium text-slate-900 dark:text-slate-100">
+                <RenderMathText text={option} />
+              </span>
             </button>
           ))}
         </div>

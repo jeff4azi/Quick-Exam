@@ -6,33 +6,30 @@ const Timer = ({ totalTime, onTimeUp, onTick }) => {
   const intervalRef = useRef(null)
 
   useEffect(() => {
-    // Clear any existing interval
+    setTimeLeft(totalTime) // reset when totalTime changes
+  }, [totalTime])
+
+  useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current)
 
     intervalRef.current = setInterval(() => {
       setTimeLeft(prev => {
         const newTime = prev - 1
 
-        // Don't call onTick here inside setState callback
+        if (onTick) onTick(newTime)
+
+        if (newTime <= 0) {
+          clearInterval(intervalRef.current)
+          if (onTimeUp) onTimeUp(0)
+          return 0
+        }
+
         return newTime
       })
     }, 1000)
 
-    return () => {
-      if (intervalRef.current) clearInterval(intervalRef.current)
-    }
-  }, [totalTime]) // Remove onTimeUp and onTick from dependencies
-
-  // Separate useEffect to handle timeLeft changes
-  useEffect(() => {
-    if (timeLeft <= 0) {
-      if (intervalRef.current) clearInterval(intervalRef.current)
-      onTimeUp(0)
-    } else {
-      // Call onTick here, outside of setState callback
-      onTick(timeLeft)
-    }
-  }, [timeLeft, onTimeUp, onTick])
+    return () => clearInterval(intervalRef.current)
+  }, [onTimeUp, onTick])
 
   const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0")
   const seconds = String(timeLeft % 60).padStart(2, "0")

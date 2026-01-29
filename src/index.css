@@ -10,3 +10,25 @@ body {
   /* Dark mode override */
   @apply dark:text-gray-100 dark:bg-gray-900;
 }
+
+/* 1. Fix the "Red" color issue and force inheritance */
+.katex {
+  /* This ensures math matches your Tailwind text colors */
+  color: inherit !important;
+}
+
+/* 2. Remove the red color specifically from parse errors */
+.katex-error {
+  color: inherit !important;
+  background-color: transparent !important;
+}
+
+/* 3. Handle Dark Mode specifically for KaTeX */
+.dark .katex {
+  @apply text-gray-100;
+}
+
+/* 4. Ensure proper spacing for your math blocks */
+.katex-display {
+  @apply my-4 overflow-x-auto overflow-y-hidden;
+}
