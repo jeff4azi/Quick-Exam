@@ -7,6 +7,7 @@ import { vos117Questions } from "./courses/vos-117questions";
 import { cos101Questions } from "./courses/cos-101questions";
 import { math101Questions } from "./courses/math-101questions";
 import { bed112Questions } from "./courses/bed-112questions";
+import { soc105Questions } from "./courses/soc-105questions";
 import { edu101revisionQuestions } from "./courses/edu101revisionQuestions";
 
 const courses = [
@@ -29,7 +30,7 @@ const courses = [
   {
     id: "GNS113",
     name: "GNS 113",
-    title: "USE OF LIBRARY AND STUDIES SKILLS",
+    title: "USE OF LIBRARY AND STUDY SKILLS",
     group: "general",
     colleges: "all",
     questions: gns113Questions,
@@ -65,6 +66,14 @@ const courses = [
     group: "departmental",
     colleges: ["COVTED"], // scalable
     questions: bed112Questions,
+  },
+  {
+    id: "SOC105",
+    name: "SOC 105",
+    title: "Element of scientific thought",
+    group: "departmental",
+    colleges: ["COVTED"], // scalable
+    questions: soc105Questions,
   },
   {
     id: "VOS116",
