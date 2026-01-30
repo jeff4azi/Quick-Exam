@@ -1,4 +1,4 @@
-export const soc105Questions = [/* 
+export const soc105Questions = [ 
   {
     id: "soc105-001",
     question:
@@ -644,5 +644,5 @@ export const soc105Questions = [/*
       "By enabling researchers to question assumptions about society, institutions, and human behavior",
     reason:
       "Philosophical perspectives allow social scientists to analyze values, power, and social justice beyond mere description.",
-  }, */
+  },
 ];
