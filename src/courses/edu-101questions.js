@@ -2136,8 +2136,8 @@ export const edu101Questions = [
     question:
       "He is enthusiastic to learn, can handle abstractions and always ready to take up challenges. The above perfectly describes ___________.",
     options: [
-      "an emotional learner.",
-      "a well-motivated learner.",
+      "an emotional learner",
+      "a well-motivated learner",
       "a high potential learner",
       "a learner with level of cognition",
     ],
