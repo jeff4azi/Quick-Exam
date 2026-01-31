@@ -8,6 +8,7 @@ import { cos101Questions } from "./courses/cos-101questions";
 import { math101Questions } from "./courses/math-101questions";
 import { bed112Questions } from "./courses/bed-112questions";
 import { soc105Questions } from "./courses/soc-105questions";
+import { csc115Questions } from "./courses/csc-115questions";
 import { edu101revisionQuestions } from "./courses/edu101revisionQuestions";
 
 const courses = [
@@ -74,6 +75,14 @@ const courses = [
     group: "departmental",
     colleges: ["COVTED"], // scalable
     questions: soc105Questions,
+  },
+  {
+    id: "CSC115",
+    name: "CSC 115",
+    title: "COMPUTER HARDWARE AND MAINTENANCE",
+    group: "departmental",
+    colleges: ["COSIT"], // scalable
+    questions: csc115Questions,
   },
   {
     id: "VOS116",
