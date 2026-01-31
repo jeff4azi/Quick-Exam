@@ -1696,4 +1696,67 @@ export const csc115Questions = [
     reason:
       "In P2P networks, peers are equally privileged and share workloads.",
   },
+  {
+    id: "csc115-139",
+    question: "Which type of maintenance is performed to prevent hardware failures before they occur?",
+    options: ["Corrective maintenance", "Preventive maintenance", "Predictive maintenance", "Emergency maintenance"],
+    correct: "Preventive maintenance",
+    reason: "Preventive maintenance is done proactively to avoid hardware failures."
+  },
+  {
+    id: "csc115-140",
+    question: "Corrective maintenance is primarily performed when:",
+    options: ["Hardware is malfunctioning", "Hardware is operating normally", "New hardware is installed", "Software updates are applied"],
+    correct: "Hardware is malfunctioning",
+    reason: "Corrective maintenance addresses hardware faults after they occur."
+  },
+  {
+    id: "csc115-141",
+    question: "Predictive maintenance aims to:",
+    options: ["Repair broken hardware", "Predict potential hardware failures before they happen", "Upgrade software only", "Clean hardware components weekly"],
+    correct: "Predict potential hardware failures before they happen",
+    reason: "Predictive maintenance uses monitoring to anticipate failures."
+  },
+  {
+    id: "csc115-142",
+    question: "Which tools are commonly used for computer hardware maintenance?",
+    options: ["Anti-static wrist strap, screwdrivers, compressed air", "Paintbrush, hammer, glue", "Measuring tape, ruler, calipers", "Flash drives, CD-ROMs, cloud storage"],
+    correct: "Anti-static wrist strap, screwdrivers, compressed air",
+    reason: "These are standard tools for safely maintaining and cleaning computer hardware."
+  },
+  {
+    id: "csc115-143",
+    question: "Why is it important to use an anti-static wrist strap when handling computer components?",
+    options: ["To increase processing speed", "To prevent electrostatic discharge that can damage components", "To avoid hardware overheating", "To enhance network connectivity"],
+    correct: "To prevent electrostatic discharge that can damage components",
+    reason: "Static electricity can destroy sensitive hardware parts, and wrist straps prevent this."
+  },
+  {
+    id: "csc115-144",
+    question: "Which environmental factor is critical to maintaining computer hardware?",
+    options: ["Temperature and humidity", "Software version", "Keyboard layout", "Internet speed"],
+    correct: "Temperature and humidity",
+    reason: "High temperature or humidity can damage hardware; proper environmental control is essential."
+  },
+  {
+    id: "csc115-145",
+    question: "What is a common sign that a hardware component might be failing?",
+    options: ["Regular software updates", "Unexpected shutdowns, strange noises, or performance slowdown", "High internet bandwidth", "Keyboard shortcuts not working"],
+    correct: "Unexpected shutdowns, strange noises, or performance slowdown",
+    reason: "These symptoms often indicate hardware issues."
+  },
+  {
+    id: "csc115-146",
+    question: "Which practice ensures the safe backup and storage of computer data?",
+    options: ["Keeping data only in RAM", "Using cloud storage and external drives regularly", "Storing data in temporary folders", "Turning off the monitor frequently"],
+    correct: "Using cloud storage and external drives regularly",
+    reason: "Regular backups on reliable media prevent data loss during hardware failures."
+  },
+  {
+    id: "csc115-147",
+    question: "Why is regular cleaning of dust from computer hardware important?",
+    options: ["Improves internet speed", "Prevents overheating and prolongs component life", "Increases software functionality", "Reduces the size of files"],
+    correct: "Prevents overheating and prolongs component life",
+    reason: "Dust can block airflow and cause overheating, leading to hardware damage."
+  }
 ];
