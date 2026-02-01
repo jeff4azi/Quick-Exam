@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { RenderMathText } from "../utils/RenderMathText"
 
-const ReviewAnswers = ({ questions, answers }) => {
+const ReviewAnswers = ({ questions, answers, selectedCourse }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
 
@@ -67,7 +67,7 @@ const ReviewAnswers = ({ questions, answers }) => {
             >
               {/* Question */}
               <div className="font-semibold text-gray-800 dark:text-gray-200 text-lg mb-4">
-                {index + 1}. <RenderMathText text={question.question} />
+                {index + 1}. <RenderMathText text={question.question} courseId={selectedCourse.id} />
               </div>
 
               {/* User Answer */}
@@ -93,7 +93,7 @@ const ReviewAnswers = ({ questions, answers }) => {
                     Correct answer:
                   </span>
                   <span className="text-green-600 font-semibold">
-                   <RenderMathText text={correctAnswer} />
+                    <RenderMathText text={correctAnswer} courseId={selectedCourse.id} />
                   </span>
                 </div>
               )}
@@ -105,7 +105,7 @@ const ReviewAnswers = ({ questions, answers }) => {
                     Explanation
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-300">
-                    <RenderMathText text={question.reason} />
+                    <RenderMathText text={question.reason} courseId={selectedCourse.id} />
                   </div>
                 </div>
               )}
