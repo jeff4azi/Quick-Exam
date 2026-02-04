@@ -7,6 +7,8 @@ import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
 import AboutPage from "./pages/AboutPage";
 import ChooseCourseScreen from "./pages/ChooseCourseScreen";
+import OnboardingScreen from "./pages/OnboardingScreen";
+import AuthGate from "./pages/AuthGate";
 import HistoryScreen from "./pages/HistoryScreen.jsx"
 import courses from "./courses.js"
 
@@ -133,46 +135,92 @@ function App() {
 
   return (
     <Router>
-      <RouteChangeTracker />
-      <Routes>
-        <Route path="/" element={<StartExam {...props} />} />
+  <RouteChangeTracker />
+  <Routes>
+    {/* 🌍 Public routes */}
+    <Route path="/auth" element={<AuthGate />} />
+    <Route path="/onboarding" element={<OnboardingScreen />} />
+    <Route path="/test-katex" element={<TestKaTeX />} />
 
-        <Route
-          path="/exam"
-          element={
-            <ProtectedRoute stateCheck={questions.length > 0 && selectedCourse}>
-              <ExamScreen {...props} />
-            </ProtectedRoute>
-          }
-        />
+    {/* 🔐 Auth-only routes */}
+    <Route
+      path="/"
+      element={
+        <ProtectedRoute>
+          <StartExam {...props} />
+        </ProtectedRoute>
+      }
+    />
 
-        <Route
-          path="/results"
-          element={
-            <ProtectedRoute stateCheck={results.answered > 0}>
-              <ResultScreen {...props} />
-            </ProtectedRoute>
-          }
-        />
+    <Route
+      path="/choose-course"
+      element={
+        <ProtectedRoute>
+          <ChooseCourseScreen {...props} />
+        </ProtectedRoute>
+      }
+    />
 
-        <Route
-          path="/review-answers"
-          element={
-            <ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}>
-              <ReviewAnswers {...props} />
-            </ProtectedRoute>
-          }
-        />
+    <Route
+      path="/bookmarks"
+      element={
+        <ProtectedRoute>
+          <BookMark {...props} />
+        </ProtectedRoute>
+      }
+    />
 
-        <Route path="/bookmarks" element={<BookMark {...props} />} />
-        <Route path="/about-page" element={<AboutPage {...props} />} />
-        <Route path="/choose-course" element={<ChooseCourseScreen {...props} />} />
-        <Route path="/history" element={<HistoryScreen {...props} />} />
-        // In App.jsx, add a test route
-        <Route path="/test-katex" element={<TestKaTeX />} />
-      </Routes>
-      <SpeedInsights />
-    </Router>
+    <Route
+      path="/history"
+      element={
+        <ProtectedRoute>
+          <HistoryScreen {...props} />
+        </ProtectedRoute>
+      }
+    />
+
+    <Route
+      path="/about-page"
+      element={
+        <ProtectedRoute>
+          <AboutPage {...props} />
+        </ProtectedRoute>
+      }
+    />
+
+    {/* 🧠 Auth + flow-protected routes */}
+    <Route
+      path="/exam"
+      element={
+        <ProtectedRoute stateCheck={questions.length > 0 && selectedCourse}>
+          <ExamScreen {...props} />
+        </ProtectedRoute>
+      }
+    />
+
+    <Route
+      path="/results"
+      element={
+        <ProtectedRoute stateCheck={results.answered > 0}>
+          <ResultScreen {...props} />
+        </ProtectedRoute>
+      }
+    />
+
+    <Route
+      path="/review-answers"
+      element={
+        <ProtectedRoute
+          stateCheck={answers.length > 0 && questions.length > 0}
+        >
+          <ReviewAnswers {...props} />
+        </ProtectedRoute>
+      }
+    />
+  </Routes>
+
+  <SpeedInsights />
+</Router>
   );
 }
 

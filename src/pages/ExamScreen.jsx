@@ -1,26 +1,24 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import ConfirmOverlay from "../components/ConfirmOverlay";
-
-import {RenderMathText} from "../utils/RenderMathText"
-import ProgressBar from "../components/ProgressBar";
-import Timer from "../components/Timer";
-
-import ReactGA from "react-ga4";
+import { useState, useEffect } from "react"
+import { useNavigate } from "react-router-dom"
+import ConfirmOverlay from "../components/ConfirmOverlay"
+import { RenderMathText } from "../utils/RenderMathText"
+import ProgressBar from "../components/ProgressBar"
+import Timer from "../components/Timer"
+import ReactGA from "react-ga4"
 
 const calculateTotalTime = (questionCount, isMath) => {
-  const timePer10 = isMath ? 6 * 60 : 3.33 * 60;
-  return Math.ceil((questionCount / 10) * timePer10);
-};
+  const timePer10 = isMath ? 6 * 60 : 3.33 * 60
+  return Math.ceil((questionCount / 10) * timePer10)
+}
 
 const shuffleArray = (array) => {
-  const arr = [...array];
+  const arr = [...array]
   for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]];
+    const j = Math.floor(Math.random() * (i + 1))
+    [arr[i], arr[j]] = [arr[j], arr[i]]
   }
-  return arr;
-};
+  return arr
+}
 
 const ExamScreen = ({
   answers,
@@ -31,58 +29,54 @@ const ExamScreen = ({
   bookmarks,
   setBookmarks
 }) => {
-  const isMathCourse = selectedCourse?.id === "MTH101";
-  const navigate = useNavigate();
-  const totalQuestions = questions.length;
+  const isMathCourse = selectedCourse?.id === "MTH101"
+  const navigate = useNavigate()
+  const totalQuestions = questions.length
 
-  // 1️⃣ Calculate total time once
-  const initialTotalTime = calculateTotalTime(totalQuestions, isMathCourse);
+  // Calculate total time once
+  const initialTotalTime = calculateTotalTime(totalQuestions, isMathCourse)
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(initialTotalTime); // track countdown
-  const [shuffledOptions, setShuffledOptions] = useState([]);
-  const [hasSaved, setHasSaved] = useState(false);
-  const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false);
-  const [isExitOverlayOpen, setExitOverlayOpen] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0)
+  const [timeLeft, setTimeLeft] = useState(initialTotalTime)
+  const [timeTaken, setTimeTaken] = useState(0) // NEW: Track actual time taken
+  const [shuffledOptions, setShuffledOptions] = useState([])
+  const [hasSaved, setHasSaved] = useState(false)
+  const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false)
+  const [isExitOverlayOpen, setExitOverlayOpen] = useState(false)
 
-  const currentQuestion = questions[currentIndex];
-  const selectedOption = answers[currentIndex];
-  const isBookmarked = bookmarks.includes(currentQuestion?.id);
+  const currentQuestion = questions[currentIndex]
+  const selectedOption = answers[currentIndex]
+  const isBookmarked = bookmarks.includes(currentQuestion?.id)
 
   useEffect(() => {
     if (currentQuestion) {
-      setShuffledOptions(shuffleArray(currentQuestion.options));
+      setShuffledOptions(shuffleArray(currentQuestion.options))
     }
-  }, [currentQuestion]);
-
-  // ✅ Remove this effect that reset timeLeft unnecessarily
-  // useEffect(() => {
-  //   setTimeLeft(calculateTotalTime(totalQuestions, isMathCourse));
-  // }, [questions, totalQuestions, isMathCourse]);
+  }, [currentQuestion])
 
   const handleBookmarkClick = () => {
     setBookmarks(prev => {
       const updated = prev.includes(currentQuestion.id)
         ? prev.filter(id => id !== currentQuestion.id)
-        : [...prev, currentQuestion.id];
-      localStorage.setItem("bookmarkedQuestions", JSON.stringify(updated));
-      return updated;
-    });
-  };
+        : [...prev, currentQuestion.id]
+      localStorage.setItem("bookmarkedQuestions", JSON.stringify(updated))
+      return updated
+    })
+  }
 
   const onOptionClick = (option) => {
-    const newAnswers = [...answers];
-    newAnswers[currentIndex] = option;
-    setAnswers(newAnswers);
-  };
+    const newAnswers = [...answers]
+    newAnswers[currentIndex] = option
+    setAnswers(newAnswers)
+  }
 
   const calculateScore = () =>
-    questions.reduce((acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc), 0);
+    questions.reduce((acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc), 0)
 
   const saveResult = () => {
-    if (hasSaved) return;
+    if (hasSaved) return
 
-    const correctCount = calculateScore();
+    const correctCount = calculateScore()
 
     const newResult = {
       id: Date.now(),
@@ -93,52 +87,55 @@ const ExamScreen = ({
         year: "numeric"
       }),
       score: correctCount,
-      total: totalQuestions
-    };
+      total: totalQuestions,
+      timeTaken: timeTaken // Use tracked time
+    }
 
-    const existingHistory = JSON.parse(localStorage.getItem("examHistory")) || [];
-    localStorage.setItem("examHistory", JSON.stringify([...existingHistory, newResult]));
-    setHasSaved(true);
+    const existingHistory = JSON.parse(localStorage.getItem("examHistory")) || []
+    localStorage.setItem("examHistory", JSON.stringify([...existingHistory, newResult]))
+    setHasSaved(true)
 
     ReactGA.event({
       category: "Exam",
       action: `Submit Exam ${selectedCourse.name}`,
       label: selectedCourse.id,
       value: correctCount
-    });
-  };
+    })
+  }
 
   const handleSubmit = () => {
-    saveResult();
-    onSubmit();
-    setSubmitOverlayOpen(false);
-    navigate("/results", { state: { timeTaken: initialTotalTime - timeLeft } });
-  };
+    // Ensure we have the latest time before saving
+    setTimeTaken(initialTotalTime - timeLeft)
+    saveResult()
+    onSubmit()
+    setSubmitOverlayOpen(false)
+    navigate("/results")
+  }
 
   const handleTimeUp = () => {
-    console.log("Time up! Final time:", timeLeft);
-    saveResult();
-    onSubmit();
-    navigate("/results", {
-      state: { timeTaken: initialTotalTime }
-    });
-  };
+    console.log("Time up! Final time:", timeLeft)
+    // When time is up, set full time as taken
+    setTimeTaken(initialTotalTime)
+    saveResult()
+    onSubmit()
+    navigate("/results")
+  }
 
   const nextQuestion = () => {
-    if (currentIndex < totalQuestions - 1) setCurrentIndex(prev => prev + 1);
-    else setSubmitOverlayOpen(true);
-  };
+    if (currentIndex < totalQuestions - 1) setCurrentIndex(prev => prev + 1)
+    else setSubmitOverlayOpen(true)
+  }
 
   const prevQuestion = () => {
-    if (currentIndex > 0) setCurrentIndex(prev => prev - 1);
-  };
+    if (currentIndex > 0) setCurrentIndex(prev => prev - 1)
+  }
 
   const handleExit = () => {
-    setExitOverlayOpen(false);
-    navigate("/");
-  };
+    setExitOverlayOpen(false)
+    navigate("/")
+  }
 
-  const progress = ((currentIndex + 1) / totalQuestions) * 100;
+  const progress = ((currentIndex + 1) / totalQuestions) * 100
 
   return (
     <div className="dark:bg-slate-900 relative">
@@ -161,8 +158,12 @@ const ExamScreen = ({
         </div>
 
         <Timer
-          totalTime={calculateTotalTime(totalQuestions, isMathCourse)}
-          onTick={setTimeLeft}
+          totalTime={initialTotalTime}
+          onTick={(newTimeLeft) => {
+            setTimeLeft(newTimeLeft)
+            // Calculate and store actual time taken on each tick
+            setTimeTaken(initialTotalTime - newTimeLeft)
+          }}
           onTimeUp={handleTimeUp}
         />
       </div>
@@ -249,7 +250,7 @@ const ExamScreen = ({
         danger={true}
       />
     </div>
-  );
-};
+  )
+}
 
-export default ExamScreen;
+export default ExamScreen

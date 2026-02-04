@@ -42,7 +42,7 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
 
       {/* 1. Main Content Layer */}
       <div className="flex flex-col items-center animate-in fade-in zoom-in duration-700">
-        <div className="mb-6"><Logo /></div>
+        <div className="mb-16"><Logo /></div>
         <h1 className="text-5xl font-black text-center tracking-tight text-slate-900 dark:text-white mb-2">
           Quiz Bolt
         </h1>

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import WhatsAppCard from "../components/WhatsAppCard"
 import { useEffect } from "react"
 import ReactGA from "react-ga4"
@@ -6,24 +6,58 @@ import WhatsappFollowButton from "../images/whatsapp-follow"
 
 const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
   const navigate = useNavigate()
-  const formatNum = (num) => String(num).padStart(2, '0');
+  const formatNum = (num) => String(num).padStart(2, '0')
 
-  const { state } = useLocation()
-  const timeTaken = state?.timeTaken ?? 0
-  const minutes = String(Math.floor(timeTaken / 60)).padStart(2, "0")
-  const seconds = String(timeTaken % 60).padStart(2, "0")
+  // Get the latest result from localStorage for the current course
+  const getLatestResult = () => {
+    const history = JSON.parse(localStorage.getItem("examHistory")) || []
+    if (history.length === 0) return null
 
-  const scorePercentage = Math.round((results.correct / questions.length) * 100);
-  const strokeDasharray = 2 * Math.PI * 90; // Circumference for r=90
-  const strokeDashoffset = strokeDasharray - (scorePercentage / 100) * strokeDasharray;
+    // Find the result for the current course
+    const courseResults = history.filter(r => r.course === selectedCourse.name)
+    return courseResults.length > 0 ? courseResults[courseResults.length - 1] : null
+  }
 
+  const latestResult = getLatestResult()
+
+  // Move useEffect BEFORE any conditional returns
   useEffect(() => {
     ReactGA.event({
       category: "Exam",
       action: "View Results",
       label: selectedCourse.id,
-    });
-  }, [selectedCourse.id]);
+    })
+  }, [selectedCourse.id])
+
+  // Handle case where no results exist
+  if (!latestResult) {
+    return (
+      <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
+            No Exam Results Found
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            Please take an exam first to see results.
+          </p>
+          <button
+            onClick={() => navigate("/")}
+            className="bg-blue-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors"
+          >
+            Go to Home
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  const timeTaken = latestResult?.timeTaken ?? 0
+  const minutes = String(Math.floor(timeTaken / 60)).padStart(2, "0")
+  const seconds = String(timeTaken % 60).padStart(2, "0")
+
+  const scorePercentage = Math.round((results.correct / questions.length) * 100)
+  const strokeDasharray = 2 * Math.PI * 90
+  const strokeDashoffset = strokeDasharray - (scorePercentage / 100) * strokeDasharray
 
   return (
     <div className='min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300'>
@@ -89,8 +123,8 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
           label="Retake"
           color="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
           onClick={() => {
-            setAnswers([]);
-            navigate("/exam");
+            setAnswers([])
+            navigate("/exam")
           }}
           icon={<path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />}
         />
@@ -98,13 +132,12 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
           label="Review"
           color="bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
           onClick={() => navigate("/review-answers")}
-          /* Wrap multiple paths in a fragment <> */
-          icon={(
+          icon={
             <>
               <path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
               <path d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
             </>
-          )}
+          }
         />
 
         <ActionButton
