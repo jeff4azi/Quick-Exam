@@ -14,7 +14,7 @@ const calculateTotalTime = (questionCount, isMath) => {
 const shuffleArray = (array) => {
   const arr = [...array]
   for (let i = arr.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
+    const j = Math.floor(Math.random() * (i + 1));
     [arr[i], arr[j]] = [arr[j], arr[i]]
   }
   return arr
@@ -38,7 +38,7 @@ const ExamScreen = ({
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [timeLeft, setTimeLeft] = useState(initialTotalTime)
-  const [timeTaken, setTimeTaken] = useState(0) // NEW: Track actual time taken
+  const [_, setTimeTaken] = useState(0) // NEW: Track actual time taken
   const [shuffledOptions, setShuffledOptions] = useState([])
   const [hasSaved, setHasSaved] = useState(false)
   const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false)
@@ -73,7 +73,7 @@ const ExamScreen = ({
   const calculateScore = () =>
     questions.reduce((acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc), 0)
 
-  const saveResult = () => {
+  const saveResult = (finalTime) => {
     if (hasSaved) return
 
     const correctCount = calculateScore()
@@ -88,7 +88,7 @@ const ExamScreen = ({
       }),
       score: correctCount,
       total: totalQuestions,
-      timeTaken: timeTaken // Use tracked time
+      timeTaken: finalTime // use passed value
     }
 
     const existingHistory = JSON.parse(localStorage.getItem("examHistory")) || []
@@ -104,9 +104,8 @@ const ExamScreen = ({
   }
 
   const handleSubmit = () => {
-    // Ensure we have the latest time before saving
-    setTimeTaken(initialTotalTime - timeLeft)
-    saveResult()
+    const finalTimeTaken = initialTotalTime - timeLeft
+    saveResult(finalTimeTaken)
     onSubmit()
     setSubmitOverlayOpen(false)
     navigate("/results")
@@ -114,9 +113,8 @@ const ExamScreen = ({
 
   const handleTimeUp = () => {
     console.log("Time up! Final time:", timeLeft)
-    // When time is up, set full time as taken
-    setTimeTaken(initialTotalTime)
-    saveResult()
+    const finalTimeTaken = initialTotalTime - timeLeft
+    saveResult(finalTimeTaken)
     onSubmit()
     navigate("/results")
   }
