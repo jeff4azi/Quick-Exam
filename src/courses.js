@@ -9,6 +9,7 @@ import { math101Questions } from "./courses/math-101questions";
 import { bed112Questions } from "./courses/bed-112questions";
 import { soc105Questions } from "./courses/soc-105questions";
 import { csc115Questions } from "./courses/csc-115questions";
+import { bed114Questions } from "./courses/bed-114questions";
 import { edu101revisionQuestions } from "./courses/edu101revisionQuestions";
 
 const courses = [
@@ -83,6 +84,14 @@ const courses = [
     group: "departmental",
     colleges: ["COSIT"], // scalable
     questions: csc115Questions,
+  },
+  {
+    id: "BED114",
+    name: "BED 114",
+    title: "introduction to accounting",
+    group: "departmental",
+    colleges: ["COSIT"], // scalable
+    questions: bed114Questions,
   },
   {
     id: "VOS116",

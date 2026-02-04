@@ -2,10 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiUser } from "react-icons/fi";
+import { supabase } from "../supabaseClient";
 
 const SignUpScreen = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -16,20 +20,35 @@ const SignUpScreen = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSignUp = (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault();
-    // Add your signup logic here (e.g., Firebase, Supabase, or API)
-    console.log("Creating account for:", formData);
-    navigate("/onboarding");
+    setLoading(true);
+    setError(null);
+
+    const { fullName, email, password } = formData;
+
+    try {
+      const { data, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: { data: { full_name: fullName } } // store full name in user metadata
+      });
+
+      if (signUpError) throw signUpError;
+
+      console.log("User signed up:", data);
+      navigate("/onboarding"); // navigate after successful signup
+    } catch (err) {
+      console.error("Sign up error:", err.message);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
-
-      {/* Main Card Container */}
       <div className="w-full max-w-sm flex flex-col items-center animate-in fade-in zoom-in duration-700">
-
-        {/* Header Section */}
         <div className="mb-10 flex flex-col items-center">
           <div className="mb-6 scale-110">
             <Logo className={"h-36 w-36"} />
@@ -42,10 +61,8 @@ const SignUpScreen = () => {
           </p>
         </div>
 
-        {/* Form Section */}
         <form onSubmit={handleSignUp} className="w-full space-y-4">
 
-          {/* Full Name Input */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <FiUser className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
@@ -61,7 +78,6 @@ const SignUpScreen = () => {
             />
           </div>
 
-          {/* Email Input */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <FiMail className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
@@ -77,7 +93,6 @@ const SignUpScreen = () => {
             />
           </div>
 
-          {/* Password Input */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <FiLock className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
@@ -100,21 +115,22 @@ const SignUpScreen = () => {
             </button>
           </div>
 
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
           <p className="text-[11px] text-slate-500 dark:text-slate-400 px-2 leading-relaxed">
             By signing up, you agree to our <span className="text-blue-600 font-bold">Terms</span> and <span className="text-blue-600 font-bold">Privacy Policy</span>.
           </p>
 
-          {/* Primary Sign Up Button */}
           <button
             type="submit"
+            disabled={loading}
             className="w-full bg-blue-600 dark:bg-blue-700 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all hover:-translate-y-1 active:scale-95 active:translate-y-0 flex items-center justify-center gap-2 group mt-4"
           >
-            <span>Create Account</span>
+            <span>{loading ? "Creating..." : "Create Account"}</span>
             <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
           </button>
         </form>
 
-        {/* Login Footer */}
         <p className="mt-8 text-slate-500 dark:text-slate-400 font-medium text-sm">
           Already have an account?{" "}
           <button
@@ -124,7 +140,6 @@ const SignUpScreen = () => {
             Sign In
           </button>
         </p>
-
       </div>
     </div>
   );
