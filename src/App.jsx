@@ -8,7 +8,8 @@ import ResultScreen from "./pages/ResultScreen";
 import AboutPage from "./pages/AboutPage";
 import ChooseCourseScreen from "./pages/ChooseCourseScreen";
 import OnboardingScreen from "./pages/OnboardingScreen";
-import AuthGate from "./pages/AuthGate";
+import Login from "./pages/Login";
+import SignUp from "./pages/SignUp";
 import HistoryScreen from "./pages/HistoryScreen.jsx"
 import courses from "./courses.js"
 
@@ -138,7 +139,8 @@ function App() {
   <RouteChangeTracker />
   <Routes>
     {/* 🌍 Public routes */}
-    <Route path="/auth" element={<AuthGate />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/signup" element={<SignUp />} />
     <Route path="/onboarding" element={<OnboardingScreen />} />
     <Route path="/test-katex" element={<TestKaTeX />} />
 

@@ -5,7 +5,7 @@ const ProtectedRoute = ({ children, stateCheck = true }) => {
 
   // 🔐 Auth check FIRST
   if (!isAuthenticated) {
-    return <Navigate to="/auth" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   // 🧠 State check SECOND
