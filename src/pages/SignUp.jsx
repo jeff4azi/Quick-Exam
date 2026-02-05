@@ -13,7 +13,8 @@ const SignUpScreen = () => {
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
-    password: ""
+    password: "",
+    confirmPassword: "" // Added field
   });
 
   const handleChange = (e) => {
@@ -25,7 +26,14 @@ const SignUpScreen = () => {
     setLoading(true);
     setError(null);
 
-    const { fullName, email, password } = formData;
+    const { fullName, email, password, confirmPassword } = formData;
+
+    // Industry Standard: Client-side validation check
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      setLoading(false);
+      return;
+    }
 
     try {
       const { data, error: signUpError } = await supabase.auth.signUp({
@@ -63,7 +71,7 @@ const SignUpScreen = () => {
           </p>
         </div>
 
-        {/* Error Message Display (Standardized with Onboarding) */}
+        {/* Error Message Display */}
         {error && (
           <div className="w-full mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-2xl text-red-600 dark:text-red-400 text-sm font-semibold animate-in fade-in slide-in-from-top-2">
             {error}
@@ -126,11 +134,26 @@ const SignUpScreen = () => {
             </button>
           </div>
 
+          {/* Confirm Password Input - Added Section */}
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <FiLock className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
+            </div>
+            <input
+              type={showPassword ? "text" : "password"} // Syncs with the showPassword toggle
+              name="confirmPassword"
+              placeholder="Confirm Password"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all shadow-sm"
+              required
+            />
+          </div>
+
           <p className="text-[11px] text-slate-500 dark:text-slate-400 px-2 leading-relaxed">
             By signing up, you agree to our <span className="text-blue-600 font-bold hover:underline cursor-pointer">Terms</span> and <span className="text-blue-600 font-bold hover:underline cursor-pointer">Privacy Policy</span>.
           </p>
 
-          {/* Submit Button with Loading UI */}
           <button
             type="submit"
             disabled={loading}
