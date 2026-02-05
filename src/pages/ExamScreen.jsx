@@ -5,6 +5,7 @@ import { RenderMathText } from "../utils/RenderMathText"
 import ProgressBar from "../components/ProgressBar"
 import Timer from "../components/Timer"
 import ReactGA from "react-ga4"
+import { FiChevronLeft, FiBookmark, FiSend, FiChevronRight } from "react-icons/fi"
 
 const calculateTotalTime = (questionCount, isMath) => {
   const timePer10 = isMath ? 6 * 60 : 3.33 * 60
@@ -32,13 +33,10 @@ const ExamScreen = ({
   const isMathCourse = selectedCourse?.id === "MTH101"
   const navigate = useNavigate()
   const totalQuestions = questions.length
-
-  // Calculate total time once
   const initialTotalTime = calculateTotalTime(totalQuestions, isMathCourse)
 
   const [currentIndex, setCurrentIndex] = useState(0)
   const [timeLeft, setTimeLeft] = useState(initialTotalTime)
-  const [_, setTimeTaken] = useState(0) // NEW: Track actual time taken
   const [shuffledOptions, setShuffledOptions] = useState([])
   const [hasSaved, setHasSaved] = useState(false)
   const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false)
@@ -70,161 +68,150 @@ const ExamScreen = ({
     setAnswers(newAnswers)
   }
 
-  const calculateScore = () =>
-    questions.reduce((acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc), 0)
-
   const saveResult = (finalTime) => {
     if (hasSaved) return
-
-    const correctCount = calculateScore()
-
+    const correctCount = questions.reduce((acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc), 0)
     const newResult = {
       id: Date.now(),
       course: selectedCourse.name,
-      date: new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric"
-      }),
+      date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
       score: correctCount,
       total: totalQuestions,
-      timeTaken: finalTime // use passed value
+      timeTaken: finalTime
     }
-
     const existingHistory = JSON.parse(localStorage.getItem("examHistory")) || []
     localStorage.setItem("examHistory", JSON.stringify([...existingHistory, newResult]))
     setHasSaved(true)
-
-    ReactGA.event({
-      category: "Exam",
-      action: `Submit Exam ${selectedCourse.name}`,
-      label: selectedCourse.id,
-      value: correctCount
-    })
   }
 
   const handleSubmit = () => {
-    const finalTimeTaken = initialTotalTime - timeLeft
-    saveResult(finalTimeTaken)
+    saveResult(initialTotalTime - timeLeft)
     onSubmit()
-    setSubmitOverlayOpen(false)
     navigate("/results")
   }
 
   const handleTimeUp = () => {
-    console.log("Time up! Final time:", timeLeft)
-    const finalTimeTaken = initialTotalTime - timeLeft
-    saveResult(finalTimeTaken)
+    saveResult(initialTotalTime - timeLeft)
     onSubmit()
     navigate("/results")
-  }
-
-  const nextQuestion = () => {
-    if (currentIndex < totalQuestions - 1) setCurrentIndex(prev => prev + 1)
-    else setSubmitOverlayOpen(true)
-  }
-
-  const prevQuestion = () => {
-    if (currentIndex > 0) setCurrentIndex(prev => prev - 1)
-  }
-
-  const handleExit = () => {
-    setExitOverlayOpen(false)
-    navigate("/")
   }
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100
 
   return (
-    <div className="dark:bg-slate-900 relative">
-      {/* TOP BAR */}
-      <div className="flex justify-between items-center my-7 mx-5">
-        <button
-          onClick={() => setExitOverlayOpen(true)}
-          className="bg-gray-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100 p-2 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none"
-            viewBox="0 0 24 24" strokeWidth="1.5"
-            stroke="currentColor" className="size-6">
-            <path strokeLinecap="round" strokeLinejoin="round"
-              d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-          </svg>
-        </button>
-
-        <div className="font-medium absolute left-1/2 -translate-x-1/2 text-slate-900 dark:text-slate-100">
-          {currentIndex + 1} of {totalQuestions}
-        </div>
-
-        <Timer
-          totalTime={initialTotalTime}
-          onTick={(newTimeLeft) => {
-            setTimeLeft(newTimeLeft)
-            // Calculate and store actual time taken on each tick
-            setTimeTaken(initialTotalTime - newTimeLeft)
-          }}
-          onTimeUp={handleTimeUp}
-        />
-      </div>
-
-      <div className="lg:max-w-2xl lg:mx-auto mx-5">
-        <ProgressBar progress={progress} />
-      </div>
-
-      {/* QUESTION CARD */}
-      <div className="lg:max-w-2xl lg:mx-auto bg-white dark:bg-slate-800 mx-5 p-5 rounded-2xl my-7 shadow-sm mb-[100px]">
-        <div className="flex justify-between items-center mb-2">
-          <div className="text-gray-400 dark:text-gray-300">{selectedCourse.name}</div>
-
+    <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex flex-col">
+      
+      {/* HEADER SECTION */}
+      <div className="sticky top-0 z-30 bg-gray-50/80 dark:bg-slate-900/80 backdrop-blur-md px-5 pt-6 pb-2">
+        <div className="max-w-2xl mx-auto flex justify-between items-center mb-4">
           <button
-            onClick={handleBookmarkClick}
-            className={`${isBookmarked ? "text-blue-500 dark:text-yellow-500" : "text-gray-400 dark:text-gray-300"} hover:text-yellow-500/70 transition-colors -translate-y-1`}
-            aria-label={isBookmarked ? "Remove bookmark" : "Add bookmark"}
+            onClick={() => setExitOverlayOpen(true)}
+            className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-all"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
-              strokeWidth="1.5" className="size-7"
-              stroke="currentColor" fill={isBookmarked ? "currentColor" : "none"}>
-              <path strokeLinecap="round" strokeLinejoin="round"
-                d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-            </svg>
+            <FiChevronLeft className="size-6 text-slate-600 dark:text-slate-300" />
           </button>
-        </div>
 
-        <div className="text-xl font-medium mb-7 text-slate-900 dark:text-slate-100">
-          <RenderMathText text={currentQuestion.question} courseId={selectedCourse?.id} />
-        </div>
+          <div className="flex flex-col items-center translate-x-1/2">
+             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-0.5">Progress</span>
+             <div className="font-black text-slate-900 dark:text-white">
+                {currentIndex + 1} <span className="text-slate-400 font-medium">/ {totalQuestions}</span>
+             </div>
+          </div>
 
-        <div className="space-y-4">
-          {shuffledOptions.map((option, index) => (
-            <button
-              key={index}
-              onClick={() => onOptionClick(option)}
-              className={`py-3 px-4 w-full rounded-xl ring-2 transition active:scale-95 hover:ring-[#2563EB]/40 duration-200
-                ${selectedOption === option ? "ring-[#2563EB]/60 dark:ring-[#60A5FA]/80" : "ring-gray-300 dark:ring-gray-600"}`}
-            >
-              <span className="text-lg font-medium text-slate-900 dark:text-slate-100">
-                <RenderMathText text={option} courseId={selectedCourse?.id} />
-              </span>
-            </button>
-          ))}
+          <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
+            <Timer totalTime={initialTotalTime} onTick={setTimeLeft} onTimeUp={handleTimeUp} />
+          </div>
+        </div>
+        
+        <div className="max-w-2xl mx-auto">
+          <ProgressBar progress={progress} />
         </div>
       </div>
 
-      {/* NAVIGATION */}
-      <div className="px-7 py-5 flex items-center justify-between fixed bottom-0 right-0 left-0 bg-gray-200 dark:bg-gray-900 border-t border-gray-300 dark:border-gray-800 lg:max-w-2xl mx-auto">
-        <button
-          onClick={prevQuestion}
-          disabled={currentIndex === 0}
-          className="bg-red-500 dark:bg-red-600 disabled:opacity-30 h-[48px] w-[130px] rounded-2xl font-semibold text-white shadow-md active:scale-95 hover:brightness-110 transition-all duration-200 ease-in-out"
-        >
-          Previous
-        </button>
+      {/* QUESTION CONTENT */}
+      <div className="flex-1 px-5 pb-32 pt-4 overflow-y-auto">
+        <div className="max-w-2xl mx-auto">
+          
+          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-gray-50 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            
+            <div className="flex justify-between items-start mb-6">
+              <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">
+                {selectedCourse.name}
+              </div>
+              <button
+                onClick={handleBookmarkClick}
+                className={`p-2 rounded-xl transition-all ${isBookmarked ? "bg-yellow-100 text-yellow-600" : "bg-gray-50 dark:bg-slate-700 text-gray-400"}`}
+              >
+                <FiBookmark className={`size-5 ${isBookmarked ? "fill-current" : ""}`} />
+              </button>
+            </div>
 
-        <button
-          onClick={nextQuestion}
-          className="bg-green-500 dark:bg-green-600 rounded-2xl font-bold text-white shadow-lg active:scale-95 hover:brightness-110 hover:shadow-green-500/20 transition-all duration-300 ease-in-out h-[58px] w-[200px] text-lg"
-        >
-          {currentIndex === totalQuestions - 1 ? "Submit Quiz" : "Next"}
-        </button>
+            <div className="text-xl lg:text-2xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-10">
+              <RenderMathText text={currentQuestion.question} courseId={selectedCourse?.id} />
+            </div>
+
+            <div className="space-y-4">
+              {shuffledOptions.map((option, index) => {
+                const isSelected = selectedOption === option;
+                const label = String.fromCharCode(65 + index); // A, B, C, D
+
+                return (
+                  <button
+                    key={index}
+                    onClick={() => onOptionClick(option)}
+                    className={`group w-full flex items-center gap-4 p-4 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
+                      isSelected 
+                        ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10" 
+                        : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
+                    }`}
+                  >
+                    <div className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                      isSelected 
+                        ? "bg-blue-600 text-white" 
+                        : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                    }`}>
+                      {label}
+                    </div>
+                    <div className={`text-left font-semibold text-lg ${isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}>
+                      <RenderMathText text={option} courseId={selectedCourse?.id} />
+                    </div>
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* BOTTOM NAVIGATION BAR */}
+      <div className="fixed bottom-0 inset-x-0 p-6 z-40">
+        <div className="max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-4">
+          <button
+            onClick={() => setCurrentIndex(prev => prev - 1)}
+            disabled={currentIndex === 0}
+            className="size-14 rounded-full flex items-center justify-center bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-20 transition-all active:scale-90"
+          >
+            <FiChevronLeft size={24} />
+          </button>
+
+          {currentIndex === totalQuestions - 1 ? (
+            <button
+              onClick={() => setSubmitOverlayOpen(true)}
+              className="flex-1 bg-green-600 hover:bg-green-700 text-white h-14 rounded-[1.8rem] font-black text-lg shadow-lg shadow-green-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-3"
+            >
+              <span>Submit Quiz</span>
+              <FiSend />
+            </button>
+          ) : (
+            <button
+              onClick={() => setCurrentIndex(prev => prev + 1)}
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white h-14 rounded-[1.8rem] font-black text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
+            >
+              <span>Next Question</span>
+              <FiChevronRight />
+            </button>
+          )}
+        </div>
       </div>
 
       <ConfirmOverlay
@@ -232,19 +219,19 @@ const ExamScreen = ({
         onClose={() => setSubmitOverlayOpen(false)}
         onConfirm={handleSubmit}
         title="Submit Exam?"
-        message="Are you sure you want to submit your exam?"
-        confirmText="Submit"
-        cancelText="Cancel"
+        message="Review your answers before submitting. You cannot go back after this!"
+        confirmText="Yes, Submit"
+        cancelText="Review"
       />
 
       <ConfirmOverlay
         isOpen={isExitOverlayOpen}
         onClose={() => setExitOverlayOpen(false)}
-        onConfirm={handleExit}
-        title="Exit Exam?"
-        message="Are you sure you want to exit? Your progress will not be saved."
-        confirmText="Exit"
-        cancelText="Cancel"
+        onConfirm={() => navigate("/")}
+        title="Quit Exam?"
+        message="Your current progress will be lost. Are you sure?"
+        confirmText="Quit"
+        cancelText="Stay"
         danger={true}
       />
     </div>

@@ -1,27 +1,27 @@
 import { useNavigate } from "react-router-dom"
 import WhatsAppCard from "../components/WhatsAppCard"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import ReactGA from "react-ga4"
-import WhatsappFollowButton from "../images/whatsapp-follow"
+import { supabase } from "../supabaseClient"
 
 const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
   const navigate = useNavigate()
+  const [userData, setUserData] = useState({ name: "Scholar", college: "" })
+  
   const formatNum = (num) => String(num).padStart(2, '0')
 
-  // Get the latest result from localStorage for the current course
-  const getLatestResult = () => {
-    const history = JSON.parse(localStorage.getItem("examHistory")) || []
-    if (history.length === 0) return null
-
-    // Find the result for the current course
-    const courseResults = history.filter(r => r.course === selectedCourse.name)
-    return courseResults.length > 0 ? courseResults[courseResults.length - 1] : null
-  }
-
-  const latestResult = getLatestResult()
-
-  // Move useEffect BEFORE any conditional returns
   useEffect(() => {
+    const fetchUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user?.user_metadata) {
+        setUserData({
+          name: user.user_metadata.full_name || "Scholar",
+          college: user.user_metadata.college || ""
+        })
+      }
+    }
+    fetchUser()
+
     ReactGA.event({
       category: "Exam",
       action: "View Results",
@@ -29,27 +29,14 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
     })
   }, [selectedCourse.id])
 
-  // Handle case where no results exist
-  if (!latestResult) {
-    return (
-      <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white mb-4">
-            No Exam Results Found
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Please take an exam first to see results.
-          </p>
-          <button
-            onClick={() => navigate("/")}
-            className="bg-blue-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors"
-          >
-            Go to Home
-          </button>
-        </div>
-      </div>
-    )
+  const getLatestResult = () => {
+    const history = JSON.parse(localStorage.getItem("examHistory")) || []
+    const courseResults = history.filter(r => r.course === selectedCourse.name)
+    return courseResults.length > 0 ? courseResults[courseResults.length - 1] : null
   }
+
+  const latestResult = getLatestResult()
+  if (!latestResult) return null 
 
   const timeTaken = latestResult?.timeTaken ?? 0
   const minutes = String(Math.floor(timeTaken / 60)).padStart(2, "0")
@@ -59,31 +46,43 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
   const strokeDasharray = 2 * Math.PI * 90
   const strokeDashoffset = strokeDasharray - (scorePercentage / 100) * strokeDasharray
 
+  // DYNAMIC FEEDBACK LOGIC
+  const getFeedback = () => {
+    if (scorePercentage >= 80) return { msg: `Outstanding work, ${userData.name.split(' ')[0]}! You've mastered this.`, color: "text-green-500" }
+    if (scorePercentage >= 60) return { msg: `Great job, ${userData.name.split(' ')[0]}! You're on the right track.`, color: "text-blue-500" }
+    if (scorePercentage >= 45) return { msg: `Good effort, ${userData.name.split(' ')[0]}. A little more study and you'll ace it!`, color: "text-amber-500" }
+    return { msg: `Don't give up, ${userData.name.split(' ')[0]}. Review your errors and try again!`, color: "text-red-500" }
+  }
+
+  const feedback = getFeedback()
+
   return (
     <div className='min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300'>
 
       {/* Header Section */}
       <header className="flex justify-between items-center mb-8">
-        <WhatsappFollowButton />
         <div className="flex items-center gap-2 bg-white dark:bg-gray-900 py-2 px-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <span className="text-gray-400 dark:text-gray-500 text-xs uppercase tracking-wider font-bold">Time</span>
           <span className="font-mono text-[#2563EB] dark:text-[#22D3EE] font-bold text-lg">{minutes}:{seconds}</span>
+        </div>
+
+        {/* Profile with Name Initial and College */}
+        <div className="flex items-center gap-3">
+          <div className="text-right hidden sm:block">
+            <p className="text-xs font-black text-gray-800 dark:text-gray-200 leading-none">{userData.name}</p>
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter mt-1">{userData.college}</p>
+          </div>
+          <div className="size-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-black shadow-lg">
+            {userData.name.charAt(0)}
+          </div>
         </div>
       </header>
 
       {/* Main Score Visual */}
       <main className="flex-grow flex flex-col items-center justify-center space-y-8">
-        <div
-          onClick={() => navigate("/history")}
-          className="relative flex items-center justify-center cursor-pointer group"
-        >
-          {/* Progress Ring */}
+        <div onClick={() => navigate("/history")} className="relative flex items-center justify-center cursor-pointer group">
           <svg className="size-56 transform -rotate-90">
-            <circle
-              cx="112" cy="112" r="90"
-              className="stroke-gray-200 dark:stroke-gray-800"
-              strokeWidth="12" fill="transparent"
-            />
+            <circle cx="112" cy="112" r="90" className="stroke-gray-200 dark:stroke-gray-800" strokeWidth="12" fill="transparent" />
             <circle
               cx="112" cy="112" r="90"
               stroke="currentColor"
@@ -103,9 +102,16 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
           </div>
         </div>
 
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-800 dark:text-white">{selectedCourse.name}</h1>
-          <p className="text-gray-500 dark:text-gray-400 text-sm mt-1">Assessment Completed Successfully</p>
+        <div className="text-center px-4">
+          <h1 className="text-2xl font-black text-gray-800 dark:text-white tracking-tight">{selectedCourse.name}</h1>
+          <p className={`text-sm mt-2 font-bold leading-relaxed ${feedback.color}`}>
+            {feedback.msg}
+          </p>
+          {userData.college && (
+            <span className="inline-block mt-3 px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 text-[10px] font-bold uppercase rounded-full tracking-widest">
+              {userData.college}
+            </span>
+          )}
         </div>
 
         {/* Detailed Stats Grid */}
@@ -122,10 +128,7 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
         <ActionButton
           label="Retake"
           color="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
-          onClick={() => {
-            setAnswers([])
-            navigate("/exam")
-          }}
+          onClick={() => { setAnswers([]); navigate("/exam"); }}
           icon={<path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />}
         />
         <ActionButton
@@ -139,7 +142,6 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
             </>
           }
         />
-
         <ActionButton
           label="Home"
           color="bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
@@ -148,7 +150,6 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
         />
       </footer>
 
-      {/* WhatsApp Card Overlay */}
       <div className="fixed bottom-24 right-6 pointer-events-auto">
         <WhatsAppCard />
       </div>
@@ -156,7 +157,6 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
   )
 }
 
-// Sub-components for cleaner code
 const StatItem = ({ label, value, color, textColor }) => (
   <div className='flex items-center gap-3 p-2'>
     <div className={`size-2 rounded-full ${color}`}></div>
@@ -178,4 +178,4 @@ const ActionButton = ({ label, icon, onClick, color }) => (
   </button>
 )
 
-export default ResultScreen
+export default ResultScreen;

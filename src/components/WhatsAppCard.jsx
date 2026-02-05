@@ -1,90 +1,72 @@
 import React, { useState, useEffect } from "react";
+import { FaWhatsapp } from "react-icons/fa";
+import { FiX } from "react-icons/fi";
 
 const WhatsAppCard = () => {
-  const [visible, setVisible] = useState(false); // slide-in control
-  const [show, setShow] = useState(true); // visibility control
+  const [visible, setVisible] = useState(false);
+  const [show, setShow] = useState(true);
 
   useEffect(() => {
-    const timer = setTimeout(() => setVisible(true), 5000);
+    // Show after 3 seconds for a snappier feel
+    const timer = setTimeout(() => setVisible(true), 3000);
     return () => clearTimeout(timer);
   }, []);
 
   const handleClose = (e) => {
     e.stopPropagation();
-    e.preventDefault(); // prevent navigation from <a>
-    setShow(false);
+    e.preventDefault();
+    setVisible(false);
+    // Remove from DOM after transition finishes
+    setTimeout(() => setShow(false), 500);
   };
 
   if (!show) return null;
 
   return (
     <div
-      className={`fixed bottom-5 right-5 w-64 
-    bg-green-500 bg-gradient-to-r from-green-400 to-green-600 
-    text-white rounded-xl shadow-lg p-4 flex items-center gap-3 cursor-pointer transform transition-transform duration-500
-    ${visible ? "translate-x-0" : "translate-x-[150%]"}`}
+      className={`fixed bottom-6 right-6 z-[100] w-[320px] max-w-[calc(100vw-3rem)]
+      bg-white dark:bg-slate-800 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] 
+      dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-5 border border-gray-100 dark:border-slate-700
+      transform transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]
+      ${visible ? "translate-y-0 opacity-100 scale-100" : "translate-y-20 opacity-0 scale-90 pointer-events-none"}`}
     >
-      {/* WhatsApp Link */}
       <a
-        href="https://chat.whatsapp.com/FMPmsBbwU9kL6t2vJ6C8qq"
+        href="https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f"
         target="_blank"
         rel="noopener noreferrer"
-        className="flex items-center gap-3 flex-1"
+        className="flex items-center gap-4 group"
       >
-        {/* WhatsApp Icon */}
-        <div>
-          <svg
-            fill="none"
-            viewBox="0 0 64 64"
-            xmlns="http://www.w3.org/2000/svg"
-            width="40"
-            height="40"
-          >
-            <path
-              stroke="#ffffff"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M6,59a1,1,0,0,1-.95-1.32L9,46.06A27.1,27.1,0,0,1,13,13,26.93,26.93,0,0,1,51,13h0A26.94,26.94,0,0,1,20.22,56.23L6.2,59Zm14.35-4.85a1,1,0,0,1,.45.11A24.94,24.94,0,0,0,49.63,14.37h0a24.93,24.93,0,0,0-35.26,0,25.08,25.08,0,0,0-3.4,31,1,1,0,0,1,.1.86L7.51,56.72,20.17,54.2Z"
-            />
-            <path
-              stroke="#ffffff"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M39.17,46a8.46,8.46,0,0,1-.92,0c-5.31-.58-12-5.83-13.89-7.68h0c-1.85-1.85-7.11-8.58-7.68-13.89-.46-4.24,2.37-7.12,3.61-8.17a2.87,2.87,0,0,1,2-.69l2.7.09a1,1,0,0,1,.9.65c.6,1.59,2.54,6.88,2.54,8.25,0,1.2-1.06,2.13-2,2.95-.2.17-.47.41-.63.58a28.74,28.74,0,0,0,3.61,5.16,28.77,28.77,0,0,0,5.16,3.61c.17-.17.41-.44.58-.63.82-.94,1.75-2,3-2,1.37,0,6.66,1.94,8.25,2.54a1,1,0,0,1,.65.9l.09,2.7a3,3,0,0,1-.69,2A9.82,9.82,0,0,1,39.17,46ZM25.78,36.88c1.65,1.65,8,6.6,12.69,7.11,3.29.35,5.59-1.92,6.43-2.91a1,1,0,0,0,.22-.66l-.07-2a47.65,47.65,0,0,0-6.92-2.18c-.32,0-1.11.93-1.45,1.32-.68.78-1.22,1.39-2,1.39-1.27,0-5.7-3.28-6.69-4.27S23.75,29.23,23.75,28c0-.75.61-1.29,1.39-2,.38-.34,1.29-1.12,1.32-1.45a47.7,47.7,0,0,0-2.18-6.92l-2-.07a1,1,0,0,0-.66.22c-1,.84-3.27,3.14-2.91,6.42.51,4.72,5.46,11,7.11,12.69Zm9,0Z"
-            />
-          </svg>
+        {/* WhatsApp Icon with Pulse Effect */}
+        <div className="relative">
+          <div className="absolute inset-0 bg-green-500 rounded-2xl blur-md opacity-20 group-hover:opacity-40 transition-opacity animate-pulse" />
+          <div className="relative size-14 bg-green-500 rounded-2xl flex items-center justify-center text-white shadow-lg shadow-green-200 dark:shadow-none transition-transform group-hover:scale-110">
+            <FaWhatsapp size={32} />
+          </div>
         </div>
 
-        {/* Text */}
-        <div className="space-y-1">
-          <h4 className="font-bold text-lg leading-tight">Join our WhatsApp group</h4>
-          <p className="text-sm opacity-90">Share your scores and challenge friends!</p>
+        {/* Text Content */}
+        <div className="flex-1 pr-4">
+          <h4 className="font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+            Join the Community
+          </h4>
+          <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-0.5 leading-relaxed">
+            Share scores & challenge fellow scholars! ⚡️
+          </p>
         </div>
       </a>
 
       {/* Close Button */}
       <button
-        className="absolute top-1 right-1 p-1 hover:scale-110 transition-transform"
+        className="absolute top-4 right-4 size-8 flex items-center justify-center rounded-full bg-gray-50 dark:bg-slate-700 text-slate-400 dark:text-slate-500 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-900/20 dark:hover:text-red-400 transition-all active:scale-90"
         onClick={handleClose}
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M18 6L6 18M6 6L18 18"
-            stroke="#fff"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+        <FiX size={18} />
       </button>
+
+      {/* Decorative "New" Badge */}
+      <div className="absolute -top-2 -left-2 bg-blue-600 text-white text-[10px] font-black px-2.5 py-1 rounded-full shadow-lg uppercase tracking-tighter">
+        Active
+      </div>
     </div>
   );
 };

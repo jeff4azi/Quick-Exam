@@ -31,13 +31,13 @@ const SignUpScreen = () => {
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: fullName } } // store full name in user metadata
+        options: { data: { full_name: fullName } } 
       });
 
       if (signUpError) throw signUpError;
 
       console.log("User signed up:", data);
-      navigate("/onboarding"); // navigate after successful signup
+      navigate("/onboarding"); 
     } catch (err) {
       console.error("Sign up error:", err.message);
       setError(err.message);
@@ -49,7 +49,9 @@ const SignUpScreen = () => {
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
       <div className="w-full max-w-sm flex flex-col items-center animate-in fade-in zoom-in duration-700">
-        <div className="mb-10 flex flex-col items-center">
+        
+        {/* Header Section */}
+        <div className="mb-8 flex flex-col items-center">
           <div className="mb-6 scale-110">
             <Logo className={"h-36 w-36"} />
           </div>
@@ -61,8 +63,15 @@ const SignUpScreen = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSignUp} className="w-full space-y-4">
+        {/* Error Message Display (Standardized with Onboarding) */}
+        {error && (
+          <div className="w-full mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-2xl text-red-600 dark:text-red-400 text-sm font-semibold animate-in fade-in slide-in-from-top-2">
+            {error}
+          </div>
+        )}
 
+        <form onSubmit={handleSignUp} className="w-full space-y-4">
+          {/* Full Name Input */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <FiUser className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
@@ -78,6 +87,7 @@ const SignUpScreen = () => {
             />
           </div>
 
+          {/* Email Input */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <FiMail className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
@@ -93,6 +103,7 @@ const SignUpScreen = () => {
             />
           </div>
 
+          {/* Password Input */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <FiLock className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
@@ -115,19 +126,22 @@ const SignUpScreen = () => {
             </button>
           </div>
 
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-
           <p className="text-[11px] text-slate-500 dark:text-slate-400 px-2 leading-relaxed">
-            By signing up, you agree to our <span className="text-blue-600 font-bold">Terms</span> and <span className="text-blue-600 font-bold">Privacy Policy</span>.
+            By signing up, you agree to our <span className="text-blue-600 font-bold hover:underline cursor-pointer">Terms</span> and <span className="text-blue-600 font-bold hover:underline cursor-pointer">Privacy Policy</span>.
           </p>
 
+          {/* Submit Button with Loading UI */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 dark:bg-blue-700 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all hover:-translate-y-1 active:scale-95 active:translate-y-0 flex items-center justify-center gap-2 group mt-4"
+            className={`w-full bg-blue-600 dark:bg-blue-700 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 group mt-4 ${
+              loading 
+                ? "opacity-70 cursor-not-allowed" 
+                : "hover:bg-blue-700 hover:-translate-y-1 active:scale-95 active:translate-y-0"
+            }`}
           >
             <span>{loading ? "Creating..." : "Create Account"}</span>
-            <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+            {!loading && <FiArrowRight className="group-hover:translate-x-1 transition-transform" />}
           </button>
         </form>
 

@@ -2,32 +2,66 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
+import { supabase } from "../supabaseClient";
 
 const LoginScreen = () => {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Logging in with:", formData);
-    navigate("/onboarding");
+    setLoading(true);
+    setError(null);
+
+    try {
+      // 🔑 Supabase login
+      const { data, error: authError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (authError) throw authError;
+
+      const user = data.user;
+      if (!user) throw new Error("Login failed. Please try again.");
+
+      // ✅ Check if onboarding is complete
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("onboarding_complete")
+        .eq("id", user.id)
+        .single();
+
+      if (profileError) throw profileError;
+
+      if (!profile?.onboarding_complete) {
+        // go to onboarding if not done
+        navigate("/onboarding");
+      } else {
+        // go to main app
+        navigate("/");
+      }
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
-      
-      {/* Main Card Container */}
       <div className="w-full max-w-sm flex flex-col items-center animate-in fade-in zoom-in duration-700">
-        
-        {/* Header Section */}
-        <div className="mb-10 flex flex-col items-center">
+        <div className="mb-8 flex flex-col items-center">
           <div className="mb-6 scale-110">
-            <Logo className={"h-36 w-36"}/>
+            <Logo className={"h-36 w-36"} />
           </div>
           <h1 className="text-4xl font-black text-center tracking-tight text-slate-900 dark:text-white mb-2">
             Welcome Back
@@ -37,10 +71,14 @@ const LoginScreen = () => {
           </p>
         </div>
 
-        {/* Form Section */}
+        {error && (
+          <div className="w-full mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-2xl text-red-600 dark:text-red-400 text-sm font-semibold animate-in fade-in slide-in-from-top-2">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleLogin} className="w-full space-y-5">
-          
-          {/* Email Input */}
+          {/* Email */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <FiMail className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
@@ -56,7 +94,7 @@ const LoginScreen = () => {
             />
           </div>
 
-          {/* Password Input */}
+          {/* Password */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <FiLock className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
@@ -79,7 +117,7 @@ const LoginScreen = () => {
             </button>
           </div>
 
-          {/* Forgot Password Link */}
+          {/* Forgot Password */}
           <div className="flex justify-end px-1">
             <button
               type="button"
@@ -89,17 +127,21 @@ const LoginScreen = () => {
             </button>
           </div>
 
-          {/* Primary Login Button */}
+          {/* Login Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 dark:bg-blue-700 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all hover:-translate-y-1 active:scale-95 active:translate-y-0 flex items-center justify-center gap-2 group mt-2"
+            disabled={loading}
+            className={`w-full bg-blue-600 dark:bg-blue-700 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 group mt-2 ${
+              loading 
+                ? "opacity-70 cursor-not-allowed" 
+                : "hover:bg-blue-700 hover:-translate-y-1 active:scale-95 active:translate-y-0"
+            }`}
           >
-            <span>Sign In</span>
-            <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+            <span>{loading ? "Signing In..." : "Sign In"}</span>
+            {!loading && <FiArrowRight className="group-hover:translate-x-1 transition-transform" />}
           </button>
         </form>
 
-        {/* Sign Up Footer */}
         <p className="mt-10 text-slate-500 dark:text-slate-400 font-medium text-sm">
           New to Quiz Bolt?{" "}
           <button
@@ -109,7 +151,6 @@ const LoginScreen = () => {
             Create an account
           </button>
         </p>
-
       </div>
     </div>
   );

@@ -2,24 +2,52 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import { FiBookOpen, FiNavigation, FiCalendar, FiCheckCircle } from "react-icons/fi";
+import { supabase } from "../supabaseClient"; // Import your supabase client
 
 const OnboardingScreen = () => {
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  
   const [formData, setFormData] = useState({
     college: "",
     department: "",
     year: "",
   });
 
-  // Example autocomplete list - you'd fetch this or expand it
   const collegeSuggestions = ["COSIT", "COVTED", "COSPED", "COHUM", "COSMAS", "COAHM"];
   const [showSuggestions, setShowSuggestions] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log("Saving profile:", formData);
-    navigate("/");
-  };
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  setError(null);
+
+  try {
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    if (authError || !user) throw new Error("No authenticated user found. Please sign in again.");
+
+    const { error: upsertError } = await supabase
+      .from("profiles")
+      .upsert({
+        id: user.id,
+        college: formData.college,
+        department: formData.department,
+        year: parseInt(formData.year) || null,
+        onboarding_complete: true,
+        is_premium: false,
+        updated_at: new Date().toISOString(),
+      });
+
+    if (upsertError) throw upsertError;
+
+    navigate("/"); // success
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
@@ -28,7 +56,7 @@ const OnboardingScreen = () => {
         
         {/* Header */}
         <div className="flex flex-col items-center text-center">
-          <div className="mb-6"> {/* Reduce scale if needed */}
+          <div className="mb-6">
             <Logo className="w-36 h-36" />
           </div>
           <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white mb-1">
@@ -39,7 +67,14 @@ const OnboardingScreen = () => {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        {/* Error Message Display */}
+        {error && (
+          <div className="mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-2xl text-red-600 dark:text-red-400 text-sm font-semibold">
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5 mt-6">
           
           {/* College with Autocomplete Logic */}
           <div className="relative group">
@@ -64,7 +99,6 @@ const OnboardingScreen = () => {
               />
             </div>
             
-            {/* Simple Dropdown UI */}
             {showSuggestions && formData.college.length > 1 && (
               <div className="absolute z-10 w-full mt-2 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden">
                 {collegeSuggestions.map((item) => (
@@ -131,10 +165,15 @@ const OnboardingScreen = () => {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full mt-4 bg-blue-600 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-2"
+            disabled={loading}
+            className={`w-full mt-4 bg-blue-600 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 ${
+              loading 
+                ? "opacity-70 cursor-not-allowed" 
+                : "hover:bg-blue-700 hover:-translate-y-1 active:scale-95"
+            }`}
           >
-            <span>Complete Setup</span>
-            <FiCheckCircle className="text-xl" />
+            <span>{loading ? "Saving..." : "Complete Setup"}</span>
+            {!loading && <FiCheckCircle className="text-xl" />}
           </button>
 
         </form>
