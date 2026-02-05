@@ -88,7 +88,7 @@ const fetchProfile = async () => {
   };
 
   return (
-    <div className="relative h-[100dvh] flex flex-col bg-gray-50 dark:bg-slate-900 transition-colors duration-500 overflow-hidden">
+    <div className="max-w-2xl mx-auto relative h-[100dvh] flex flex-col bg-gray-50 dark:bg-slate-900 transition-colors duration-500 overflow-hidden">
       
       {/* Top Navigation Bar */}
       <div className="p-6 flex justify-between items-center z-50">
@@ -200,12 +200,12 @@ const fetchProfile = async () => {
       </div>
 
       {/* Floating CTA Button */}
-      <div className="fixed bottom-0 inset-x-0 p-6 bg-gradient-to-t from-gray-50 via-gray-50/90 to-transparent dark:from-slate-900 dark:via-slate-900/90">
+      <div className="mx-auto max-w-2xl fixed bottom-0 inset-x-0 p-6 bg-gradient-to-t from-gray-50 via-gray-50/90 to-transparent dark:from-slate-900 dark:via-slate-900/90">
         <button
             onClick={() => navigate("/choose-course")}
             className="w-full bg-blue-600 dark:bg-blue-700 py-4.5 rounded-2xl font-black text-white text-lg shadow-xl shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all active:scale-95"
         >
-            Start Exam
+            Choose Course
         </button>
       </div>
     </div>
