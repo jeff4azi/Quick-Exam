@@ -11,6 +11,7 @@ import { csc115Questions } from "./courses/csc-115questions";
 import { bed114Questions } from "./courses/bed-114questions";
 import { vos116Questions } from "./courses/vos-116questions";
 import { vos117Questions } from "./courses/vos-117questions";
+import { gcp113Questions } from "./courses/gcp-113questions";
 
 const courses = [
   {
@@ -95,6 +96,14 @@ const courses = [
     group: "departmental",
     colleges: ["COVTED"],
     questions: bed114Questions,
+  },
+  {
+    id: "GCP113",
+    name: "GCP 113",
+    title: "BIOLOGICAL PSYCHOLOGY",
+    group: "departmental",
+    colleges: ["COSPED"],
+    questions: gcp113Questions,
   },
   {
     id: "VOS116",
