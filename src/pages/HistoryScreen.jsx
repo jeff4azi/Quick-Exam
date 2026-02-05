@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { FaClipboardList, FaChevronRight, FaTrash } from "react-icons/fa";
+import { FaHistory, FaChevronRight, FaTrashAlt, FaTrophy, FaChartLine, FaLayerGroup } from "react-icons/fa";
+import { FiArrowLeft, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 
@@ -11,179 +12,192 @@ const HistoryScreen = () => {
 
   // Fetch history from localStorage
   useEffect(() => {
-    const storedHistory = (JSON.parse(localStorage.getItem("examHistory")) || []).reverse();
-    setHistoryData(storedHistory);
+    const data = localStorage.getItem("examHistory");
+    if (data) {
+      const storedHistory = (JSON.parse(data) || []).reverse();
+      setHistoryData(storedHistory);
+    }
   }, []);
 
-  // Scroll shadow effect for header
+  // Scroll shadow effect
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 0);
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const totalExams = historyData.length;
 
-  // Stats calculations
-  const bestScore =
-    totalExams > 0 ? Math.max(...historyData.map((h) => (h.score / h.total) * 100)) : 0;
-  const avgScore =
-    totalExams > 0
-      ? Math.round(historyData.reduce((acc, h) => acc + (h.score / h.total) * 100, 0) / totalExams)
-      : 0;
+  // Optimized Stat Calculations
+  const bestScore = totalExams > 0 
+    ? Math.max(...historyData.map((h) => (Number(h.score) / Number(h.total)) * 100)) 
+    : 0;
 
-  // Performance color styling
-  const getPerformanceStyles = (percent) => {
-    if (percent >= 80) return "border-l-[#22C55E] dark:border-l-[#16A34A]"; // Green
-    if (percent >= 50) return "border-l-[#2563EB] dark:border-l-[#60A5FA]"; // Blue/Neutral
-    return "border-l-[#EF4444] dark:border-l-[#DC2626]"; // Red
-  };
+  const avgScore = totalExams > 0 
+    ? Math.round(historyData.reduce((acc, h) => acc + (Number(h.score) / Number(h.total)) * 100, 0) / totalExams) 
+    : 0;
 
-  // ---------- DELETE FUNCTIONS ----------
   const deleteExam = (id) => {
     const updated = historyData.filter((exam) => exam.id !== id);
     setHistoryData(updated);
-    localStorage.setItem("examHistory", JSON.stringify(updated));
+    localStorage.setItem("examHistory", JSON.stringify(updated.reverse())); // Store in original order
   };
 
   const clearAllHistory = () => {
     setHistoryData([]);
     localStorage.removeItem("examHistory");
+    setOverlayOpen(false);
   };
 
   return (
-    <div className="min-h-screen bg-[#F3F4F6] dark:bg-[#111827] text-[#1F2937] dark:text-[#F3F4F6] font-sans antialiased transition-colors duration-300">
-
-      {/* Header */}
-      <header
-        className={`flex items-center justify-between gap-5 px-5 py-6 sticky top-0 z-50 bg-[#FFFFFF] dark:bg-[#1E293B] transition-shadow duration-200 ${isScrolled ? "shadow-sm dark:shadow-black/40" : "shadow-none"
-          }`}
-      >
-        <div className="flex gap-3 items-center">
-        <button
-          className="bg-gray-100 dark:bg-gray-700 p-2 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"
-          onClick={() => navigate(-1)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-          </svg>
-        </button>
-          <h1 className="text-2xl font-semibold dark:text-white">Exam History</h1>
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
+      
+      {/* Sleek Glass Header */}
+      <header className={`sticky top-0 z-50 px-6 py-4 transition-all duration-300 ${
+        isScrolled 
+          ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-lg shadow-slate-200/50 dark:shadow-none border-b border-slate-100 dark:border-slate-800" 
+          : "bg-transparent"
+      }`}>
+        <div className="max-w-2xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => navigate(-1)}
+              className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 active:scale-90 transition-all"
+            >
+              <FiArrowLeft size={20} />
+            </button>
+            <h1 className="text-xl font-black tracking-tight">Activity Log</h1>
+          </div>
+          
+          {totalExams > 0 && (
+            <button 
+              onClick={() => setOverlayOpen(true)}
+              className="p-2.5 rounded-2xl bg-red-50 dark:bg-red-950/30 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
+            >
+              <FiTrash2 size={20} />
+            </button>
+          )}
         </div>
-        {totalExams > 0 && (
-          <button
-            className="bg-red-500 text-white px-4 py-2 rounded-xl"
-            onClick={() => setOverlayOpen(true)}
-          >
-            <FaTrash size={18} />
-          </button>
-        )}
       </header>
 
-      <main className="max-w-md mx-auto pb-8">
-        {/* Summary Strip */}
+      <main className="max-w-2xl mx-auto px-6 pt-4 pb-20">
+        
+        {/* Stats Bento Grid */}
         {totalExams > 0 && (
-          <section className="mt-4 px-4">
-            <div className="grid grid-cols-3 gap-1 bg-[#FFFFFF] dark:bg-[#1E293B] rounded-2xl p-4 shadow-sm border border-[#D1D5DB] dark:border-[#4B5563]">
-              <SummaryItem label="Total" value={totalExams} />
-              <SummaryItem label="Average" value={`${bestScore.toFixed(1)}%`} />
-              <SummaryItem label="Average" value={`${avgScore.toFixed(1)}%`} />
-            </div>
+          <section className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+            <StatCard label="Completed" value={totalExams} icon={<FaLayerGroup />} color="blue" />
+            <StatCard label="Best Score" value={`${Math.round(bestScore)}%`} icon={<FaTrophy />} color="amber" />
+            <StatCard 
+                label="Avg. Perf." 
+                value={`${avgScore}%`} 
+                icon={<FaChartLine />} 
+                color="emerald" 
+                className="col-span-2 md:col-span-1" 
+            />
           </section>
         )}
 
-        {/* History List / Empty State */}
-        <section className="mt-6 px-4 space-y-3">
+        {/* History List */}
+        <div className="space-y-4">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
+            Recent Attempts
+          </h3>
+          
           {totalExams === 0 ? (
-            <div className="flex flex-col items-center justify-center pt-20 opacity-60">
-              <FaClipboardList size={48} className="text-[#9CA3AF]" />
-              <h3 className="mt-4 text-lg font-medium">No exams taken yet</h3>
-              <p className="text-sm text-[#9CA3AF] dark:text-[#D1D5DB]">
-                Your completed exams will appear here.
-              </p>
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="size-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
+                <FaHistory size={32} className="text-slate-300" />
+              </div>
+              <h3 className="text-lg font-bold">No History Found</h3>
+              <p className="text-slate-500 text-sm max-w-[200px]">Complete an exam to see your performance here.</p>
             </div>
           ) : (
-            historyData.map((exam) => {
-              const percent = Math.round((exam.score / exam.total) * 100);
-              return (
-                <div
-                  key={exam.id}
-                  className={`group flex justify-between items-center p-4 
-                    bg-[#FFFFFF] dark:bg-[#1E293B] 
-                    rounded-xl border-l-4 shadow-sm border-y border-r border-y-[#D1D5DB] border-r-[#D1D5DB] 
-                    dark:border-y-[#4B5563] dark:border-r-[#4B5563]
-                    ${getPerformanceStyles(percent)}
-                    active:scale-[0.98] transition-all duration-200
-                  `}
-                >
-                  <div className="flex flex-col">
-                    <span className="font-bold text-base leading-tight">{exam.course}</span>
-                    <span className="text-xs text-[#9CA3AF] dark:text-[#D1D5DB] mt-1">{exam.date}</span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <div className="text-right">
-                      <div className="text-lg font-extrabold text-[#1F2937] dark:text-[#F3F4F6]">
-                        {exam.score}
-                        <span className="text-xs font-normal text-[#9CA3AF]">/{exam.total}</span>
-                      </div>
-                      <div
-                        className={`text-xs font-semibold ${percent >= 50 ? "text-[#22C55E]" : "text-[#EF4444]"
-                          }`}
-                      >
-                        {percent}%
-                      </div>
-                    </div>
-
-                    {/* Delete Single Exam */}
-                    <button
-                      onClick={() => deleteExam(exam.id)}
-                      className="p-2 rounded-full bg-red-100 dark:bg-red-700 text-red-600 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-600 transition-colors"
-                      title="Delete Exam"
-                    >
-                      <FaTrash size={14} />
-                    </button>
-
-                    <FaChevronRight
-                      className="text-[#D1D5DB] group-hover:text-[#2563EB] transition-colors"
-                      size={12}
-                    />
-                  </div>
-                </div>
-              );
-            })
+            <div className="space-y-3">
+              {historyData.map((exam) => (
+                <HistoryItem 
+                  key={exam.id} 
+                  exam={exam} 
+                  onDelete={() => deleteExam(exam.id)} 
+                />
+              ))}
+            </div>
           )}
-        </section>
+        </div>
       </main>
 
       <ConfirmOverlay
         isOpen={isOverlayOpen}
         onClose={() => setOverlayOpen(false)}
         onConfirm={clearAllHistory}
-        title="Delete All History?"
-        message="This will remove all saved exam history. Are you sure?"
-        confirmText="Delete"
-        cancelText="Cancel"
+        title="Clear History"
+        message="This action cannot be undone. All your progress data will be reset."
         danger={true}
       />
-
     </div>
   );
 };
 
-// Sub-component for Summary Items
-const SummaryItem = ({ label, value }) => (
-  <div className="text-center">
-    <p className="text-[10px] uppercase tracking-wider text-[#9CA3AF] dark:text-[#D1D5DB] font-semibold">{label}</p>
-    <p className="text-xl font-bold text-[#1F2937] dark:text-[#F3F4F6]">{value}</p>
-  </div>
-);
+/* --- STAT CARD COMPONENT --- */
+const StatCard = ({ label, value, icon, color, className = "" }) => {
+  const colors = {
+    blue: "text-blue-600 bg-blue-50 dark:bg-blue-500/10",
+    amber: "text-amber-600 bg-amber-50 dark:bg-amber-500/10",
+    emerald: "text-emerald-600 bg-emerald-50 dark:bg-emerald-500/10",
+  };
+  return (
+    <div className={`bg-white dark:bg-slate-800/50 p-5 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm ${className}`}>
+      <div className={`size-10 rounded-xl flex items-center justify-center mb-3 ${colors[color]}`}>
+        {icon}
+      </div>
+      <p className="text-2xl font-black">{value}</p>
+      <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">{label}</p>
+    </div>
+  );
+};
+
+/* --- HISTORY ITEM COMPONENT --- */
+const HistoryItem = ({ exam, onDelete }) => {
+  // Ensure values are treated as numbers to avoid calculation errors
+  const score = Number(exam.score) || 0;
+  const total = Number(exam.total) || 1; 
+  const percent = Math.round((score / total) * 100);
+  const isPassed = percent >= 50;
+
+  return (
+    <div className="group relative bg-white dark:bg-slate-800/50 p-5 rounded-[2rem] border border-slate-100 dark:border-slate-800 flex items-center justify-between hover:shadow-xl hover:shadow-slate-200/40 dark:hover:shadow-none transition-all duration-300 active:scale-[0.98]">
+      <div className="flex flex-col gap-0.5">
+        <span className="font-black text-slate-900 dark:text-white capitalize truncate max-w-[150px] sm:max-w-none">
+          {exam.course?.toLowerCase() || "Course"}
+        </span>
+        <span className="text-[11px] font-medium text-slate-400 flex items-center gap-2">
+          {exam.date} • {total} Qs
+        </span>
+      </div>
+
+      <div className="flex items-center gap-4">
+        <div className="text-right">
+          <p className="text-xl font-black leading-none flex items-baseline justify-end">
+            {score}
+            <span className="text-xs text-slate-300 dark:text-slate-600 font-medium ml-0.5">/{total}</span>
+          </p>
+          <p className={`text-[10px] font-black mt-1 ${isPassed ? 'text-emerald-500' : 'text-red-500'}`}>
+            {percent}% {isPassed ? 'PASSED' : 'FAILED'}
+          </p>
+        </div>
+        
+        <button 
+          onClick={(e) => { e.stopPropagation(); onDelete(); }}
+          className="p-3 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden sm:block"
+        >
+          <FaTrashAlt size={14} />
+        </button>
+        
+        <div className="p-2 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-300">
+          <FaChevronRight size={12} />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default HistoryScreen;

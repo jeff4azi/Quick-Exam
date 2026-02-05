@@ -1,20 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { FaTrash } from "react-icons/fa";
-import { RenderMathText } from "../utils/RenderMathText"
+import { FaTrashAlt, FaBookmark, FaLightbulb } from "react-icons/fa";
+import { FiArrowLeft, FiTrash2 } from "react-icons/fi";
+import { RenderMathText } from "../utils/RenderMathText";
 
 const BookMark = ({ bookmarks, courses, setBookmarks }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 0);
+    const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const allQuestions = courses.flatMap(course => course.questions);
-  const bookmarkedQuestions = allQuestions.filter(q => bookmarks.includes(q.id));
+  const allQuestions = courses.flatMap((course) => course.questions);
+  const bookmarkedQuestions = allQuestions.filter((q) => bookmarks.includes(q.id));
 
   const getCourseFromId = (id) => {
     if (!id) return "";
@@ -29,115 +30,117 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
   };
 
   const handleDeleteBookmark = (id) => {
-    const updated = bookmarks.filter(b => b !== id);
+    const updated = bookmarks.filter((b) => b !== id);
     setBookmarks(updated);
     localStorage.setItem("bookmarkedQuestions", JSON.stringify(updated));
   };
 
-  if (!bookmarkedQuestions || bookmarkedQuestions.length === 0) {
-    return (
-      <>
-        <div className="flex items-center gap-5 mb-6 mx-5 mt-5">
-          <button
-            className="bg-gray-100 dark:bg-gray-700 p-2 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"
-            onClick={() => navigate(-1)}
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-6 h-6"
-            >
-              <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-            </svg>
-          </button>
-          <h1 className="text-2xl font-semibold dark:text-white">Bookmarked Questions</h1>
-        </div>
-        <div className="flex items-center justify-center text-gray-500 dark:text-gray-400 min-h-[calc(100vh-100px)]">
-          No bookmarked questions.
-        </div>
-      </>
-    );
-  }
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-6">
-
-      {/* Header */}
-      <div
-        className={`flex items-center gap-5 px-5 pt-6 pb-2 sticky top-0 right-0 left-0 bg-gray-50 dark:bg-gray-900 z-50 transition-shadow duration-200 ${isScrolled ? "shadow-sm dark:shadow-black/40 pb-6" : "shadow-none"
-          }`}
+    <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
+      {/* Sleek Glass Header */}
+      <header
+        className={`sticky top-0 z-50 px-6 py-4 transition-all duration-300 ${
+          isScrolled
+            ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-lg shadow-slate-200/50 dark:shadow-none border-b border-slate-100 dark:border-slate-800"
+            : "bg-transparent"
+        }`}
       >
-        <button
-          className="bg-gray-100 dark:bg-gray-700 p-2 rounded-xl shadow-sm active:scale-95 hover:scale-105 duration-200"
-          onClick={() => navigate(-1)}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="w-6 h-6"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-          </svg>
-        </button>
-        <h1 className="text-2xl font-semibold dark:text-white">Bookmarked Questions</h1>
-      </div>
-
-      {/* Bookmarked Questions */}
-      <div className="space-y-6 px-5 mt-4">
-        {bookmarkedQuestions.map((question, index) => (
-          <div
-            key={question.id || index}
-            className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
-          >
-            <div className="flex justify-between items-start mb-3">
-              {/* Course Code */}
-              <div className="text-gray-400 dark:text-gray-300 text-sm font-medium">
-                {getCourseFromId(question.id)}
-              </div>
-
-              {/* Delete Bookmark */}
-              <button
-                onClick={() => handleDeleteBookmark(question.id)}
-                className="p-2 rounded-full bg-red-100 dark:bg-red-700 text-red-600 dark:text-red-200 hover:bg-red-200 dark:hover:bg-red-600 transition-colors active:scale-95"
-                title="Remove Bookmark"
-              >
-                <FaTrash size={14} />
-              </button>
-            </div>
-
-            {/* Question */}
-            <div className="font-semibold text-gray-800 dark:text-gray-100 text-lg mb-3">
-              {index + 1}. <RenderMathText text={question.question} courseId={question.id} />
-            </div>
-
-            {/* Answer */}
-            <div className="mb-2 flex items-center gap-2">
-              <span className="font-medium text-gray-700 dark:text-gray-200">Answer:</span>
-              <span className="font-semibold text-blue-600 dark:text-blue-400">
-                <RenderMathText text={question.correct}  courseId={question.id}/>
-              </span>
-            </div>
-
-            {/* Reason */}
-            {question.reason && (
-              <div className="mt-3 bg-gray-50 dark:bg-gray-700 border-l-4 border-blue-500 dark:border-blue-400 p-4 rounded-lg">
-                <div className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">
-                  Reason
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300">
-                  <RenderMathText text={question.reason} courseId={question.id}/>
-                </div>
-              </div>
-            )}
+        <div className="max-w-2xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 active:scale-90 transition-all"
+            >
+              <FiArrowLeft size={20} />
+            </button>
+            <h1 className="text-xl font-black tracking-tight">Saved Items</h1>
           </div>
-        ))}
-      </div>
+
+          <div className="bg-blue-50 dark:bg-blue-500/10 px-4 py-1.5 rounded-full border border-blue-100 dark:border-blue-500/20">
+            <span className="text-xs font-black text-blue-600 dark:text-blue-400">
+              {bookmarkedQuestions.length} TOTAL
+            </span>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-2xl mx-auto px-6 pt-4 pb-20">
+        {bookmarkedQuestions.length === 0 ? (
+          /* Sleek Empty State */
+          <div className="flex flex-col items-center justify-center py-32 text-center animate-in fade-in duration-700">
+            <div className="size-24 bg-slate-100 dark:bg-slate-800 rounded-[2rem] flex items-center justify-center mb-6">
+              <FaBookmark size={36} className="text-slate-300 dark:text-slate-600" />
+            </div>
+            <h3 className="text-xl font-black">Archive is empty</h3>
+            <p className="text-slate-500 text-sm max-w-[240px] mt-2 leading-relaxed">
+              Questions you bookmark during exams will appear here for review.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
+              Bookmarked Questions
+            </h3>
+
+            <div className="space-y-5">
+              {bookmarkedQuestions.map((question, index) => (
+                <div
+                  key={question.id || index}
+                  className="group bg-white dark:bg-slate-800/50 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-slate-200/40 dark:hover:shadow-none transition-all duration-300"
+                >
+                  <div className="flex justify-between items-center mb-4">
+                    <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-[10px] font-black tracking-wider text-slate-500 dark:text-slate-400">
+                      {getCourseFromId(question.id)}
+                    </span>
+                    <button
+                      onClick={() => handleDeleteBookmark(question.id)}
+                      className="p-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 opacity-0 group-hover:opacity-100"
+                      title="Remove Bookmark"
+                    >
+                      <FaTrashAlt size={14} />
+                    </button>
+                  </div>
+
+                  {/* Question Text */}
+                  <div className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-snug mb-4">
+                    <div className="flex gap-2">
+                      <span className="text-blue-500 shrink-0">{index + 1}.</span>
+                      <div className="flex-1 break-words whitespace-normal">
+                        <RenderMathText text={question.question} courseId={question.id} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Answer Section */}
+                  <div className="flex items-center gap-3 bg-emerald-50/50 dark:bg-emerald-500/5 p-4 rounded-2xl border border-emerald-100/50 dark:border-emerald-500/10">
+                    <div className="size-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white shrink-0 shadow-sm shadow-emerald-200">
+                      <span className="text-[10px] font-black">ANS</span>
+                    </div>
+                    <div className="text-emerald-700 dark:text-emerald-400 font-black">
+                      <RenderMathText text={question.correct} courseId={question.id} />
+                    </div>
+                  </div>
+
+                  {/* Explanation Section */}
+                  {question.reason && (
+                    <div className="mt-4 flex gap-3 p-4 rounded-2xl bg-blue-50/30 dark:bg-blue-500/5 border-l-4 border-blue-500">
+                      <FaLightbulb className="text-blue-500 shrink-0 mt-0.5" size={16} />
+                      <div className="space-y-1">
+                        <p className="text-[11px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                          Explanation
+                        </p>
+                        <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                          <RenderMathText text={question.reason} courseId={question.id} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 };

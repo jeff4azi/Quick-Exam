@@ -114,7 +114,6 @@ function App() {
   };
 
 
-
   const props = {
     answers,
     setAnswers,

@@ -1,32 +1,35 @@
 import { edu101Questions } from "./courses/edu-101questions";
+import { edu101revisionQuestions } from "./courses/edu101revisionQuestions";
 import { gns113Questions } from "./courses/gns-113questions";
 import { gst111Questions } from "./courses/gst-111questions";
 import { csc111Questions } from "./courses/csc-111questions";
-import { vos116Questions } from "./courses/vos-116questions";
-import { vos117Questions } from "./courses/vos-117questions";
 import { cos101Questions } from "./courses/cos-101questions";
 import { math101Questions } from "./courses/math-101questions";
 import { bed112Questions } from "./courses/bed-112questions";
 import { soc105Questions } from "./courses/soc-105questions";
 import { csc115Questions } from "./courses/csc-115questions";
 import { bed114Questions } from "./courses/bed-114questions";
-import { edu101revisionQuestions } from "./courses/edu101revisionQuestions";
+import { vos116Questions } from "./courses/vos-116questions";
+import { vos117Questions } from "./courses/vos-117questions";
 
 const courses = [
   {
     id: "EDU101",
     name: "EDU 101",
     title: "INTRODUCTION TO TEACHING AND FOUNDATION OF EDUCATION",
-    group: "general", // general | departmental | vocational
-    colleges: "all",
-    questions: [...edu101Questions, ...edu101revisionQuestions],
+    group: "general",
+    colleges: ["ALL"],
+    questions: [
+      ...edu101Questions,
+      ...edu101revisionQuestions,
+    ],
   },
   {
     id: "GST111",
     name: "GST 111",
     title: "COMMUNICATION IN ENGLISH",
     group: "general",
-    colleges: "all",
+    colleges: ["ALL"],
     questions: gst111Questions,
   },
   {
@@ -34,47 +37,47 @@ const courses = [
     name: "GNS 113",
     title: "USE OF LIBRARY AND STUDY SKILLS",
     group: "general",
-    colleges: "all",
+    colleges: ["ALL"],
     questions: gns113Questions,
   },
   {
     id: "CSC111",
     name: "CSC 111",
-    title: "Introduction to database application",
+    title: "INTRODUCTION TO DATABASE APPLICATION",
     group: "departmental",
-    colleges: ["COSIT"], // scalable
+    colleges: ["COSIT"],
     questions: csc111Questions,
   },
   {
     id: "COS101",
     name: "COS 101",
-    title: "Introduction to computing science",
+    title: "INTRODUCTION TO COMPUTING SCIENCE",
     group: "departmental",
-    colleges: ["COSIT"], // scalable
+    colleges: ["COSIT"],
     questions: cos101Questions,
   },
   {
     id: "MTH101",
     name: "MTH 101",
-    title: "Elementary Mathematics 1",
+    title: "ELEMENTARY MATHEMATICS I",
     group: "departmental",
-    colleges: ["COSIT"], // scalable
+    colleges: ["COSIT"],
     questions: math101Questions,
   },
   {
     id: "BED112",
     name: "BED 112",
-    title: "Computer Fundamental",
+    title: "COMPUTER FUNDAMENTALS",
     group: "departmental",
-    colleges: ["COVTED"], // scalable
+    colleges: ["COVTED"],
     questions: bed112Questions,
   },
   {
     id: "SOC105",
     name: "SOC 105",
-    title: "Element of scientific thought",
+    title: "ELEMENTS OF SCIENTIFIC THOUGHT",
     group: "departmental",
-    colleges: ["COVTED"], // scalable
+    colleges: ["COSMAS"],
     questions: soc105Questions,
   },
   {
@@ -82,31 +85,31 @@ const courses = [
     name: "CSC 115",
     title: "COMPUTER HARDWARE AND MAINTENANCE",
     group: "departmental",
-    colleges: ["COSIT"], // scalable
+    colleges: ["COSIT"],
     questions: csc115Questions,
   },
   {
     id: "BED114",
     name: "BED 114",
-    title: "introduction to accounting",
+    title: "INTRODUCTION TO ACCOUNTING",
     group: "departmental",
-    colleges: ["COSIT"], // scalable
+    colleges: ["COVTED"],
     questions: bed114Questions,
   },
   {
     id: "VOS116",
     name: "VOS 116",
-    title: "Fruit Juice and Non Alcoholic Beverage",
+    title: "FRUIT JUICE AND NON-ALCOHOLIC BEVERAGE",
     group: "vocational",
-    colleges: "all",
+    colleges: ["ALL"],
     questions: vos116Questions,
   },
   {
     id: "VOS117",
     name: "VOS 117",
-    title: "Fish Farming",
+    title: "FISH FARMING",
     group: "vocational",
-    colleges: "all",
+    colleges: ["ALL"],
     questions: vos117Questions,
   },
 ];
