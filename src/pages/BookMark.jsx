@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaTrashAlt, FaBookmark, FaLightbulb } from "react-icons/fa";
-import { FiArrowLeft, FiTrash2 } from "react-icons/fi"; // Added FiTrash2
+import { FiArrowLeft, FiTrash2 } from "react-icons/fi";
 import { RenderMathText } from "../utils/RenderMathText";
+import ConfirmOverlay from "../components/ConfirmOverlay"; // Added this import
 
 const BookMark = ({ bookmarks, courses, setBookmarks }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isOverlayOpen, setOverlayOpen] = useState(false); // New state for overlay
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -35,12 +37,11 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
     localStorage.setItem("bookmarkedQuestions", JSON.stringify(updated));
   };
 
-  // --- NEW: CLEAR ALL LOGIC ---
+  // --- UPDATED: CLEAR ALL LOGIC USING OVERLAY ---
   const handleClearAll = () => {
-    if (window.confirm("Are you sure you want to clear all bookmarks?")) {
-      setBookmarks([]);
-      localStorage.setItem("bookmarkedQuestions", JSON.stringify([]));
-    }
+    setBookmarks([]);
+    localStorage.setItem("bookmarkedQuestions", JSON.stringify([]));
+    setOverlayOpen(false);
   };
 
   return (
@@ -65,10 +66,10 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
           </div>
 
           <div className="flex items-center gap-2">
-            {/* --- NEW: CLEAR ALL BUTTON --- */}
+            {/* --- UPDATED: TRIGGER OVERLAY --- */}
             {bookmarkedQuestions.length > 0 && (
               <button
-                onClick={handleClearAll}
+                onClick={() => setOverlayOpen(true)}
                 className="p-2.5 rounded-2xl bg-red-50 dark:bg-red-500/10 text-red-500 border border-red-100 dark:border-red-500/20 active:scale-90 transition-all"
                 title="Clear All"
               >
@@ -113,7 +114,6 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
                       {getCourseFromId(question.id)}
                     </span>
                     
-                    {/* Individual Delete Button - Improved visibility for mobile/desktop */}
                     <button
                       onClick={() => handleDeleteBookmark(question.id)}
                       className="p-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
@@ -123,7 +123,6 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
                     </button>
                   </div>
 
-                  {/* Question Text */}
                   <div className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-snug mb-4">
                     <div className="flex gap-2">
                       <span className="text-blue-500 shrink-0">{index + 1}.</span>
@@ -133,7 +132,6 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
                     </div>
                   </div>
 
-                  {/* Answer Section */}
                   <div className="flex items-center gap-3 bg-emerald-50/50 dark:bg-emerald-500/5 p-4 rounded-2xl border border-emerald-100/50 dark:border-emerald-500/10">
                     <div className="size-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white shrink-0 shadow-sm shadow-emerald-200">
                       <span className="text-[10px] font-black">ANS</span>
@@ -143,7 +141,6 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
                     </div>
                   </div>
 
-                  {/* Explanation Section */}
                   {question.reason && (
                     <div className="mt-4 flex gap-3 p-4 rounded-2xl bg-blue-50/30 dark:bg-blue-500/5 border-l-4 border-blue-500">
                       <FaLightbulb className="text-blue-500 shrink-0 mt-0.5" size={16} />
@@ -163,6 +160,16 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
           </div>
         )}
       </main>
+
+      {/* --- CONFIRMATION OVERLAY --- */}
+      <ConfirmOverlay
+        isOpen={isOverlayOpen}
+        onClose={() => setOverlayOpen(false)}
+        onConfirm={handleClearAll}
+        title="Clear Bookmarks"
+        message="Are you sure you want to remove all saved questions? This action cannot be undone."
+        danger={true}
+      />
     </div>
   );
 };
