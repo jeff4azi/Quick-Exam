@@ -4,11 +4,13 @@ import { useEffect, useState } from "react"
 import ReactGA from "react-ga4"
 import { supabase } from "../supabaseClient"
 
-const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
+const ResultScreen = ({ questions, results, answers, setAnswers, selectedCourse }) => {
   const navigate = useNavigate()
   const [userData, setUserData] = useState({ name: "Scholar", college: "" })
   
   const formatNum = (num) => String(num).padStart(2, '0')
+  const answeredCount = answers.filter(a => a !== undefined).length
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -116,7 +118,12 @@ const ResultScreen = ({ questions, results, setAnswers, selectedCourse }) => {
 
         {/* Detailed Stats Grid */}
         <div className='bg-white dark:bg-gray-900 w-full p-6 grid grid-cols-2 gap-4 rounded-3xl shadow-xl shadow-gray-200/50 dark:shadow-none border border-gray-100 dark:border-gray-800'>
-          <StatItem label="Answered" value={formatNum(results.answered)} color="bg-blue-500" textColor="text-[#2563EB] dark:text-blue-400" />
+          <StatItem
+            label="Answered"
+            value={formatNum(answeredCount)}
+            color="bg-blue-500"
+            textColor="text-[#2563EB] dark:text-blue-400"
+          />
           <StatItem label="Total" value={formatNum(questions.length)} color="bg-gray-400" textColor="text-gray-600 dark:text-gray-300" />
           <StatItem label="Correct" value={formatNum(results.correct)} color="bg-green-500" textColor="text-green-600 dark:text-green-400" />
           <StatItem label="Wrong" value={formatNum(results.wrong)} color="bg-red-500" textColor="text-red-600 dark:text-red-400" />

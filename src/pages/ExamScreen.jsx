@@ -4,7 +4,6 @@ import ConfirmOverlay from "../components/ConfirmOverlay"
 import { RenderMathText } from "../utils/RenderMathText"
 import ProgressBar from "../components/ProgressBar"
 import Timer from "../components/Timer"
-import ReactGA from "react-ga4"
 import { FiChevronLeft, FiBookmark, FiSend, FiChevronRight } from "react-icons/fi"
 
 const calculateTotalTime = (questionCount, isMath) => {
@@ -68,7 +67,9 @@ const ExamScreen = ({
     setAnswers(newAnswers)
   }
 
-  const saveResult = (finalTime) => {
+  // NOTE: This only saves to localStorage for History tab. 
+  // ResultScreen will NOT use this storage.
+  const saveResultToHistory = (finalTime) => {
     if (hasSaved) return
     const correctCount = questions.reduce((acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc), 0)
     const newResult = {
@@ -84,15 +85,16 @@ const ExamScreen = ({
     setHasSaved(true)
   }
 
+  // FIX: Ensure onSubmit() is called to update App.js state
   const handleSubmit = () => {
-    saveResult(initialTotalTime - timeLeft)
-    onSubmit()
+    saveResultToHistory(initialTotalTime - timeLeft)
+    if (onSubmit) onSubmit() 
     navigate("/results")
   }
 
   const handleTimeUp = () => {
-    saveResult(initialTotalTime - timeLeft)
-    onSubmit()
+    saveResultToHistory(initialTotalTime - timeLeft)
+    if (onSubmit) onSubmit()
     navigate("/results")
   }
 
