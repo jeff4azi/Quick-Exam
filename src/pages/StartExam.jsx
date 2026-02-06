@@ -21,44 +21,56 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
 
   // Replace the fetchProfile function in your StartExam.js with this:
 
-const fetchProfile = async () => {
-  try {
-    setLoading(true);
-    // 1. Get the current user from Supabase Auth
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
 
-    if (authError) throw authError;
+      // Check if profile already exists in localStorage
+      const cachedProfile = localStorage.getItem("profile");
+      if (cachedProfile) {
+        setProfile(JSON.parse(cachedProfile));
+        setLoading(false);
+        return;
+      }
 
-    if (user) {
-      // 2. Pull the "Display Name" from the metadata (where your SignUp saved it)
-      const userDisplayName = user.user_metadata?.full_name || "Scholar";
+      // 1. Get current user
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError) throw authError;
 
-      // 3. Get the College/Dept from the 'profiles' table
-      const { data: profileTableData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single();
+      if (user) {
+        const userDisplayName = user.user_metadata?.full_name || "Scholar";
 
-      // 4. Merge them together
-      setProfile({
-        full_name: userDisplayName,
-        college: profileTableData?.college || "TASUED",
-        department: profileTableData?.department || "General Studies",
-        year: profileTableData?.year || "1"
-      });
+        const { data: profileTableData } = await supabase
+          .from('profiles')
+          .select('*')
+          .eq('id', user.id)
+          .single();
+
+        const fullProfile = {
+          full_name: userDisplayName,
+          college: profileTableData?.college || "TASUED",
+          department: profileTableData?.department || "General Studies",
+          year: profileTableData?.year || "1"
+        };
+
+        // Save to localStorage
+        localStorage.setItem("profile", JSON.stringify(fullProfile));
+
+        setProfile(fullProfile);
+      }
+    } catch (error) {
+      console.error("Error loading profile:", error.message);
+    } finally {
+      setLoading(false);
     }
-  } catch (error) {
-    console.error("Error loading profile:", error.message);
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    navigate("/login")
+    await supabase.auth.signOut();
+    localStorage.removeItem("profile");
+    navigate("/login");
   }
+
 
   const toggleMenu = () => setIsMenuOpen(prev => !prev)
 
