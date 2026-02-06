@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import Logo from "../images/Logo"
+import BannerAd from "../components/BannerAd";
 import { supabase } from "../supabaseClient"
 
 import { SiTiktok } from "react-icons/si";
@@ -18,6 +19,14 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
   useEffect(() => {
     fetchProfile()
   }, [])
+
+  const [showAd, setShowAd] = useState(false);
+
+  useEffect(() => {
+    // Trigger the ad 0.75 seconds after the user lands on the dashboard
+    const timer = setTimeout(() => setShowAd(true), 750);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Replace the fetchProfile function in your StartExam.js with this:
 
@@ -220,6 +229,11 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
             Choose Course
         </button>
       </div>
+      {showAd && (
+        <BannerAd
+          onAdClose={() => setShowAd(false)} 
+        />
+      )}
     </div>
   )
 }

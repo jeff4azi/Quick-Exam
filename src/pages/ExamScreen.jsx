@@ -110,10 +110,10 @@ const ExamScreen = ({
             onClick={() => setExitOverlayOpen(true)}
             className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-all"
           >
-            <FiChevronLeft className="size-6 text-slate-600 dark:text-slate-300" />
+            <FiChevronLeft className="-translate-x-1/18 size-6 text-slate-600 dark:text-slate-300" />
           </button>
 
-          <div className="flex flex-col items-center translate-x-1/2">
+          <div className="absolute left-1/2 flex flex-col items-center -translate-x-1/2">
              <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-0.5">Progress</span>
              <div className="font-black text-slate-900 dark:text-white">
                 {currentIndex + 1} <span className="text-slate-400 font-medium">/ {totalQuestions}</span>

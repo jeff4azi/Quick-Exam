@@ -3,10 +3,12 @@ import WhatsAppCard from "../components/WhatsAppCard"
 import { useEffect, useState } from "react"
 import ReactGA from "react-ga4"
 import { supabase } from "../supabaseClient"
+import BannerAd from "../components/BannerAd";
 
 const ResultScreen = ({ questions, results, answers, setAnswers, selectedCourse }) => {
   const navigate = useNavigate()
   const [userData, setUserData] = useState({ name: "Scholar", college: "" })
+  const [showAd, setShowAd] = useState(true);
   
   const formatNum = (num) => String(num).padStart(2, '0')
   const answeredCount = answers.filter(a => a !== undefined).length
@@ -160,6 +162,12 @@ const ResultScreen = ({ questions, results, answers, setAnswers, selectedCourse 
       <div className="fixed bottom-24 right-6 pointer-events-auto">
         <WhatsAppCard />
       </div>
+
+      {showAd && (
+        <BannerAd 
+          onAdClose={() => setShowAd(false)} 
+        />
+      )}
     </div>
   )
 }
