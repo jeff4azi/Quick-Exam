@@ -13,11 +13,11 @@ const AD_DATABASE = [
     type: "image",
     url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770389975/Advertise_Here_20260206_152335_0000_lg0smh.png",
     duration: 5,
-    whatsapp: "2347015585397",
+    whatsapp: "2349069306883",
   },
   {
     type: "video",
-    url: "https://res.cloudinary.com/dxdnhc1hm/video/upload/v1770381976/samples/elephants.mp4",
+    url: "https://res.cloudinary.com/dxdnhc1hm/video/upload/v1770495366/YouCut_20260207_210718090_zfu7lv.mp4",
     duration: 10,
     whatsapp: "2340000000000",
   },
