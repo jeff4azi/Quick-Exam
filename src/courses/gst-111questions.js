@@ -2270,6 +2270,606 @@ export const gst111Questions = [
       "The sentence has no object"
     ],
     correct: "The subject performs the action"
+  },
+  {
+    id: "gst111-293",
+    question: "Communication is effective only when the receiver ______ the message.",
+    options: ["hears", "understands", "receives", "records"],
+    correct: "understands"
+  },
+  {
+    id: "gst111-294",
+    question: "The major purpose of feedback in communication is to ______.",
+    options: ["delay response", "confuse the sender", "ensure understanding", "ignore the message"],
+    correct: "ensure understanding"
+  },
+  {
+    id: "gst111-295",
+    question: "Noise arising from wrong interpretation of words is called ______ noise.",
+    options: ["physical", "mechanical", "semantic", "emotional"],
+    correct: "semantic"
+  },
+  {
+    id: "gst111-296",
+    question: "A lecture delivered without students’ response is an example of ______ communication.",
+    options: ["two-way", "effective", "one-way", "transactional"],
+    correct: "one-way"
+  },
+  {
+    id: "gst111-297",
+    question: "Communication becomes ineffective mainly when ______.",
+    options: ["feedback is absent", "message is short", "channel is written", "sender is educated"],
+    correct: "feedback is absent"
+  },
+  {
+    id: "gst111-298",
+    question: "Which of the following is NOT a barrier to communication?",
+    options: ["Noise", "Feedback", "Cultural difference", "Emotional state"],
+    correct: "Feedback"
+  },
+  {
+    id: "gst111-299",
+    question: "The basic unit of communication is the ______.",
+    options: ["sentence", "word", "idea", "letter"],
+    correct: "idea"
+  },
+  {
+    id: "gst111-300",
+    question: "The sender encodes a message by ______.",
+    options: ["receiving ideas", "converting ideas into symbols", "interpreting symbols", "giving feedback"],
+    correct: "converting ideas into symbols"
+  },
+  {
+    id: "gst111-301",
+    question: "In classroom communication, the teacher mainly functions as the ______.",
+    options: ["receiver", "decoder", "sender", "channel"],
+    correct: "sender"
+  },
+  {
+    id: "gst111-302",
+    question: "Which medium allows immediate feedback?",
+    options: ["Newspaper", "Notice board", "Radio", "Face-to face"],
+    correct: "Face-to face"
+  },
+  {
+    id: "gst111-303",
+    question: "Facial expressions are examples of ______ communication.",
+    options: ["verbal", "written", "non-verbal", "formal"],
+    correct: "non-verbal"
+  },
+  {
+    id: "gst111-304",
+    question: "Feedback confirms ______.",
+    options: ["message length", "sender’s salary", "understanding", "channel efficiency"],
+    correct: "understanding"
+  },
+  {
+    id: "gst111-305",
+    question: "Noise can be ______.",
+    options: ["physical only", "semantic only", "psychological only", "physical, psychological, or semantic"],
+    correct: "physical, psychological, or semantic"
+  },
+  {
+    id: "gst111-306",
+    question: "Effective communication reduces ______.",
+    options: ["clarity", "misunderstanding", "learning", "knowledge"],
+    correct: "misunderstanding"
+  },
+  {
+    id: "gst111-307",
+    question: "Written communication is preferred because it is ______.",
+    options: ["fast", "permanent", "noisy", "optional"],
+    correct: "permanent"
+  },
+  {
+    id: "gst111-308",
+    question: "One-way communication occurs when ______.",
+    options: ["feedback is given", "no feedback occurs", "channel is clear", "noise is absent"],
+    correct: "no feedback occurs"
+  },
+  {
+    id: "gst111-309",
+    question: "Communication is called circular because ______.",
+    options: ["it repeats messages", "sender and receiver exchange roles", "feedback is ignored", "noise persists"],
+    correct: "sender and receiver exchange roles"
+  },
+  {
+    id: "gst111-310",
+    question: "The most reliable indicator of communication is ______.",
+    options: ["silence", "feedback", "channel", "sender"],
+    correct: "feedback"
+  },
+  {
+    id: "gst111-311",
+    question: "Oral communication mainly involves ______.",
+    options: ["writing", "speaking", "drawing", "gestures"],
+    correct: "speaking"
+  },
+  {
+    id: "gst111-312",
+    question: "Non-verbal communication can reinforce ______.",
+    options: ["spoken messages", "noise", "channel", "feedback"],
+    correct: "spoken messages"
+  },
+  {
+    id: "gst111-313",
+    question: "The channel of communication is the ______.",
+    options: ["medium", "sender", "feedback", "noise"],
+    correct: "medium"
+  },
+  {
+    id: "gst111-314",
+    question: "Classroom communication primarily serves to ______.",
+    options: ["entertain", "transmit knowledge", "control noise", "confuse learners"],
+    correct: "transmit knowledge"
+  },
+  {
+    id: "gst111-315",
+    question: "A sender fails to communicate effectively when ______.",
+    options: ["feedback is received", "noise interferes", "message is clear", "receiver listens actively"],
+    correct: "noise interferes"
+  },
+  {
+    id: "gst111-316",
+    question: "Semantic noise occurs due to ______.",
+    options: ["language barriers", "physical disturbance", "silence", "gestures"],
+    correct: "language barriers"
+  },
+  {
+    id: "gst111-317",
+    question: "Feedback may be ______.",
+    options: ["verbal only", "non-verbal only", "verbal or non-verbal", "ignored always"],
+    correct: "verbal or non-verbal"
+  },
+  {
+    id: "gst111-318",
+    question: "Communication requires a shared ______.",
+    options: ["channel", "understanding", "noise", "distance"],
+    correct: "understanding"
+  },
+  {
+    id: "gst111-319",
+    question: "The message in communication is ______.",
+    options: ["the medium", "the idea sent", "the sender", "the noise"],
+    correct: "the idea sent"
+  },
+  {
+    id: "gst111-320",
+    question: "Face-to-face communication is the most ______.",
+    options: ["delayed", "permanent", "effective", "optional"],
+    correct: "effective"
+  },
+  {
+    id: "gst111-321",
+    question: "The person receiving the message is called the ______.",
+    options: ["sender", "decoder", "feedback", "noise"],
+    correct: "decoder"
+  },
+  {
+    id: "gst111-322",
+    question: "Effective communication mainly depends on ______.",
+    options: ["length of message", "clarity and understanding", "salary of sender", "channel only"],
+    correct: "clarity and understanding"
+  },
+  {
+    id: "gst111-323",
+    question: "In SVOCA, ‘C’ stands for ______.",
+    options: ["complement", "clause", "code", "channel"],
+    correct: "complement"
+  },
+  {
+    id: "gst111-324",
+    question: "In ‘The boy became angry’, ‘angry’ is a ______.",
+    options: ["object", "adjunct", "complement", "verb"],
+    correct: "complement"
+  },
+  {
+    id: "gst111-325",
+    question: "An adjunct in a sentence is usually ______.",
+    options: ["compulsory", "optional", "subject", "verb"],
+    correct: "optional"
+  },
+  {
+    id: "gst111-326",
+    question: "In ‘She placed the book on the table’, ‘on the table’ is an ______.",
+    options: ["object", "complement", "adjunct", "subject"],
+    correct: "adjunct"
+  },
+  {
+    id: "gst111-327",
+    question: "In ‘They elected him president’, ‘president’ is a ______.",
+    options: ["subject", "object", "object complement", "adjunct"],
+    correct: "object complement"
+  },
+  {
+    id: "gst111-328",
+    question: "Which sentence contains SVC structure?",
+    options: ["He ran fast", "She is happy", "They played football", "We read books"],
+    correct: "She is happy"
+  },
+  {
+    id: "gst111-329",
+    question: "The verb in a sentence mainly shows ______.",
+    options: ["description", "action or state", "position", "quantity"],
+    correct: "action or state"
+  },
+  {
+    id: "gst111-330",
+    question: "A sentence without a subject is considered ______.",
+    options: ["complete", "incomplete", "compound", "complex"],
+    correct: "incomplete"
+  },
+  {
+    id: "gst111-331",
+    question: "An adjunct mainly provides ______ information.",
+    options: ["optional", "compulsory", "core", "main"],
+    correct: "optional"
+  },
+  {
+    id: "gst111-332",
+    question: "In ‘The sky grew dark’, ‘dark’ is a ______.",
+    options: ["verb", "object", "complement", "adjunct"],
+    correct: "complement"
+  },
+  {
+    id: "gst111-333",
+    question: "‘The teacher is a professional’ – ‘a professional’ is a ______.",
+    options: ["object", "subject complement", "adjunct", "verb"],
+    correct: "subject complement"
+  },
+  {
+    id: "gst111-334",
+    question: "‘She sings beautifully’ – ‘beautifully’ is an ______.",
+    options: ["object", "complement", "adjunct", "subject"],
+    correct: "adjunct"
+  },
+  {
+    id: "gst111-335",
+    question: "‘They appointed her manager’ – ‘manager’ is a ______.",
+    options: ["object complement", "subject", "adjunct", "complement"],
+    correct: "object complement"
+  },
+  {
+    id: "gst111-336",
+    question: "‘The children are happy’ – ‘happy’ is a ______.",
+    options: ["verb", "complement", "object", "adjunct"],
+    correct: "complement"
+  },
+  {
+    id: "gst111-337",
+    question: "In ‘John reads books’, ‘books’ is the ______.",
+    options: ["subject", "verb", "object", "complement"],
+    correct: "object"
+  },
+  {
+    id: "gst111-338",
+    question: "In ‘The students finished the assignment yesterday’, ‘yesterday’ is an ______.",
+    options: ["object", "complement", "adjunct", "subject"],
+    correct: "adjunct"
+  },
+  {
+    id: "gst111-339",
+    question: "SVO stands for ______.",
+    options: ["Subject Verb Object", "Sentence Verb Order", "Subject Verb Optional", "Statement Verb Object"],
+    correct: "Subject Verb Object"
+  },
+  {
+    id: "gst111-340",
+    question: "The complement completes the meaning of a ______ verb.",
+    options: ["action", "linking", "transitive", "intransitive"],
+    correct: "linking"
+  },
+  {
+    id: "gst111-341",
+    question: "Which sentence is optional adjunct-heavy?",
+    options: ["She ran", "She ran quickly in the park", "She slept", "They played"],
+    correct: "She ran quickly in the park"
+  },
+  {
+    id: "gst111-342",
+    question: "In ‘My brother plays football’, ‘football’ is a ______.",
+    options: ["subject", "object", "verb", "complement"],
+    correct: "object"
+  },
+  {
+    id: "gst111-343",
+    question: "A synonym of ‘scarce’ is ______.",
+    options: ["rare", "many", "surplus", "enough"],
+    correct: "rare"
+  },
+  {
+    id: "gst111-344",
+    question: "A synonym of ‘abrupt’ is ______.",
+    options: ["calm", "sudden", "gentle", "slow"],
+    correct: "sudden"
+  },
+  {
+    id: "gst111-345",
+    question: "A synonym of ‘vital’ is ______.",
+    options: ["minor", "optional", "essential", "weak"],
+    correct: "essential"
+  },
+  {
+    id: "gst111-346",
+    question: "A synonym of ‘commence’ is ______.",
+    options: ["end", "delay", "begin", "stop"],
+    correct: "begin"
+  },
+  {
+    id: "gst111-347",
+    question: "A synonym of ‘diligent’ is ______.",
+    options: ["lazy", "careful", "hardworking", "weak"],
+    correct: "hardworking"
+  },
+  {
+    id: "gst111-348",
+    question: "A synonym of ‘obtain’ is ______.",
+    options: ["lose", "get", "abandon", "neglect"],
+    correct: "get"
+  },
+  {
+    id: "gst111-349",
+    question: "A synonym of ‘elated’ is ______.",
+    options: ["sad", "happy", "angry", "neutral"],
+    correct: "happy"
+  },
+  {
+    id: "gst111-350",
+    question: "A synonym of ‘assist’ is ______.",
+    options: ["help", "ignore", "delay", "hinder"],
+    correct: "help"
+  },
+  {
+    id: "gst111-351",
+    question: "A synonym of ‘terminate’ is ______.",
+    options: ["start", "finish", "continue", "postpone"],
+    correct: "finish"
+  },
+  {
+    id: "gst111-352",
+    question: "A synonym of ‘brave’ is ______.",
+    options: ["timid", "courageous", "weak", "fearful"],
+    correct: "courageous"
+  },
+  {
+    id: "gst111-353",
+    question: "The antonym of ‘expand’ is ______.",
+    options: ["widen", "enlarge", "contract", "increase"],
+    correct: "contract"
+  },
+  {
+    id: "gst111-354",
+    question: "The antonym of ‘ancient’ is ______.",
+    options: ["historic", "old", "modern", "past"],
+    correct: "modern"
+  },
+  {
+    id: "gst111-355",
+    question: "The antonym of ‘polite’ is ______.",
+    options: ["rude", "calm", "gentle", "kind"],
+    correct: "rude"
+  },
+  {
+    id: "gst111-356",
+    question: "The antonym of ‘frequent’ is ______.",
+    options: ["often", "regular", "rare", "usual"],
+    correct: "rare"
+  },
+  {
+    id: "gst111-357",
+    question: "The antonym of ‘complex’ is ______.",
+    options: ["hard", "complicated", "simple", "difficult"],
+    correct: "simple"
+  },
+  {
+    id: "gst111-358",
+    question: "The antonym of ‘optimistic’ is ______.",
+    options: ["hopeful", "negative", "confident", "cheerful"],
+    correct: "negative"
+  },
+  {
+    id: "gst111-359",
+    question: "The antonym of ‘ascend’ is ______.",
+    options: ["rise", "climb", "descend", "soar"],
+    correct: "descend"
+  },
+  {
+    id: "gst111-360",
+    question: "The antonym of ‘permit’ is ______.",
+    options: ["allow", "forbid", "approve", "authorize"],
+    correct: "forbid"
+  },
+  {
+    id: "gst111-361",
+    question: "The antonym of ‘generous’ is ______.",
+    options: ["kind", "selfish", "giving", "caring"],
+    correct: "selfish"
+  },
+  {
+    id: "gst111-362",
+    question: "The antonym of ‘accurate’ is ______.",
+    options: ["precise", "correct", "wrong", "exact"],
+    correct: "wrong"
+  },
+  {
+    id: "gst111-363",
+    question: "Choose the correctly spelt word.",
+    options: ["Accomodation", "Accommodation", "Acommodation", "Accommadation"],
+    correct: "Accommodation"
+  },
+  {
+    id: "gst111-364",
+    question: "Which is correct?",
+    options: ["Neccessary", "Necesary", "Necessary", "Neccesary"],
+    correct: "Necessary"
+  },
+  {
+    id: "gst111-365",
+    question: "Correct spelling is ______.",
+    options: ["Priviledge", "Privilege", "Privelege", "Priviledg"],
+    correct: "Privilege"
+  },
+  {
+    id: "gst111-366",
+    question: "Choose the correct spelling.",
+    options: ["Seperate", "Separate", "Seperete", "Separete"],
+    correct: "Separate"
+  },
+  {
+    id: "gst111-367",
+    question: "Which is correctly spelt?",
+    options: ["Pronounciation", "Pronunciation", "Pronunsiation", "Prononciation"],
+    correct: "Pronunciation"
+  },
+  {
+    id: "gst111-368",
+    question: "Correct spelling of the word meaning “to acquire knowledge” is ______.",
+    options: ["Learnig", "Learning", "Lernning", "Learing"],
+    correct: "Learning"
+  },
+  {
+    id: "gst111-369",
+    question: "Choose the correctly spelt word:",
+    options: ["Recieve", "Receive", "Recive", "Reciive"],
+    correct: "Receive"
+  },
+  {
+    id: "gst111-370",
+    question: "Which is correct?",
+    options: ["Definitely", "Definately", "Definetly", "Defanitely"],
+    correct: "Definitely"
+  },
+  {
+    id: "gst111-371",
+    question: "Correct spelling is ______.",
+    options: ["Occassion", "Occasion", "Ocassion", "Occation"],
+    correct: "Occasion"
+  },
+  {
+    id: "gst111-372",
+    question: "Which word is correct?",
+    options: ["Separate", "Seperate", "Seperrate", "Separete"],
+    correct: "Separate"
+  },
+  {
+    id: "gst111-373",
+    question: "Which of the following words functions as a verb?",
+    options: ["Run (noun)", "Run (action)", "Running shoes", "Runner"],
+    correct: "Run (action)"
+  },
+  {
+    id: "gst111-374",
+    question: "Identify the verb: “She sings beautifully.”",
+    options: ["She", "sings", "beautifully", "none"],
+    correct: "sings"
+  },
+  {
+    id: "gst111-375",
+    question: "Which sentence has a transitive verb?",
+    options: ["I sleep early.", "He kicked the ball.", "Birds fly.", "The sun rises."],
+    correct: "He kicked the ball."
+  },
+  {
+    id: "gst111-376",
+    question: "Which sentence has an intransitive verb?",
+    options: ["She eats rice.", "He runs fast.", "They write letters.", "I opened the door."],
+    correct: "He runs fast."
+  },
+  {
+    id: "gst111-377",
+    question: "Choose the action verb:",
+    options: ["Happiness", "Jump", "Teacher", "Quickly"],
+    correct: "Jump"
+  },
+  {
+    id: "gst111-378",
+    question: "Identify the part of speech of “quickly” in “He runs quickly.”",
+    options: ["Verb", "Adverb", "Adjective", "Noun"],
+    correct: "Adverb"
+  },
+  {
+    id: "gst111-379",
+    question: "Identify the part of speech: “The tall building collapsed.”",
+    options: ["Adjective", "Noun", "Verb", "Pronoun"],
+    correct: "Adjective"
+  },
+  {
+    id: "gst111-380",
+    question: "Choose the correct part of speech: “She gave me a gift.” – “me” is a ______.",
+    options: ["Pronoun", "Noun", "Verb", "Adjective"],
+    correct: "Pronoun"
+  },
+  {
+    id: "gst111-381",
+    question: "Identify the part of speech of “and” in “He ran and she jumped.”",
+    options: ["Conjunction", "Adverb", "Verb", "Preposition"],
+    correct: "Conjunction"
+  },
+  {
+    id: "gst111-382",
+    question: "Identify the part of speech: “Books are useful.” – “books” is a ______.",
+    options: ["Adjective", "Noun", "Verb", "Pronoun"],
+    correct: "Noun"
+  },
+  {
+    id: "gst111-383",
+    question: "A figure of speech that gives human qualities to non-living things is ______.",
+    options: ["Simile", "Metaphor", "Personification", "Hyperbole"],
+    correct: "Personification"
+  },
+  {
+    id: "gst111-384",
+    question: "“The sun smiled at us” is an example of ______.",
+    options: ["Simile", "Metaphor", "Personification", "Irony"],
+    correct: "Personification"
+  },
+  {
+    id: "gst111-385",
+    question: "“As brave as a lion” is an example of ______.",
+    options: ["Metaphor", "Simile", "Hyperbole", "Irony"],
+    correct: "Simile"
+  },
+  {
+    id: "gst111-386",
+    question: "“I am so hungry I could eat a horse” is ______.",
+    options: ["Simile", "Metaphor", "Hyperbole", "Personification"],
+    correct: "Hyperbole"
+  },
+  {
+    id: "gst111-387",
+    question: "“She sells sea shells by the sea shore” is ______.",
+    options: ["Alliteration", "Metaphor", "Simile", "Irony"],
+    correct: "Alliteration"
+  },
+  {
+    id: "gst111-388",
+    question: "A question tag is mainly used to ______.",
+    options: ["command", "confirm information", "insult", "narrate"],
+    correct: "confirm information"
+  },
+  {
+    id: "gst111-389",
+    question: "“You are coming, ______?”",
+    options: ["aren’t you", "are you", "don’t you", "won’t you"],
+    correct: "aren’t you"
+  },
+  {
+    id: "gst111-390",
+    question: "“He can’t drive, ______?”",
+    options: ["can he", "can’t he", "does he", "doesn’t he"],
+    correct: "can he"
+  },
+  {
+    id: "gst111-391",
+    question: "“She loves music, ______?”",
+    options: ["doesn’t she", "do she", "isn’t she", "doesn’t it"],
+    correct: "doesn’t she"
+  },
+  {
+    id: "gst111-392",
+    question: "“We should start now, ______?”",
+    options: ["shouldn’t we", "should we", "do we", "don’t we"],
+    correct: "shouldn’t we"
   }
 ];
 
