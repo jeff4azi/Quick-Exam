@@ -1840,5 +1840,437 @@ export const gst111Questions = [
       "Feedback is given"
     ],
     correct: "Message is misunderstood"
+  },
+  {
+    id: "gst111-223",
+    question: "Which of the following is considered a 'Lexical' word?",
+    options: ["The", "And", "Run", "In"],
+    correct: "Run"
+  },
+  {
+    id: "gst111-224",
+    question: "Words that have little meaning on their own but show relationships between other words (e.g., prepositions, conjunctions) are called:",
+    options: ["Content words", "Grammatical words", "Lexical words", "Open class words"],
+    correct: "Grammatical words"
+  },
+  {
+    id: "gst111-225",
+    question: "The sentence 'The students read in the library' is an example of a:",
+    options: ["Simple sentence", "Compound sentence", "Complex sentence", "Compound-complex sentence"],
+    correct: "Simple sentence"
+  },
+  {
+    id: "gst111-226",
+    question: "'Because it rained, we stayed indoors.' This is a:",
+    options: ["Simple sentence", "Compound sentence", "Complex sentence", "Fragment"],
+    correct: "Complex sentence"
+  },
+  {
+    id: "gst111-227",
+    question: "Which of the following word classes is an 'Open Class' (meaning new words are frequently added)?",
+    options: ["Pronouns", "Conjunctions", "Nouns", "Prepositions"],
+    correct: "Nouns"
+  },
+  {
+    id: "gst111-228",
+    question: "In the sentence 'She runs fast,' the word 'fast' functions as:",
+    options: ["An adjective", "An adverb", "A noun", "A verb"],
+    correct: "An adverb"
+  },
+  {
+    id: "gst111-229",
+    question: "Identify the grammatical subject in: 'The large black dog barked loudly.'",
+    options: ["The large", "Dog", "The large black dog", "Barked"],
+    correct: "The large black dog"
+  },
+  {
+    id: "gst111-230",
+    question: "'I want to go, but I am tired.' This is a:",
+    options: ["Simple sentence", "Compound sentence", "Complex sentence", "Phrase"],
+    correct: "Compound sentence"
+  },
+  {
+    id: "gst111-231",
+    question: "Which of the following is NOT a part of speech?",
+    options: ["Adjective", "Clause", "Preposition", "Interjection"],
+    correct: "Clause"
+  },
+  {
+    id: "gst111-232",
+    question: "A sentence must contain at least one:",
+    options: ["Phrase", "Independent clause", "Dependent clause", "Preposition"],
+    correct: "Independent clause"
+  },
+  {
+    id: "gst111-233",
+    question: "Which tense is used in: 'She has finished her work'?",
+    options: ["Simple Past", "Past Perfect", "Present Perfect", "Present Continuous"],
+    correct: "Present Perfect"
+  },
+  {
+    id: "gst111-234",
+    question: "'If I were you, I would accept the offer.' This sentence expresses which mood?",
+    options: ["Indicative", "Imperative", "Subjunctive", "Interrogative"],
+    correct: "Subjunctive"
+  },
+  {
+    id: "gst111-235",
+    question: "'Close the door.' This sentence is in the ______ mood.",
+    options: ["Indicative", "Imperative", "Subjunctive", "Conditional"],
+    correct: "Imperative"
+  },
+  {
+    id: "gst111-236",
+    question: "Choose the correct verb: 'Bola speaks English, but Bayo ______.'",
+    options: ["do not", "don't", "does not", "speaking"],
+    correct: "does not"
+  },
+  {
+    id: "gst111-237",
+    question: "Concord refers to the agreement between:",
+    options: ["Subject and Object", "Subject and Verb", "Verb and Adverb", "Noun and Adjective"],
+    correct: "Subject and Verb"
+  },
+  {
+    id: "gst111-238",
+    question: "'The committee ______ decided to postpone the meeting.' (acting as a single unit)",
+    options: ["has", "have", "are", "were"],
+    correct: "has"
+  },
+  {
+    id: "gst111-239",
+    question: "'Neither of the boys ______ present yesterday.'",
+    options: ["were", "was", "are", "have been"],
+    correct: "was"
+  },
+  {
+    id: "gst111-240",
+    question: "'Bread and butter ______ my favorite breakfast.'",
+    options: ["are", "is", "were", "have"],
+    correct: "is"
+  },
+  {
+    id: "gst111-241",
+    question: "Which sentence is grammatically correct?",
+    options: [
+      "One of the boys are coming.",
+      "One of the boys is coming.",
+      "One of the boys were coming.",
+      "One of the boys have come."
+    ],
+    correct: "One of the boys is coming."
+  },
+  {
+    id: "gst111-242",
+    question: "'By this time tomorrow, I ______ the assignment.'",
+    options: ["will finish", "will have finished", "am finishing", "have finished"],
+    correct: "will have finished"
+  },
+  {
+    id: "gst111-243",
+    question: "Prefixes and suffixes are collectively known as:",
+    options: ["Roots", "Stems", "Affixes", "Phrases"],
+    correct: "Affixes"
+  },
+  {
+    id: "gst111-244",
+    question: "The process of shortening a word without changing its meaning (e.g., 'exam' from 'examination') is called:",
+    options: ["Compounding", "Clipping", "Blending", "Acronym"],
+    correct: "Clipping"
+  },
+  {
+    id: "gst111-245",
+    question: "Joining two words that can stand alone to form a new word (e.g., 'class' + 'room' = 'classroom') is called:",
+    options: ["Affixation", "Compounding", "Clipping", "Derivation"],
+    correct: "Compounding"
+  },
+  {
+    id: "gst111-246",
+    question: "In the word 'Unbelievable,' the root word is:",
+    options: ["Un", "Believe", "Able", "Unbeliev"],
+    correct: "Believe"
+  },
+  {
+    id: "gst111-247",
+    question: "The word 'Smog' (Smoke + Fog) is an example of:",
+    options: ["Clipping", "Blending", "Compounding", "Acronym"],
+    correct: "Blending"
+  },
+  {
+    id: "gst111-248",
+    question: "Which of the following is a suffix?",
+    options: ["Pre-", "Dis-", "-ment", "Un-"],
+    correct: "-ment"
+  },
+  {
+    id: "gst111-249",
+    question: "'NASA' is an example of:",
+    options: ["An abbreviation", "An acronym", "A blend", "A clip"],
+    correct: "An acronym"
+  },
+  {
+    id: "gst111-250",
+    question: "The addition of a prefix usually changes the word's:",
+    options: ["Word class", "Meaning", "Tense", "Spelling only"],
+    correct: "Meaning"
+  },
+  {
+    id: "gst111-251",
+    question: "The addition of a suffix usually changes the word's:",
+    options: ["Meaning only", "Word class (Part of speech)", "Root", "Prefix"],
+    correct: "Word class (Part of speech)"
+  },
+  {
+    id: "gst111-252",
+    question: "'Dr.' for Doctor is an example of:",
+    options: ["Acronym", "Abbreviation", "Contraction", "Blending"],
+    correct: "Abbreviation"
+  },
+  {
+    id: "gst111-253",
+    question: "A group of words that contains a finite verb and makes complete sense is called a:",
+    options: ["Phrase", "Dependent Clause", "Main/Independent Clause", "Prepositional Phrase"],
+    correct: "Main/Independent Clause"
+  },
+  {
+    id: "gst111-254",
+    question: "A clause that cannot stand alone as a sentence is called:",
+    options: ["Main Clause", "Subordinate Clause", "Finite Clause", "Noun Clause"],
+    correct: "Subordinate Clause"
+  },
+  {
+    id: "gst111-255",
+    question: "In the sentence 'I know what you did,' the underlined part is a:",
+    options: ["Noun Clause", "Adjectival Clause", "Adverbial Clause", "Main Clause"],
+    correct: "Noun Clause"
+  },
+  {
+    id: "gst111-256",
+    question: "'The man who came yesterday is my uncle.' The underlined part is a(n):",
+    options: ["Noun Clause", "Adjectival Clause", "Adverbial Clause", "Prepositional Clause"],
+    correct: "Adjectival Clause"
+  },
+  {
+    id: "gst111-257",
+    question: "'He ran because he was late.' The underlined part is a(n):",
+    options: ["Noun Clause", "Adjectival Clause", "Adverbial Clause", "Gerund"],
+    correct: "Adverbial Clause"
+  },
+  {
+    id: "gst111-258",
+    question: "Which of the following contains a finite verb?",
+    options: ["To run fast", "Running fast", "He runs fast", "The fast runner"],
+    correct: "He runs fast"
+  },
+  {
+    id: "gst111-259",
+    question: "A Nominal clause functions as a:",
+    options: ["Verb", "Adjective", "Noun", "Adverb"],
+    correct: "Noun"
+  },
+  {
+    id: "gst111-260",
+    question: "Identify the main clause: 'Although it rained, we played football.'",
+    options: ["Although it rained", "We played football", "Played football", "Although"],
+    correct: "We played football"
+  },
+  {
+    id: "gst111-261",
+    question: "'That he failed the exam surprised everyone.' The clause 'That he failed the exam' functions as the:",
+    options: ["Object", "Subject", "Complement", "Adjective"],
+    correct: "Subject"
+  },
+  {
+    id: "gst111-262",
+    question: "Adverbial clauses modify:",
+    options: ["Nouns", "Pronouns", "Verbs, Adjectives, or other Adverbs", "Prepositions"],
+    correct: "Verbs, Adjectives, or other Adverbs"
+  },
+  {
+    id: "gst111-263",
+    question: "A group of related words that lacks a finite verb is called a:",
+    options: ["Clause", "Sentence", "Phrase", "Subject"],
+    correct: "Phrase"
+  },
+  {
+    id: "gst111-264",
+    question: "'The tall black gate is open.' The underlined words form a:",
+    options: ["Noun Phrase", "Adjective Phrase", "Verb Phrase", "Adverbial Phrase"],
+    correct: "Noun Phrase"
+  },
+  {
+    id: "gst111-265",
+    question: "'He is running very quickly.' The underlined words form a:",
+    options: ["Noun Phrase", "Adverbial Phrase", "Adjectival Phrase", "Prepositional Phrase"],
+    correct: "Adverbial Phrase"
+  },
+  {
+    id: "gst111-266",
+    question: "'The book on the table is mine.' The underlined phrase functions as:",
+    options: ["An Adverb (telling where)", "An Adjective (describing the book)", "A Noun", "A Verb"],
+    correct: "An Adjective (describing the book)"
+  },
+  {
+    id: "gst111-267",
+    question: "'To err is human.' The underlined part is a(n):",
+    options: ["Prepositional Phrase", "Infinitive Phrase", "Gerund Phrase", "Participial Phrase"],
+    correct: "Infinitive Phrase"
+  },
+  {
+    id: "gst111-268",
+    question: "'Smoking is dangerous.' The underlined word acts as a:",
+    options: ["Participle", "Gerund Phrase (acting as a noun)", "Verb", "Adjective"],
+    correct: "Gerund Phrase (acting as a noun)"
+  },
+  {
+    id: "gst111-269",
+    question: "'He went into the room.' This is a:",
+    options: ["Noun Phrase", "Prepositional Phrase", "Gerund Phrase", "Infinitive Phrase"],
+    correct: "Prepositional Phrase"
+  },
+  {
+    id: "gst111-270",
+    question: "Which of the following is a Noun Phrase?",
+    options: ["Extremely loud", "The beautiful garden", "In the morning", "Has been eating"],
+    correct: "The beautiful garden"
+  },
+  {
+    id: "gst111-271",
+    question: "A phrase acting as the subject of a sentence is likely a:",
+    options: ["Noun Phrase", "Adverbial Phrase", "Adjective Phrase", "Prepositional Phrase"],
+    correct: "Noun Phrase"
+  },
+  {
+    id: "gst111-272",
+    question: "'She wants to buy a car.' The underlined phrase is:",
+    options: ["Prepositional", "Infinitive", "Gerund", "Adverbial"],
+    correct: "Infinitive"
+  },
+  {
+    id: "gst111-273",
+    question: "Communication between oneself (e.g., thinking) is called:",
+    options: ["Interpersonal communication", "Intrapersonal communication", "Mass communication", "Public communication"],
+    correct: "Intrapersonal communication"
+  },
+  {
+    id: "gst111-274",
+    question: "Communication without feedback is known as:",
+    options: ["Circular communication", "Interactive communication", "One-way (Linear) communication", "Transactional communication"],
+    correct: "One-way (Linear) communication"
+  },
+  {
+    id: "gst111-275",
+    question: "In the SQ3R study technique, the 'S' stands for:",
+    options: ["Study", "Survey", "Scan", "Search"],
+    correct: "Survey"
+  },
+  {
+    id: "gst111-276",
+    question: "The second 'R' in SQ3R stands for:",
+    options: ["Read", "Recite", "Review", "Recall"],
+    correct: "Recite"
+  },
+  {
+    id: "gst111-277",
+    question: "The third 'R' in SQ3R stands for:",
+    options: ["Read", "Recite", "Review", "Remember"],
+    correct: "Review"
+  },
+  {
+    id: "gst111-278",
+    question: "When you read a text quickly to get the general idea, you are:",
+    options: ["Scanning", "Skimming", "Studying", "Reviewing"],
+    correct: "Skimming"
+  },
+  {
+    id: "gst111-279",
+    question: "When you look for specific information (like a date or name) in a text, you are:",
+    options: ["Scanning", "Skimming", "Critical reading", "Intensive reading"],
+    correct: "Scanning"
+  },
+  {
+    id: "gst111-280",
+    question: "A good student must provide ______ for his/her work to avoid plagiarism.",
+    options: ["Only the page number", "Only the publisher", "A reference/citation", "The initials of the author"],
+    correct: "A reference/citation"
+  },
+  {
+    id: "gst111-281",
+    question: "Which of the following is a receptive language skill?",
+    options: ["Speaking", "Writing", "Listening", "Acting"],
+    correct: "Listening"
+  },
+  {
+    id: "gst111-282",
+    question: "Which of the following is a productive language skill?",
+    options: ["Reading", "Listening", "Writing", "Observation"],
+    correct: "Writing"
+  },
+  {
+    id: "gst111-283",
+    question: "Which type of writing is used to tell a story?",
+    options: ["Expository", "Argumentative", "Narrative", "Descriptive"],
+    correct: "Narrative"
+  },
+  {
+    id: "gst111-284",
+    question: "Writing that aims to persuade or convince the reader is called:",
+    options: ["Narrative", "Argumentative", "Descriptive", "Expository"],
+    correct: "Argumentative"
+  },
+  {
+    id: "gst111-285",
+    question: "'The wind whispered through the trees' is an example of:",
+    options: ["Simile", "Metaphor", "Personification", "Hyperbole"],
+    correct: "Personification"
+  },
+  {
+    id: "gst111-286",
+    question: "'He is as strong as a lion' is an example of:",
+    options: ["Metaphor", "Simile", "Irony", "Oxymoron"],
+    correct: "Simile"
+  },
+  {
+    id: "gst111-287",
+    question: "'I've told you a million times' is an example of:",
+    options: ["Paradox", "Hyperbole", "Euphemism", "Synecdoche"],
+    correct: "Hyperbole"
+  },
+  {
+    id: "gst111-288",
+    question: "Expository writing is primarily concerned with:",
+    options: ["Entertaining", "Explaining or informing", "Persuading", "Describing sensory details"],
+    correct: "Explaining or informing"
+  },
+  {
+    id: "gst111-289",
+    question: "The element of communication that interferes with the message is called:",
+    options: ["Channel", "Feedback", "Noise", "Context"],
+    correct: "Noise"
+  },
+  {
+    id: "gst111-290",
+    question: "In a sentence, the person performing the action is the:",
+    options: ["Object", "Subject", "Predicate", "Complement"],
+    correct: "Subject"
+  },
+  {
+    id: "gst111-291",
+    question: "Which of the following is required for a group of words to be a clause?",
+    options: ["A subject and a preposition", "A subject and a finite verb", "An adjective and a noun", "A phrase and a clause"],
+    correct: "A subject and a finite verb"
+  },
+  {
+    id: "gst111-292",
+    question: "'Active Voice' means:",
+    options: [
+      "The subject receives the action",
+      "The subject performs the action",
+      "The verb is in the past tense",
+      "The sentence has no object"
+    ],
+    correct: "The subject performs the action"
   }
 ];
+
+
