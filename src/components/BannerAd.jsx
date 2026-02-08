@@ -22,9 +22,9 @@ const AD_DATABASE = [
     whatsapp: "2349069306883",
   },
 {
-    type: "video",
+    type: "image",
     url: "https://res.cloudinary.com/dxdnhc1hm/video/upload/v1770495366/YouCut_20260207_210718090_zfu7lv.mp4",
-    duration: 15,
+    duration: 10,
     whatsapp: "2348159767554",
   },
 ];
