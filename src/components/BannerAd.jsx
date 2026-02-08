@@ -23,7 +23,7 @@ const AD_DATABASE = [
   },
 {
     type: "image",
-    url: "https://res.cloudinary.com/dxdnhc1hm/video/upload/v1770495366/YouCut_20260207_210718090_zfu7lv.mp4",
+    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770557375/BackgroundEraser_20260208_141707632_sk6ng9.jpg",
     duration: 10,
     whatsapp: "2348159767554",
   },
