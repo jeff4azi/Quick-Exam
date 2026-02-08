@@ -17,7 +17,7 @@ const AD_DATABASE = [
   },
   {
     type: "video",
-    url: "https://res.cloudinary.com/dxdnhc1hm/video/upload/v1770495366/YouCut_20260207_210718090_zfu7lv.mp4",
+    url: "https://res.cloudinary.com/dxdnhc1hm/video/upload/v1770570959/YouCut_20260208_181126153_vvdvbc.mp4",
     duration: 15,
     whatsapp: "2349069306883",
   },
