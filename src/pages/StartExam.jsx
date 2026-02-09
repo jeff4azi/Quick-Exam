@@ -6,8 +6,7 @@ import { supabase } from "../supabaseClient";
 
 import { SiTiktok } from "react-icons/si";
 import { FaFacebookF, FaWhatsapp, FaGraduationCap } from "react-icons/fa";
-// Added FiZap for the Premium icon
-import { FiBookmark, FiInfo, FiUser, FiLogOut, FiZap } from "react-icons/fi"; 
+import { FiBookmark, FiInfo, FiUser, FiLogOut, FiZap, FiAlertTriangle } from "react-icons/fi";
 import { HiOutlineMoon } from "react-icons/hi";
 import { MdOutlineHistory } from 'react-icons/md';
 
@@ -212,6 +211,11 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
               <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-2">App</h3>
               <ul className="space-y-1">
                 <MenuItem icon={<FiInfo />} label="About" onClick={() => navigate("/about-page")} />
+                <MenuItem 
+                  icon={<FiAlertTriangle className="text-orange-500" />} 
+                  label="Report Problem" 
+                  href="https://wa.me/2347015585397?text=Hi%20Quiz%20Bolt%20Support,%20I%20found%20an%20issue..." 
+                />
                 <MenuItem icon={<FiLogOut />} label="Sign Out" onClick={handleLogout} variant="danger" />
               </ul>
             </div>
