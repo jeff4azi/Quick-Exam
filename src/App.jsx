@@ -16,13 +16,14 @@ import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
 import ReactGA from "react-ga4";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import { AuthProvider } from "./context/AuthContext";
 import "katex/dist/katex.min.css";
 
 function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [availableCourses, setAvailableCourses] = useState([]);
-  
+
   const [answers, setAnswers] = useState([])
   const [selectedCourse, setSelectedCourse] = useState(null)
   const [questions, setQuestions] = useState([]);
@@ -30,7 +31,7 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
-  
+
   // FIX: Initialize results logic
   const [results, setResults] = useState({ correct: 0, wrong: 0, answered: 0 });
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(null);
@@ -58,10 +59,10 @@ function App() {
       try {
         setLoading(true);
         const { data: { user }, error: authError } = await supabase.auth.getUser();
-        
+
         if (authError || !user) {
           setUserProfile(null);
-          setAvailableCourses([]); 
+          setAvailableCourses([]);
           return;
         }
 
@@ -77,7 +78,7 @@ function App() {
           full_name: user.user_metadata?.full_name || "Scholar",
           college: profileData?.college || "TASUED",
           department: profileData?.department || "General Studies",
-          year: profileData?.year?.toString() || "1", 
+          year: profileData?.year?.toString() || "1",
         };
 
         setUserProfile(profile);
@@ -85,7 +86,7 @@ function App() {
         if (profile.year === "1" || parseInt(profile.year) === 1) {
           setAvailableCourses(allCourses);
         } else {
-          setAvailableCourses([]); 
+          setAvailableCourses([]);
         }
 
       } catch (error) {
@@ -132,7 +133,7 @@ function App() {
     questions,
     setQuestions,
     // FIX: Pass the actual submit handler
-    onSubmit: handleExamSubmit, 
+    onSubmit: handleExamSubmit,
     results,
     courses: availableCourses,
     selectedCourse,
@@ -162,20 +163,22 @@ function App() {
           </h2>
         </div>
       ) : (
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          <Route path="/onboarding" element={<OnboardingScreen />} />
-          <Route path="/" element={<ProtectedRoute><StartExam {...props} /></ProtectedRoute>} />
-          <Route path="/choose-course" element={<ProtectedRoute><ChooseCourseScreen {...props} /></ProtectedRoute>} />
-          <Route path="/bookmarks" element={<ProtectedRoute><BookMark {...props} /></ProtectedRoute>} />
-          <Route path="/history" element={<ProtectedRoute><HistoryScreen {...props} /></ProtectedRoute>} />
-          <Route path="/exam" element={<ProtectedRoute stateCheck={questions.length > 0 && selectedCourse}><ExamScreen {...props} /></ProtectedRoute>} />
-          
-          {/* FIX: Results route checks results.answered, which handleExamSubmit updates */}
-          <Route path="/results" element={<ProtectedRoute stateCheck={results.answered > 0}><ResultScreen {...props} /></ProtectedRoute>} />
-          <Route path="/review-answers" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><ReviewAnswers {...props} /></ProtectedRoute>} />
-        </Routes>
+        <AuthProvider>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/onboarding" element={<OnboardingScreen />} />
+            <Route path="/" element={<ProtectedRoute><StartExam {...props} /></ProtectedRoute>} />
+            <Route path="/choose-course" element={<ProtectedRoute><ChooseCourseScreen {...props} /></ProtectedRoute>} />
+            <Route path="/bookmarks" element={<ProtectedRoute><BookMark {...props} /></ProtectedRoute>} />
+            <Route path="/history" element={<ProtectedRoute><HistoryScreen {...props} /></ProtectedRoute>} />
+            <Route path="/exam" element={<ProtectedRoute stateCheck={questions.length > 0 && selectedCourse}><ExamScreen {...props} /></ProtectedRoute>} />
+
+            {/* FIX: Results route checks results.answered, which handleExamSubmit updates */}
+            <Route path="/results" element={<ProtectedRoute stateCheck={results.answered > 0}><ResultScreen {...props} /></ProtectedRoute>} />
+            <Route path="/review-answers" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><ReviewAnswers {...props} /></ProtectedRoute>} />
+          </Routes>
+        </AuthProvider>
       )}
       <SpeedInsights />
     </Router>

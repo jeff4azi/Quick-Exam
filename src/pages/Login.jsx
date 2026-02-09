@@ -32,22 +32,7 @@ const LoginScreen = () => {
       const user = data.user;
       if (!user) throw new Error("Login failed. Please try again.");
 
-      // ✅ Check if onboarding is complete
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("onboarding_complete")
-        .eq("id", user.id)
-        .single();
-
-      if (profileError) throw profileError;
-
-      if (!profile?.onboarding_complete) {
-        // go to onboarding if not done
-        navigate("/onboarding");
-      } else {
-        // go to main app
-        navigate("/");
-      }
+      navigate("/");
 
     } catch (err) {
       setError(err.message);

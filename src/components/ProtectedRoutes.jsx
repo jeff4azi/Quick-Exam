@@ -1,73 +1,11 @@
-import { useEffect, useState, useMemo } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { supabase } from "../supabaseClient";
 import { FiLock, FiLoader } from "react-icons/fi";
+import { useAuth } from "../context/AuthContext";
 
-// Static cache to prevent flickers between route changes
-let authCache = {
-  user: null,
-  isAuthenticated: null,
-  profileValid: null,
-};
 
 const ProtectedRoute = ({ children, stateCheck = true }) => {
-  const [loading, setLoading] = useState(authCache.isAuthenticated === null);
-  const [isAuthenticated, setIsAuthenticated] = useState(authCache.isAuthenticated || false);
-  const [userStateValid, setUserStateValid] = useState(authCache.profileValid || false);
+  const { user, loading, profileValid } = useAuth();
   const location = useLocation();
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const checkAuth = async () => {
-      // 1. Check if we already have the answer in cache to skip the network hit
-      if (authCache.isAuthenticated !== null) {
-        if (!stateCheck || authCache.profileValid !== null) {
-          if (isMounted) setLoading(false);
-          return;
-        }
-      }
-
-      // 2. Fetch User from Supabase
-      const { data: { user }, error } = await supabase.auth.getUser();
-
-      if (error || !user) {
-        authCache = { user: null, isAuthenticated: false, profileValid: false };
-        if (isMounted) {
-          setIsAuthenticated(false);
-          setLoading(false);
-        }
-        return;
-      }
-
-      // 3. Optional State Check (Onboarding)
-      let isValid = true;
-      if (stateCheck) {
-        const { data: profile, error: profileError } = await supabase
-          .from("profiles")
-          .select("onboarding_complete")
-          .eq("id", user.id)
-          .single();
-        
-        isValid = !profileError && !!profile?.onboarding_complete;
-      }
-
-      // 4. Update Static Cache for next route change
-      authCache = { user, isAuthenticated: true, profileValid: isValid };
-
-      if (isMounted) {
-        setIsAuthenticated(true);
-        setUserStateValid(isValid);
-        setLoading(false);
-      }
-    };
-
-    checkAuth();
-    return () => { isMounted = false; };
-  }, [stateCheck]);
-
-  // Prevent children from re-rendering while loading is true
-  const content = useMemo(() => children, [children]);
 
   if (loading) {
     return (
@@ -102,16 +40,16 @@ const ProtectedRoute = ({ children, stateCheck = true }) => {
     );
   }
 
-  // Final Redirect Logic
-  if (!isAuthenticated) {
+
+  if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
   
-  if (stateCheck && !userStateValid) {
+  if (stateCheck && !profileValid) {
     return <Navigate to="/onboarding" replace />;
   }
 
-  return content;
+  return children;
 };
 
 export default ProtectedRoute;
