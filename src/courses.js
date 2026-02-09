@@ -12,6 +12,7 @@ import { bed114Questions } from "./courses/bed-114questions";
 import { vos116Questions } from "./courses/vos-116questions";
 import { vos117Questions } from "./courses/vos-117questions";
 import { gcp113Questions } from "./courses/gcp-113questions";
+import { phy101AndPhy107Questions } from "./courses/phy-101andphy-107questions";
 
 const courses = [
   {
@@ -104,6 +105,14 @@ const courses = [
     group: "departmental",
     colleges: ["COSPED"],
     questions: gcp113Questions,
+  },
+  {
+    id: "PHY101/PHY107",
+    name: "PHY 101/PHY 107",
+    title: "GENERAL PHYSICS 1",
+    group: "departmental",
+    colleges: ["COSIT"],
+    questions: phy101AndPhy107Questions,
   },
   {
     id: "VOS116",

@@ -10,7 +10,8 @@ export const RenderMathText = ({ text, courseId }) => {
 
   if (
     typeof courseId !== "string" ||
-    !courseId.toUpperCase().startsWith("MTH101")
+    !courseId.toUpperCase().startsWith("MTH101") ||
+    !courseId.toUpperCase().startsWith("PHY101")
   ) {
     return <span>{text}</span>;
   }
