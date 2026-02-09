@@ -1,40 +1,36 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import Logo from "../images/Logo"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Logo from "../images/Logo";
 import BannerAd from "../components/BannerAd";
-import { supabase } from "../supabaseClient"
+import { supabase } from "../supabaseClient";
 
 import { SiTiktok } from "react-icons/si";
 import { FaFacebookF, FaWhatsapp, FaGraduationCap } from "react-icons/fa";
-import { FiBookmark, FiInfo, FiUser, FiLogOut } from "react-icons/fi";
+// Added FiZap for the Premium icon
+import { FiBookmark, FiInfo, FiUser, FiLogOut, FiZap } from "react-icons/fi"; 
 import { HiOutlineMoon } from "react-icons/hi";
 import { MdOutlineHistory } from 'react-icons/md';
 
 const StartExam = ({ isDarkMode, toggleDarkMode }) => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [profile, setProfile] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const navigate = useNavigate()
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    fetchProfile()
-  }, [])
+    fetchProfile();
+  }, []);
 
   const [showAd, setShowAd] = useState(false);
 
   useEffect(() => {
-    // Trigger the ad 0.75 seconds after the user lands on the dashboard
     const timer = setTimeout(() => setShowAd(true), 750);
     return () => clearTimeout(timer);
   }, []);
 
-  // Replace the fetchProfile function in your StartExam.js with this:
-
   const fetchProfile = async () => {
     try {
       setLoading(true);
-
-      // Check if profile already exists in localStorage
       const cachedProfile = localStorage.getItem("profile");
       if (cachedProfile) {
         setProfile(JSON.parse(cachedProfile));
@@ -42,13 +38,11 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
         return;
       }
 
-      // 1. Get current user
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       if (authError) throw authError;
 
       if (user) {
         const userDisplayName = user.user_metadata?.full_name || "Scholar";
-
         const { data: profileTableData } = await supabase
           .from('profiles')
           .select('*')
@@ -62,9 +56,7 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
           year: profileTableData?.year || "1"
         };
 
-        // Save to localStorage
         localStorage.setItem("profile", JSON.stringify(fullProfile));
-
         setProfile(fullProfile);
       }
     } catch (error) {
@@ -77,17 +69,15 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      // Clear all cached user data
       localStorage.clear();
       sessionStorage.clear();
+      navigate("/login");
     } catch (err) {
       console.error("Logout failed:", err.message);
     }
   };
 
-
-
-  const toggleMenu = () => setIsMenuOpen(prev => !prev)
+  const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
   const MenuItem = ({ icon, label, onClick, href, variant = "default" }) => {
     const content = (
@@ -132,10 +122,8 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
         </div>
       </div>
 
-      {/* Main Personalized Content */}
+      {/* Main Content */}
       <div className="flex-1 px-6 flex flex-col animate-in fade-in slide-in-from-bottom-4 duration-700">
-        
-        {/* Personalized Greeting */}
         <div className="mt-4 mb-8">
           <h2 className="text-gray-500 dark:text-slate-400 font-medium text-lg">Hello,</h2>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
@@ -143,12 +131,10 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
           </h1>
         </div>
 
-        {/* Info Card (Dynamic data from Supabase) */}
         <div className="bg-white dark:bg-slate-800 p-6 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm relative overflow-hidden group">
           <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
             <FaGraduationCap size={80} className="text-blue-600" />
           </div>
-          
           <div className="relative z-10">
             <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
               {profile?.college || "TASUED"}
@@ -162,7 +148,6 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
           </div>
         </div>
 
-        {/* Quick Stats/Links */}
         <div className="grid grid-cols-2 gap-4 mt-6">
             <button onClick={() => navigate("/history")} className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-700 flex flex-col items-center gap-2">
                 <div className="size-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600">
@@ -178,23 +163,42 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
             </button>
         </div>
 
-        {/* Branding Logo - Moved lower and subtle */}
         <div className="mt-auto mb-32 flex flex-col items-center opacity-40 grayscale">
             <Logo className="size-12" />
             <p className="text-[10px] font-bold tracking-[0.2em] uppercase mt-2 text-slate-400">Quiz Bolt</p>
         </div>
       </div>
 
-      {/* Side Menu (Same as your original) */}
+      {/* Side Menu Overlay */}
       <div className={`fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`} onClick={toggleMenu} />
+      
+      {/* Side Menu Drawer */}
       <div className={`fixed top-0 left-0 h-full w-[85%] max-w-[320px] bg-white dark:bg-slate-900 z-[70] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] border-r border-gray-100 dark:border-slate-800 flex flex-col ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="p-8 flex flex-col h-full">
-          <div className="mb-10 pt-4">
+          <div className="mb-8 pt-4">
             <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Menu</h2>
             <div className="h-1.5 w-10 bg-blue-600 rounded-full mt-2" />
           </div>
 
           <nav className="flex-grow space-y-6 overflow-y-auto no-scrollbar">
+            {/* Premium CTA Card */}
+            <div className="mb-4">
+              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-5 shadow-lg shadow-blue-200 dark:shadow-none relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all" onClick={() => navigate("/premium")}>
+                {/* Decorative background circle */}
+                <div className="absolute -right-4 -top-4 size-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all" />
+                
+                <div className="flex flex-col gap-3 relative z-10">
+                  <div className="size-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-md">
+                    <FiZap className="text-yellow-300 text-xl animate-pulse" />
+                  </div>
+                  <div>
+                    <h4 className="text-white font-black text-lg">Get Premium</h4>
+                    <p className="text-blue-100 text-[11px] leading-relaxed font-medium">Remove ads and unlock a better exam experience.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             <div>
               <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-2">Community</h3>
               <ul className="space-y-1">
@@ -203,6 +207,7 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
                 <MenuItem icon={<SiTiktok className="dark:text-white text-black" />} label="TikTok" href="https://www.tiktok.com/@codejeffrey18" />
               </ul>
             </div>
+            
             <div>
               <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-2">App</h3>
               <ul className="space-y-1">
@@ -241,7 +246,7 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
         />
       )}
     </div>
-  )
+  );
 }
 
-export default StartExam
+export default StartExam;

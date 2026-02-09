@@ -8,7 +8,7 @@ const OnboardingScreen = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  
+
   const [formData, setFormData] = useState({
     college: "",
     department: "",
@@ -19,41 +19,50 @@ const OnboardingScreen = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
-  setError(null);
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
-  try {
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) throw new Error("No authenticated user found. Please sign in again.");
+    try {
+      // 1. Ensure user exists
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      if (authError || !user) {
+        throw new Error("No authenticated user found. Please sign in again.");
+      }
 
-    const { error: upsertError } = await supabase
-      .from("profiles")
-      .upsert({
-        id: user.id,
-        college: formData.college,
-        department: formData.department,
-        year: parseInt(formData.year) || null,
-        onboarding_complete: true,
-        is_premium: false,
-        updated_at: new Date().toISOString(),
-      });
+      // 2. Save onboarding data + mark complete
+      const { error: upsertError } = await supabase
+        .from("profiles")
+        .upsert({
+          id: user.id,
+          college: formData.college,
+          department: formData.department,
+          year: parseInt(formData.year, 10) || null,
+          onboarding_complete: true,
+          is_premium: false,
+          updated_at: new Date().toISOString(),
+        });
 
-    if (upsertError) throw upsertError;
+      if (upsertError) throw upsertError;
 
-    navigate("/"); // success
-  } catch (err) {
-    setError(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
+      // 3. Let auth listener catch up (small but important)
+      await supabase.auth.getSession();
+
+      // 4. Exit onboarding permanently
+      navigate("/", { replace: true });
+
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
-      
+
       <div className="w-full max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
-        
+
         {/* Header */}
         <div className="flex flex-col items-center text-center">
           <div className="mb-6">
@@ -75,7 +84,7 @@ const OnboardingScreen = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5 mt-6">
-          
+
           {/* College with Autocomplete Logic */}
           <div className="relative group">
             <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-4 mb-1 block">
@@ -90,7 +99,7 @@ const OnboardingScreen = () => {
                 placeholder="Search your college..."
                 value={formData.college}
                 onChange={(e) => {
-                  setFormData({...formData, college: e.target.value});
+                  setFormData({ ...formData, college: e.target.value });
                   setShowSuggestions(true);
                 }}
                 onFocus={() => setShowSuggestions(true)}
@@ -98,7 +107,7 @@ const OnboardingScreen = () => {
                 required
               />
             </div>
-            
+
             {showSuggestions && formData.college.length > 1 && (
               <div className="absolute z-10 w-full mt-2 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden">
                 {collegeSuggestions.map((item) => (
@@ -106,7 +115,7 @@ const OnboardingScreen = () => {
                     key={item}
                     type="button"
                     onClick={() => {
-                      setFormData({...formData, college: item});
+                      setFormData({ ...formData, college: item });
                       setShowSuggestions(false);
                     }}
                     className="w-full text-left px-5 py-3 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
@@ -131,7 +140,7 @@ const OnboardingScreen = () => {
                 type="text"
                 placeholder="e.g. Computer Science"
                 value={formData.department}
-                onChange={(e) => setFormData({...formData, department: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
                 className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all shadow-sm"
                 required
               />
@@ -149,7 +158,7 @@ const OnboardingScreen = () => {
               </div>
               <select
                 value={formData.year}
-                onChange={(e) => setFormData({...formData, year: e.target.value})}
+                onChange={(e) => setFormData({ ...formData, year: e.target.value })}
                 className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all shadow-sm appearance-none"
                 required
               >
@@ -166,11 +175,10 @@ const OnboardingScreen = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full mt-4 bg-blue-600 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 ${
-              loading 
-                ? "opacity-70 cursor-not-allowed" 
+            className={`w-full mt-4 bg-blue-600 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 ${loading
+                ? "opacity-70 cursor-not-allowed"
                 : "hover:bg-blue-700 hover:-translate-y-1 active:scale-95"
-            }`}
+              }`}
           >
             <span>{loading ? "Saving..." : "Complete Setup"}</span>
             {!loading && <FiCheckCircle className="text-xl" />}

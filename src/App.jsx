@@ -16,6 +16,7 @@ import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
 import ReactGA from "react-ga4";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import PremiumPage from "./pages/PremiumPage"
 import { AuthProvider } from "./context/AuthContext";
 import "katex/dist/katex.min.css";
 
@@ -177,6 +178,7 @@ function App() {
             {/* FIX: Results route checks results.answered, which handleExamSubmit updates */}
             <Route path="/results" element={<ProtectedRoute stateCheck={results.answered > 0}><ResultScreen {...props} /></ProtectedRoute>} />
             <Route path="/review-answers" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><ReviewAnswers {...props} /></ProtectedRoute>} />
+            <Route path="/premium" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><PremiumPage {...props} /></ProtectedRoute>} />
           </Routes>
         </AuthProvider>
       )}
