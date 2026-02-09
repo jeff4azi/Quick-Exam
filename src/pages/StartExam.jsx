@@ -75,10 +75,16 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
   };
 
   const handleLogout = async () => {
-    await supabase.auth.signOut();
-    localStorage.removeItem("profile");
-    navigate("/login");
-  }
+    try {
+      await supabase.auth.signOut();
+      // Clear all cached user data
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch (err) {
+      console.error("Logout failed:", err.message);
+    }
+  };
+
 
 
   const toggleMenu = () => setIsMenuOpen(prev => !prev)
