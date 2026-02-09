@@ -7,7 +7,7 @@ const AD_DATABASE = [
     type: "image",
     url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770389773/Advertise_Here_20260206_152922_0000_kxlh99.png",
     duration: 5,
-    whatsapp: "2347015585397", 
+    whatsapp: "2347015585397",
   },
   {
     type: "image",
@@ -21,7 +21,7 @@ const AD_DATABASE = [
     duration: 15,
     whatsapp: "2349069306883",
   },
-{
+  {
     type: "image",
     url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770557375/BackgroundEraser_20260208_141707632_sk6ng9.jpg",
     duration: 10,
@@ -71,18 +71,18 @@ const BannerAd = ({ onAdClose }) => {
 
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
-      <div 
-        className="absolute inset-0 bg-slate-900/40 dark:bg-black/80 backdrop-blur-xs animate-in fade-in duration-500" 
+      <div
+        className="absolute inset-0 bg-slate-900/40 dark:bg-black/80 backdrop-blur-xs animate-in fade-in duration-500"
         onClick={isClosable ? handleClose : undefined}
       />
 
       {/* 2. Responsive Aspect Ratio: A4 on mobile, 16:9 on LG */}
       <div className="relative w-full max-w-md lg:max-w-4xl aspect-[1/1.414] lg:aspect-video bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/20 dark:border-slate-800 animate-in zoom-in-95 duration-500">
-        
+
         {/* 3. Clickable WhatsApp Area */}
-        <a 
-          href={`https://wa.me/${currentAd.whatsapp}`} 
-          target="_blank" 
+        <a
+          href={`https://wa.me/${currentAd.whatsapp}`}
+          target="_blank"
           rel="noopener noreferrer"
           className="block w-full h-full bg-slate-100 dark:bg-slate-950 relative overflow-hidden cursor-pointer"
         >
@@ -116,7 +116,7 @@ const BannerAd = ({ onAdClose }) => {
         </a>
 
         {currentAd.type === "video" && (
-          <button 
+          <button
             onClick={(e) => {
               e.preventDefault(); // Prevents opening WhatsApp link
               setIsMuted(!isMuted);
