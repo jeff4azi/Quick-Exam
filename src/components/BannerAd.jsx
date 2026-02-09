@@ -27,6 +27,12 @@ const AD_DATABASE = [
     duration: 10,
     whatsapp: "2348159767554",
   },
+ {
+    type: "video",
+    url: "https://res.cloudinary.com/dxdnhc1hm/video/upload/v1770647493/VID-20260208-WA0078_niavqq.mp4",
+    duration: 15,
+    whatsapp: "2348163186790",
+  },
 ];
 
 const BannerAd = ({ onAdClose }) => {
