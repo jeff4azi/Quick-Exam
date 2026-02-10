@@ -2,12 +2,46 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FiZap, FiArrowLeft, FiCheckCircle, FiShield } from "react-icons/fi";
 import Logo from "../images/Logo";
+import { supabase } from "../supabaseClient"; // Ensure this path is correct
 
 const PremiumPage = () => {
   const navigate = useNavigate();
   const [premiumCode, setPremiumCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
+
+  // Your backend logic wired in
+  async function redeemPremiumCode(userId, code) {
+    // 1. Check if the code exists and is unused
+    const { data: codeEntry, error } = await supabase
+      .from("premium_codes")
+      .select("*")
+      .eq("code", code)
+      .eq("used", false)
+      .single();
+
+    if (error || !codeEntry) {
+      return { success: false, message: "Invalid or already used code." };
+    }
+
+    // 2. Update code to used
+    const { error: updateError } = await supabase
+      .from("premium_codes")
+      .update({ used: true })
+      .eq("id", codeEntry.id);
+
+    if (updateError) return { success: false, message: "Failed to redeem code." };
+
+    // 3. Grant premium to user
+    const { error: userUpdateError } = await supabase
+      .from("profiles")
+      .update({ is_premium: true })
+      .eq("id", userId);
+
+    if (userUpdateError) return { success: false, message: "Failed to activate premium." };
+
+    return { success: true, message: "Premium activated!" };
+  }
 
   const handleActivate = async (e) => {
     e.preventDefault();
@@ -16,15 +50,29 @@ const PremiumPage = () => {
     setLoading(true);
     setStatus({ type: "", message: "" });
 
-    // Simulate activation logic
-    setTimeout(() => {
-      // Logic for code validation would go here
+    try {
+      // Get the current logged-in user
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        throw new Error("You must be logged in to activate premium.");
+      }
+
+      // Call the redemption logic
+      const result = await redeemPremiumCode(user.id, premiumCode.trim());
+
+      if (result.success) {
+        setStatus({ type: "success", message: result.message });
+        // Optional: Redirect to home after a short delay
+        setTimeout(() => navigate("/"), 2000);
+      } else {
+        setStatus({ type: "error", message: result.message });
+      }
+    } catch (err) {
+      setStatus({ type: "error", message: err.message || "An unexpected error occurred." });
+    } finally {
       setLoading(false);
-      setStatus({
-        type: "error",
-        message: "Invalid or expired premium code. Please try again."
-      });
-    }, 1500);
+    }
   };
 
   return (
@@ -39,7 +87,6 @@ const PremiumPage = () => {
           <FiArrowLeft size={20} />
         </button>
         <Logo className="size-10 opacity-20" />
-        <div className="w-10" /> {/* Spacer for centering */}
       </div>
 
       <div className="flex-1 flex flex-col max-w-sm mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -67,6 +114,7 @@ const PremiumPage = () => {
               onChange={(e) => setPremiumCode(e.target.value.toUpperCase())}
               className="w-full pl-12 pr-4 py-5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-800 dark:text-white font-bold placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-blue-600/10 focus:border-blue-600 transition-all text-center tracking-widest uppercase"
               required
+              disabled={loading}
             />
           </div>
 
@@ -80,8 +128,8 @@ const PremiumPage = () => {
             type="submit"
             disabled={loading}
             className={`w-full bg-blue-600 dark:bg-blue-700 py-5 rounded-2xl font-black text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 mt-2 ${loading
-                ? "opacity-70 cursor-not-allowed"
-                : "hover:bg-blue-800 hover:-translate-y-1 active:scale-95 active:translate-y-0"
+              ? "opacity-70 cursor-not-allowed"
+              : "hover:bg-blue-800 hover:-translate-y-1 active:scale-95 active:translate-y-0"
               }`}
           >
             {loading ? "Verifying..." : "Activate Premium"}
@@ -98,7 +146,6 @@ const PremiumPage = () => {
             {["Obtain a valid premium code",
               "Enter the code above",
               "Premium access unlocks instantly"
-              
             ].map((step, index) => (
               <div key={index} className="flex items-start gap-3">
                 <div className="size-5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">
@@ -117,7 +164,7 @@ const PremiumPage = () => {
           <div className="flex items-center justify-center gap-2 text-slate-400 dark:text-slate-500">
             <FiCheckCircle size={14} />
             <span className="text-[11px] font-bold uppercase tracking-wider">
-              Premium detected automatically
+              {status.type === 'success' ? "Premium Active" : "Premium detected automatically"}
             </span>
           </div>
         </div>
