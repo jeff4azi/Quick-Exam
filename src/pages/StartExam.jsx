@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import BannerAd from "../components/BannerAd";
-import { supabase } from "../supabaseClient";
 
 import { SiTiktok } from "react-icons/si";
 import { FaFacebookF, FaWhatsapp, FaGraduationCap } from "react-icons/fa";
@@ -10,71 +9,29 @@ import { FiBookmark, FiInfo, FiUser, FiLogOut, FiZap, FiAlertTriangle } from "re
 import { HiOutlineMoon } from "react-icons/hi";
 import { MdOutlineHistory } from 'react-icons/md';
 
-const StartExam = ({ isDarkMode, toggleDarkMode }) => {
+const StartExam = ({
+  isDarkMode,
+  toggleDarkMode,
+  userProfile,
+  loadingProfile,
+  isPremium,
+  handleLogout,
+}) => {
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
   const [showAd, setShowAd] = useState(false);
 
   useEffect(() => {
+    if (isPremium) {
+      setShowAd(false); // force hide if user is premium
+      return;
+    }
+
     const timer = setTimeout(() => setShowAd(true), 750);
     return () => clearTimeout(timer);
-  }, []);
+  }, [isPremium]);
 
-  const fetchProfile = async () => {
-    try {
-      setLoading(true);
-      const cachedProfile = localStorage.getItem("profile");
-      if (cachedProfile) {
-        setProfile(JSON.parse(cachedProfile));
-        setLoading(false);
-        return;
-      }
-
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      if (authError) throw authError;
-
-      if (user) {
-        const userDisplayName = user.user_metadata?.full_name || "Scholar";
-        const { data: profileTableData } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .single();
-
-        const fullProfile = {
-          full_name: userDisplayName,
-          college: profileTableData?.college || "TASUED",
-          department: profileTableData?.department || "General Studies",
-          year: profileTableData?.year || "1"
-        };
-
-        localStorage.setItem("profile", JSON.stringify(fullProfile));
-        setProfile(fullProfile);
-      }
-    } catch (error) {
-      console.error("Error loading profile:", error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      localStorage.clear();
-      sessionStorage.clear();
-      navigate("/login");
-    } catch (err) {
-      console.error("Logout failed:", err.message);
-    }
-  };
 
   const toggleMenu = () => setIsMenuOpen(prev => !prev);
 
@@ -126,7 +83,7 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
         <div className="mt-4 mb-8">
           <h2 className="text-gray-500 dark:text-slate-400 font-medium text-lg">Hello,</h2>
           <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-            {loading ? "..." : (profile?.full_name?.split(' ')[0] || "Scholar")}!👋
+            {loadingProfile ? "..." : (userProfile?.full_name?.split(' ')[0] || "Scholar")}!👋
           </h1>
         </div>
 
@@ -136,13 +93,13 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
           </div>
           <div className="relative z-10">
             <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
-              {profile?.college || "TASUED"}
+              {userProfile?.college || "TASUED"}
             </span>
             <h3 className="text-xl font-bold text-slate-800 dark:text-white mt-3 mb-1">
-              {profile?.department || "Ready to study?"}
+              {userProfile?.department || "Ready to study?"}
             </h3>
             <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-              Level {profile?.year || "1"}00 Student
+              Level {userProfile?.year || "1"}00 Student
             </p>
           </div>
         </div>
@@ -182,7 +139,7 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
           <nav className="flex-grow space-y-6 overflow-y-auto no-scrollbar">
             {/* Premium CTA Card */}
             <div className="mb-4">
-              <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-5 shadow-lg shadow-blue-200 dark:shadow-none relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all" onClick={() => navigate("/premium")}>
+              {!isPremium && <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-5 shadow-lg shadow-blue-200 dark:shadow-none relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all" onClick={() => navigate("/premium")}>
                 {/* Decorative background circle */}
                 <div className="absolute -right-4 -top-4 size-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all" />
                 
@@ -195,7 +152,7 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
                     <p className="text-blue-100 text-[11px] leading-relaxed font-medium">Remove ads and unlock a better exam experience.</p>
                   </div>
                 </div>
-              </div>
+              </div>}
             </div>
 
             <div>
@@ -244,10 +201,8 @@ const StartExam = ({ isDarkMode, toggleDarkMode }) => {
             Choose Course
         </button>
       </div>
-      {showAd && (
-        <BannerAd
-          onAdClose={() => setShowAd(false)} 
-        />
+      {!isPremium && showAd && (
+        <BannerAd onAdClose={() => setShowAd(false)} />
       )}
     </div>
   );

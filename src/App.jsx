@@ -80,6 +80,7 @@ function App() {
           college: profileData?.college || "TASUED",
           department: profileData?.department || "General Studies",
           year: profileData?.year?.toString() || "1",
+          isPremium: profileData?.is_premium === true,
         };
 
         setUserProfile(profile);
@@ -101,6 +102,8 @@ function App() {
 
     fetchProfile();
   }, []);
+
+  const isPremium = userProfile?.isPremium === true; // only pasing what's needed
 
   useEffect(() => {
     ReactGA.initialize("G-93T0BGL64Y");
@@ -128,6 +131,16 @@ function App() {
     if (saved) setBookmarks(JSON.parse(saved))
   }, [])
 
+  const handleLogout = async () => {
+    try {
+      await supabase.auth.signOut();
+      localStorage.clear();
+      sessionStorage.clear();
+    } catch (err) {
+      console.error("Logout failed:", err.message);
+    }
+  };
+
   const props = {
     answers,
     setAnswers,
@@ -146,7 +159,9 @@ function App() {
     selectedQuestionCount,
     setSelectedQuestionCount,
     userProfile,
-    loadingProfile: loading
+    loadingProfile: loading,
+    isPremium,
+    handleLogout,
   }
 
   return (
