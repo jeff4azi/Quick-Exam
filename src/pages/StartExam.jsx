@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import BannerAd from "../components/BannerAd";
 
+import { FaCrown } from "react-icons/fa"; // Add this
 import { SiTiktok } from "react-icons/si";
 import { FaFacebookF, FaWhatsapp, FaGraduationCap } from "react-icons/fa";
 import { FiBookmark, FiInfo, FiUser, FiLogOut, FiZap, FiAlertTriangle } from "react-icons/fi";
@@ -73,8 +74,19 @@ const StartExam = ({
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
-        <div className="size-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white shadow-lg shadow-blue-200 dark:shadow-none">
-           <FiUser className="text-xl" />
+
+        {/* User Initial Avatar with Premium Crown */}
+        <div className="relative">
+          <div className="size-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all duration-300">
+            {loadingProfile ? "..." : (userProfile?.full_name?.charAt(0) || "S")}
+          </div>
+
+          {/* Premium Badge */}
+          {isPremium && (
+            <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+              <FaCrown className="text-[8px] text-white" />
+            </div>
+          )}
         </div>
       </div>
 

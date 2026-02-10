@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import ReactGA from "react-ga4"
 import { supabase } from "../supabaseClient"
 import BannerAd from "../components/BannerAd";
+import { FaCrown } from "react-icons/fa";
 
 const ResultScreen = ({ questions, results, answers, setAnswers, selectedCourse, isPremium }) => {
   const navigate = useNavigate()
@@ -76,8 +77,19 @@ const ResultScreen = ({ questions, results, answers, setAnswers, selectedCourse,
             <p className="text-xs font-black text-gray-800 dark:text-gray-200 leading-none">{userData.name}</p>
             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter mt-1">{userData.college}</p>
           </div>
-          <div className="size-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-black shadow-lg">
-            {userData.name.charAt(0)}
+
+          {/* Avatar Container */}
+          <div className="relative">
+            <div className="size-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-black shadow-lg">
+              {userData.name.charAt(0)}
+            </div>
+
+            {/* Premium Crown Badge */}
+            {isPremium && (
+              <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-white dark:border-gray-950 shadow-md flex items-center justify-center">
+                <FaCrown className="text-[8px] text-white" />
+              </div>
+            )}
           </div>
         </div>
       </header>
