@@ -26,12 +26,14 @@ function generateUniqueCodes(count = 10, length = 10) {
 }
 
 async function insertCodes(codes) {
-  const { data, error } = await supabase
+  const { data, error, status, statusText } = await supabase
     .from("premium_codes")
-    .insert(codes.map(code => ({ code })));
+    .insert(codes.map((code) => ({ code })), { returning: "representation" });
 
   if (error) console.error("Insert error:", error);
   else console.log("Inserted codes:", data);
+
+  console.log("Status:", status, "StatusText:", statusText);
 }
 
 // generate 100 codes
