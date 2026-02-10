@@ -55,6 +55,12 @@ function App() {
     });
   };
 
+  // In App.js
+  const handlePremiumActivation = () => {
+    setUserProfile(prev => ({ ...prev, isPremium: true }));
+  };
+
+
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -193,7 +199,7 @@ function App() {
             {/* FIX: Results route checks results.answered, which handleExamSubmit updates */}
             <Route path="/results" element={<ProtectedRoute stateCheck={results.answered > 0}><ResultScreen {...props} /></ProtectedRoute>} />
             <Route path="/review-answers" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><ReviewAnswers {...props} /></ProtectedRoute>} />
-            <Route path="/premium" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><PremiumPage {...props} /></ProtectedRoute>} />
+              <Route path="/premium" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><PremiumPage {...props} onActivatePremium={handlePremiumActivation} /></ProtectedRoute>} />
           </Routes>
         </AuthProvider>
       )}

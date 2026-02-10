@@ -4,7 +4,7 @@ import { FiZap, FiArrowLeft, FiCheckCircle, FiShield } from "react-icons/fi";
 import Logo from "../images/Logo";
 import { supabase } from "../supabaseClient"; // Ensure this path is correct
 
-const PremiumPage = () => {
+const PremiumPage = ({ onActivatePremium }) => {
   const navigate = useNavigate();
   const [premiumCode, setPremiumCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -63,6 +63,7 @@ const PremiumPage = () => {
 
       if (result.success) {
         setStatus({ type: "success", message: result.message });
+        onActivatePremium?.();
         // Optional: Redirect to home after a short delay
         setTimeout(() => navigate("/"), 2000);
       } else {
