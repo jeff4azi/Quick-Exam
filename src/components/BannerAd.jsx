@@ -16,6 +16,18 @@ const AD_DATABASE = [
     whatsapp: "2347015585397",
   },
   {
+    type: "image",
+    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770738898/Advertise_Here_20260210_164652_0001_t8oeiu.png",
+    duration: 10,
+    whatsapp: "2347015585397",
+  },
+  {
+    type: "image",
+    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770738882/Advertise_Here_20260210_163207_0001_e1ihib.png",
+    duration: 10,
+    whatsapp: "2347015585397",
+  },
+  {
     type: "video",
     url: "https://res.cloudinary.com/dxdnhc1hm/video/upload/v1770570959/YouCut_20260208_181126153_vvdvbc.mp4",
     duration: 15,
