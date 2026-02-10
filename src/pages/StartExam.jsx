@@ -181,7 +181,7 @@ const StartExam = ({
               <ul className="space-y-1">
                 <MenuItem icon={<FiInfo />} label="About" onClick={() => navigate("/about-page")} />
                 <MenuItem 
-                  icon={<FiAlertTriangle className="text-orange-500" />} 
+                  icon={<FiAlertTriangle />} 
                   label="Report Problem" 
                   href="https://wa.me/2347015585397?text=Hi%20Quiz%20Bolt%20Support,%20I%20found%20an%20issue..." 
                 />
