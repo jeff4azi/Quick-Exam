@@ -64,7 +64,7 @@ const courses = [
     name: "MTH 101",
     title: "ELEMENTARY MATHEMATICS I",
     group: "departmental",
-    colleges: ["COSIT"],
+    colleges: ["COSIT", "COAHM"],
     questions: math101Questions,
   },
   {
@@ -120,7 +120,7 @@ const courses = [
     name: "PHY 101/PHY 107",
     title: "GENERAL PHYSICS 1",
     group: "departmental",
-    colleges: ["COSIT"],
+    colleges: ["COSIT", "COAHM"],
     questions: phy101AndPhy107Questions,
   },
   {
