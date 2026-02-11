@@ -113,7 +113,7 @@ const courses = [
     title: "INTRODUCTION TO STATISTICS",
     group: "departmental",
     colleges: ["COSMAS", "COSIT"],
-    questions: gcp113Questions,
+    questions: csm111Questions,
   },
   {
     id: "PHY101/PHY107",
