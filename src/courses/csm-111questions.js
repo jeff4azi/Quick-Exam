@@ -1,1 +1,1 @@
-csm111Questions = []
+export const csm111Questions = [];
