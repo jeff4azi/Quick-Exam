@@ -112,7 +112,7 @@ const courses = [
     name: "CSM 111",
     title: "INTRODUCTION TO STATISTICS",
     group: "departmental",
-    colleges: ["COSMAS"],
+    colleges: ["COSMAS", "COSIT"],
     questions: gcp113Questions,
   },
   {
