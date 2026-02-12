@@ -8,6 +8,7 @@ import {
   FiCheckCircle,
   FiX,
 } from "react-icons/fi";
+import { FaCrown } from "react-icons/fa";
 
 const ChooseCourseScreen = ({
   selectedQuestionCount,
@@ -17,7 +18,8 @@ const ChooseCourseScreen = ({
   setSelectedCourse,
   setAnswers,
   userProfile, 
-  loadingProfile
+  loadingProfile,
+  isPremium,
 }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -210,17 +212,33 @@ const ChooseCourseScreen = ({
               <h3 className="text-2xl font-black text-slate-900 dark:text-white">{selectedCourse.name}</h3>
               <p className="text-slate-500 text-sm mt-1 font-medium italic">{selectedCourse.title}</p>
               <div className="grid grid-cols-2 gap-3 mt-8">
-                {getAvailableQuestionOptions(selectedCourse.questions).map(num => (
-                  <button
-                    key={num}
-                    onClick={() => setSelectedQuestionCount(num)}
-                    className={`py-4 rounded-2xl font-black transition-all ${
-                      selectedQuestionCount === num ? "bg-blue-600 text-white shadow-lg shadow-blue-200" : "bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200"
-                    }`}
-                  >
-                    {num === "All" ? "Full Exam" : `${num} Qs`}
-                  </button>
-                ))}
+                {getAvailableQuestionOptions(selectedCourse.questions).map(num => {
+                  const isLocked =
+                    !isPremium &&
+                    num !== 30; // Only 30 questions allowed for free users
+
+                  return (
+                    <button
+                      key={num}
+                      onClick={() => !isLocked && setSelectedQuestionCount(num)}
+                      disabled={isLocked}
+                      className={`relative py-4 rounded-2xl font-black transition-all ${selectedQuestionCount === num
+                          ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
+                          : "bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200"
+                        } ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`}
+                    >
+                      {num === "All" ? "Full Exam" : `${num} Qs`}
+
+                      {/* PREMIUM OVERLAY ICON */}
+                      {isLocked && (
+                        <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                                      <FaCrown className="text-[8px] text-white" />
+                                    </div>
+                      )}
+                    </button>
+                  );
+                })}
+
               </div>
               <button onClick={handleStartExam} disabled={!selectedQuestionCount} className="w-full mt-6 py-4 rounded-2xl font-black bg-blue-600 text-white disabled:bg-gray-300 shadow-xl shadow-blue-100 dark:shadow-none">Start Exam</button>
             </div>
