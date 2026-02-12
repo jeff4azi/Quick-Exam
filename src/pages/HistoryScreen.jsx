@@ -18,16 +18,17 @@ const HistoryScreen = () => {
   const [historyData, setHistoryData] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHistory = async () => {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
+      setLoading(true); // start loading
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
 
       if (userError || !user) {
         console.error("No user session");
+        setHistoryData([]);
+        setLoading(false);
         return;
       }
 
@@ -47,14 +48,17 @@ const HistoryScreen = () => {
 
       if (error) {
         console.error("Failed to fetch history:", error.message, error.details);
+        setHistoryData([]);
+      } else {
+        setHistoryData(data || []);
       }
 
-
-      setHistoryData(data || []);
+      setLoading(false); // stop loading
     };
 
     fetchHistory();
   }, []);
+
 
   // Scroll shadow effect
   useEffect(() => {
@@ -176,65 +180,74 @@ const HistoryScreen = () => {
 
       <main className="max-w-2xl mx-auto px-6 pt-4 pb-20">
 
-        {/* Stats Bento Grid */}
-        {totalExams > 0 && (
-          <section className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-            <StatCard label="Completed" value={totalExams} icon={<FaLayerGroup />} color="blue" />
-            <StatCard label="Best Score" value={`${Math.round(bestScore)}%`} icon={<FaTrophy />} color="amber" />
-            <StatCard
-              label="Retake Rate"
-              value={formattedRetake}
-              icon={<FiRefreshCw />}
-              color="purple"
-            />
-            <StatCard
-              label="Avg. Time"
-              value={formattedAvgTime || "—"}
-              icon={<FiClock />}
-              color="purple"
-            />
-            <StatCard
-              label="Avg. Perf."
-              value={`${avgScore}%`}
-              icon={<FaChartLine />}
-              color="emerald"
-              className="col-span-2 md:col-span-1"
-            />
-          </section>
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-b-4 mb-4"></div>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">Loading history...</p>
+          </div>
+        ) : (
+          <>
+            {/* Stats Bento Grid */}
+            {totalExams > 0 && (
+              <section className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
+                <StatCard label="Completed" value={totalExams} icon={<FaLayerGroup />} color="blue" />
+                <StatCard label="Best Score" value={`${Math.round(bestScore)}%`} icon={<FaTrophy />} color="amber" />
+                <StatCard
+                  label="Retake Rate"
+                  value={formattedRetake}
+                  icon={<FiRefreshCw />}
+                  color="purple"
+                />
+                <StatCard
+                  label="Avg. Time"
+                  value={formattedAvgTime || "—"}
+                  icon={<FiClock />}
+                  color="purple"
+                />
+                <StatCard
+                  label="Avg. Perf."
+                  value={`${avgScore}%`}
+                  icon={<FaChartLine />}
+                  color="emerald"
+                  className="col-span-2 md:col-span-1"
+                />
+              </section>
+            )}
+
+            {/* History List */}
+            <div className="space-y-4">
+              <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
+                Recent Attempts
+              </h3>
+
+              {totalExams === 0 ? (
+                <div className="flex flex-col items-center justify-center py-20 text-center">
+                  <div className="size-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
+                    <FaHistory size={32} className="text-slate-300" />
+                  </div>
+                  <h3 className="text-lg font-bold">No History Found</h3>
+                  <p className="text-slate-500 text-sm max-w-[200px]">Complete an exam to see your performance here.</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {historyData.map((exam) => (
+                    <HistoryItem
+                      key={exam.id}
+                      exam={{
+                        ...exam,
+                        course: exam.course_id,
+                        total: exam.total_questions,
+                        date: new Date(exam.date_taken).toLocaleDateString(),
+                      }}
+                      onDelete={() => deleteExam(exam.id)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </>
         )}
 
-        {/* History List */}
-        <div className="space-y-4">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
-            Recent Attempts
-          </h3>
-
-          {totalExams === 0 ? (
-            <div className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="size-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">
-                <FaHistory size={32} className="text-slate-300" />
-              </div>
-              <h3 className="text-lg font-bold">No History Found</h3>
-              <p className="text-slate-500 text-sm max-w-[200px]">Complete an exam to see your performance here.</p>
-            </div>
-          ) : (
-            <div className="space-y-3">
-              {historyData.map((exam) => (
-                <HistoryItem
-                  key={exam.id}
-                  exam={{
-                    ...exam,
-                    course: exam.course_id,
-                    total: exam.total_questions,
-                    date: new Date(exam.date_taken).toLocaleDateString(),
-                  }}
-                  onDelete={() => deleteExam(exam.id)}
-                />
-
-              ))}
-            </div>
-          )}
-        </div>
       </main>
 
       <ConfirmOverlay

@@ -2,37 +2,35 @@ import { useNavigate } from "react-router-dom"
 import WhatsAppCard from "../components/WhatsAppCard"
 import { useEffect, useState } from "react"
 import ReactGA from "react-ga4"
-import { supabase } from "../supabaseClient"
 import BannerAd from "../components/BannerAd";
 import { FaCrown } from "react-icons/fa";
 
-const ResultScreen = ({ questions, results, answers, setAnswers, setHasRetaken, selectedCourse, isPremium }) => {
-  const navigate = useNavigate()
-  const [userData, setUserData] = useState({ name: "Scholar", college: "" })
+const ResultScreen = ({
+  questions,
+  results,
+  answers,
+  setAnswers,
+  setHasRetaken,
+  selectedCourse,
+  isPremium,
+  userProfile // NEW
+}) => {
+  const navigate = useNavigate();
   const [showAd, setShowAd] = useState(true);
-  
-  const formatNum = (num) => String(num).padStart(2, '0')
-  const answeredCount = answers.filter(a => a !== undefined).length
 
+  const userData = userProfile || { full_name: "Scholar", college: "" }; // use App.jsx profile
+
+  const formatNum = (num) => String(num).padStart(2, '0');
+  const answeredCount = answers.filter(a => a !== undefined).length;
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user?.user_metadata) {
-        setUserData({
-          name: user.user_metadata.full_name || "Scholar",
-          college: user.user_metadata.college || ""
-        })
-      }
-    }
-    fetchUser()
-
     ReactGA.event({
       category: "Exam",
       action: "View Results",
       label: selectedCourse.id,
-    })
-  }, [selectedCourse.id])
+    });
+  }, [selectedCourse.id]);
+
 
   const getLatestResult = () => {
     const history = JSON.parse(localStorage.getItem("examHistory")) || []
@@ -53,10 +51,10 @@ const ResultScreen = ({ questions, results, answers, setAnswers, setHasRetaken, 
 
   // DYNAMIC FEEDBACK LOGIC
   const getFeedback = () => {
-    if (scorePercentage >= 80) return { msg: `Outstanding work, ${userData.name.split(' ')[0]}! You've mastered this.`, color: "text-green-500" }
-    if (scorePercentage >= 60) return { msg: `Great job, ${userData.name.split(' ')[0]}! You're on the right track.`, color: "text-blue-500" }
-    if (scorePercentage >= 45) return { msg: `Good effort, ${userData.name.split(' ')[0]}. A little more study and you'll ace it!`, color: "text-amber-500" }
-    return { msg: `Don't give up, ${userData.name.split(' ')[0]}. Review your errors and try again!`, color: "text-red-500" }
+    if (scorePercentage >= 80) return { msg: `Outstanding work, ${userData.full_name.split(' ')[0]}! You've mastered this.`, color: "text-green-500" }
+    if (scorePercentage >= 60) return { msg: `Great job, ${userData.full_name.split(' ')[0]}! You're on the right track.`, color: "text-blue-500" }
+    if (scorePercentage >= 45) return { msg: `Good effort, ${userData.full_name.split(' ')[0]}. A little more study and you'll ace it!`, color: "text-amber-500" }
+    return { msg: `Don't give up, ${userData.full_name.split(' ')[0]}. Review your errors and try again!`, color: "text-red-500" }
   }
 
   const feedback = getFeedback()
@@ -74,14 +72,14 @@ const ResultScreen = ({ questions, results, answers, setAnswers, setHasRetaken, 
         {/* Profile with Name Initial and College */}
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
-            <p className="text-xs font-black text-gray-800 dark:text-gray-200 leading-none">{userData.name}</p>
+            <p className="text-xs font-black text-gray-800 dark:text-gray-200 leading-none">{userData.full_name}</p>
             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter mt-1">{userData.college}</p>
           </div>
 
           {/* Avatar Container */}
           <div className="relative">
             <div className="size-10 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-white font-black shadow-lg">
-              {userData.name.charAt(0)}
+              {userData.full_name.charAt(0)}
             </div>
 
             {/* Premium Crown Badge */}

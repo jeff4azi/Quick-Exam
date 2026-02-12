@@ -63,24 +63,24 @@ function App() {
 
 
   useEffect(() => {
-    const fetchProfile = async () => {
+    const getProfile = async (user) => {
+      if (!user) {
+        setUserProfile(null);
+        setAvailableCourses([]);
+        setLoading(false);
+        return;
+      }
+
       try {
         setLoading(true);
-        const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-        if (authError || !user) {
-          setUserProfile(null);
-          setAvailableCourses([]);
-          return;
-        }
-
-        const { data: profileData, error: profileError } = await supabase
+        const { data: profileData, error } = await supabase
           .from("profiles")
           .select("*")
           .eq("id", user.id)
           .single();
 
-        if (profileError) throw profileError;
+        if (error) throw error;
 
         const profile = {
           full_name: user.user_metadata?.full_name || "Scholar",
@@ -98,8 +98,8 @@ function App() {
           setAvailableCourses([]);
         }
 
-      } catch (error) {
-        console.error("Error fetching profile:", error.message);
+      } catch (err) {
+        console.error("Profile fetch error:", err.message);
         setUserProfile(null);
         setAvailableCourses([]);
       } finally {
@@ -107,8 +107,23 @@ function App() {
       }
     };
 
-    fetchProfile();
+    // 1️⃣ Get current session on mount
+    supabase.auth.getSession().then(({ data }) => {
+      getProfile(data.session?.user);
+    });
+
+    // 2️⃣ Listen for auth changes
+    const { data: listener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        getProfile(session?.user);
+      }
+    );
+
+    return () => {
+      listener.subscription.unsubscribe();
+    };
   }, []);
+
 
   useEffect(() => {
     setHasRetaken(false);   // every time new questions are loaded
@@ -146,12 +161,17 @@ function App() {
   const handleLogout = async () => {
     try {
       await supabase.auth.signOut();
-      localStorage.clear();
-      sessionStorage.clear();
+      setUserProfile(null);
+      setAvailableCourses([]);
+      setQuestions([]);
+      setAnswers([]);
+      setResults({ correct: 0, wrong: 0, answered: 0 });
+      window.location.href = "/login";
     } catch (err) {
       console.error("Logout failed:", err.message);
     }
   };
+
 
   const props = {
     answers,
