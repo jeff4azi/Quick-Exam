@@ -1858,4 +1858,434 @@ export const gns113Questions = [
     ],
     correct: "Bindery unit",
   },
+  // ADD THESE AT THE END OF YOUR gns113Questions ARRAY
+{
+  id: "gns113-205",
+  question: "What is the primary definition of a library?",
+  options: [
+    "A bookshop",
+    "A place where books are kept for sale", 
+    "A collection of books and information materials organized for use",
+    "A computer center"
+  ],
+  correct: "A collection of books and information materials organized for use"
+},
+{
+  id: "gns113-206",
+  question: "Which of the following is NOT a function of a library?",
+  options: [
+    "Supporting teaching",
+    "Aiding research",
+    "Selling stationery",
+    "Supporting the curriculum"
+  ],
+  correct: "Selling stationery"
+},
+{
+  id: "gns113-207",
+  question: "The National Library is owned by:",
+  options: [
+    "Private individuals",
+    "State governments only",
+    "The Federal Government",
+    "The United Nations"
+  ],
+  correct: "The Federal Government"
+},
+{
+  id: "gns113-208",
+  question: "Which type of library is established by research agencies?",
+  options: [
+    "School Library",
+    "Special Library",
+    "Public Library",
+    "Private Library"
+  ],
+  correct: "Special Library"
+},
+{
+  id: "gns113-209",
+  question: "In the Dewey Decimal Classification (DDC), the notation '000' stands for:",
+  options: [
+    "Philosophy",
+    "Arts",
+    "Generalities",
+    "History"
+  ],
+  correct: "Generalities"
+},
+{
+  id: "gns113-210",
+  question: "Which section of the library acquires and receives new books?",
+  options: [
+    "Circulation Section",
+    "Acquisition Section",
+    "Reference Section",
+    "Serials Section"
+  ],
+  correct: "Acquisition Section"
+},
+{
+  id: "gns113-211",
+  question: "What materials are primarily found in the Serials Section?",
+  options: [
+    "Textbooks",
+    "Journals and Magazines",
+    "Dictionaries",
+    "Encyclopedias"
+  ],
+  correct: "Journals and Magazines"
+},
+{
+  id: "gns113-212",
+  question: "ICT stands for:",
+  options: [
+    "International Computer Technology",
+    "Information and Communication Technology",
+    "Internal Communication Transfer",
+    "Internet Connection Tool"
+  ],
+  correct: "Information and Communication Technology"
+},
+{
+  id: "gns113-213",
+  question: "Which of the following is a hardware component of ICT in a library?",
+  options: [
+    "Koha",
+    "Barcode Reader",
+    "Windows",
+    "Database"
+  ],
+  correct: "Barcode Reader"
+},
+{
+  id: "gns113-214",
+  question: "Which factor is considered an 'Environmental Factor' in study techniques?",
+  options: [
+    "Health",
+    "Motivation",
+    "Lighting",
+    "Diet"
+  ],
+  correct: "Lighting"
+},
+{
+  id: "gns113-215",
+  question: "A 'Union Catalogue' lists materials held by:",
+  options: [
+    "One small library",
+    "Multiple libraries",
+    "A single shelf",
+    "A private individual"
+  ],
+  correct: "Multiple libraries"
+},
+{
+  id: "gns113-216",
+  question: "The 'Reference Section' contains materials that:",
+  options: [
+    "Can be borrowed for 2 weeks",
+    "Are strictly for home use",
+    "Cannot be borrowed/taken out of the library",
+    "Are fictional novels"
+  ],
+  correct: "Cannot be borrowed/taken out of the library"
+},
+{
+  id: "gns113-217",
+  question: "Which software is a Library Management Software?",
+  options: [
+    "Microsoft Word",
+    "Koha",
+    "Excel",
+    "Photoshop"
+  ],
+  correct: "Koha"
+},
+{
+  id: "gns113-218",
+  question: "In DDC, 'Arts' falls under:",
+  options: [
+    "400",
+    "700",
+    "800",
+    "100"
+  ],
+  correct: "700"
+},
+{
+  id: "gns113-219",
+  question: "'Extrinsic Motivation' is driven by:",
+  options: [
+    "External rewards or recognition",
+    "Inner peace",
+    "Curiosity",
+    "Self-discipline"
+  ],
+  correct: "External rewards or recognition"
+},
+{
+  id: "gns113-220",
+  question: "'GIGO' in ICT stands for:",
+  options: [
+    "Get In, Get Out",
+    "Garbage In, Garbage Out",
+    "Good Input, Good Output",
+    "General Input, General Output"
+  ],
+  correct: "Garbage In, Garbage Out"
+},
+{
+  id: "gns113-221",
+  question: "'SOP' stands for:",
+  options: [
+    "Standard Operating Procedure",
+    "System of Preservation",
+    "Standard Organizational Plan",
+    "Serial Ordering Process"
+  ],
+  correct: "Standard Operating Procedure"
+},
+{
+  id: "gns113-222",
+  question: "Which section deals with 'rare or restricted materials'?",
+  options: [
+    "Circulation",
+    "Special Collection / Reserved",
+    "Open shelves",
+    "Children's section"
+  ],
+  correct: "Special Collection / Reserved"
+},
+{
+  id: "gns113-223",
+  question: "'KSA' in study techniques stands for:",
+  options: [
+    "Knowledge, Skills, Abilities",
+    "Know, Study, Apply",
+    "Knowledge, Strategy, Action",
+    "Keep Studying Always"
+  ],
+  correct: "Knowledge, Skills, Abilities"
+},
+{
+  id: "gns113-224",
+  question: "In DDC, 'History & Geography' are located in:",
+  options: [
+    "100",
+    "900",
+    "300",
+    "600"
+  ],
+  correct: "900"
+},
+{
+  id: "gns113-225",
+  question: "In LCC, 'J' represents:",
+  options: [
+    "Journalism",
+    "Justice",
+    "Political Science",
+    "Jurisprudence"
+  ],
+  correct: "Political Science"
+},
+{
+  id: "gns113-226",
+  question: "In DDC, '100' represents:",
+  options: [
+    "Psychology",
+    "Philosophy & Psychology",
+    "Religion",
+    "Language"
+  ],
+  correct: "Philosophy & Psychology"
+},
+{
+  id: "gns113-227",
+  question: "In DDC, '200' represents:",
+  options: [
+    "Religion",
+    "Social Sciences",
+    "Language",
+    "Technology"
+  ],
+  correct: "Religion"
+},
+{
+  id: "gns113-228",
+  question: "In DDC, '300' represents:",
+  options: [
+    "Science",
+    "Social Science",
+    "Arts",
+    "History"
+  ],
+  correct: "Social Science"
+},
+{
+  id: "gns113-229",
+  question: "In DDC, '400' represents:",
+  options: [
+    "Language",
+    "Literature",
+    "Law",
+    "Logic"
+  ],
+  correct: "Language"
+},
+{
+  id: "gns113-230",
+  question: "In DDC, '600' represents:",
+  options: [
+    "Pure Science",
+    "Technology (Applied Sciences)",
+    "Arts",
+    "History"
+  ],
+  correct: "Technology (Applied Sciences)"
+},
+{
+  id: "gns113-231",
+  question: "The 'Preliminary pages' are also known as:",
+  options: [
+    "Back matter",
+    "Front matter",
+    "Text",
+    "Index"
+  ],
+  correct: "Front matter"
+},
+{
+  id: "gns113-232",
+  question: "'AACR2' stands for:",
+  options: [
+    "American Association of Cataloguing Rules",
+    "Anglo-American Cataloguing Rules (2nd Edition)",
+    "African Academic Cataloguing Regulations",
+    "Automated Access Cataloguing Rules"
+  ],
+  correct: "Anglo-American Cataloguing Rules (2nd Edition)"
+},
+{
+  id: "gns113-233",
+  question: "'FRBR' stands for:",
+  options: [
+    "Functional Requirements for Bibliographic Records",
+    "Federal Republic Book Regulations",
+    "Free Resources for Book Readers",
+    "Functional Rules for Book Retrieval"
+  ],
+  correct: "Functional Requirements for Bibliographic Records"
+},
+{
+  id: "gns113-234",
+  question: "'RFID' in library technology stands for:",
+  options: [
+    "Radio Frequency Identification",
+    "Reading Frequency ID",
+    "Remote Frequency Information Device",
+    "Rapid Finding ID"
+  ],
+  correct: "Radio Frequency Identification"
+},
+{
+  id: "gns113-235",
+  question: "RFID is primarily used for:",
+  options: [
+    "Reading books aloud",
+    "Tracking books and security",
+    "Cataloguing",
+    "Grading students"
+  ],
+  correct: "Tracking books and security"
+},
+{
+  id: "gns113-236",
+  question: "Which is NOT an example of library management software?",
+  options: [
+    "Koha",
+    "SLAM",
+    "Android",
+    "E-Granary"
+  ],
+  correct: "Android"
+},
+{
+  id: "gns113-237",
+  question: "'Procrastination' leads to:",
+  options: [
+    "Early completion of tasks",
+    "Stress and rushing",
+    "Better memory",
+    "Higher grades"
+  ],
+  correct: "Stress and rushing"
+},
+{
+  id: "gns113-238",
+  question: "A 'Sheaf Catalogue' is:",
+  options: [
+    "A catalogue on slips of paper bound in loose-leaf binders",
+    "An online catalogue",
+    "A card catalogue",
+    "A list on the wall"
+  ],
+  correct: "A catalogue on slips of paper bound in loose-leaf binders"
+},
+{
+  id: "gns113-239",
+  question: "A 'Mnemonic' is:",
+  options: [
+    "A computer virus",
+    "A memory aid (e.g., acronyms, rhymes)",
+    "A type of book",
+    "A library section"
+  ],
+  correct: "A memory aid (e.g., acronyms, rhymes)"
+},
+{
+  id: "gns113-240",
+  question: "'Visualization' as a memory technique involves:",
+  options: [
+    "Creating mental images of what you read",
+    "Reading aloud",
+    "Writing notes",
+    "Looking at the book cover"
+  ],
+  correct: "Creating mental images of what you read"
+},
+{
+  id: "gns113-241",
+  question: "A 'Bibliography' differs from a 'Catalogue' because:",
+  options: [
+    "A catalogue lists books in a specific library; a bibliography lists sources on a subject regardless of location",
+    "A catalogue is for sale",
+    "A bibliography is only online",
+    "They are the same"
+  ],
+  correct: "A catalogue lists books in a specific library; a bibliography lists sources on a subject regardless of location"
+},
+{
+  id: "gns113-242",
+  question: "Which requires 'Specialized Training' to manage?",
+  options: [
+    "Reading a newspaper",
+    "The Cataloguing & Classification Section",
+    "Walking into a library",
+    "Sitting in the library"
+  ],
+  correct: "The Cataloguing & Classification Section"
+},
+{
+  id: "gns113-243",
+  question: "'Reference materials' typically include:",
+  options: [
+    "Novels",
+    "Encyclopedias, Atlases, Dictionaries",
+    "Textbooks",
+    "Newspapers only"
+  ],
+  correct: "Encyclopedias, Atlases, Dictionaries"
+},
 ];

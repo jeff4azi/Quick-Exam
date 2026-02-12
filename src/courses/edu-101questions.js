@@ -2282,5 +2282,485 @@ export const edu101Questions = [
     question: "When was the Nigeria Union of Teachers (NUT) established?",
     options: ["1931", "1945", "1920", "1950"],
     correct: "1931"
-  }
+  },
+  {
+  id: "edu101-221",
+  question: "According to your notes, when did Western education come into Nigeria?",
+  options: ["18th century", "19th century", "1934", "1944"],
+  correct: "19th century"
+},
+{
+  id: "edu101-222",
+  question: "What does the acronym 'TRCN' stand for?",
+  options: ["Teaching Regulations Council of Nigeria", "Teachers Registration Council of Nigeria", "Tertiary Research Council of Nigeria", "Teachers Recruitment Centre of Nigeria"],
+  correct: "Teachers Registration Council of Nigeria"
+},
+{
+  id: "edu101-223",
+  question: "Which teaching method involves the teacher talking while students primarily listen and take notes?",
+  options: ["Discovery method", "Lecture method", "Project method", "Brainstorming"],
+  correct: "Lecture method"
+},
+{
+  id: "edu101-224",
+  question: "What is the full meaning of the acronym 'FME'?",
+  options: ["Federal Management of Education", "Federal Ministry of Education", "Federation of Ministry Employees", "Federal Monitoring Evaluation"],
+  correct: "Federal Ministry of Education"
+},
+{
+  id: "edu101-225",
+  question: "According to your notes, Yaba Higher College was opened in which year?",
+  options: ["1925", "1934", "1944", "1948"],
+  correct: "1934"
+},
+{
+  id: "edu101-226",
+  question: "Which term is defined as the 'acceptance of beliefs without questioning'?",
+  options: ["Skepticism", "Dogmatism", "Pragmatism", "Realism"],
+  correct: "Dogmatism"
+},
+{
+  id: "edu101-227",
+  question: "The questioning technique is also known as what method?",
+  options: ["Project method", "Socratic method", "Play-way method", "Demonstration method"],
+  correct: "Socratic method"
+},
+{
+  id: "edu101-228",
+  question: "What does the acronym 'UBE' stand for?",
+  options: ["Unified Basic Education", "Universal Basic Education", "University Board Examination", "Universal Board of Education"],
+  correct: "Universal Basic Education"
+},
+{
+  id: "edu101-229",
+  question: "Which organization is referred to as 'PEAN'?",
+  options: ["Professional Education Association of Nigeria", "Philosophy of Education Association of Nigeria", "Primary Education Association of Nigeria", "Psychology of Education Association of Nigeria"],
+  correct: "Philosophy of Education Association of Nigeria"
+},
+{
+  id: "edu101-230",
+  question: "According to your notes, what commission spurred the 1925 memorandum on education?",
+  options: ["Ashby Commission", "Phelps Stoke Commission", "Curriculum Conference", "Richards Constitution"],
+  correct: "Phelps Stoke Commission"
+},
+{
+  id: "edu101-231",
+  question: "Which domain of learning deals with values, feelings, interest, and emotion?",
+  options: ["Cognitive domain", "Psychomotor domain", "Affective domain", "Social domain"],
+  correct: "Affective domain"
+},
+{
+  id: "edu101-232",
+  question: "What is 'Andragogy' defined as?",
+  options: ["Teaching of children", "Teaching of adults", "Teaching of animals", "Teaching of special needs"],
+  correct: "Teaching of adults"
+},
+{
+  id: "edu101-233",
+  question: "Which university is noted in the text as NOT being among those that have adult education?",
+  options: ["Unilag", "Unilorin", "UI", "UNN"],
+  correct: "Unilorin"
+},
+{
+  id: "edu101-234",
+  question: "In the SMART principle for instructional objectives, what does the 'T' stand for?",
+  options: ["Tested", "Time-bound", "Technical", "Theoretical"],
+  correct: "Time-bound"
+},
+{
+  id: "edu101-235",
+  question: "What distinguishes the 'Teacher-centered' type of teaching?",
+  options: ["Learners construct knowledge", "Teacher leads activities and gives instruction", "Work in groups", "Active learner participation"],
+  correct: "Teacher leads activities and gives instruction"
+},
+{
+  id: "edu101-236",
+  question: "Which of the following represents the correct communication cycle in teaching?",
+  options: ["Teacher -> Method -> Content -> Learner", "Teacher -> Content -> Method -> Learner -> Evaluation", "Learner -> Content -> Teacher -> Evaluation", "Content -> Teacher -> Learner -> Method"],
+  correct: "Teacher -> Content -> Method -> Learner -> Evaluation"
+},
+{
+  id: "edu101-237",
+  question: "Maslow’s hierarchy of needs is divided into which two main categories?",
+  options: ["Physical and Mental needs", "Deficiency needs and Growth needs", "Primary and Secondary needs", "Intrinsic and Extrinsic needs"],
+  correct: "Deficiency needs and Growth needs"
+},
+{
+  id: "edu101-238",
+  question: "Which of the following is NOT listed as a level of the Cognitive Domain?",
+  options: ["Synthesis", "Characterization", "Analysis", "Application"],
+  correct: "Characterization"
+},
+{
+  id: "edu101-239",
+  question: "What is the highest level of Maslow’s needs?",
+  options: ["Safety", "Social", "Self-actualization", "Esteem"],
+  correct: "Self-actualization"
+},
+{
+  id: "edu101-240",
+  question: "According to the notes, what does 'CAI' stand for?",
+  options: ["Central African Initiative", "Computer Assisted Instruction", "Classroom Activity Index", "Creative Arts Instruction"],
+  correct: "Computer Assisted Instruction"
+},
+{
+  id: "edu101-241",
+  question: "A teacher focusing on 'building skills through practice, drills, and repetition' is using which method?",
+  options: ["Indoctrination", "Training method", "Brainstorming", "Lecture method"],
+  correct: "Training method"
+},
+{
+  id: "edu101-242",
+  question: "Which of the following best describes the 'Learner-centered' approach?",
+  options: ["The learner constructs knowledge and works in groups", "The teacher is the sole authority", "Learners accept ideas without questioning", "The focus is on drills and repetition"],
+  correct: "The learner constructs knowledge and works in groups"
+},
+{
+  id: "edu101-243",
+  question: "If a teacher wants to use 'three dimensional objects' for teaching, what attribute must the materials possess according to your notes?",
+  options: ["Color, shape, and size", "Length, breadth, and depth", "Height, width, and weight", "Texture, volume, and mass"],
+  correct: "Length, breadth, and depth"
+},
+{
+  id: "edu101-244",
+  question: "Which domain would 'typing' or 'drawing' fall under?",
+  options: ["Cognitive", "Affective", "Psychomotor", "Social"],
+  correct: "Psychomotor"
+},
+{
+  id: "edu101-245",
+  question: "How is teaching described in Nigeria regarding its professional status in your notes?",
+  options: ["A full profession", "A half-way profession", "A non-profession", "An elite profession"],
+  correct: "A half-way profession"
+},
+{
+  id: "edu101-246",
+  question: "Intrinsic motivation differs from extrinsic motivation because it comes from:",
+  options: ["External rewards", "Inner satisfaction", "Peer pressure", "Teacher's praise"],
+  correct: "Inner satisfaction"
+},
+{
+  id: "edu101-247",
+  question: "Which of these is a 'Deficiency Need' according to Maslow?",
+  options: ["Self-actualization", "Esteem", "Safety", "Knowledge"],
+  correct: "Safety"
+},
+{
+  id: "edu101-248",
+  question: "Which level of the Affective domain involves integrating a new value into one's general set of values?",
+  options: ["Receiving", "Organization", "Responding", "Valuing"],
+  correct: "Organization"
+},
+{
+  id: "edu101-249",
+  question: "The 'Lecture Method' implies that the student is primarily:",
+  options: ["Active and leading", "Passive and listening", "Collaborating with peers", "Demonstrating skills"],
+  correct: "Passive and listening"
+},
+{
+  id: "edu101-250",
+  question: "Which of the following is NOT one of the 'Types of Teaching' listed?",
+  options: ["Teacher-centered", "Learner-centered", "Content-centered", "None of the above"],
+  correct: "Content-centered"
+},
+{
+  id: "edu101-251",
+  question: "A teacher asks, 'Whom to teach?' and 'Why the teaching?'. This characterizes teaching as:",
+  options: ["A casual activity", "A process of decision making", "Indoctrination", "A static process"],
+  correct: "A process of decision making"
+},
+{
+  id: "edu101-252",
+  question: "Which level of the Cognitive Domain involves breaking down material into its component parts?",
+  options: ["Application", "Analysis", "Synthesis", "Comprehension"],
+  correct: "Analysis"
+},
+{
+  id: "edu101-253",
+  question: "Who are the developers of the Affective Domain mentioned in the notes?",
+  options: ["Bloom alone", "Krathwohl, Bloom, and Masia", "Maslow and Skinner", "Piaget and Vygotsky"],
+  correct: "Krathwohl, Bloom, and Masia"
+},
+{
+  id: "edu101-254",
+  question: "In the Psychomotor domain, what is the level 'Perceptual Abilities' concerned with?",
+  options: ["Reflex movements", "Sensing and interpreting", "Complex skills", "Communication"],
+  correct: "Sensing and interpreting"
+},
+{
+  id: "edu101-255",
+  question: "Which implies a higher level of professional autonomy?",
+  options: ["Occupation", "Profession", "Vocation", "Job"],
+  correct: "Profession"
+},
+{
+  id: "edu101-256",
+  question: "Sociology of Education specifically studies:",
+  options: ["Human behavior in isolation", "The relationship between school and society", "The internal workings of the brain", "Teaching methods only"],
+  correct: "The relationship between school and society"
+},
+{
+  id: "edu101-257",
+  question: "If a student is 'characterizing' a value, they are at which stage of the Affective Domain?",
+  options: ["First stage", "Highest/Last stage", "Middle stage", "Second stage"],
+  correct: "Highest/Last stage"
+},
+{
+  id: "edu101-258",
+  question: "Which question is NOT part of the decision-making process in teaching listed in your notes?",
+  options: ["How to measure the outcome?", "What to do with evaluation feedback?", "How much salary to demand?", "Why the teaching?"],
+  correct: "How much salary to demand?"
+},
+{
+  id: "edu101-259",
+  question: "Which method allows learners to 'freely bring up ideas on a topic'?",
+  options: ["Lecture", "Brainstorming", "Indoctrination", "Training"],
+  correct: "Brainstorming"
+},
+{
+  id: "edu101-260",
+  question: "A Lesson Note is derived from the Scheme of Work, which in turn comes from the:",
+  options: ["Textbook", "Syllabus", "Lesson Plan", "School Calendar"],
+  correct: "Syllabus"
+},
+{
+  id: "edu101-261",
+  question: "If an objective states: 'Students will understand the concept of gravity', which SMART principle does it violate most?",
+  options: ["Time-bound", "Measurable", "Achievable", "Relevant"],
+  correct: "Measurable"
+},
+{
+  id: "edu101-262",
+  question: "A teacher notices a student only participates when offered a sticker. This student displays:",
+  options: ["Intrinsic motivation", "Extrinsic motivation", "Self-actualization", "Growth needs"],
+  correct: "Extrinsic motivation"
+},
+{
+  id: "edu101-263",
+  question: "Which scenario best illustrates the 'Application' level of Bloom's Taxonomy?",
+  options: ["Reciting the formula for area", "Using the formula to calculate the area of a specific room", "Explaining why the formula works", "Designing a new shape with a specific area"],
+  correct: "Using the formula to calculate the area of a specific room"
+},
+{
+  id: "edu101-264",
+  question: "Why is 'Evaluation' placed at the end of the teaching cycle?",
+  options: ["To fill time", "To punish students", "To measure if objectives were achieved and improve effectiveness", "To start the cycle"],
+  correct: "To measure if objectives were achieved and improve effectiveness"
+},
+{
+  id: "edu101-265",
+  question: "A Physical Education teacher guiding a student's hand to hold a racket correctly is engaging in which domain?",
+  options: ["Cognitive", "Affective", "Psychomotor", "Sociological"],
+  correct: "Psychomotor"
+},
+{
+  id: "edu101-266",
+  question: "If a teacher focuses solely on 'Indoctrination', what critical element of education is missing?",
+  options: ["Content delivery", "Questioning and critical thinking", "Teacher authority", "Learner presence"],
+  correct: "Questioning and critical thinking"
+},
+{
+  id: "edu101-267",
+  question: "Which sequence correctly orders the Psychomotor domain from lowest to highest?",
+  options: ["Skilled Movement -> Reflex Movement -> Basic Movement", "Reflex Movement -> Basic Movement -> Perceptual Abilities", "Perceptual Abilities -> Reflex Movement -> Skilled Movement", "Basic Movement -> Skilled Movement -> Reflex Movement"],
+  correct: "Reflex Movement -> Basic Movement -> Perceptual Abilities"
+},
+{
+  id: "edu101-268",
+  question: "In the context of 'Teaching as a profession', what role does the Code of Ethics play?",
+  options: ["It determines the syllabus", "It regulates the conduct and moral behavior of teachers", "It ensures high salaries", "It provides training materials"],
+  correct: "It regulates the conduct and moral behavior of teachers"
+},
+{
+  id: "edu101-269",
+  question: "A learner who 'works in groups and constructs knowledge' is most likely in which environment?",
+  options: ["Lecture hall", "Learner-centered classroom", "Training camp", "Indoctrination session"],
+  correct: "Learner-centered classroom"
+},
+{
+  id: "edu101-270",
+  question: "Which combination best describes 'Non-discursive communication' in the Psychomotor domain?",
+  options: ["Speaking fluently", "Writing an essay", "Expressive movement and body language", "Reflex actions"],
+  correct: "Expressive movement and body language"
+},
+{
+  id: "edu101-271",
+  question: "A teacher analyzing 'How to teach' is primarily concerned with:",
+  options: ["Methodology", "Curriculum", "Psychology", "Philosophy"],
+  correct: "Methodology"
+},
+{
+  id: "edu101-272",
+  question: "If a teacher uses 'Synthesis' (Cognitive Domain), they might ask students to:",
+  options: ["Define a term", "Create a new plan or proposal combining different ideas", "Compare two items", "Judge the value of an idea"],
+  correct: "Create a new plan or proposal combining different ideas"
+},
+{
+  id: "edu101-273",
+  question: "The concept of 'Pedagogy' typically contrasts with 'Andragogy' because:",
+  options: ["Pedagogy is for adults, Andragogy for children", "Pedagogy is for children, Andragogy for adults", "They are the same", "Pedagogy avoids methods, Andragogy uses them"],
+  correct: "Pedagogy is for children, Andragogy for adults"
+},
+{
+  id: "edu101-274",
+  question: "Why would 'TETFUND' be relevant to a lecturer in a Nigerian University?",
+  options: ["It registers teachers", "It provides funding for tertiary education infrastructure and research", "It manages primary schools", "It conducts entrance exams"],
+  correct: "It provides funding for tertiary education infrastructure and research"
+},
+{
+  id: "edu101-275",
+  question: "A student who is able to 'Judge the value of material' is operating at which Cognitive level?",
+  options: ["Analysis", "Evaluation", "Synthesis", "Application"],
+  correct: "Evaluation"
+},
+{
+  id: "edu101-276",
+  question: "Which need must be met BEFORE 'Esteem' needs can be fully prioritized according to Maslow?",
+  options: ["Self-actualization", "Social needs", "Growth needs", "Intellectual needs"],
+  correct: "Social needs"
+},
+{
+  id: "edu101-277",
+  question: "The phrase 'teaching is not a casual activity' implies that:",
+  options: ["It requires systematic planning and conscious effort", "It is done only on weekends", "It doesn't require certification", "It is easy"],
+  correct: "It requires systematic planning and conscious effort"
+},
+{
+  id: "edu101-278",
+  question: "If a teacher uses 'Drills' and 'Demonstration' exclusively, they might be criticized for neglecting:",
+  options: ["Psychomotor skills", "Critical thinking and creativity", "Discipline", "Repetition"],
+  correct: "Critical thinking and creativity"
+},
+{
+  id: "edu101-279",
+  question: "The 'Communication Cycle' in teaching is incomplete without:",
+  options: ["A computer", "Evaluation (Feedback)", "A blackboard", "A textbook"],
+  correct: "Evaluation (Feedback)"
+},
+{
+  id: "edu101-280",
+  question: "Which statement best connects 'Sociology of Education' with 'Curriculum'?",
+  options: ["Society determines what is valuable to learn, influencing the curriculum", "Curriculum is independent of society", "Sociology ignores the curriculum", "Curriculum is only about psychology"],
+  correct: "Society determines what is valuable to learn, influencing the curriculum"
+},
+   {
+    id: "edu101-281",
+    question: "Which of the following is NOT identified as a component of Pedagogical Content Knowledge?",
+    options: ["Knowledge of Subject Matter", "Knowledge of Students", "Knowledge of Educational Technology", "Knowledge of Curriculum"],
+    correct: "Knowledge of Educational Technology",
+  },
+  {
+    id: "edu101-282",
+    question: "What organization was established to regulate entry into the teaching profession in Nigeria?",
+    options: ["Nigerian Union of Teachers", "Ministry of Education", "Teachers Registration Council of Nigeria (TRCN)", "National Education Council"],
+    correct: "Teachers Registration Council of Nigeria (TRCN)",
+  },
+  {
+    id: "edu101-283",
+    question: "Which of the following is NOT one of the major ethics of teaching?",
+    options: ["Confidentiality", "Professional competence", "Favoritism", "Integrity"],
+    correct: "Favoritism",
+  },
+  {
+    id: "edu101-284",
+    question: "A teacher's commitment to continuous professional development is an example of:",
+    options: ["Ethical responsibility to the profession", "Personal hobby", "Waste of time", "Political requirement"],
+    correct: "Ethical responsibility to the profession",
+  },
+  {
+    id: "edu101-285",
+    question: "Which of the following is a primary source of teacher's professional ethics in Nigeria?",
+    options: ["TRCN Code of Conduct", "Social Media", "International News", "Personal Opinions"],
+    correct: "TRCN Code of Conduct",
+  },
+  {
+    id: "edu101-286",
+    question: "The primary purpose of a teacher's lesson note is to:",
+    options: ["Impress the principal", "Guide the teacher during instruction", "Replace the textbook", "Record student attendance"],
+    correct: "Guide the teacher during instruction",
+  },
+  {
+    id: "edu101-287",
+    question: "When a teacher uses a variety of teaching methods to cater to different learning styles, they are practicing:",
+    options: ["Differentiated instruction", "Indoctrination", "Random teaching", "Passive teaching"],
+    correct: "Differentiated instruction",
+  },
+  {
+    id: "edu101-288",
+    question: "Which of the following is an example of an audio-visual aid?",
+    options: ["Radio", "Chalkboard", "Television", "Textbook"],
+    correct: "Television",
+  },
+  {
+    id: "edu101-289",
+    question: "The term 'entry behaviour' in lesson planning refers to:",
+    options: ["How students enter the class", "Students' previous knowledge and skills", "Classroom furniture arrangement", "The teacher's dress code"],
+    correct: "Students' previous knowledge and skills",
+  },
+  {
+    id: "edu101-290",
+    question: "Micro-teaching is primarily used for:",
+    options: ["Teaching small children", "Scaling down the teaching process for practice", "Teaching in a small room", "Reducing school fees"],
+    correct: "Scaling down the teaching process for practice",
+  },
+  {
+    id: "edu101-291",
+    question: "In the context of teaching, 'Feedback' is essential because it:",
+    options: ["Makes the teacher famous", "Helps in improving learning and teaching", "Increases the volume of work", "Is a government requirement"],
+    correct: "Helps in improving learning and teaching",
+  },
+  {
+    id: "edu101-292",
+    question: "Which of these is a major barrier to effective communication in the classroom?",
+    options: ["Clear voice", "Noise", "Use of teaching aids", "Student participation"],
+    correct: "Noise",
+  },
+  {
+    id: "edu101-293",
+    question: "A teacher who maintains a fair and impartial relationship with all students is upholding:",
+    options: ["Social status", "Professional integrity", "Financial gain", "Political power"],
+    correct: "Professional integrity",
+  },
+  {
+    id: "edu101-294",
+    question: "Which of the following best describes the 'Discovery Method'?",
+    options: ["Teacher tells everything", "Students find out information for themselves", "Rote memorization", "Watching a movie"],
+    correct: "Students find out information for themselves",
+  },
+  {
+    id: "edu101-295",
+    question: "The 'Discussion Method' is most effective for:",
+    options: ["Delivering facts quickly", "Developing critical thinking and social skills", "Teaching silent reading", "Individual drawing"],
+    correct: "Developing critical thinking and social skills",
+  },
+  {
+    id: "edu101-296",
+    question: "Which of the following is a characteristic of a professional teacher?",
+    options: ["Lack of patience", "Mastery of subject matter", "Resisting change", "Ignoring students' needs"],
+    correct: "Mastery of subject matter",
+  },
+  {
+    id: "edu101-297",
+    question: "Active learning involves:",
+    options: ["Learners passively listening", "Learners engaging in activities to construct understanding", "Teacher-only lectures", "Punishment for wrong answers"],
+    correct: "Learners engaging in activities to construct understanding",
+  },
+  {
+    id: "edu101-298",
+    question: "Which of the following best describes peer teaching?",
+    options: ["Learners teaching each other", "Teacher lecturing learners", "Individual study", "Assigning homework"],
+    correct: "Learners teaching each other",
+  },
+  {
+    id: "edu101-299",
+    question: "Which of the following is an example of psychomotor learning?",
+    options: ["Reading a story", "Performing a dance", "Discussing politics", "Writing an essay"],
+    correct: "Performing a dance",
+  },
+  {
+    id: "edu101-300",
+    question: "Which of the following is NOT a barrier to effective communication in teaching?",
+    options: ["Sender", "Message", "Channel", "Punishment"],
+    correct: "Punishment",
+  },
 ];
