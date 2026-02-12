@@ -6,7 +6,7 @@ import { supabase } from "../supabaseClient"
 import BannerAd from "../components/BannerAd";
 import { FaCrown } from "react-icons/fa";
 
-const ResultScreen = ({ questions, results, answers, setAnswers, selectedCourse, isPremium }) => {
+const ResultScreen = ({ questions, results, answers, setAnswers, setHasRetaken, selectedCourse, isPremium }) => {
   const navigate = useNavigate()
   const [userData, setUserData] = useState({ name: "Scholar", college: "" })
   const [showAd, setShowAd] = useState(true);
@@ -149,7 +149,7 @@ const ResultScreen = ({ questions, results, answers, setAnswers, selectedCourse,
         <ActionButton
           label="Retake"
           color="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
-          onClick={() => { setAnswers([]); navigate("/exam"); }}
+          onClick={() => { setAnswers([]); navigate("/exam"); setHasRetaken(true); }}
           icon={<path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />}
         />
         <ActionButton

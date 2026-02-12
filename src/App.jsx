@@ -24,6 +24,7 @@ function App() {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [availableCourses, setAvailableCourses] = useState([]);
+  const [hasRetaken, setHasRetaken] = useState(false);
 
   const [answers, setAnswers] = useState([])
   const [selectedCourse, setSelectedCourse] = useState(null)
@@ -109,6 +110,11 @@ function App() {
     fetchProfile();
   }, []);
 
+  useEffect(() => {
+    setHasRetaken(false);   // every time new questions are loaded
+  }, [questions]);
+
+
   const isPremium = userProfile?.isPremium === true; // only pasing what's needed
 
   useEffect(() => {
@@ -168,6 +174,8 @@ function App() {
     loadingProfile: loading,
     isPremium,
     handleLogout,
+    hasRetaken,
+    setHasRetaken,
   }
 
   return (

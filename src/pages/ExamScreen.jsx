@@ -4,7 +4,9 @@ import ConfirmOverlay from "../components/ConfirmOverlay"
 import { RenderMathText } from "../utils/RenderMathText"
 import ProgressBar from "../components/ProgressBar"
 import Timer from "../components/Timer"
-import { FiChevronLeft, FiBookmark, FiSend, FiChevronRight } from "react-icons/fi"
+import { FiChevronLeft, FiBookmark, FiSend, FiChevronRight, FiLoader } from "react-icons/fi"
+import { supabase } from "../supabaseClient"
+
 
 const calculateTotalTime = (questionCount, isMath) => {
   const timePer10 = isMath ? 6 * 60 : 3.33 * 60
@@ -27,7 +29,7 @@ const ExamScreen = ({
   onSubmit,
   selectedCourse,
   bookmarks,
-  setBookmarks
+  setBookmarks, hasRetaken,
 }) => {
   const isMathCourse = selectedCourse?.id === "MTH101"
   const navigate = useNavigate()
@@ -40,10 +42,39 @@ const ExamScreen = ({
   const [hasSaved, setHasSaved] = useState(false)
   const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false)
   const [isExitOverlayOpen, setExitOverlayOpen] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const currentQuestion = questions[currentIndex]
   const selectedOption = answers[currentIndex]
   const isBookmarked = bookmarks.includes(currentQuestion?.id)
+
+  const saveResultToSupabase = async (finalTime) => {
+    try {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
+
+      // Calculate score
+      const correctCount = questions.reduce(
+        (acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc),
+        0
+      );
+
+      // Insert into Supabase
+      await supabase.from("exam_attempts").insert({
+        user_id: userData.user.id,
+        course_id: selectedCourse.id,
+        score: correctCount,
+        total_questions: questions.length,
+        time_taken: finalTime,
+        is_retake: hasRetaken, // Track if this attempt is a retake
+      });
+
+      console.log("Saved to Supabase ✅");
+
+    } catch (error) {
+      console.error("Error saving attempt:", error.message);
+    }
+  };
 
   useEffect(() => {
     if (currentQuestion) {
@@ -85,23 +116,63 @@ const ExamScreen = ({
     setHasSaved(true)
   }
 
-  // FIX: Ensure onSubmit() is called to update App.js state
-  const handleSubmit = () => {
-    saveResultToHistory(initialTotalTime - timeLeft)
-    if (onSubmit) onSubmit() 
-    navigate("/results")
+  const handleSubmit = async () => {
+    setSubmitOverlayOpen(false); // Close the confirm modal
+    setIsSubmitting(true);       // Show the loader
+
+    const finalTime = initialTotalTime - timeLeft;
+
+    // Save data
+    saveResultToHistory(finalTime);
+    await saveResultToSupabase(finalTime);
+
+    // Optional: 1.5s delay so the animation isn't too fast to see
+    setTimeout(() => {
+      if (onSubmit) onSubmit();
+      navigate("/results");
+    }, 50);
   }
 
-  const handleTimeUp = () => {
-    saveResultToHistory(initialTotalTime - timeLeft)
-    if (onSubmit) onSubmit()
-    navigate("/results")
+  const handleTimeUp = async () => {
+    setIsSubmitting(true); // Show loader immediately on timeout
+    const finalTime = initialTotalTime - timeLeft;
+
+    saveResultToHistory(finalTime);
+    await saveResultToSupabase(finalTime);
+
+    setTimeout(() => {
+      if (onSubmit) onSubmit();
+      navigate("/results");
+    }, 1500);
   }
+
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100
 
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex flex-col">
+
+      {/* SUBMITTING LOADING OVERLAY */}
+      {isSubmitting && (
+        <div className="fixed inset-0 z-[100] bg-gray-50/80 dark:bg-slate-900/80 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-300">
+          <div className="relative">
+            {/* Outer Pulse effect */}
+            <div className="absolute inset-0 rounded-full bg-blue-500/20 animate-ping" />
+
+            {/* Center Icon Box */}
+            <div className="relative size-20 bg-blue-600 rounded-[2rem] shadow-2xl shadow-blue-500/40 flex items-center justify-center">
+              <FiLoader className="text-white size-10 animate-spin" />
+            </div>
+          </div>
+
+          <h2 className="mt-8 text-2xl font-black text-slate-900 dark:text-white tracking-tight">
+            Processing Results
+          </h2>
+          <p className="mt-2 text-slate-500 dark:text-slate-400 font-medium animate-pulse">
+            Calculating your score...
+          </p>
+        </div>
+      )}
       
       {/* HEADER SECTION */}
       <div className="sticky top-0 z-30 bg-gray-50/80 dark:bg-slate-900/80 backdrop-blur-md px-5 pt-6 pb-2">
