@@ -63,17 +63,17 @@ function App() {
 
 
   useEffect(() => {
+    let isInitialLoad = true;
+
     const getProfile = async (user) => {
       if (!user) {
         setUserProfile(null);
         setAvailableCourses([]);
-        setLoading(false);
+        if (isInitialLoad) setLoading(false);
         return;
       }
 
       try {
-        setLoading(true);
-
         const { data: profileData, error } = await supabase
           .from("profiles")
           .select("*")
@@ -103,16 +103,19 @@ function App() {
         setUserProfile(null);
         setAvailableCourses([]);
       } finally {
-        setLoading(false);
+        if (isInitialLoad) {
+          setLoading(false);
+          isInitialLoad = false;
+        }
       }
     };
 
-    // 1️⃣ Get current session on mount
+    // Initial load
     supabase.auth.getSession().then(({ data }) => {
       getProfile(data.session?.user);
     });
 
-    // 2️⃣ Listen for auth changes
+    // Auth listener (DO NOT control global loading here)
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         getProfile(session?.user);
@@ -227,7 +230,7 @@ function App() {
             {/* FIX: Results route checks results.answered, which handleExamSubmit updates */}
             <Route path="/results" element={<ProtectedRoute stateCheck={results.answered > 0}><ResultScreen {...props} /></ProtectedRoute>} />
             <Route path="/review-answers" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><ReviewAnswers {...props} /></ProtectedRoute>} />
-              <Route path="/premium" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><PremiumPage {...props} onActivatePremium={handlePremiumActivation} /></ProtectedRoute>} />
+            <Route path="/premium" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><PremiumPage {...props} onActivatePremium={handlePremiumActivation} /></ProtectedRoute>} />
           </Routes>
         </AuthProvider>
       )}
