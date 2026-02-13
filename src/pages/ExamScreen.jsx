@@ -205,9 +205,9 @@ const ExamScreen = ({
       <div className="flex-1 px-5 pb-32 pt-4 overflow-y-auto">
         <div className="max-w-2xl mx-auto">
           
-          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 shadow-xl shadow-slate-200/50 dark:shadow-none border border-gray-50 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-gray-50 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
             
-            <div className="flex justify-between items-start mb-6">
+            <div className="flex justify-between items-center mb-4">
               <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">
                 {selectedCourse.name}
               </div>
@@ -219,7 +219,7 @@ const ExamScreen = ({
               </button>
             </div>
 
-            <div className="text-xl lg:text-2xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-10">
+            <div className="lg:text-xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-5">
               <RenderMathText text={currentQuestion.question} courseId={selectedCourse?.id} />
             </div>
 
@@ -232,7 +232,7 @@ const ExamScreen = ({
                   <button
                     key={index}
                     onClick={() => onOptionClick(option)}
-                    className={`group w-full flex items-center gap-4 p-4 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
+                    className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
                       isSelected 
                         ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10" 
                         : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
@@ -245,7 +245,7 @@ const ExamScreen = ({
                     }`}>
                       {label}
                     </div>
-                    <div className={`text-left font-semibold text-lg ${isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}>
+                    <div className={`text-left font-semibold ${isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}>
                       <RenderMathText text={option} courseId={selectedCourse?.id} />
                     </div>
                   </button>
@@ -257,8 +257,8 @@ const ExamScreen = ({
       </div>
 
       {/* BOTTOM NAVIGATION BAR */}
-      <div className="fixed bottom-0 inset-x-0 p-6 z-40">
-        <div className="max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-4">
+      <div className="fixed bottom-0 inset-x-0 px-6 py-2 z-40">
+        <div className="max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-3">
           <button
             onClick={() => setCurrentIndex(prev => prev - 1)}
             disabled={currentIndex === 0}
@@ -278,7 +278,7 @@ const ExamScreen = ({
           ) : (
             <button
               onClick={() => setCurrentIndex(prev => prev + 1)}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white h-14 rounded-[1.8rem] font-black text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
+              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white h-14 rounded-[1.8rem] font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               <span>Next Question</span>
               <FiChevronRight />
