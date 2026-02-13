@@ -137,7 +137,7 @@ const courses = [
   {
     id: "AGE101",
     name: "AGE 101",
-    title: "INTRODUCTION TO agriculture",
+    title: "INTRODUCTION TO AGRICULTURE",
     group: "departmental",
     colleges: ["COAHM", "COSIT"],
     questions: age101Questions,
