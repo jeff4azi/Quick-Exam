@@ -144,7 +144,7 @@ const courses = [
   {
     id: "VOS101",
     name: "VOS 101",
-    title: "House hold care product making",
+    title: "HOUSE HOLD CARE PRODUCT MAKING",
     group: "vocational",
     colleges: ["ALL"],
     questions: vos101Questions,
