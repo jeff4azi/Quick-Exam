@@ -55,7 +55,6 @@ options: [
 "Metamorphic",
 "Sedimentary",
 "Magmatic"
-"
 ],
 correct: "Sedimentary",
 reason: "Sedimentary rocks are formed by the accumulation and cementation of materials and may contain fossils."
