@@ -663,5 +663,181 @@ options: [
 ],
 correct: "To avoid the risk of introducing new parasites or diseases",
 reason: "Quarantining is necessary to prevent the risk of introducing new parasites into a herd when adding new animals."
+},
+{
+id: "AGE101-061",
+question: "What is livestock management?",
+options: [
+"Only feeding farm animals",
+"The practices involved in raising, feeding, breeding, housing, and caring for farm animals for productivity and health",
+"Treating sick animals in a veterinary clinic",
+"Importing exotic animal breeds"
+],
+correct: "The practices involved in raising, feeding, breeding, housing, and caring for farm animals for productivity and health"
+},
+{
+id: "AGE101-062",
+question: "Which of the following is NOT listed as an importance of livestock management?",
+options: [
+"Provision of meat and milk",
+"Source of income",
+"Production of synthetic fertilizers",
+"Supply of raw materials like hides and wool"
+],
+correct: "Production of synthetic fertilizers"
+},
+{
+id: "AGE101-063",
+question: "Which breeding method involves the use of semen collected from a male and manually introduced into the female reproductive tract?",
+options: [
+"Natural mating",
+"Crossbreeding",
+"Artificial insemination",
+"Inbreeding"
+],
+correct: "Artificial insemination"
+},
+{
+id: "AGE101-064",
+question: "Why is record keeping important in livestock production?",
+options: [
+"To decorate farm offices",
+"For planning, profit analysis, and disease control",
+"To reduce feed cost only",
+"To increase animal size genetically"
+],
+correct: "For planning, profit analysis, and disease control"
+},
+{
+id: "AGE101-065",
+question: "Which class of livestock includes pigs and rabbits?",
+options: [
+"Ruminants",
+"Poultry",
+"Monogastrics (Non-ruminants)",
+"Aquatic livestock"
+],
+correct: "Monogastrics (Non-ruminants)"
+},
+{
+id: "AGE101-066",
+question: "Which sequence correctly represents the steps in the nutrition process?",
+options: [
+"Ingestion → Digestion → Absorption → Excretion",
+"Procurement → Ingestion → Digestion → Absorption → Assimilation → Excretion",
+"Absorption → Ingestion → Digestion → Assimilation",
+"Digestion → Procurement → Absorption → Metabolism"
+],
+correct: "Procurement → Ingestion → Digestion → Absorption → Assimilation → Excretion"
+},
+{
+id: "AGE101-067",
+question: "What are indispensable nutrients?",
+options: [
+"Nutrients synthesized in excess by the body",
+"Nutrients that cannot be synthesized fast enough and must be supplied in the diet",
+"Nutrients needed only during disease",
+"Optional nutrients"
+],
+correct: "Nutrients that cannot be synthesized fast enough and must be supplied in the diet"
+},
+{
+id: "AGE101-068",
+question: "Why must monogastric animals receive essential amino acids directly in their diet?",
+options: [
+"They rely on rumen microbes",
+"They cannot synthesize essential amino acids",
+"They digest cellulose efficiently",
+"They hydrogenate fats in the stomach"
+],
+correct: "They cannot synthesize essential amino acids"
+},
+{
+id: "AGE101-069",
+question: "In ruminants, what is the role of rumen microbes in protein nutrition?",
+options: [
+"They destroy dietary nitrogen",
+"They synthesize microbial protein from nitrogen sources",
+"They prevent absorption of amino acids",
+"They produce only fat"
+],
+correct: "They synthesize microbial protein from nitrogen sources"
+},
+{
+id: "AGE101-070",
+question: "Which environmental factor increases stress and susceptibility to disease when animals are exposed for long periods?",
+options: [
+"Moderate airflow",
+"Extreme temperature",
+"Balanced nutrition",
+"Proper ventilation"
+],
+correct: "Extreme temperature"
+},
+{
+id: "AGE101-071",
+question: "Which environmental factor can increase heat load especially in animals without pigmentation?",
+options: [
+"Humidity",
+"Solar radiation",
+"Rainfall",
+"Air circulation"
+],
+correct: "Solar radiation"
+},
+{
+id: "AGE101-072",
+question: "Why should new animals be quarantined before joining an existing herd?",
+options: [
+"To allow social bonding",
+"To match feeding schedules",
+"To prevent introduction of new parasites or diseases",
+"To improve body weight"
+],
+correct: "To prevent introduction of new parasites or diseases"
+},
+{
+id: "AGE101-073",
+question: "What is disease?",
+options: [
+"Increased productivity",
+"A deviation from the normal state of health",
+"Normal physiological change",
+"Improved metabolic efficiency"
+],
+correct: "A deviation from the normal state of health"
+},
+{
+id: "AGE101-074",
+question: "Which male reproductive organ regulates the temperature of the testes?",
+options: [
+"Epididymis",
+"Scrotum",
+"Vas deferens",
+"Seminal vesicle"
+],
+correct: "Scrotum"
+},
+{
+id: "AGE101-075",
+question: "Which structure transports sperm from the epididymis to the urethra?",
+options: [
+"Penis",
+"Prostate gland",
+"Vas deferens",
+"Scrotum"
+],
+correct: "Vas deferens"
+},
+{
+id: "AGE101-076",
+question: "What is the function of the epididymis?",
+options: [
+"Produce testosterone",
+"Store and mature sperm",
+"Deposit semen",
+"Regulate urine flow"
+],
+correct: "Store and mature sperm"
 }
 ];
