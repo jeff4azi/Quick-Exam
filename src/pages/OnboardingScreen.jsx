@@ -49,7 +49,7 @@ const OnboardingScreen = () => {
       await supabase.auth.getSession();
 
       // 4. Exit onboarding permanently
-      navigate("/", { replace: true });
+      navigate("/login", { replace: true });
 
     } catch (err) {
       setError(err.message);
