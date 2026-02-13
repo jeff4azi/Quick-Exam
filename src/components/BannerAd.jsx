@@ -36,7 +36,7 @@ const AD_DATABASE = [
   {
     type: "image",
     url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770557375/BackgroundEraser_20260208_141707632_sk6ng9.jpg",
-    duration: 10,
+    duration: 5,
     whatsapp: "2348159767554",
   },
  {
