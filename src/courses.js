@@ -13,6 +13,8 @@ import { vos116Questions } from "./courses/vos-116questions";
 import { vos117Questions } from "./courses/vos-117questions";
 import { gcp113Questions } from "./courses/gcp-113questions";
 import { csm111Questions } from "./courses/csm-111questions";
+import { vos101Questions } from "./courses/vos-101questions";
+import { age101Questions } from "./courses/age-101questions";
 import { phy101AndPhy107Questions } from "./courses/phy-101andphy-107questions";
 
 const courses = [
@@ -112,7 +114,7 @@ const courses = [
     name: "CSM 111",
     title: "INTRODUCTION TO STATISTICS",
     group: "departmental",
-    colleges: ["COSMAS", "COSIT"],
+    colleges: ["COSMAS"],
     questions: csm111Questions,
   },
   {
@@ -124,12 +126,28 @@ const courses = [
     questions: phy101AndPhy107Questions,
   },
   {
+    id: "AGE101",
+    name: "AGE 101",
+    title: "INTRODUCTION TO agriculture",
+    group: "departmental",
+    colleges: ["COAHM"],
+    questions: age101Questions,
+  },
+  {
     id: "VOS116",
     name: "VOS 116",
     title: "FRUIT JUICE AND NON-ALCOHOLIC BEVERAGE",
     group: "vocational",
     colleges: ["ALL"],
     questions: vos116Questions,
+  },
+  {
+    id: "VOS101",
+    name: "VOS 101",
+    title: "House hold care product making",
+    group: "vocational",
+    colleges: ["ALL"],
+    questions: vos101Questions,
   },
   {
     id: "VOS117",
