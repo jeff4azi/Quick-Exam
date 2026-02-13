@@ -1,39 +1,31 @@
 import { InlineMath } from "react-katex";
 
-const looksLikeMath = (text) => {
-  // More comprehensive pattern that detects common LaTeX/math patterns
-  return /\\[a-zA-Z]+|\\[\\\{\}\[\]\(\)]|[=^_+\-*/<>|]|\\frac|\\sum|\\pi|\\sqrt|\\sin|\\cos|\\tan|\\begin|\\end/.test(text);
-};
-
 export const RenderMathText = ({ text, courseId }) => {
   if (typeof text !== "string") return text;
 
+  // Only render math for math/physics courses
   if (
     typeof courseId !== "string" ||
-    (!courseId.toUpperCase().startsWith("MTH101") && !courseId.toUpperCase().startsWith("PHY101"))
-  )
- {
+    (!courseId.toUpperCase().startsWith("MTH101") &&
+      !courseId.toUpperCase().startsWith("PHY101") &&
+      !courseId.toUpperCase().startsWith("CSM111"))
+  ) {
     return <span>{text}</span>;
   }
 
-  // Split by space, but keep punctuation attached
-  const parts = text.split(" ");
+  // Split by $ but keep math in between
+  const parts = text.split(/(\$.*?\$)/g); // split and keep delimiters
 
   return (
     <>
       {parts.map((part, i) => {
-        const isMath = looksLikeMath(part);
-
-        return (
-          <span key={i}>
-            {isMath ? (
-              <InlineMath math={part} />
-            ) : (
-              <span>{part}</span>
-            )}
-            {i < parts.length - 1 ? " " : ""}
-          </span>
-        );
+        // If it starts and ends with $ it's math
+        if (part.startsWith("$") && part.endsWith("$")) {
+          const mathContent = part.slice(1, -1); // remove $ symbols
+          return <InlineMath key={i} math={mathContent} />;
+        }
+        // Otherwise normal text
+        return <span key={i}>{part}</span>;
       })}
     </>
   );
