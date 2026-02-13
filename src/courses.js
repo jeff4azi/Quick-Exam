@@ -78,6 +78,14 @@ const courses = [
     colleges: ["COVTED"],
     questions: bed112Questions,
   },
+   {
+    id: "AMS101",
+    name: "AMS 101",
+    title: "PRINCIPLES OF MANAGEMENT",
+    group: "departmental",
+    colleges: ["COSIT", "COSMAS"],
+    questions: ams101Questions,
+  },
   {
     id: "SOC105",
     name: "SOC 105",
@@ -131,7 +139,7 @@ const courses = [
     name: "AGE 101",
     title: "INTRODUCTION TO agriculture",
     group: "departmental",
-    colleges: ["COAHM"],
+    colleges: ["COAHM", "COSIT"],
     questions: age101Questions,
   },
   {
