@@ -83,7 +83,7 @@ const courses = [
     name: "AMS 101",
     title: "PRINCIPLES OF MANAGEMENT",
     group: "departmental",
-    colleges: ["COSIT", "COSMAS"],
+    colleges: ["COSMAS"],
     questions: ams101Questions,
   },
   {
@@ -139,7 +139,7 @@ const courses = [
     name: "AGE 101",
     title: "INTRODUCTION TO AGRICULTURE",
     group: "departmental",
-    colleges: ["COAHM", "COSIT"],
+    colleges: ["COAHM"],
     questions: age101Questions,
   },
   {
