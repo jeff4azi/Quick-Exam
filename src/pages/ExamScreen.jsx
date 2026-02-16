@@ -37,16 +37,27 @@ const ExamScreen = ({
   const initialTotalTime = calculateTotalTime(totalQuestions, isMathCourse)
 
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [shuffledQuestions, setShuffledQuestions] = useState([]);
   const [timeLeft, setTimeLeft] = useState(initialTotalTime)
-  const [shuffledOptions, setShuffledOptions] = useState([])
   const [hasSaved, setHasSaved] = useState(false)
   const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false)
   const [isExitOverlayOpen, setExitOverlayOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const currentQuestion = questions[currentIndex]
+  const currentQuestion = shuffledQuestions[currentIndex]
   const selectedOption = answers[currentIndex]
   const isBookmarked = bookmarks.includes(currentQuestion?.id)
+
+  useEffect(() => {
+    if (questions.length > 0 && shuffledQuestions.length === 0) {
+      const shuffled = questions.map(q => ({
+        ...q,
+        // Create a stable version of the question with shuffled options
+        options: shuffleArray([...q.options])
+      }));
+      setShuffledQuestions(shuffled);
+    }
+  }, [questions, shuffledQuestions.length]);
 
   const saveResultToSupabase = async (finalTime) => {
     try {
@@ -54,7 +65,7 @@ const ExamScreen = ({
       if (!userData.user) return;
 
       // Calculate score
-      const correctCount = questions.reduce(
+      const correctCount = shuffledQuestions.reduce(
         (acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc),
         0
       );
@@ -76,12 +87,6 @@ const ExamScreen = ({
     }
   };
 
-  useEffect(() => {
-    if (currentQuestion) {
-      setShuffledOptions(shuffleArray(currentQuestion.options))
-    }
-  }, [currentQuestion])
-
   const handleBookmarkClick = () => {
     setBookmarks(prev => {
       const updated = prev.includes(currentQuestion.id)
@@ -93,16 +98,25 @@ const ExamScreen = ({
   }
 
   const onOptionClick = (option) => {
-    const newAnswers = [...answers]
-    newAnswers[currentIndex] = option
-    setAnswers(newAnswers)
-  }
+    const newAnswers = [...answers];
+    newAnswers[currentIndex] = option;
+    setAnswers(newAnswers);
 
-  // NOTE: This only saves to localStorage for History tab. 
-  // ResultScreen will NOT use this storage.
+    setTimeout(() => {
+      if (currentIndex < totalQuestions - 1) {
+        setCurrentIndex(prev => prev + 1);
+      } else {
+        setSubmitOverlayOpen(true);
+      }
+    }, 200); // small delay for UX smoothness
+  };
+
   const saveResultToHistory = (finalTime) => {
     if (hasSaved) return
-    const correctCount = questions.reduce((acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc), 0)
+    const correctCount = shuffledQuestions.reduce(
+      (acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc),
+      0
+    );
     const newResult = {
       id: Date.now(),
       course: selectedCourse.name,
@@ -146,9 +160,9 @@ const ExamScreen = ({
     }, 1500);
   }
 
-
   const progress = ((currentIndex + 1) / totalQuestions) * 100
-
+  if (shuffledQuestions.length === 0) return null;
+  
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex flex-col">
 
@@ -224,9 +238,9 @@ const ExamScreen = ({
             </div>
 
             <div className="space-y-4">
-              {shuffledOptions.map((option, index) => {
+              {currentQuestion?.options.map((option, index) => {
                 const isSelected = selectedOption === option;
-                const label = String.fromCharCode(65 + index); // A, B, C, D
+                const label = String.fromCharCode(65 + index);
 
                 return (
                   <button
