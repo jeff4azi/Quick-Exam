@@ -130,35 +130,37 @@ const ExamScreen = ({
     setHasSaved(true)
   }
 
-  const handleSubmit = async () => {
-    setSubmitOverlayOpen(false); // Close the confirm modal
-    setIsSubmitting(true);       // Show the loader
+  const handleSubmit = () => {
+  setSubmitOverlayOpen(false);
+  setIsSubmitting(true);
 
-    const finalTime = initialTotalTime - timeLeft;
+  const finalTime = initialTotalTime - timeLeft;
 
-    // Save data
-    saveResultToHistory(finalTime);
-    await saveResultToSupabase(finalTime);
+  saveResultToHistory(finalTime);
 
-    // Optional: 1.5s delay so the animation isn't too fast to see
-    setTimeout(() => {
-      if (onSubmit) onSubmit();
-      navigate("/results");
-    }, 50);
-  }
+  // Fire-and-forget save (async won't block UI)
+  saveResultToSupabase(finalTime).catch(err => console.error(err));
 
-  const handleTimeUp = async () => {
-    setIsSubmitting(true); // Show loader immediately on timeout
-    const finalTime = initialTotalTime - timeLeft;
+  // Navigate immediately
+  setTimeout(() => {
+    if (onSubmit) onSubmit();
+    navigate("/results");
+  }, 50);
+}
 
-    saveResultToHistory(finalTime);
-    await saveResultToSupabase(finalTime);
+  const handleTimeUp = () => {
+  setIsSubmitting(true);
+  const finalTime = initialTotalTime - timeLeft;
 
-    setTimeout(() => {
-      if (onSubmit) onSubmit();
-      navigate("/results");
-    }, 1500);
-  }
+  saveResultToHistory(finalTime);
+
+  saveResultToSupabase(finalTime).catch(err => console.error(err));
+
+  setTimeout(() => {
+    if (onSubmit) onSubmit();
+    navigate("/results");
+  }, 1500);
+}
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100
   if (shuffledQuestions.length === 0) return null;
