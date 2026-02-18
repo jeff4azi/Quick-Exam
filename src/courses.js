@@ -17,6 +17,7 @@ import { vos101Questions } from "./courses/vos-101questions";
 import { age101Questions } from "./courses/age-101questions";
 import { ams101Questions } from "./courses/ams-101questions";
 import { acc111Questions } from "./courses/acc-111questions";
+import { csc113Questions } from "./courses/csc-113questions";
 import { phy101AndPhy107Questions } from "./courses/phy-101andphy-107questions";
 
 const courses = [
@@ -148,8 +149,16 @@ const courses = [
     name: "ACC 111",
     title: "ACCOUNTING",
     group: "departmental",
-    colleges: ["COSMAS", "COSIT"],
+    colleges: ["COSMAS"],
     questions: acc111Questions,
+  },
+  {
+    id: "CSC113",
+    name: "CSC 113",
+    title: "STATISTICS",
+    group: "departmental",
+    colleges: ["COSIT"],
+    questions: csc113Questions,
   },
   {
     id: "VOS116",
