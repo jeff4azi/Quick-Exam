@@ -155,7 +155,7 @@ const courses = [
   {
     id: "CSC113",
     name: "CSC 113",
-    title: "STATISTICS",
+    title: "MATHEMATICAL TECHNIQUES FOR COMPUTER SCIENCE",
     group: "departmental",
     colleges: ["COSIT"],
     questions: csc113Questions,
