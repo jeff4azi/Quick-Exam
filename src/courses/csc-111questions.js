@@ -1552,4 +1552,124 @@ export const csc111Questions = [
     correct: "Database system",
     reason: "Database system is defined as this integration.",
   },
+{
+  id: "csc111-151",
+  question: "Which of the following is NOT a database according to standard definition?",
+  options: [
+    "Oracle",
+    "SQL Server",
+    "Sybase",
+    "Microsoft Excel"
+  ],
+  correct: "Microsoft Excel",
+  reason: "Although Excel can store data, it is not classified as a DBMS under standard definition."
+},
+{
+  id: "csc111-152",
+  question: "Which of the following is an example of a NoSQL database?",
+  options: [
+    "MongoDB",
+    "MySQL",
+    "PostgreSQL",
+    "SQL Server"
+  ],
+  correct: "MongoDB",
+  reason: "MongoDB is a NoSQL database, unlike the others listed which are relational DBMS."
+},
+{
+  id: "csc111-153",
+  question: "Which architecture is more complex but offers better scalability than 2-Tier?",
+  options: [
+    "1-Tier Architecture",
+    "3-Tier Architecture",
+    "File System",
+    "Standalone System"
+  ],
+  correct: "3-Tier Architecture",
+  reason: "3-Tier Architecture introduces an application layer and scales better for large systems."
+},
+{
+  id: "csc111-154",
+  question: "Which data model represents data using tables with rows and columns?",
+  options: [
+    "Relational Data Model",
+    "Entity-Relationship Model",
+    "Object-Based Model",
+    "Semi-Structured Model"
+  ],
+  correct: "Relational Data Model",
+  reason: "The relational model organizes data into tables consisting of rows and columns."
+},
+{
+  id: "csc111-155",
+  question: "Who initially described the Relational Data Model?",
+  options: [
+    "Edgar F. Codd",
+    "Peter Chen",
+    "Charles Bachman",
+    "Bill Gates"
+  ],
+  correct: "Edgar F. Codd",
+  reason: "Edgar F. Codd introduced the relational model in 1970."
+},
+{
+  id: "csc111-156",
+  question: "Who designed the Entity-Relationship (ER) Model?",
+  options: [
+    "Peter Chen",
+    "Edgar F. Codd",
+    "James Gosling",
+    "Linus Torvalds"
+  ],
+  correct: "Peter Chen",
+  reason: "Peter Chen introduced the ER model in 1976."
+},
+{
+  id: "csc111-157",
+  question: "XML is widely used to represent which type of data model?",
+  options: [
+    "Semi-Structured Data Model",
+    "Relational Data Model",
+    "Hierarchical Data Model",
+    "Object-Based Data Model"
+  ],
+  correct: "Semi-Structured Data Model",
+  reason: "XML is commonly used for representing semi-structured data."
+},
+{
+  id: "csc111-158",
+  question: "Which level of data independence is harder to achieve?",
+  options: [
+    "Logical data independence",
+    "Physical data independence",
+    "Both equally difficult",
+    "Neither achievable"
+  ],
+  correct: "Logical data independence",
+  reason: "Logical data independence is generally harder to achieve than physical data independence."
+},
+{
+  id: "csc111-159",
+  question: "In the Three-Schema Architecture, the internal schema refers to:",
+  options: [
+    "Physical storage level",
+    "Conceptual design",
+    "External user view",
+    "Application programs"
+  ],
+  correct: "Physical storage level",
+  reason: "The internal schema defines how data is physically stored."
+},
+{
+  id: "csc111-160",
+  question: "Which tool is used for data modeling?",
+  options: [
+    "Erwin Data Modeler",
+    "Notepad",
+    "NTFS",
+    "MongoDB"
+  ],
+  correct: "Erwin Data Modeler",
+  reason: "Erwin Data Modeler is a professional data modeling tool."
+}
 ];
