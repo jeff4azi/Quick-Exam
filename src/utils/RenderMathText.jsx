@@ -8,7 +8,8 @@ export const RenderMathText = ({ text, courseId }) => {
     typeof courseId !== "string" ||
     (!courseId.toUpperCase().startsWith("MTH101") &&
       !courseId.toUpperCase().startsWith("PHY101") &&
-      !courseId.toUpperCase().startsWith("CSM111"))
+      !courseId.toUpperCase().startsWith("CSM111") &&
+      !courseId.toUpperCase().startsWith("CSC113"))
   ) {
     return <span>{text}</span>;
   }
