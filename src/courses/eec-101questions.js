@@ -1,4 +1,4 @@
-export const age101Questions = [
+export const ecc101Questions = [
 {
 id: "EEC101-001",
 question: "What is the specific age range defined for Early Childhood Education (ECE) according to the overview?",
