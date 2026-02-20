@@ -1963,5 +1963,3 @@ export const cos101Questions = [
     reason: "Open-source software provides access to its source code for users to study or change.",
   },
 ];
-
-];
