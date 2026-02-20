@@ -134,7 +134,7 @@ const courses = [
     name: "EEC 101",
     title: "EARLY CHILDHOOD EDUCATION",
     group: "departmental",
-    colleges: ["COSPED", "COSIT"],
+    colleges: ["COSPED"],
     questions: ecc101Questions,
   },
   {
