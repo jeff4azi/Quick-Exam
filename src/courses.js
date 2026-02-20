@@ -130,6 +130,14 @@ const courses = [
     questions: csm111Questions,
   },
   {
+    id: "EEC101",
+    name: "EEC 101",
+    title: "EARLY CHILDHOOD EDUCATION",
+    group: "departmental",
+    colleges: ["COSPED", "COSIT"],
+    questions: ecc101Questions,
+  },
+  {
     id: "PHY101/PHY107",
     name: "PHY 101/PHY 107",
     title: "GENERAL PHYSICS 1",
