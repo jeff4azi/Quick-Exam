@@ -1962,4 +1962,880 @@ export const cos101Questions = [
     correct: "Open source allows modification; Proprietary does not",
     reason: "Open-source software provides access to its source code for users to study or change.",
   },
+  {
+    id: "cos101-209",
+    question: "What is a computer?",
+    options: [
+      "A mechanical device",
+      "An electronic device that processes data according to instructions",
+      "A typing machine",
+      "A storage device"
+    ],
+    correct: "An electronic device that processes data according to instructions",
+    reason: "A computer is defined as an electronic device that manipulates information or data according to a set of instructions."
+  },
+  {
+    id: "cos101-210",
+    question: "Which of the following is an input device?",
+    options: [
+      "Monitor",
+      "Printer",
+      "Keyboard",
+      "Speaker"
+    ],
+    correct: "Keyboard",
+    reason: "The keyboard is used to input data into the computer system."
+  },
+  {
+    id: "cos101-211",
+    question: "The basic operations performed by a computer are:",
+    options: [
+      "Input, Processing, Output",
+      "Save, Print, Delete",
+      "Type, Scan, Print",
+      "Open, Close, Shut down"
+    ],
+    correct: "Input, Processing, Output",
+    reason: "The core cycle of any computer involves taking input, processing it, and providing output."
+  },
+  {
+    id: "cos101-212",
+    question: "Which unit is known as the brain of the computer?",
+    options: [
+      "RAM",
+      "Monitor",
+      "CPU",
+      "Hard Disk"
+    ],
+    correct: "CPU",
+    reason: "The Central Processing Unit (CPU) is responsible for executing instructions and managing other hardware."
+  },
+  {
+    id: "cos101-213",
+    question: "RAM stands for:",
+    options: [
+      "Random Access Memory",
+      "Read Access Memory",
+      "Run Access Memory",
+      "Ready Active Memory"
+    ],
+    correct: "Random Access Memory",
+    reason: "RAM is the acronym for Random Access Memory, the computer's short-term memory."
+  },
+  {
+    id: "cos101-214",
+    question: "Which of the following is a secondary storage device?",
+    options: [
+      "Keyboard",
+      "Hard Drive",
+      "Mouse",
+      "Monitor"
+    ],
+    correct: "Hard Drive",
+    reason: "The hard drive provides long-term, non-volatile storage for data."
+  },
+  {
+    id: "cos101-215",
+    question: "The full meaning of CPU is:",
+    options: [
+      "Central Process Unit",
+      "Central Processing Unit",
+      "Computer Processing Unit",
+      "Control Processing Unit"
+    ],
+    correct: "Central Processing Unit",
+    reason: "CPU stands for Central Processing Unit."
+  },
+  {
+    id: "cos101-216",
+    question: "Which of the following is system software?",
+    options: [
+      "Microsoft Word",
+      "Operating System",
+      "Excel",
+      "Photoshop"
+    ],
+    correct: "Operating System",
+    reason: "The operating system is the primary system software that manages computer hardware."
+  },
+  {
+    id: "cos101-217",
+    question: "The smallest unit in a computer system is:",
+    options: [
+      "Byte",
+      "Bit",
+      "Kilobyte",
+      "Megabyte"
+    ],
+    correct: "Bit",
+    reason: "A bit (binary digit) is the most basic unit of information in computing."
+  },
+  {
+    id: "cos101-218",
+    question: "Which device is used to convert digital signals to analog signals?",
+    options: [
+      "Router",
+      "Switch",
+      "Modem",
+      "Printer"
+    ],
+    correct: "Modem",
+    reason: "A modem modulates/demodulates signals to convert between digital and analog formats."
+  },
+  {
+    id: "cos101-219",
+    question: "The primary purpose of an operating system is to:",
+    options: [
+      "Play music",
+      "Manage hardware and software components",
+      "Print documents",
+      "Store files"
+    ],
+    correct: "Manage hardware and software components",
+    reason: "Operating systems act as an intermediary to manage all resources of the computer."
+  },
+  {
+    id: "cos101-220",
+    question: "Which of the following is a volatile memory?",
+    options: [
+      "ROM",
+      "Hard Drive",
+      "RAM",
+      "Flash Drive"
+    ],
+    correct: "RAM",
+    reason: "RAM is volatile, meaning it loses its data when power is turned off."
+  },
+  {
+    id: "cos101-221",
+    question: "What is the function of ALU?",
+    options: [
+      "To store data",
+      "To perform logical and arithmetic calculations",
+      "To display output",
+      "To print documents"
+    ],
+    correct: "To perform logical and arithmetic calculations",
+    reason: "The Arithmetic Logic Unit (ALU) performs all calculations and logic comparisons within the CPU."
+  },
+  {
+    id: "cos101-222",
+    question: "Which generation of computers used vacuum tubes?",
+    options: [
+      "First Generation",
+      "Second Generation",
+      "Third Generation",
+      "Fourth Generation"
+    ],
+    correct: "First Generation",
+    reason: "First-generation computers relied on vacuum tubes for circuitry."
+  },
+  {
+    id: "cos101-223",
+    question: "Microsoft Excel is an example of:",
+    options: [
+      "System Software",
+      "Application Software",
+      "Programming Software",
+      "Utility Software"
+    ],
+    correct: "Application Software",
+    reason: "Excel is an end-user program designed to perform specific tasks."
+  },
+  {
+    id: "cos101-224",
+    question: "The process of starting or restarting a computer is called:",
+    options: [
+      "Logging",
+      "Formatting",
+      "Booting",
+      "Installing"
+    ],
+    correct: "Booting",
+    reason: "Booting is the initial set of operations that a computer system performs when it is switched on."
+  },
+  {
+    id: "cos101-225",
+    question: "Which port is commonly used to connect a printer to a computer?",
+    options: [
+      "HDMI",
+      "VGA",
+      "USB",
+      "Ethernet"
+    ],
+    correct: "USB",
+    reason: "Universal Serial Bus (USB) is the standard modern connection for printers."
+  },
+  {
+    id: "cos101-226",
+    question: "What is a pixel?",
+    options: [
+      "A type of printer",
+      "The smallest element of an image",
+      "A storage device",
+      "A keyboard key"
+    ],
+    correct: "The smallest element of an image",
+    reason: "A pixel is a physical point in a raster image or the smallest addressable element in a display device."
+  },
+  {
+    id: "cos101-227",
+    question: "Which of the following is NOT a web browser?",
+    options: [
+      "Chrome",
+      "Firefox",
+      "Photoshop",
+      "Edge"
+    ],
+    correct: "Photoshop",
+    reason: "Photoshop is image editing software, not a web browser."
+  },
+  {
+    id: "cos101-228",
+    question: "What does URL stand for?",
+    options: [
+      "Uniform Resource Locator",
+      "Universal Resource Link",
+      "Uniform Read Link",
+      "Universal Record Locator"
+    ],
+    correct: "Uniform Resource Locator",
+    reason: "URL is the address used to access resources on the internet."
+  },
+  {
+    id: "cos101-229",
+    question: "Which of the following is an example of malware?",
+    options: [
+      "Antivirus",
+      "Virus",
+      "Keyboard",
+      "Monitor"
+    ],
+    correct: "Virus",
+    reason: "A computer virus is a type of malicious software (malware)."
+  },
+  {
+    id: "cos101-230",
+    question: "What is a firewall used for?",
+    options: [
+      "To cool the computer",
+      "To protect against unauthorized access",
+      "To store files",
+      "To print documents"
+    ],
+    correct: "To protect against unauthorized access",
+    reason: "Firewalls monitor and control incoming/outgoing network traffic based on security rules."
+  },
+  {
+    id: "cos101-231",
+    question: "Which device is used for uninterrupted power supply?",
+    options: [
+      "Generator",
+      "UPS",
+      "Battery",
+      "Adapter"
+    ],
+    correct: "UPS",
+    reason: "UPS stands for Uninterruptible Power Supply."
+  },
+  {
+    id: "cos101-232",
+    question: "What is cache memory?",
+    options: [
+      "Permanent storage",
+      "High-speed memory between CPU and RAM",
+      "External storage",
+      "Input memory"
+    ],
+    correct: "High-speed memory between CPU and RAM",
+    reason: "Cache memory provides high-speed data access to the CPU to improve processing speed."
+  },
+  {
+    id: "cos101-233",
+    question: "Which of the following is NOT a programming language?",
+    options: [
+      "Python",
+      "Java",
+      "Windows",
+      "C++"
+    ],
+    correct: "Windows",
+    reason: "Windows is an operating system, not a programming language."
+  },
+  {
+    id: "cos101-234",
+    question: "What is the full meaning of HTTP?",
+    options: [
+      "HyperText Transfer Protocol",
+      "High Transfer Text Protocol",
+      "Hyper Transfer Text Program",
+      "Hyper Tool Transfer Protocol"
+    ],
+    correct: "HyperText Transfer Protocol",
+    reason: "HTTP is the protocol used for transmitting web pages over the internet."
+  },
+  {
+    id: "cos101-235",
+    question: "Processor speed is measured in:",
+    options: [
+      "Bytes",
+      "Hertz",
+      "Watts",
+      "Volts"
+    ],
+    correct: "Hertz",
+    reason: "CPU clock speed is measured in Hertz (usually GHz today)."
+  },
+  {
+    id: "cos101-236",
+    question: "A computer network is:",
+    options: [
+      "A single computer",
+      "Interconnected computers sharing resources",
+      "A type of printer",
+      "A storage device"
+    ],
+    correct: "Interconnected computers sharing resources",
+    reason: "Networks consist of two or more computers linked to share data and peripherals."
+  },
+  {
+    id: "cos101-237",
+    question: "Which of the following is NOT a type of printer?",
+    options: [
+      "Inkjet",
+      "Laser",
+      "Dot Matrix",
+      "Bluetooth"
+    ],
+    correct: "Bluetooth",
+    reason: "Bluetooth is a wireless communication technology, not a printer type."
+  },
+  {
+    id: "cos101-238",
+    question: "What is the purpose of antivirus software?",
+    options: [
+      "To increase speed",
+      "To protect against malware",
+      "To design graphics",
+      "To connect internet"
+    ],
+    correct: "To protect against malware",
+    reason: "Antivirus is designed to detect and remove malicious software."
+  },
+  {
+    id: "cos101-239",
+    question: "Which device is used to input graphical data?",
+    options: [
+      "Monitor",
+      "Printer",
+      "Scanner",
+      "Speaker"
+    ],
+    correct: "Scanner",
+    reason: "Scanners convert physical images and documents into digital graphical data."
+  },
+  {
+    id: "cos101-240",
+    question: "PDF stands for:",
+    options: [
+      "Portable Document Format",
+      "Personal Data File",
+      "Print Data Format",
+      "Public Document File"
+    ],
+    correct: "Portable Document Format",
+    reason: "PDF is a file format used to present documents independent of software or hardware."
+  },
+  {
+    id: "cos101-241",
+    question: "BIOS stands for:",
+    options: [
+      "Basic Input and Output System",
+      "Binary Input Output Setup",
+      "Basic Internal Operating System",
+      "Backup Input Output System"
+    ],
+    correct: "Basic Input and Output System",
+    reason: "BIOS initializes hardware during the booting process."
+  },
+  {
+    id: "cos101-242",
+    question: "Which device is used to point and select items on screen?",
+    options: [
+      "Keyboard",
+      "Mouse",
+      "Monitor",
+      "Printer"
+    ],
+    correct: "Mouse",
+    reason: "The mouse is the primary pointing device for graphical user interfaces."
+  },
+  {
+    id: "cos101-243",
+    question: "A folder is used to:",
+    options: [
+      "Delete files",
+      "Organize data",
+      "Print documents",
+      "Scan images"
+    ],
+    correct: "Organize data",
+    reason: "Folders are used to group and organize related files on a storage device."
+  },
+  {
+    id: "cos101-244",
+    question: "Which of the following is NOT a valid file extension?",
+    options: [
+      ".doc",
+      ".jpg",
+      ".cpu",
+      ".pdf"
+    ],
+    correct: ".cpu",
+    reason: ".cpu refers to hardware, while the others are standard file formats."
+  },
+  {
+    id: "cos101-245",
+    question: "The function of a motherboard is to:",
+    options: [
+      "Store data",
+      "Connect all computer components",
+      "Print documents",
+      "Display output"
+    ],
+    correct: "Connect all computer components",
+    reason: "The motherboard is the main printed circuit board that allows communication between components."
+  },
+  {
+    id: "cos101-246",
+    question: "Which of the following is a search engine?",
+    options: [
+      "Google",
+      "Word",
+      "Excel",
+      "Windows"
+    ],
+    correct: "Google",
+    reason: "Google is a service designed to search for information on the World Wide Web."
+  },
+  {
+    id: "cos101-247",
+    question: "The purpose of a server is to:",
+    options: [
+      "Play games",
+      "Provide services to other computers",
+      "Type documents",
+      "Scan files"
+    ],
+    correct: "Provide services to other computers",
+    reason: "Servers are computers that provide data or services to 'client' computers."
+  },
+  {
+    id: "cos101-248",
+    question: "Which device is used for video conferencing?",
+    options: [
+      "Scanner",
+      "Webcam",
+      "Printer",
+      "Speaker"
+    ],
+    correct: "Webcam",
+    reason: "Webcams capture live video for transmission over a network."
+  },
+  {
+    id: "cos101-249",
+    question: "The function of an IP address is to:",
+    options: [
+      "Print documents",
+      "Identify a device on a network",
+      "Store data",
+      "Increase speed"
+    ],
+    correct: "Identify a device on a network",
+    reason: "Internet Protocol addresses act as unique identifiers for hardware on a network."
+  },
+  {
+    id: "cos101-250",
+    question: "A compiler is used to:",
+    options: [
+      "Play music",
+      "Translate program to machine language",
+      "Scan virus",
+      "Design graphics"
+    ],
+    correct: "Translate program to machine language",
+    reason: "Compilers convert high-level source code into low-level machine code for the CPU."
+  },
+  {
+    id: "cos101-251",
+    question: "Which generation of computer used transistors?",
+    options: [
+      "First",
+      "Second",
+      "Third",
+      "Fourth"
+    ],
+    correct: "Second",
+    reason: "The second generation of computers replaced vacuum tubes with transistors."
+  },
+  {
+    id: "cos101-252",
+    question: "ROM is used to:",
+    options: [
+      "Permanently store data",
+      "Play games",
+      "Print documents",
+      "Connect internet"
+    ],
+    correct: "Permanently store data",
+    reason: "Read-Only Memory is non-volatile and keeps its data when the power is off."
+  },
+  {
+    id: "cos101-253",
+    question: "Which of the following is NOT an input device?",
+    options: [
+      "Keyboard",
+      "Mouse",
+      "Monitor",
+      "Scanner"
+    ],
+    correct: "Monitor",
+    reason: "A monitor is an output device because it displays information from the computer."
+  },
+  {
+    id: "cos101-254",
+    question: "Which of the following is a type of malware?",
+    options: [
+      "Trojan",
+      "Printer",
+      "Monitor",
+      "Keyboard"
+    ],
+    correct: "Trojan",
+    reason: "A Trojan horse is a type of malicious software that misleads users of its true intent."
+  },
+  {
+    id: "cos101-255",
+    question: "A device driver is used to:",
+    options: [
+      "Store files",
+      "Establish communication between hardware and OS",
+      "Increase RAM",
+      "Print documents"
+    ],
+    correct: "Establish communication between hardware and OS",
+    reason: "Drivers act as translators between hardware devices and the operating system."
+  },
+  {
+    id: "cos101-256",
+    question: "A database is:",
+    options: [
+      "A game",
+      "An organized collection of data",
+      "A printer",
+      "A browser"
+    ],
+    correct: "An organized collection of data",
+    reason: "Databases allow for the efficient storage, retrieval, and management of data."
+  },
+  {
+    id: "cos101-257",
+    question: "Which device is used for audio output?",
+    options: [
+      "Keyboard",
+      "Mouse",
+      "Speaker",
+      "Scanner"
+    ],
+    correct: "Speaker",
+    reason: "Speakers convert electronic signals into audible sound."
+  },
+  {
+    id: "cos101-258",
+    question: "Which of the following is a type of software license?",
+    options: [
+      "Freeware",
+      "Monitor",
+      "CPU",
+      "Printer"
+    ],
+    correct: "Freeware",
+    reason: "Freeware is software distributed at no cost to the user."
+  },
+  {
+    id: "cos101-259",
+    question: "The function of an Ethernet card is to:",
+    options: [
+      "Print documents",
+      "Connect to a network",
+      "Play music",
+      "Store data"
+    ],
+    correct: "Connect to a network",
+    reason: "Ethernet cards (NICs) allow computers to connect to wired local area networks."
+  },
+  {
+    id: "cos101-260",
+    question: "A computer virus is:",
+    options: [
+      "A hardware device",
+      "A malicious program",
+      "A browser",
+      "A keyboard"
+    ],
+    correct: "A malicious program",
+    reason: "Viruses are code designed to damage or gain unauthorized access to computer systems."
+  },
+  {
+    id: "cos101-261",
+    question: "Which of the following is NOT a desktop operating system?",
+    options: [
+      "Windows",
+      "Linux",
+      "Android",
+      "macOS"
+    ],
+    correct: "Android",
+    reason: "Android is primarily a mobile operating system, whereas the others are for desktops/laptops."
+  },
+  {
+    id: "cos101-262",
+    question: "The purpose of a power supply unit is to:",
+    options: [
+      "Store files",
+      "Provide power to computer components",
+      "Connect internet",
+      "Print documents"
+    ],
+    correct: "Provide power to computer components",
+    reason: "The PSU converts outlet power to the specific voltages needed by internal components."
+  },
+  {
+    id: "cos101-263",
+    question: "Which device is used to control games?",
+    options: [
+      "Joystick",
+      "Printer",
+      "Monitor",
+      "Scanner"
+    ],
+    correct: "Joystick",
+    reason: "Joysticks and gamepads are common input devices for gaming."
+  },
+  {
+    id: "cos101-264",
+    question: "The function of a network switch is to:",
+    options: [
+      "Print documents",
+      "Connect network devices",
+      "Store data",
+      "Scan files"
+    ],
+    correct: "Connect network devices",
+    reason: "Switches connect multiple devices on a single computer network."
+  },
+  {
+    id: "cos101-265",
+    question: "Virtual memory is used to:",
+    options: [
+      "Increase internet speed",
+      "Extend RAM using hard disk space",
+      "Print documents",
+      "Scan files"
+    ],
+    correct: "Extend RAM using hard disk space",
+    reason: "Virtual memory allows the OS to use disk space to simulate additional RAM when physical RAM is full."
+  },
+  {
+    id: "cos101-266",
+    question: "Which device is used for internet connection?",
+    options: [
+      "Modem",
+      "Printer",
+      "Monitor",
+      "Keyboard"
+    ],
+    correct: "Modem",
+    reason: "A modem is necessary to connect a computer to an Internet Service Provider (ISP)."
+  },
+  {
+    id: "cos101-267",
+    question: "The function of a sound card is to:",
+    options: [
+      "Print documents",
+      "Process audio data",
+      "Store files",
+      "Scan images"
+    ],
+    correct: "Process audio data",
+    reason: "Sound cards facilitate the input and output of audio signals to and from a computer."
+  },
+  {
+    id: "cos101-268",
+    question: "Backup is used to:",
+    options: [
+      "Delete files",
+      "Save copies of data",
+      "Format disk",
+      "Increase speed"
+    ],
+    correct: "Save copies of data",
+    reason: "Backups protect against data loss by creating duplicates of important files."
+  },
+  {
+    id: "cos101-269",
+    question: "NTFS is a type of:",
+    options: [
+      "Web browser",
+      "File system",
+      "Printer",
+      "CPU"
+    ],
+    correct: "File system",
+    reason: "New Technology File System (NTFS) is the standard file system for the Windows NT family."
+  },
+  {
+    id: "cos101-270",
+    question: "The purpose of a taskbar is to:",
+    options: [
+      "Show running programs",
+      "Delete files",
+      "Scan virus",
+      "Format disk"
+    ],
+    correct: "Show running programs",
+    reason: "The taskbar allows users to locate and launch programs and see which ones are currently open."
+  },
+  {
+    id: "cos101-271",
+    question: "The function of a heatsink is to:",
+    options: [
+      "Store data",
+      "Cool computer components",
+      "Print documents",
+      "Connect network"
+    ],
+    correct: "Cool computer components",
+    reason: "Heatsinks dissipate heat from processors to prevent overheating."
+  },
+  {
+    id: "cos101-272",
+    question: "Bluetooth is used for:",
+    options: [
+      "Long-distance wired connection",
+      "Short-range wireless connection",
+      "Printing documents",
+      "Scanning images"
+    ],
+    correct: "Short-range wireless connection",
+    reason: "Bluetooth is a wireless technology standard for exchanging data over short distances."
+  },
+  {
+    id: "cos101-273",
+    question: "Overclocking means:",
+    options: [
+      "Slowing down CPU",
+      "Running computer components faster than rated speed",
+      "Deleting files",
+      "Formatting disk"
+    ],
+    correct: "Running computer components faster than rated speed",
+    reason: "Overclocking is the practice of increasing the clock rate of a component to exceed the manufacturer's specification."
+  },
+  {
+    id: "cos101-274",
+    question: "CMOS battery is used to:",
+    options: [
+      "Power the monitor",
+      "Store BIOS settings",
+      "Connect internet",
+      "Print documents"
+    ],
+    correct: "Store BIOS settings",
+    reason: "The CMOS battery maintains the time, date, and BIOS configuration settings when the computer is off."
+  },
+  {
+    id: "cos101-275",
+    question: "RAID is used to:",
+    options: [
+      "Manage data storage",
+      "Print documents",
+      "Play music",
+      "Scan virus"
+    ],
+    correct: "Manage data storage",
+    reason: "Redundant Array of Independent Disks (RAID) is used for data redundancy or performance improvement."
+  },
+  {
+    id: "cos101-276",
+    question: "System Restore is used to:",
+    options: [
+      "Install new hardware",
+      "Return system to previous settings",
+      "Delete virus",
+      "Format disk"
+    ],
+    correct: "Return system to previous settings",
+    reason: "System Restore allows users to revert their computer's state to a previous point in time."
+  },
+  {
+    id: "cos101-277",
+    question: "Which of the following is NOT a type of keyboard?",
+    options: [
+      "Mechanical",
+      "Wireless",
+      "Digital",
+      "Ergonomic"
+    ],
+    correct: "Digital",
+    reason: "Mechanical, Wireless, and Ergonomic are real keyboard categories; 'Digital' is not a standard type."
+  },
+  {
+    id: "cos101-278",
+    question: "An algorithm is:",
+    options: [
+      "A hardware device",
+      "Step-by-step solution to a problem",
+      "A printer",
+      "A monitor"
+    ],
+    correct: "Step-by-step solution to a problem",
+    reason: "An algorithm is a finite sequence of well-defined instructions to solve a class of problems."
+  },
+  {
+    id: "cos101-279",
+    question: "Which translator translates the entire program at once?",
+    options: [
+      "Interpreter",
+      "Compiler",
+      "Assembler",
+      "Loader"
+    ],
+    correct: "Compiler",
+    reason: "Compilers translate the whole source code into object code before execution."
+  },
+  {
+    id: "cos101-280",
+    question: "A primary cause of computer overheating is:",
+    options: [
+      "Clean system",
+      "Dust accumulation in cooling system",
+      "Strong internet",
+      "Large RAM"
+    ],
+    correct: "Dust accumulation in cooling system",
+    reason: "Dust blocks airflow, causing heat to build up inside the computer case."
+  },
+  {
+    id: "cos101-281",
+    question: "Troubleshooting means:",
+    options: [
+      "Installing software",
+      "Identifying and solving problems",
+      "Printing documents",
+      "Deleting files"
+    ],
+    correct: "Identifying and solving problems",
+    reason: "Troubleshooting is a systematic approach to finding the cause of a fault and correcting it."
+  }
 ];
