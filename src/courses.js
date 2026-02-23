@@ -19,6 +19,7 @@ import { ams101Questions } from "./courses/ams-101questions";
 import { acc111Questions } from "./courses/acc-111questions";
 import { csc113Questions } from "./courses/csc-113questions";
 import { ecc101Questions } from "./courses/eec-101questions";
+import { vos114Questions } from "./courses/vos-114questions";
 import { phy101AndPhy107Questions } from "./courses/phy-101andphy-107questions";
 
 const courses = [
@@ -176,6 +177,14 @@ const courses = [
     group: "vocational",
     colleges: ["ALL"],
     questions: vos101Questions,
+  },
+  {
+    id: "VOS114",
+    name: "VOS 114",
+    title: "COMPUTER SERVICING AND MAINTENANCE",
+    group: "vocational",
+    colleges: ["ALL"],
+    questions: vos114Questions,
   },
   {
     id: "VOS116",
