@@ -170,20 +170,20 @@ const courses = [
     questions: csc113Questions,
   },
   {
-    id: "VOS116",
-    name: "VOS 116",
-    title: "FRUIT JUICE AND NON-ALCOHOLIC BEVERAGE",
-    group: "vocational",
-    colleges: ["ALL"],
-    questions: vos116Questions,
-  },
-  {
     id: "VOS101",
     name: "VOS 101",
     title: "HOUSE HOLD CARE PRODUCT MAKING",
     group: "vocational",
     colleges: ["ALL"],
     questions: vos101Questions,
+  },
+  {
+    id: "VOS116",
+    name: "VOS 116",
+    title: "FRUIT JUICE AND NON-ALCOHOLIC BEVERAGE",
+    group: "vocational",
+    colleges: ["ALL"],
+    questions: vos116Questions,
   },
   {
     id: "VOS117",
