@@ -565,4 +565,386 @@ export const vos117Questions = [
     reason:
       "Freshwater fish thrive best in clean water with sufficient oxygen.",
   },
+  {
+    id: "vos117-050",
+    question: "According to the document, what is another name for Fish Farming?",
+    options: ["Aquaculture", "Agriculture", "Horticulture", "Apiculture"],
+    correct: "Aquaculture",
+    reason: "The text explicitly states: 'Fish farming, also called aquaculture...'"
+  },
+  {
+    id: "vos117-051",
+    question: "What is the term used for a young fish in the provided material?",
+    options: ["Larva", "Fry", "Fingerling", "Juvenile"],
+    correct: "Fingerling",
+    reason: "In the objective questions, 'Fingerling' is identified as the term for a young fish."
+  },
+  {
+    id: "vos117-052",
+    question: "Which of these is defined as a facility where fish eggs are hatched?",
+    options: ["Pond", "Tank", "Cage", "Hatchery"],
+    correct: "Hatchery",
+    reason: "The document identifies the hatchery as the place where fish eggs are hatched."
+  },
+  {
+    id: "vos117-053",
+    question: "What does 'Stocking density' refer to in a fish farming context?",
+    options: ["The size of the pond", "The number of fish per pond", "The age of the fish", "The weight of the feed"],
+    correct: "Number of fish per pond",
+    reason: "The text defines stocking density as the number of fish per pond."
+  },
+  {
+    id: "vos117-054",
+    question: "Which fish farming system is specifically mentioned as suitable for areas with limited space?",
+    options: ["Pond culture", "Cage culture", "Tank culture", "River culture"],
+    correct: "Tank culture",
+    reason: "The document states tank culture is suitable where there is limited space."
+  },
+  {
+    id: "vos117-055",
+    question: "What is the primary effect of pond fertilization according to the text?",
+    options: ["To kill predators", "To increase natural food", "To reduce oxygen", "To clear the water"],
+    correct: "To increase natural food",
+    reason: "The notes indicate that pond fertilization helps to increase natural food for the fish."
+  },
+  {
+    id: "vos117-056",
+    question: "Which of the following is NOT a benefit of good water quality mentioned in the notes?",
+    options: ["Promote healthy growth", "Increase mortality", "Prevent disease", "Ensure high yield"],
+    correct: "Increase mortality",
+    reason: "Good water quality promotes healthy growth, while poor quality is what causes mortality."
+  },
+  {
+    id: "vos117-057",
+    question: "According to the document, what happens if fish are overfed?",
+    options: ["Faster growth only", "Water pollution", "Bigger ponds", "No effect"],
+    correct: "Water pollution",
+    reason: "The document states that overfeeding fish can lead to water pollution."
+  },
+  {
+    id: "vos117-058",
+    question: "In the context of fish farming, what does 'Mortality' mean?",
+    options: ["Growth", "Feeding", "Death", "Sorting"],
+    correct: "Death",
+    reason: "The objective section defines mortality as death."
+  },
+  {
+    id: "vos117-059",
+    question: "What is the specific purpose of 'Sorting' in fish management?",
+    options: ["To kill the fish", "To separate fish by size", "To drain the pond", "To count the eggs"],
+    correct: "Separate fish by size",
+    reason: "The document states that sorting is done to separate fish by size."
+  },
+  {
+  id: "vos117-060",
+  question: "Which factor would most likely increase fish mortality in a pond?",
+  options: [
+    "Adequate aeration",
+    "Proper stocking density",
+    "Overcrowding and poor water quality",
+    "Balanced feeding"
+  ],
+  correct: "Overcrowding and poor water quality",
+  reason: "Overcrowding and poor water quality reduce oxygen levels and increase stress and disease, leading to mortality."
+},
+{
+  id: "vos117-061",
+  question: "Why is stocking density important in fish farming?",
+  options: [
+    "It determines pond color",
+    "It affects fish growth and survival",
+    "It changes fish species",
+    "It controls rainfall"
+  ],
+  correct: "It affects fish growth and survival",
+  reason: "Too many fish per pond reduces oxygen and increases competition, affecting survival and growth."
+},
+{
+  id: "vos117-062",
+  question: "A farmer notices slow fish growth despite regular feeding. Which factor should be checked first?",
+  options: [
+    "Water quality",
+    "Market price",
+    "Pond color",
+    "Number of visitors"
+  ],
+  correct: "Water quality",
+  reason: "Poor water quality affects metabolism and growth even if feeding is adequate."
+},
+{
+  id: "vos117-063",
+  question: "Which of the following best explains why fish farming reduces overfishing?",
+  options: [
+    "It replaces wild fish supply with farmed fish",
+    "It increases ocean fishing",
+    "It reduces pond construction",
+    "It stops fish feeding"
+  ],
+  correct: "It replaces wild fish supply with farmed fish",
+  reason: "Farmed fish reduce pressure on wild fish populations."
+},
+{
+  id: "vos117-064",
+  question: "What is the likely result of harvesting fish before they reach market size?",
+  options: [
+    "Higher profit",
+    "Reduced income",
+    "Better water quality",
+    "Faster reproduction"
+  ],
+  correct: "Reduced income",
+  reason: "Smaller fish sell for lower prices, reducing profitability."
+},
+{
+  id: "vos117-065",
+  question: "Which fish farming system would be most appropriate in a river?",
+  options: [
+    "Tank culture",
+    "Pond culture",
+    "Cage culture",
+    "Desert culture"
+  ],
+  correct: "Cage culture",
+  reason: "Cage culture is practiced in natural flowing water bodies like rivers."
+},
+{
+  id: "vos117-066",
+  question: "Why should fingerlings be healthy and active before stocking?",
+  options: [
+    "To reduce feed cost",
+    "To ensure better survival and growth",
+    "To change water color",
+    "To increase pond depth"
+  ],
+  correct: "To ensure better survival and growth",
+  reason: "Healthy fingerlings have higher survival rates and better growth performance."
+},
+{
+  id: "vos117-067",
+  question: "Which practice improves environmental sustainability in fish farming?",
+  options: [
+    "Dumping waste into rivers",
+    "Efficient resource use and waste management",
+    "Overstocking ponds",
+    "Ignoring water testing"
+  ],
+  correct: "Efficient resource use and waste management",
+  reason: "Sustainable practices protect the environment and ensure long-term productivity."
+},
+{
+  id: "vos117-068",
+  question: "A farmer wants to start fish farming in a small urban area. Which system is most suitable?",
+  options: [
+    "Deep sea fishing",
+    "Tank culture",
+    "Lagoon fishing",
+    "Swamp fishing"
+  ],
+  correct: "Tank culture",
+  reason: "Tank culture is suitable for areas with limited space."
+},
+{
+  id: "vos117-069",
+  question: "Which stage directly follows stocking in fish production?",
+  options: [
+    "Harvesting",
+    "Feeding and management",
+    "Construction",
+    "Marketing"
+  ],
+  correct: "Feeding and management",
+  reason: "After stocking, fish are fed and managed until they reach market size."
+},
+{
+  id: "vos117-070",
+  question: "What is the relationship between feed cost and profitability?",
+  options: [
+    "Higher feed cost always increases profit",
+    "Feed cost has no impact on profit",
+    "Feed cost is a major factor affecting profit",
+    "Feed cost only affects pond color"
+  ],
+  correct: "Feed cost is a major factor affecting profit",
+  reason: "Feed is a major operational cost and directly affects net profit."
+},
+{
+  id: "vos117-071",
+  question: "Which management practice helps prevent disease outbreak?",
+  options: [
+    "Overfeeding",
+    "Poor hygiene",
+    "Regular monitoring and clean environment",
+    "Overcrowding"
+  ],
+  correct: "Regular monitoring and clean environment",
+  reason: "Good hygiene and monitoring reduce disease spread."
+},
+{
+  id: "vos117-072",
+  question: "Fish require dissolved oxygen primarily for what purpose?",
+  options: [
+    "Color change",
+    "Respiration",
+    "Reproduction only",
+    "Sorting"
+  ],
+  correct: "Respiration",
+  reason: "Fish use dissolved oxygen for respiration to survive."
+},
+{
+  id: "vos117-073",
+  question: "Which factor best determines when fish should be harvested?",
+  options: [
+    "Weather condition",
+    "Market size and demand",
+    "Pond color",
+    "Water temperature only"
+  ],
+  correct: "Market size and demand",
+  reason: "Fish are harvested when they reach market size and demand is favorable."
+},
+{
+  id: "vos117-074",
+  question: "If a pond lacks proper drainage, what is the likely consequence?",
+  options: [
+    "Better oxygen supply",
+    "Improved harvesting",
+    "Water management problems",
+    "Faster fish growth"
+  ],
+  correct: "Water management problems",
+  reason: "Proper drainage is essential for water control and harvesting."
+},
+{
+  id: "vos117-075",
+  question: "Which of the following is both an economic and nutritional benefit of fish farming?",
+  options: [
+    "Reduced rainfall",
+    "Protein supply and income generation",
+    "Soil erosion",
+    "Forest conservation only"
+  ],
+  correct: "Protein supply and income generation",
+  reason: "Fish farming provides protein-rich food and generates income."
+},
+{
+  id: "vos117-076",
+  question: "If feed cost increases while the selling price of fish remains the same, what is the most likely outcome?",
+  options: [
+    "Higher profit",
+    "No change in profit",
+    "Reduced profit margin",
+    "Faster fish growth"
+  ],
+  correct: "Reduced profit margin",
+  reason: "When production cost increases without an increase in selling price, profit margin decreases."
+},
+{
+  id: "vos117-077",
+  question: "Which sequence correctly represents the basic stages of fish production?",
+  options: [
+    "Harvesting → Feeding → Stocking",
+    "Stocking → Feeding and management → Harvesting",
+    "Feeding → Construction → Harvesting",
+    "Sorting → Construction → Marketing"
+  ],
+  correct: "Stocking → Feeding and management → Harvesting",
+  reason: "Fish are first stocked, then fed and managed, and finally harvested at market size."
+},
+{
+  id: "vos117-078",
+  question: "Which factor is MOST critical to monitor daily in a fish pond?",
+  options: [
+    "Fish color",
+    "Water quality parameters",
+    "Number of visitors",
+    "Pond shape"
+  ],
+  correct: "Water quality parameters",
+  reason: "Water quality directly affects oxygen levels, fish health, and survival."
+},
+{
+  id: "vos117-079",
+  question: "If a farmer ignores water testing for a long period, what is the most likely chain reaction?",
+  options: [
+    "Improved growth → Higher yield",
+    "Poor water quality → Disease outbreak → Mortality",
+    "Faster feeding → Bigger ponds",
+    "Lower cost → Higher income"
+  ],
+  correct: "Poor water quality → Disease outbreak → Mortality",
+  reason: "Unchecked poor water conditions promote disease and lead to fish death."
+},
+{
+  id: "vos117-080",
+  question: "Which farming system offers the greatest control over environmental conditions?",
+  options: [
+    "Cage culture",
+    "Lagoon fishing",
+    "Tank culture",
+    "River capture fishing"
+  ],
+  correct: "Tank culture",
+  reason: "Tank culture allows better control of feeding, water quality, and stocking density."
+},
+{
+  id: "vos117-081",
+  question: "What is the economic importance of reducing fish mortality?",
+  options: [
+    "It increases pond size",
+    "It reduces total harvest and income",
+    "It increases harvest quantity and profitability",
+    "It changes fish species"
+  ],
+  correct: "It increases harvest quantity and profitability",
+  reason: "Lower mortality means more fish survive to market size, increasing total yield and profit."
+},
+{
+  id: "vos117-082",
+  question: "Which of the following is the BEST indicator of good fish health?",
+  options: [
+    "Slow movement and dull skin",
+    "Active swimming and regular feeding response",
+    "Floating on water surface constantly",
+    "Reduced appetite"
+  ],
+  correct: "Active swimming and regular feeding response",
+  reason: "Healthy fish are active and respond well during feeding."
+},
+{
+  id: "vos117-083",
+  question: "If a farmer practices polyculture, what is the main advantage?",
+  options: [
+    "Only one species is managed",
+    "Better utilization of pond resources",
+    "Reduced oxygen demand",
+    "Elimination of feeding"
+  ],
+  correct: "Better utilization of pond resources",
+  reason: "Different species can occupy different ecological niches, maximizing resource use."
+},
+{
+  id: "vos117-084",
+  question: "Which of the following decisions would MOST likely increase profitability?",
+  options: [
+    "Overstocking ponds",
+    "Using balanced feed efficiently",
+    "Ignoring record keeping",
+    "Harvesting immature fish"
+  ],
+  correct: "Using balanced feed efficiently",
+  reason: "Efficient feeding reduces waste and improves growth, increasing profit."
+},
+{
+  id: "vos117-085",
+  question: "Why is proper pond drainage important during harvesting?",
+  options: [
+    "To decorate the pond",
+    "To simplify fish collection and reduce stress",
+    "To increase rainfall",
+    "To reduce market demand"
+  ],
+  correct: "To simplify fish collection and reduce stress",
+  reason: "Controlled drainage makes harvesting easier and minimizes fish injury or loss."
+},
 ];
