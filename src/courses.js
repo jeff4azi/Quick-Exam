@@ -16,6 +16,11 @@ import { csm111Questions } from "./courses/csm-111questions";
 import { vos101Questions } from "./courses/vos-101questions";
 import { age101Questions } from "./courses/age-101questions";
 import { ams101Questions } from "./courses/ams-101questions";
+import { acc111Questions } from "./courses/acc-111questions";
+import { csc113Questions } from "./courses/csc-113questions";
+import { ecc101Questions } from "./courses/eec-101questions";
+import { vos114Questions } from "./courses/vos-114questions";
+import { vos118Questions } from "./courses/vos-118questions";
 import { phy101AndPhy107Questions } from "./courses/phy-101andphy-107questions";
 
 const courses = [
@@ -127,6 +132,14 @@ const courses = [
     questions: csm111Questions,
   },
   {
+    id: "EEC101",
+    name: "EEC 101",
+    title: "EARLY CHILDHOOD EDUCATION",
+    group: "departmental",
+    colleges: ["COSPED"],
+    questions: ecc101Questions,
+  },
+  {
     id: "PHY101/PHY107",
     name: "PHY 101/PHY 107",
     title: "GENERAL PHYSICS 1",
@@ -143,12 +156,20 @@ const courses = [
     questions: age101Questions,
   },
   {
-    id: "VOS116",
-    name: "VOS 116",
-    title: "FRUIT JUICE AND NON-ALCOHOLIC BEVERAGE",
-    group: "vocational",
-    colleges: ["ALL"],
-    questions: vos116Questions,
+    id: "ACC111",
+    name: "ACC 111",
+    title: "ACCOUNTING",
+    group: "departmental",
+    colleges: ["COSMAS"],
+    questions: acc111Questions,
+  },
+  {
+    id: "CSC113",
+    name: "CSC 113",
+    title: "MATHEMATICAL TECHNIQUES FOR COMPUTER SCIENCE",
+    group: "departmental",
+    colleges: ["COSIT"],
+    questions: csc113Questions,
   },
   {
     id: "VOS101",
@@ -159,12 +180,36 @@ const courses = [
     questions: vos101Questions,
   },
   {
+    id: "VOS114",
+    name: "VOS 114",
+    title: "COMPUTER SERVICING AND MAINTENANCE",
+    group: "vocational",
+    colleges: ["ALL"],
+    questions: vos114Questions,
+  },
+  {
+    id: "VOS116",
+    name: "VOS 116",
+    title: "FRUIT JUICE AND NON-ALCOHOLIC BEVERAGE",
+    group: "vocational",
+    colleges: ["ALL"],
+    questions: vos116Questions,
+  },
+  {
     id: "VOS117",
     name: "VOS 117",
     title: "FISH FARMING",
     group: "vocational",
     colleges: ["ALL"],
     questions: vos117Questions,
+  },
+  {
+    id: "VOS118",
+    name: "VOS 118",
+    title: "BEE-KEEPING",
+    group: "vocational",
+    colleges: ["ALL"],
+    questions: vos118Questions,
   },
 ];
 
