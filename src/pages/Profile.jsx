@@ -17,17 +17,17 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
       formData.full_name !== (userProfile?.full_name || "") ||
       formData.department !== (userProfile?.department || "");
 
-    // If nothing changed, just exit edit mode without saving
+    // If nothing changed or no handler, just exit edit mode without saving
     if (!hasChanges || !onUpdateProfile) {
       setIsEditing(false);
       return;
     }
 
-    // Leave edit mode immediately after user confirms changes
-    setIsEditing(false);
-
     try {
+      // Show a global "Saving..." state while we persist
       setIsSaving(true);
+      // Leave edit mode so inputs collapse, but keep the saving indicator
+      setIsEditing(false);
       await onUpdateProfile(formData);
     } catch (err) {
       console.error("Failed to save profile:", err.message);
@@ -136,13 +136,19 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
 
       {/* Sticky Bottom Action Button */}
       <div className="fixed bottom-0 inset-x-0 p-6 bg-gradient-to-t from-gray-50 via-gray-50/90 to-transparent dark:from-slate-900 dark:via-slate-900/90 max-w-2xl mx-auto">
-        {isEditing ? (
+        {isSaving ? (
+          <button
+            disabled
+            className="w-full bg-green-600 dark:bg-green-700 py-4.5 rounded-2xl font-black text-white text-lg shadow-xl shadow-green-200 dark:shadow-none flex items-center justify-center gap-2 transition-all opacity-80"
+          >
+            <FiCheck className="stroke-[3]" /> Saving...
+          </button>
+        ) : isEditing ? (
           <button
             onClick={handleSave}
-            disabled={isSaving}
-            className="w-full bg-green-600 dark:bg-green-700 py-4.5 rounded-2xl font-black text-white text-lg shadow-xl shadow-green-200 dark:shadow-none flex items-center justify-center gap-2 active:scale-95 transition-all disabled:opacity-60"
+            className="w-full bg-green-600 dark:bg-green-700 py-4.5 rounded-2xl font-black text-white text-lg shadow-xl shadow-green-200 dark:shadow-none flex items-center justify-center gap-2 active:scale-95 transition-all"
           >
-            <FiCheck className="stroke-[3]" /> {isSaving ? "Saving..." : "Save Changes"}
+            <FiCheck className="stroke-[3]" /> Save Changes
           </button>
         ) : (
           <button

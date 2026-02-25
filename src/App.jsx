@@ -108,8 +108,12 @@ function App() {
 
       } catch (err) {
         console.error("Profile fetch error:", err.message);
-        setUserProfile(null);
-        setAvailableCourses([]);
+        // On initial load, fall back to logged-out state.
+        // On later updates, keep the last known profile instead of wiping it.
+        if (isInitialLoad) {
+          setUserProfile(null);
+          setAvailableCourses([]);
+        }
       } finally {
         if (isInitialLoad) {
           setLoading(false);
