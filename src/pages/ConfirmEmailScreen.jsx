@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import Logo from "../images/Logo";
 import { FiMail, FiArrowLeft, FiRefreshCw, FiCheckCircle } from "react-icons/fi";
 import { supabase } from "../supabaseClient";
 
@@ -9,22 +8,53 @@ const ConfirmEmailScreen = () => {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [resendStatus, setResendStatus] = useState(null); // 'success' | 'error'
-  
-  // Grab email from navigation state if available, else placeholder
-  const email = location.state?.email || "your email";
+  const [cooldown, setCooldown] = useState(60); // seconds before user can resend
+
+  const emailFromState = location.state?.email || null;
+  const email = emailFromState || "your email";
+  const hasEmail = !!emailFromState;
+  const canResend = hasEmail && cooldown === 0;
+
+  useEffect(() => {
+    if (!hasEmail) return;
+
+    if (cooldown <= 0) return;
+
+    const timerId = setInterval(() => {
+      setCooldown(prev => {
+        if (prev <= 1) {
+          clearInterval(timerId);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timerId);
+  }, [cooldown, hasEmail]);
 
   const handleResendEmail = async () => {
     setLoading(true);
     setResendStatus(null);
     
     try {
+      if (!hasEmail) {
+        setResendStatus("error");
+        return;
+      }
+
+      if (cooldown > 0) {
+        return;
+      }
+
       const { error } = await supabase.auth.resend({
         type: 'signup',
-        email: email,
+        email: emailFromState,
       });
 
       if (error) throw error;
       setResendStatus('success');
+      setCooldown(60);
     } catch (err) {
       console.error("Resend error:", err.message);
       setResendStatus('error');
@@ -67,6 +97,12 @@ const ConfirmEmailScreen = () => {
           </div>
         )}
 
+        {resendStatus === 'error' && !canResend && (
+          <div className="w-full mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-2xl text-red-600 dark:text-red-400 text-sm font-semibold animate-in fade-in slide-in-from-top-2">
+            We couldn&apos;t detect your email. Please sign in again to request a new link.
+          </div>
+        )}
+
         <div className="w-full space-y-4">
           <button
             onClick={() => window.open("mailto:")} // Helpful shortcut to open mail apps
@@ -77,11 +113,17 @@ const ConfirmEmailScreen = () => {
 
           <button
             onClick={handleResendEmail}
-            disabled={loading}
+            disabled={loading || !canResend}
             className="w-full py-4 rounded-2xl font-bold text-slate-600 dark:text-slate-300 text-sm transition-all flex items-center justify-center gap-2 hover:bg-gray-100 dark:hover:bg-slate-800 disabled:opacity-50"
           >
             <FiRefreshCw className={`${loading ? "animate-spin" : ""}`} />
-            {loading ? "Sending..." : "Resend Verification Link"}
+            {!hasEmail
+              ? "Email not available"
+              : loading
+                ? "Sending..."
+                : cooldown > 0
+                  ? `Resend available in ${String(Math.floor(cooldown / 60)).padStart(2, "0")}:${String(cooldown % 60).padStart(2, "0")}`
+                  : "Resend Verification Link"}
           </button>
         </div>
 

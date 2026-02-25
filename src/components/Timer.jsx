@@ -1,13 +1,13 @@
 import { useEffect, useState, useRef } from "react"
 import clockIcon from "../images/clock.webp"
 
-const Timer = ({ totalTime, onTimeUp, onTick }) => {
-  const [timeLeft, setTimeLeft] = useState(totalTime)
+const Timer = ({ totalTime, onTimeUp, onTick, initialTime }) => {
+  const [timeLeft, setTimeLeft] = useState(initialTime ?? totalTime)
   const intervalRef = useRef(null)
 
   useEffect(() => {
-    setTimeLeft(totalTime) // reset when totalTime changes
-  }, [totalTime])
+    setTimeLeft(initialTime ?? totalTime) // reset when starting value changes
+  }, [totalTime, initialTime])
 
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current)

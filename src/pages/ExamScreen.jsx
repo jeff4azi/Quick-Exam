@@ -22,6 +22,8 @@ const shuffleArray = (array) => {
   return arr
 }
 
+const EXAM_SESSION_KEY = "currentExamSession";
+
 const ExamScreen = ({
   answers,
   setAnswers,
@@ -33,31 +35,102 @@ const ExamScreen = ({
 }) => {
   const isMathCourse = selectedCourse?.id === "MTH101"
   const navigate = useNavigate()
-  const totalQuestions = questions.length
+
+  const [shuffledQuestions, setShuffledQuestions] = useState([]);
+
+  // Prefer the shuffled list length (restored from localStorage on refresh),
+  // but fall back to the raw questions length.
+  const totalQuestions = shuffledQuestions.length || questions.length
   const initialTotalTime = calculateTotalTime(totalQuestions, isMathCourse)
 
-  const [currentIndex, setCurrentIndex] = useState(0)
-  const [shuffledQuestions, setShuffledQuestions] = useState([]);
-  const [timeLeft, setTimeLeft] = useState(initialTotalTime)
+  const [currentIndex, setCurrentIndex] = useState(() => {
+    try {
+      const savedRaw = localStorage.getItem(EXAM_SESSION_KEY);
+      if (savedRaw) {
+        const saved = JSON.parse(savedRaw);
+        if (typeof saved.currentIndex === "number" && saved.currentIndex >= 0) {
+          return saved.currentIndex;
+        }
+      }
+    } catch (err) {
+      console.error("Failed to restore currentIndex from storage:", err);
+    }
+    return 0;
+  })
+
+  const [timeLeft, setTimeLeft] = useState(() => {
+    try {
+      const savedRaw = localStorage.getItem(EXAM_SESSION_KEY);
+      if (savedRaw) {
+        const saved = JSON.parse(savedRaw);
+        if (typeof saved.timeLeft === "number" && saved.timeLeft > 0) {
+          return saved.timeLeft;
+        }
+      }
+    } catch (err) {
+      console.error("Failed to restore timeLeft from storage:", err);
+    }
+    return initialTotalTime;
+  })
   const [hasSaved, setHasSaved] = useState(false)
   const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false)
   const [isExitOverlayOpen, setExitOverlayOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const buildSessionPayload = () => ({
+    selectedCourse,
+    questions: shuffledQuestions.length ? shuffledQuestions : questions,
+    answers,
+    currentIndex,
+    timeLeft,
+  });
 
   const currentQuestion = shuffledQuestions[currentIndex]
   const selectedOption = answers[currentIndex]
   const isBookmarked = bookmarks.includes(currentQuestion?.id)
 
   useEffect(() => {
+    // 1. Try to restore an in‑progress exam from localStorage
+    try {
+      const savedRaw = localStorage.getItem(EXAM_SESSION_KEY);
+      if (savedRaw) {
+        const saved = JSON.parse(savedRaw);
+
+        if (Array.isArray(saved?.questions) && saved.questions.length > 0) {
+          setShuffledQuestions(saved.questions);
+          setCurrentIndex(saved.currentIndex || 0);
+
+          if (Array.isArray(saved.answers)) {
+            setAnswers(saved.answers);
+          }
+
+          return;
+        }
+      }
+    } catch (err) {
+      console.error("Failed to restore exam session:", err);
+    }
+
+    // 2. Fresh exam – shuffle options and start a new session
     if (questions.length > 0 && shuffledQuestions.length === 0) {
       const shuffled = questions.map(q => ({
         ...q,
-        // Create a stable version of the question with shuffled options
-        options: shuffleArray([...q.options])
+        options: shuffleArray([...q.options]),
       }));
       setShuffledQuestions(shuffled);
     }
-  }, [questions, shuffledQuestions.length]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [questions]);
+
+  // Persist exam progress (answers, index, time) whenever they change
+  useEffect(() => {
+    if (!totalQuestions) return;
+    try {
+      localStorage.setItem(EXAM_SESSION_KEY, JSON.stringify(buildSessionPayload()));
+    } catch (err) {
+      console.error("Failed to persist exam session:", err);
+    }
+  }, [answers, currentIndex, timeLeft, shuffledQuestions, selectedCourse, totalQuestions, EXAM_SESSION_KEY]);
 
   const saveResultToSupabase = async (finalTime) => {
     try {
@@ -75,7 +148,7 @@ const ExamScreen = ({
         user_id: userData.user.id,
         course_id: selectedCourse.id,
         score: correctCount,
-        total_questions: questions.length,
+        total_questions: totalQuestions,
         time_taken: finalTime,
         is_retake: hasRetaken, // Track if this attempt is a retake
       });
@@ -104,7 +177,8 @@ const ExamScreen = ({
 
     setTimeout(() => {
       if (currentIndex < totalQuestions - 1) {
-        setCurrentIndex(prev => prev + 1);
+        const nextIndex = currentIndex + 1;
+        setCurrentIndex(nextIndex);
       } else {
         setSubmitOverlayOpen(true);
       }
@@ -128,6 +202,13 @@ const ExamScreen = ({
     const existingHistory = JSON.parse(localStorage.getItem("examHistory")) || []
     localStorage.setItem("examHistory", JSON.stringify([...existingHistory, newResult]))
     setHasSaved(true)
+
+    // Exam is complete – clear any persisted in‑progress state
+    try {
+      localStorage.removeItem(EXAM_SESSION_KEY);
+    } catch (err) {
+      console.error("Failed to clear exam session:", err);
+    }
   }
 
   const handleSubmit = () => {
@@ -144,6 +225,11 @@ const ExamScreen = ({
   // Navigate immediately
   setTimeout(() => {
     if (onSubmit) onSubmit();
+    try {
+      localStorage.removeItem(EXAM_SESSION_KEY);
+    } catch (err) {
+      console.error("Failed to clear exam session on submit:", err);
+    }
     navigate("/results");
   }, 50);
 }
@@ -158,6 +244,11 @@ const ExamScreen = ({
 
   setTimeout(() => {
     if (onSubmit) onSubmit();
+    try {
+      localStorage.removeItem(EXAM_SESSION_KEY);
+    } catch (err) {
+      console.error("Failed to clear exam session on timeout:", err);
+    }
     navigate("/results");
   }, 1500);
 }
@@ -208,7 +299,12 @@ const ExamScreen = ({
           </div>
 
           <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
-            <Timer totalTime={initialTotalTime} onTick={setTimeLeft} onTimeUp={handleTimeUp} />
+            <Timer
+              totalTime={initialTotalTime}
+              initialTime={timeLeft}
+              onTick={setTimeLeft}
+              onTimeUp={handleTimeUp}
+            />
           </div>
         </div>
         
@@ -276,7 +372,10 @@ const ExamScreen = ({
       <div className="fixed bottom-0 inset-x-0 px-6 py-2 z-40">
         <div className="max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-3">
           <button
-            onClick={() => setCurrentIndex(prev => prev - 1)}
+            onClick={() => {
+              const newIndex = currentIndex - 1;
+              setCurrentIndex(newIndex);
+            }}
             disabled={currentIndex === 0}
             className="size-14 rounded-full flex items-center justify-center bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-20 transition-all active:scale-90"
           >
@@ -293,7 +392,10 @@ const ExamScreen = ({
             </button>
           ) : (
             <button
-              onClick={() => setCurrentIndex(prev => prev + 1)}
+              onClick={() => {
+                const newIndex = currentIndex + 1;
+                setCurrentIndex(newIndex);
+              }}
               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white h-14 rounded-[1.8rem] font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               <span>Next Question</span>
@@ -316,7 +418,14 @@ const ExamScreen = ({
       <ConfirmOverlay
         isOpen={isExitOverlayOpen}
         onClose={() => setExitOverlayOpen(false)}
-        onConfirm={() => navigate("/")}
+        onConfirm={() => {
+          try {
+            localStorage.removeItem(EXAM_SESSION_KEY);
+          } catch (err) {
+            console.error("Failed to clear exam session on exit:", err);
+          }
+          navigate("/");
+        }}
         title="Quit Exam?"
         message="Your current progress will be lost. Are you sure?"
         confirmText="Quit"

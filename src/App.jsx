@@ -141,6 +141,30 @@ function App() {
     ReactGA.initialize("G-93T0BGL64Y");
   }, []);
 
+  // Restore any in‑progress exam from localStorage on hard refresh
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem("currentExamSession");
+      if (!saved) return;
+
+      const parsed = JSON.parse(saved);
+
+      if (parsed?.selectedCourse) {
+        setSelectedCourse(parsed.selectedCourse);
+      }
+
+      if (Array.isArray(parsed?.questions) && parsed.questions.length > 0) {
+        setQuestions(parsed.questions);
+      }
+
+      if (Array.isArray(parsed?.answers)) {
+        setAnswers(parsed.answers);
+      }
+    } catch (err) {
+      console.error("Failed to restore exam session:", err);
+    }
+  }, []);
+
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add("dark")
