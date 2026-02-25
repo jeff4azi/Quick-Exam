@@ -183,7 +183,7 @@ const courses = [
   {
     id: "VOS112",
     name: "VOS 112",
-    title: "HOUSE HOLD CARE PRODUCT MAKING",
+    title: "FOOD AND NUTRITION",
     group: "vocational",
     colleges: ["ALL"],
     questions: vos112Questions,
