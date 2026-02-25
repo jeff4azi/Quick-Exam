@@ -21,6 +21,7 @@ import { csc113Questions } from "./courses/csc-113questions";
 import { ecc101Questions } from "./courses/eec-101questions";
 import { vos114Questions } from "./courses/vos-114questions";
 import { vos118Questions } from "./courses/vos-118questions";
+import { vos112Questions } from "./courses/vos-112questions";
 import { phy101AndPhy107Questions } from "./courses/phy-101andphy-107questions";
 
 const courses = [
@@ -178,6 +179,14 @@ const courses = [
     group: "vocational",
     colleges: ["ALL"],
     questions: vos101Questions,
+  },
+  {
+    id: "VOS112",
+    name: "VOS 112",
+    title: "FOOD AND NUTRITION",
+    group: "vocational",
+    colleges: ["ALL"],
+    questions: vos112Questions,
   },
   {
     id: "VOS114",
