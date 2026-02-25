@@ -9,6 +9,8 @@ import ChooseCourseScreen from "./pages/ChooseCourseScreen";
 import OnboardingScreen from "./pages/OnboardingScreen";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import ResetPassword from "./pages/ResetPassword";
+import ConfirmEmailScreen from "./pages/ConfirmEmailScreen";
 import HistoryScreen from "./pages/HistoryScreen.jsx"
 import allCourses from "./courses.js"
 import { supabase } from "./supabaseClient";
@@ -220,6 +222,8 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/confirm-email" element={<ConfirmEmailScreen />} />
             <Route path="/onboarding" element={<OnboardingScreen />} />
             <Route path="/" element={<ProtectedRoute><StartExam {...props} /></ProtectedRoute>} />
             <Route path="/choose-course" element={<ProtectedRoute><ChooseCourseScreen {...props} /></ProtectedRoute>} />

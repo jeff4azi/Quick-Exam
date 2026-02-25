@@ -106,6 +106,7 @@ const LoginScreen = () => {
           <div className="flex justify-end px-1">
             <button
               type="button"
+              onClick={() => navigate("/reset-password")}
               className="text-sm font-bold text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 transition-colors"
             >
               Forgot Password?

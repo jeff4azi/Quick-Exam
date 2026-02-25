@@ -8,6 +8,24 @@ export const AuthProvider = ({ children }) => {
   const [profileValid, setProfileValid] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // Professional: centralize common auth helpers here so
+  // screens like ResetPassword don't talk to Supabase directly.
+  const resetPassword = async (email) => {
+    if (!email) {
+      throw new Error("Please provide a valid email address.");
+    }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      // After user clicks the email link and finishes resetting,
+      // send them back to the login screen.
+      redirectTo: `${window.location.origin}/login`,
+    });
+
+    if (error) {
+      throw new Error(error.message || "Failed to send reset link. Please try again.");
+    }
+  };
+
   useEffect(() => {
     // 1. Restore session on app load
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -42,7 +60,14 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, profileValid }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        profileValid,
+        resetPassword,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

@@ -45,7 +45,8 @@ const SignUpScreen = () => {
       if (signUpError) throw signUpError;
 
       console.log("User signed up:", data);
-      navigate("/onboarding"); 
+      // After sign up, guide user to check email for verification
+      navigate("/confirm-email", { state: { email } }); 
     } catch (err) {
       console.error("Sign up error:", err.message);
       setError(err.message);
