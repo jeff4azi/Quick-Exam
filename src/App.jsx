@@ -19,6 +19,7 @@ import BookMark from "./pages/BookMark";
 import ReactGA from "react-ga4";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import PremiumPage from "./pages/PremiumPage"
+import Profile from "./pages/Profile";
 import { AuthProvider } from "./context/AuthContext";
 import "katex/dist/katex.min.css";
 
@@ -201,6 +202,54 @@ function App() {
     }
   };
 
+  const handleUpdateProfile = async (updates) => {
+    try {
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+
+      const { full_name, department } = updates || {};
+
+      const currentFullName = userProfile?.full_name || user.user_metadata?.full_name || "";
+      const currentDepartment = userProfile?.department || "";
+
+      const nextFullName = full_name ?? currentFullName;
+      const nextDepartment = department ?? currentDepartment;
+
+      // If nothing actually changed, skip any network calls
+      if (nextFullName === currentFullName && nextDepartment === currentDepartment) {
+        return;
+      }
+
+      // Update auth metadata for full_name if it changed
+      if (nextFullName !== currentFullName) {
+        const { error: updateUserError } = await supabase.auth.updateUser({
+          data: { full_name: nextFullName },
+        });
+        if (updateUserError) throw updateUserError;
+      }
+
+      // Upsert profile fields (department etc.)
+      const { error: upsertError } = await supabase
+        .from("profiles")
+        .upsert({
+          id: user.id,
+          department: nextDepartment || null,
+        });
+
+      if (upsertError) throw upsertError;
+
+      // Update local React state so UI reflects changes immediately
+      setUserProfile(prev => ({
+        ...prev,
+        full_name: nextFullName,
+        department: nextDepartment,
+      }));
+    } catch (err) {
+      console.error("Update profile failed:", err.message);
+      throw err;
+    }
+  };
+
 
   const props = {
     answers,
@@ -253,6 +302,18 @@ function App() {
             <Route path="/choose-course" element={<ProtectedRoute><ChooseCourseScreen {...props} /></ProtectedRoute>} />
             <Route path="/bookmarks" element={<ProtectedRoute><BookMark {...props} /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><HistoryScreen {...props} /></ProtectedRoute>} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <Profile
+                    userProfile={userProfile}
+                    isPremium={isPremium}
+                    onUpdateProfile={handleUpdateProfile}
+                  />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/exam" element={<ProtectedRoute stateCheck={questions.length > 0 && selectedCourse}><ExamScreen {...props} /></ProtectedRoute>} />
 
             {/* FIX: Results route checks results.answered, which handleExamSubmit updates */}

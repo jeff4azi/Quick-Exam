@@ -75,8 +75,12 @@ const StartExam = ({
           </svg>
         </button>
 
-        {/* User Initial Avatar with Premium Crown */}
-        <div className="relative">
+        {/* User Initial Avatar with Premium Crown - navigates to Profile */}
+        <button
+          type="button"
+          onClick={() => navigate("/profile")}
+          className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl"
+        >
           <div className="size-10 rounded-2xl bg-blue-600 flex items-center justify-center text-white font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all duration-300">
             {loadingProfile ? "..." : (userProfile?.full_name?.charAt(0) || "S")}
           </div>
@@ -87,7 +91,7 @@ const StartExam = ({
               <FaCrown className="text-[8px] text-white" />
             </div>
           )}
-        </div>
+        </button>
       </div>
 
       {/* Main Content */}
