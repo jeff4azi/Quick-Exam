@@ -6,6 +6,7 @@ import ProgressBar from "../components/ProgressBar"
 import Timer from "../components/Timer"
 import { FiChevronLeft, FiBookmark, FiSend, FiChevronRight, FiLoader } from "react-icons/fi"
 import { supabase } from "../supabaseClient"
+import { withTimeout } from "../utils/withTimeout"
 
 
 const calculateTotalTime = (questionCount, isMath) => {
@@ -77,14 +78,6 @@ const ExamScreen = ({
   const [isExitOverlayOpen, setExitOverlayOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const buildSessionPayload = () => ({
-    selectedCourse,
-    questions: shuffledQuestions.length ? shuffledQuestions : questions,
-    answers,
-    currentIndex,
-    timeLeft,
-  });
-
   const currentQuestion = shuffledQuestions[currentIndex]
   const selectedOption = answers[currentIndex]
   const isBookmarked = bookmarks.includes(currentQuestion?.id)
@@ -119,18 +112,25 @@ const ExamScreen = ({
       }));
       setShuffledQuestions(shuffled);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [questions]);
 
   // Persist exam progress (answers, index, time) whenever they change
   useEffect(() => {
     if (!totalQuestions) return;
     try {
-      localStorage.setItem(EXAM_SESSION_KEY, JSON.stringify(buildSessionPayload()));
+      const payload = {
+        selectedCourse,
+        questions: shuffledQuestions.length ? shuffledQuestions : questions,
+        answers,
+        currentIndex,
+        timeLeft,
+      };
+      localStorage.setItem(EXAM_SESSION_KEY, JSON.stringify(payload));
     } catch (err) {
       console.error("Failed to persist exam session:", err);
     }
-  }, [answers, currentIndex, timeLeft, shuffledQuestions, selectedCourse, totalQuestions, EXAM_SESSION_KEY]);
+  }, [answers, currentIndex, timeLeft, shuffledQuestions, selectedCourse, totalQuestions, questions]);
 
   const saveResultToSupabase = async (finalTime) => {
     try {
@@ -211,19 +211,25 @@ const ExamScreen = ({
     }
   }
 
-  const handleSubmit = () => {
-  setSubmitOverlayOpen(false);
-  setIsSubmitting(true);
+  const handleSubmit = async () => {
+    setSubmitOverlayOpen(false);
+    setIsSubmitting(true);
 
-  const finalTime = initialTotalTime - timeLeft;
+    const finalTime = initialTotalTime - timeLeft;
 
-  saveResultToHistory(finalTime);
+    saveResultToHistory(finalTime);
 
-  // Fire-and-forget save (async won't block UI)
-  saveResultToSupabase(finalTime).catch(err => console.error(err));
+    try {
+      // Wait for Supabase to finish saving, but don't block forever
+      await withTimeout(
+        saveResultToSupabase(finalTime),
+        15000,
+        "Saving results took too long. They may not have been stored online."
+      );
+    } catch (err) {
+      console.error("Error while saving to Supabase:", err);
+    }
 
-  // Navigate immediately
-  setTimeout(() => {
     if (onSubmit) onSubmit();
     try {
       localStorage.removeItem(EXAM_SESSION_KEY);
@@ -231,18 +237,21 @@ const ExamScreen = ({
       console.error("Failed to clear exam session on submit:", err);
     }
     navigate("/results");
-  }, 50);
-}
+  }
 
-  const handleTimeUp = () => {
-  setIsSubmitting(true);
-  const finalTime = initialTotalTime - timeLeft;
+  const handleTimeUp = async () => {
+    setIsSubmitting(true);
+    const finalTime = initialTotalTime - timeLeft;
 
-  saveResultToHistory(finalTime);
+    saveResultToHistory(finalTime);
 
-  saveResultToSupabase(finalTime).catch(err => console.error(err));
+    // Wait for Supabase save attempt to complete before navigating
+    try {
+      await saveResultToSupabase(finalTime);
+    } catch (err) {
+      console.error("Error while saving to Supabase on timeout:", err);
+    }
 
-  setTimeout(() => {
     if (onSubmit) onSubmit();
     try {
       localStorage.removeItem(EXAM_SESSION_KEY);
@@ -250,12 +259,11 @@ const ExamScreen = ({
       console.error("Failed to clear exam session on timeout:", err);
     }
     navigate("/results");
-  }, 1500);
-}
+  }
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100
   if (shuffledQuestions.length === 0) return null;
-  
+
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex flex-col">
 
@@ -280,7 +288,7 @@ const ExamScreen = ({
           </p>
         </div>
       )}
-      
+
       {/* HEADER SECTION */}
       <div className="sticky top-0 z-30 bg-gray-50/80 dark:bg-slate-900/80 backdrop-blur-md px-5 pt-6 pb-2">
         <div className="max-w-2xl mx-auto flex justify-between items-center mb-4">
@@ -292,10 +300,10 @@ const ExamScreen = ({
           </button>
 
           <div className="absolute left-1/2 flex flex-col items-center -translate-x-1/2">
-             <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-0.5">Progress</span>
-             <div className="font-black text-slate-900 dark:text-white">
-                {currentIndex + 1} <span className="text-slate-400 font-medium">/ {totalQuestions}</span>
-             </div>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-0.5">Progress</span>
+            <div className="font-black text-slate-900 dark:text-white">
+              {currentIndex + 1} <span className="text-slate-400 font-medium">/ {totalQuestions}</span>
+            </div>
           </div>
 
           <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
@@ -307,7 +315,7 @@ const ExamScreen = ({
             />
           </div>
         </div>
-        
+
         <div className="max-w-2xl mx-auto">
           <ProgressBar progress={progress} />
         </div>
@@ -316,9 +324,9 @@ const ExamScreen = ({
       {/* QUESTION CONTENT */}
       <div className="flex-1 px-5 pb-32 pt-4 overflow-y-auto">
         <div className="max-w-2xl mx-auto">
-          
+
           <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-gray-50 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            
+
             <div className="flex justify-between items-center mb-4">
               <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">
                 {selectedCourse.name}
@@ -344,17 +352,15 @@ const ExamScreen = ({
                   <button
                     key={index}
                     onClick={() => onOptionClick(option)}
-                    className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
-                      isSelected 
-                        ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10" 
+                    className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${isSelected
+                        ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
                         : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                    }`}
+                      }`}
                   >
-                    <div className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
-                      isSelected 
-                        ? "bg-blue-600 text-white" 
+                    <div className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isSelected
+                        ? "bg-blue-600 text-white"
                         : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
-                    }`}>
+                      }`}>
                       {label}
                     </div>
                     <div className={`text-left font-semibold ${isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}>

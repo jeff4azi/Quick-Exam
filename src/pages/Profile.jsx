@@ -18,20 +18,17 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
       formData.department !== (userProfile?.department || "");
 
     // If nothing changed, just exit edit mode without saving
-    if (!hasChanges) {
+    if (!hasChanges || !onUpdateProfile) {
       setIsEditing(false);
       return;
     }
 
-    if (!onUpdateProfile) {
-      setIsEditing(false);
-      return;
-    }
+    // Leave edit mode immediately after user confirms changes
+    setIsEditing(false);
 
     try {
       setIsSaving(true);
       await onUpdateProfile(formData);
-      setIsEditing(false);
     } catch (err) {
       console.error("Failed to save profile:", err.message);
     } finally {

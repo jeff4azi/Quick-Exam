@@ -4,6 +4,7 @@ import { FiArrowLeft, FiCheckCircle, FiShield, FiZap, FiStar } from "react-icons
 import { FaCrown } from "react-icons/fa"; // Added FaCrown
 import Logo from "../images/Logo";
 import { supabase } from "../supabaseClient";
+import { withTimeout } from "../utils/withTimeout";
 
 const PremiumPage = ({ onActivatePremium, isPremium }) => {
   const navigate = useNavigate();
@@ -48,10 +49,18 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
     setStatus({ type: "", message: "" });
 
     try {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      const { data: { user }, error: userError } = await withTimeout(
+        supabase.auth.getUser(),
+        15000,
+        "Session check took too long. Please try again."
+      );
       if (userError || !user) throw new Error("Please log in again.");
 
-      const result = await redeemPremiumCode(user.id, premiumCode.trim());
+      const result = await withTimeout(
+        redeemPremiumCode(user.id, premiumCode.trim()),
+        15000,
+        "Verifying the premium code took too long. Please try again."
+      );
 
       if (result.success) {
         setStatus({ type: "success", message: result.message });

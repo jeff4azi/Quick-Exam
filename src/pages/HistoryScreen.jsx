@@ -4,6 +4,7 @@ import { FiArrowLeft, FiTrash2, FiClock, FiRefreshCw } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { supabase } from "../supabaseClient";
+import { withTimeout } from "../utils/withTimeout";
 
 const formatTime = (seconds) => {
   if (!seconds) return null;
@@ -23,7 +24,11 @@ const HistoryScreen = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       setLoading(true); // start loading
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      const { data: { user }, error: userError } = await withTimeout(
+        supabase.auth.getUser(),
+        15000,
+        "Session check took too long while loading history."
+      );
 
       if (userError || !user) {
         console.error("No user session");
@@ -32,9 +37,10 @@ const HistoryScreen = () => {
         return;
       }
 
-      const { data, error } = await supabase
-        .from("exam_attempts")
-        .select(`
+      const { data, error } = await withTimeout(
+        supabase
+          .from("exam_attempts")
+          .select(`
         id,
         course_id,
         score,
@@ -43,8 +49,11 @@ const HistoryScreen = () => {
         time_taken,
         is_retake
       `)
-        .eq("user_id", user.id)
-        .order("date_taken", { ascending: false });
+          .eq("user_id", user.id)
+          .order("date_taken", { ascending: false }),
+        15000,
+        "Loading your history took too long. Please try again."
+      );
 
       if (error) {
         console.error("Failed to fetch history:", error.message, error.details);
@@ -112,10 +121,14 @@ const HistoryScreen = () => {
 
 
   const deleteExam = async (id) => {
-    const { error } = await supabase
-      .from("exam_attempts")
-      .delete()
-      .eq("id", id);
+    const { error } = await withTimeout(
+      supabase
+        .from("exam_attempts")
+        .delete()
+        .eq("id", id),
+      15000,
+      "Deleting this attempt took too long. Please try again."
+    );
 
     if (error) {
       console.error("Delete failed:", error);
@@ -129,14 +142,22 @@ const HistoryScreen = () => {
   const clearAllHistory = async () => {
     const {
       data: { user },
-    } = await supabase.auth.getUser();
+    } = await withTimeout(
+      supabase.auth.getUser(),
+      15000,
+      "Session check took too long while clearing history."
+    );
 
     if (!user) return;
 
-    const { error } = await supabase
-      .from("exam_attempts")
-      .delete()
-      .eq("user_id", user.id);
+    const { error } = await withTimeout(
+      supabase
+        .from("exam_attempts")
+        .delete()
+        .eq("user_id", user.id),
+      15000,
+      "Clearing history took too long. Please try again."
+    );
 
     if (error) {
       console.error("Clear history failed:", error);

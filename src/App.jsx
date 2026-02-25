@@ -14,6 +14,7 @@ import ConfirmEmailScreen from "./pages/ConfirmEmailScreen";
 import HistoryScreen from "./pages/HistoryScreen.jsx"
 import allCourses from "./courses.js"
 import { supabase } from "./supabaseClient";
+import { withTimeout } from "./utils/withTimeout";
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
 import ReactGA from "react-ga4";
@@ -77,11 +78,15 @@ function App() {
       }
 
       try {
-        const { data: profileData, error } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
+        const { data: profileData, error } = await withTimeout(
+          supabase
+            .from("profiles")
+            .select("*")
+            .eq("id", user.id)
+            .single(),
+          15000,
+          "Loading your profile took too long. Please try again."
+        );
 
         if (error) throw error;
 
@@ -204,7 +209,11 @@ function App() {
 
   const handleUpdateProfile = async (updates) => {
     try {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      const { data: { user }, error: userError } = await withTimeout(
+        supabase.auth.getUser(),
+        15000,
+        "Session check took too long while updating your profile."
+      );
       if (userError) throw userError;
 
       const { full_name, department } = updates || {};
@@ -222,19 +231,27 @@ function App() {
 
       // Update auth metadata for full_name if it changed
       if (nextFullName !== currentFullName) {
-        const { error: updateUserError } = await supabase.auth.updateUser({
-          data: { full_name: nextFullName },
-        });
+        const { error: updateUserError } = await withTimeout(
+          supabase.auth.updateUser({
+            data: { full_name: nextFullName },
+          }),
+          15000,
+          "Updating your name took too long. Please try again."
+        );
         if (updateUserError) throw updateUserError;
       }
 
       // Upsert profile fields (department etc.)
-      const { error: upsertError } = await supabase
-        .from("profiles")
-        .upsert({
-          id: user.id,
-          department: nextDepartment || null,
-        });
+      const { error: upsertError } = await withTimeout(
+        supabase
+          .from("profiles")
+          .upsert({
+            id: user.id,
+            department: nextDepartment || null,
+          }),
+        15000,
+        "Saving your profile took too long. Please try again."
+      );
 
       if (upsertError) throw upsertError;
 
