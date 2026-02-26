@@ -32,7 +32,9 @@ const ExamScreen = ({
   onSubmit,
   selectedCourse,
   bookmarks,
-  setBookmarks, hasRetaken,
+  setBookmarks,
+  hasRetaken,
+  questionsLoading,
 }) => {
   const isMathCourse = selectedCourse?.id === "MTH101"
   const navigate = useNavigate()
@@ -261,8 +263,26 @@ const ExamScreen = ({
     navigate("/results");
   }
 
-  const progress = ((currentIndex + 1) / totalQuestions) * 100
-  if (shuffledQuestions.length === 0) return null;
+  const progress = ((currentIndex + 1) / totalQuestions) * 100;
+
+  // Show a loading screen while questions are being fetched or prepared
+  if (questionsLoading || shuffledQuestions.length === 0) {
+    return (
+      <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex items-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-blue-500/10 animate-ping" />
+            <div className="relative size-16 rounded-3xl bg-white dark:bg-slate-800 border border-blue-100 dark:border-slate-700 flex items-center justify-center shadow-lg shadow-blue-200/60 dark:shadow-none">
+              <FiLoader className="size-8 text-blue-600 dark:text-blue-400 animate-spin" />
+            </div>
+          </div>
+          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
+            Preparing your questions...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex flex-col">

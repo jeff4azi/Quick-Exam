@@ -30,6 +30,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [availableCourses, setAvailableCourses] = useState([]);
   const [hasRetaken, setHasRetaken] = useState(false);
+  const [coursesLoading, setCoursesLoading] = useState(false);
 
   const [answers, setAnswers] = useState([])
   const [selectedCourse, setSelectedCourse] = useState(null)
@@ -42,6 +43,7 @@ function App() {
   // FIX: Initialize results logic
   const [results, setResults] = useState({ correct: 0, wrong: 0, answered: 0 });
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(null);
+  const [questionsLoading, setQuestionsLoading] = useState(false);
 
   // --- FIX 2: HANDLE SUBMIT LOGIC ---
   const handleExamSubmit = () => {
@@ -104,6 +106,7 @@ function App() {
 
         // Load available courses from external API for 100-level users
         if (profile.year === "1" || parseInt(profile.year) === 1) {
+          setCoursesLoading(true);
           try {
             const params = new URLSearchParams();
             params.append("level", "100");
@@ -124,6 +127,8 @@ function App() {
           } catch (coursesErr) {
             console.error("Courses fetch error:", coursesErr);
             setAvailableCourses([]);
+          } finally {
+            setCoursesLoading(false);
           }
         } else {
           setAvailableCourses([]);
@@ -210,6 +215,7 @@ function App() {
     const loadQuestionsForSelectedCourse = async () => {
       if (!selectedCourse || !selectedQuestionCount) return;
 
+      setQuestionsLoading(true);
       try {
         const endpoint =
           selectedCourse.questionsEndpoint ||
@@ -239,6 +245,8 @@ function App() {
       } catch (err) {
         console.error("Error fetching course questions:", err);
         setQuestions([]);
+      } finally {
+        setQuestionsLoading(false);
       }
     };
 
@@ -335,10 +343,12 @@ function App() {
     setSelectedQuestionCount,
     userProfile,
     loadingProfile: loading,
+    coursesLoading,
     isPremium,
     handleLogout,
     hasRetaken,
     setHasRetaken,
+    questionsLoading,
   }
 
   return (

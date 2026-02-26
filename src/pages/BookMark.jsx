@@ -11,6 +11,7 @@ const BookMark = ({ bookmarks, setBookmarks }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false); // New state for overlay
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -27,6 +28,7 @@ const BookMark = ({ bookmarks, setBookmarks }) => {
       }
 
       try {
+        setLoading(true);
         const res = await fetch(`${API_BASE_URL}/courses/questions/by-ids`, {
           method: "POST",
           headers: {
@@ -50,6 +52,8 @@ const BookMark = ({ bookmarks, setBookmarks }) => {
       } catch (err) {
         console.error("Error fetching bookmarked questions:", err);
         setBookmarkedQuestions([]);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -124,7 +128,14 @@ const BookMark = ({ bookmarks, setBookmarks }) => {
       </header>
 
       <main className="max-w-2xl mx-auto px-6 pt-4 pb-20">
-        {bookmarkedQuestions.length === 0 ? (
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-24">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-b-4 mb-4"></div>
+            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
+              Loading saved questions...
+            </p>
+          </div>
+        ) : bookmarkedQuestions.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 text-center animate-in fade-in duration-700">
             <div className="size-24 bg-slate-100 dark:bg-slate-800 rounded-[2rem] flex items-center justify-center mb-6">
               <FaBookmark size={36} className="text-slate-300 dark:text-slate-600" />

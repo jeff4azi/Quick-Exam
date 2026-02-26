@@ -20,6 +20,7 @@ const ChooseCourseScreen = ({
   userProfile, 
   loadingProfile,
   isPremium,
+  coursesLoading,
 }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -115,7 +116,7 @@ const ChooseCourseScreen = ({
 
       {/* MAIN CONTENT AREA */}
       <main className="max-w-2xl mx-auto px-6 mt-4 space-y-10">
-        {loadingProfile ? (
+        {loadingProfile || coursesLoading ? (
             <div className="flex justify-center py-20 text-slate-400 font-bold uppercase tracking-widest text-[10px] animate-pulse">
                 Fetching Courses...
             </div>
