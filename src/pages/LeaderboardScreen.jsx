@@ -77,7 +77,7 @@ const LeaderboardScreen = () => {
 
         setAttempts(safeAttempts);
 
-        // Fetch profile data (full_name + college) for all users in these attempts
+        // Fetch profile data (full_name + college + premium) for all users in these attempts
         const userIds = Array.from(
           new Set(safeAttempts.map((a) => a.user_id).filter(Boolean))
         );
@@ -87,7 +87,7 @@ const LeaderboardScreen = () => {
             await withTimeout(
               supabase
                 .from("profiles")
-                .select("id, full_name, college")
+                .select("id, full_name, college, is_premium")
                 .in("id", userIds),
               15000,
               "Loading leaderboard profiles took too long."
@@ -106,6 +106,7 @@ const LeaderboardScreen = () => {
               profileMap[p.id] = {
                 full_name: p.full_name,
                 college: p.college,
+                isPremium: p.is_premium === true,
               };
             });
             setProfiles(profileMap);
@@ -187,6 +188,7 @@ const LeaderboardScreen = () => {
         avgTimeSeconds,
         displayName: firstName,
         college,
+        isPremium: profile.isPremium === true,
       };
     });
 
@@ -298,6 +300,7 @@ const LeaderboardScreen = () => {
                   rank={index + 1}
                   name={entry.displayName}
                   college={entry.college}
+                  isPremium={entry.isPremium}
                   bestPercent={entry.bestPercent}
                   attempts={entry.attemptsCount}
                   avgTime={formatTime(entry.avgTimeSeconds)}
@@ -311,7 +314,7 @@ const LeaderboardScreen = () => {
   );
 };
 
-const LeaderboardRow = ({ rank, name, college, bestPercent, attempts, avgTime }) => {
+const LeaderboardRow = ({ rank, name, college, isPremium, bestPercent, attempts, avgTime }) => {
   const isTop1 = rank === 1;
   const isTop2 = rank === 2;
   const isTop3 = rank === 3;
@@ -343,8 +346,17 @@ const LeaderboardRow = ({ rank, name, college, bestPercent, attempts, avgTime })
           {badgeIcon ? badgeIcon : <span>#{rank}</span>}
         </div>
         <div className="min-w-0">
-          <p className="font-black text-slate-900 dark:text-white truncate">
+          <p className="font-black text-slate-900 dark:text-white truncate flex items-center gap-1.5">
             {name}
+            {isPremium && (
+              <span
+                className="inline-flex items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-500 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-[0.12em]"
+                title="Premium user"
+              >
+                <FaCrown className="mr-0.5" size={8} />
+                PRO
+              </span>
+            )}
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
             {college}
