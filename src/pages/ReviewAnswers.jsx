@@ -79,7 +79,7 @@ const ReviewAnswers = ({ questions, answers, selectedCourse }) => {
                   <span
                     className={`font-medium ${isCorrect ? "text-green-600" : "text-red-500"}`}
                   >
-                    <RenderMathText text={userAnswer} />
+                    <RenderMathText text={userAnswer} courseId={selectedCourse.id} />
                   </span>
                 ) : (
                   <span className="text-gray-400 dark:text-gray-500 italic">Not answered</span>
