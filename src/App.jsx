@@ -12,7 +12,6 @@ import SignUp from "./pages/SignUp";
 import ResetPassword from "./pages/ResetPassword";
 import ConfirmEmailScreen from "./pages/ConfirmEmailScreen";
 import HistoryScreen from "./pages/HistoryScreen.jsx"
-import allCourses from "./courses.js"
 import { supabase } from "./supabaseClient";
 import { withTimeout } from "./utils/withTimeout";
 import ReviewAnswers from "./pages/ReviewAnswers";
@@ -24,6 +23,7 @@ import Profile from "./pages/Profile";
 import { AuthProvider } from "./context/AuthContext";
 import "katex/dist/katex.min.css";
 import LeaderboardScreen from "./pages/LeaderboardScreen";
+import { API_BASE_URL } from "./apiConfig";
 
 function App() {
   const [userProfile, setUserProfile] = useState(null);
@@ -102,8 +102,29 @@ function App() {
 
         setUserProfile(profile);
 
+        // Load available courses from external API for 100-level users
         if (profile.year === "1" || parseInt(profile.year) === 1) {
-          setAvailableCourses(allCourses);
+          try {
+            const params = new URLSearchParams();
+            params.append("level", "100");
+            if (profile.college) {
+              params.append("college", profile.college);
+            }
+
+            const res = await fetch(
+              `${API_BASE_URL}/courses?${params.toString()}`
+            );
+            const data = await res.json();
+            if (!res.ok) {
+              console.error("Courses fetch failed:", data?.msg || res.status);
+              setAvailableCourses([]);
+            } else {
+              setAvailableCourses(Array.isArray(data) ? data : []);
+            }
+          } catch (coursesErr) {
+            console.error("Courses fetch error:", coursesErr);
+            setAvailableCourses([]);
+          }
         } else {
           setAvailableCourses([]);
         }
@@ -186,12 +207,42 @@ function App() {
   }, [isDarkMode])
 
   useEffect(() => {
-    if (selectedCourse && selectedQuestionCount) {
-      let count = selectedQuestionCount === "All" ? selectedCourse.questions.length : selectedQuestionCount;
-      const shuffled = [...selectedCourse.questions].sort(() => 0.5 - Math.random());
-      setQuestions(shuffled.slice(0, count));
-      setAnswers([]);
-    }
+    const loadQuestionsForSelectedCourse = async () => {
+      if (!selectedCourse || !selectedQuestionCount) return;
+
+      try {
+        const endpoint =
+          selectedCourse.questionsEndpoint ||
+          `/courses/${selectedCourse.id}/questions`;
+
+        const res = await fetch(`${API_BASE_URL}${endpoint}`);
+        const data = await res.json();
+
+        if (!res.ok) {
+          console.error(
+            "Failed to load questions for course:",
+            data?.msg || res.status
+          );
+          setQuestions([]);
+          return;
+        }
+
+        const allQuestions = Array.isArray(data) ? data : [];
+        const count =
+          selectedQuestionCount === "All"
+            ? allQuestions.length
+            : Math.min(selectedQuestionCount, allQuestions.length);
+
+        const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
+        setQuestions(shuffled.slice(0, count));
+        setAnswers([]);
+      } catch (err) {
+        console.error("Error fetching course questions:", err);
+        setQuestions([]);
+      }
+    };
+
+    loadQuestionsForSelectedCourse();
   }, [selectedCourse, selectedQuestionCount]);
 
   useEffect(() => {

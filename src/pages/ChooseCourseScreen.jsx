@@ -61,9 +61,9 @@ const ChooseCourseScreen = ({
   const groupOrder = ["general", "departmental", "vocational"];
 
   /* ----------------------------- HELPERS ------------------------------------ */
-  const getAvailableQuestionOptions = questions => {
+  const getAvailableQuestionOptions = questionCount => {
     const options = [30, 50, 70, 100];
-    const filtered = options.filter(opt => (questions?.length || 0) >= opt);
+    const filtered = options.filter(opt => (questionCount || 0) >= opt);
     return [...filtered, "All"];
   };
 
@@ -182,7 +182,7 @@ const ChooseCourseScreen = ({
                                 : "bg-blue-50 dark:bg-blue-900/30 text-blue-600"
                             }`}>
                               <FiBookOpen />
-                              {course.questions?.length || 0} Questions
+                              {course.questionCount || 0} Questions
                             </div>
                           </div>
 
@@ -212,7 +212,7 @@ const ChooseCourseScreen = ({
               <h3 className="text-2xl font-black text-slate-900 dark:text-white">{selectedCourse.name}</h3>
               <p className="text-slate-500 text-sm mt-1 font-medium italic">{selectedCourse.title}</p>
               <div className="grid grid-cols-2 gap-3 mt-8">
-                {getAvailableQuestionOptions(selectedCourse.questions).map(num => {
+              {getAvailableQuestionOptions(selectedCourse.questionCount).map(num => {
                   const isLocked =
                     !isPremium &&
                     num !== 30; // Only 30 questions allowed for free users

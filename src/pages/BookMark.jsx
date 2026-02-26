@@ -4,11 +4,13 @@ import { FaTrashAlt, FaBookmark, FaLightbulb } from "react-icons/fa";
 import { FiArrowLeft, FiTrash2 } from "react-icons/fi";
 import { RenderMathText } from "../utils/RenderMathText";
 import ConfirmOverlay from "../components/ConfirmOverlay"; // Added this import
+import { API_BASE_URL } from "../apiConfig";
 
-const BookMark = ({ bookmarks, courses, setBookmarks }) => {
+const BookMark = ({ bookmarks, setBookmarks }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false); // New state for overlay
+  const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -16,8 +18,43 @@ const BookMark = ({ bookmarks, courses, setBookmarks }) => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const allQuestions = courses.flatMap((course) => course.questions);
-  const bookmarkedQuestions = allQuestions.filter((q) => bookmarks.includes(q.id));
+  // Load full question data for all bookmarked IDs from the external API
+  useEffect(() => {
+    const loadBookmarkedQuestions = async () => {
+      if (!Array.isArray(bookmarks) || bookmarks.length === 0) {
+        setBookmarkedQuestions([]);
+        return;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/courses/questions/by-ids`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ ids: bookmarks }),
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          console.error(
+            "Failed to load bookmarked questions:",
+            data?.msg || res.status
+          );
+          setBookmarkedQuestions([]);
+          return;
+        }
+
+        setBookmarkedQuestions(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Error fetching bookmarked questions:", err);
+        setBookmarkedQuestions([]);
+      }
+    };
+
+    loadBookmarkedQuestions();
+  }, [bookmarks]);
 
   const getCourseFromId = (id) => {
     if (!id) return "";
