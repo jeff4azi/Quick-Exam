@@ -23,6 +23,7 @@ import PremiumPage from "./pages/PremiumPage"
 import Profile from "./pages/Profile";
 import { AuthProvider } from "./context/AuthContext";
 import "katex/dist/katex.min.css";
+import LeaderboardScreen from "./pages/LeaderboardScreen";
 
 function App() {
   const [userProfile, setUserProfile] = useState(null);
@@ -90,8 +91,9 @@ function App() {
 
         if (error) throw error;
 
+        // Profiles table is now the single source of truth for user info
         const profile = {
-          full_name: user.user_metadata?.full_name || "Scholar",
+          full_name: profileData?.full_name || "Scholar",
           college: profileData?.college || "TASUED",
           department: profileData?.department || "General Studies",
           year: profileData?.year?.toString() || "1",
@@ -222,7 +224,8 @@ function App() {
 
       const { full_name, department } = updates || {};
 
-      const currentFullName = userProfile?.full_name || user.user_metadata?.full_name || "";
+      // Names and related user info now live in the profiles table
+      const currentFullName = userProfile?.full_name || "";
       const currentDepartment = userProfile?.department || "";
 
       const nextFullName = full_name ?? currentFullName;
@@ -234,23 +237,13 @@ function App() {
       }
 
       // Update auth metadata for full_name if it changed
-      if (nextFullName !== currentFullName) {
-        const { error: updateUserError } = await withTimeout(
-          supabase.auth.updateUser({
-            data: { full_name: nextFullName },
-          }),
-          15000,
-          "Updating your name took too long. Please try again."
-        );
-        if (updateUserError) throw updateUserError;
-      }
-
-      // Upsert profile fields (department etc.)
+      // Upsert profile fields (name and department) in profiles table
       const { error: upsertError } = await withTimeout(
         supabase
           .from("profiles")
           .upsert({
             id: user.id,
+            full_name: nextFullName || null,
             department: nextDepartment || null,
           }),
         15000,
@@ -323,6 +316,7 @@ function App() {
             <Route path="/choose-course" element={<ProtectedRoute><ChooseCourseScreen {...props} /></ProtectedRoute>} />
             <Route path="/bookmarks" element={<ProtectedRoute><BookMark {...props} /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><HistoryScreen {...props} /></ProtectedRoute>} />
+            <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardScreen /></ProtectedRoute>} />
             <Route
               path="/profile"
               element={

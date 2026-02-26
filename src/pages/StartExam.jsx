@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import BannerAd from "../components/BannerAd";
 
-import { FaCrown } from "react-icons/fa"; // Add this
+import { FaCrown, FaTrophy } from "react-icons/fa"; // Add leaderboard icon
 import { SiTiktok } from "react-icons/si";
 import { FaFacebookF, FaWhatsapp, FaGraduationCap } from "react-icons/fa";
 import { FiBookmark, FiInfo, FiUser, FiLogOut, FiZap, FiAlertTriangle } from "react-icons/fi";
@@ -120,21 +120,6 @@ const StartExam = ({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mt-6">
-            <button onClick={() => navigate("/history")} className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-700 flex flex-col items-center gap-2">
-                <div className="size-10 rounded-xl bg-orange-100 dark:bg-orange-900/30 flex items-center justify-center text-orange-600">
-                    <MdOutlineHistory size={20} />
-                </div>
-                <span className="text-xs font-bold dark:text-slate-300">History</span>
-            </button>
-            <button onClick={() => navigate("/bookmarks")} className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-700 flex flex-col items-center gap-2">
-                <div className="size-10 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-purple-600">
-                    <FiBookmark size={20} />
-                </div>
-                <span className="text-xs font-bold dark:text-slate-300">Saved</span>
-            </button>
-        </div>
-
         <div className="mt-auto mb-32 flex flex-col items-center opacity-40 grayscale">
             <Logo className="size-12" />
             <p className="text-[10px] font-bold tracking-[0.2em] uppercase mt-2 text-slate-400">Quiz Bolt</p>
@@ -208,14 +193,54 @@ const StartExam = ({
         </div>
       </div>
 
-      {/* Floating CTA Button */}
+      {/* Bottom CTA + Navbar */}
       <div className="mx-auto max-w-2xl fixed bottom-0 inset-x-0 p-6 bg-gradient-to-t from-gray-50 via-gray-50/90 to-transparent dark:from-slate-900 dark:via-slate-900/90">
-        <button
+        <div className="space-y-3">
+          <button
             onClick={() => navigate("/choose-course")}
             className="w-full bg-blue-600 dark:bg-blue-700 py-4.5 rounded-2xl font-black text-white text-lg shadow-xl shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all active:scale-95"
-        >
+          >
             Choose Course
-        </button>
+          </button>
+
+          <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-gray-100 dark:border-slate-700 rounded-[1.8rem] px-4 py-2 flex items-center justify-between">
+            {/* History */}
+            <button
+              type="button"
+              onClick={() => navigate("/history")}
+              className="flex flex-col items-center flex-1 text-xs font-semibold text-slate-500 dark:text-slate-300"
+            >
+              <div className="size-9 rounded-2xl flex items-center justify-center mb-1 bg-orange-50 dark:bg-orange-900/30 text-orange-600">
+                <MdOutlineHistory size={18} />
+              </div>
+              <span>History</span>
+            </button>
+
+            {/* Saved */}
+            <button
+              type="button"
+              onClick={() => navigate("/bookmarks")}
+              className="flex flex-col items-center flex-1 text-xs font-semibold text-slate-500 dark:text-slate-300"
+            >
+              <div className="size-9 rounded-2xl flex items-center justify-center mb-1 bg-purple-50 dark:bg-purple-900/30 text-purple-600">
+                <FiBookmark size={18} />
+              </div>
+              <span>Saved</span>
+            </button>
+
+            {/* Leaderboard */}
+            <button
+              type="button"
+              onClick={() => navigate("/leaderboard")}
+              className="flex flex-col items-center flex-1 text-xs font-semibold text-slate-500 dark:text-slate-300"
+            >
+              <div className="size-9 rounded-2xl flex items-center justify-center mb-1 bg-amber-50 dark:bg-amber-900/30 text-amber-500">
+                <FaTrophy size={16} />
+              </div>
+              <span>Leaders</span>
+            </button>
+          </div>
+        </div>
       </div>
       {!isPremium && showAd && (
         <BannerAd onAdClose={() => setShowAd(false)} />

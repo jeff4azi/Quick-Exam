@@ -39,14 +39,30 @@ const SignUpScreen = () => {
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
-        options: { data: { full_name: fullName } } 
       });
 
       if (signUpError) throw signUpError;
 
+      // Store the user's name in the profiles table (single source of truth)
+      if (data?.user) {
+        const { error: profileError } = await supabase
+          .from("profiles")
+          .upsert({
+            id: data.user.id,
+            full_name: fullName,
+          });
+
+        if (profileError) {
+          console.error(
+            "Failed to create/update profile on sign up:",
+            profileError.message
+          );
+        }
+      }
+
       console.log("User signed up:", data);
       // After sign up, guide user to check email for verification
-      navigate("/confirm-email", { state: { email } }); 
+      navigate("/confirm-email", { state: { email } });
     } catch (err) {
       console.error("Sign up error:", err.message);
       setError(err.message);
