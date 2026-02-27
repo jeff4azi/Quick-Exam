@@ -194,16 +194,19 @@ const StartExam = ({
       </div>
 
       {/* Bottom CTA + Navbar */}
-      <div className="mx-auto max-w-2xl fixed bottom-0 inset-x-0 p-6 bg-gradient-to-t from-gray-50 via-gray-50/90 to-transparent dark:from-slate-900 dark:via-slate-900/90">
+      <div className="mx-auto max-w-2xl fixed bottom-0 inset-x-0 bg-gradient-to-t from-gray-50 via-gray-50/90 to-transparent dark:from-slate-900 dark:via-slate-900/90">
         <div className="space-y-3">
-          <button
-            onClick={() => navigate("/choose-course")}
-            className="w-full bg-blue-600 dark:bg-blue-700 py-4.5 rounded-2xl font-black text-white text-lg shadow-xl shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all active:scale-95"
-          >
-            Choose Course
-          </button>
+          <div className="px-6">
+            <button
+              onClick={() => navigate("/choose-course")}
+              className="w-full bg-blue-600 dark:bg-blue-700 py-4.5 rounded-2xl font-black text-white text-lg shadow-xl shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all active:scale-95"
+            >
+              Choose Course
+            </button>
+          </div>
+          
 
-          <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-gray-100 dark:border-slate-700 rounded-[1.8rem] px-4 py-2 flex items-center justify-between">
+          <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-gray-100 dark:border-slate-700 px-4 py-3 flex items-center justify-between">
             {/* History */}
             <button
               type="button"
