@@ -28,22 +28,10 @@ const AD_DATABASE = [
     whatsapp: "2347015585397",
   },
   {
-    type: "video",
-    url: "https://res.cloudinary.com/dxdnhc1hm/video/upload/v1770570959/YouCut_20260208_181126153_vvdvbc.mp4",
-    duration: 10,
-    whatsapp: "2349069306883",
-  },
-  {
     type: "image",
     url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770557375/BackgroundEraser_20260208_141707632_sk6ng9.jpg",
     duration: 5,
     whatsapp: "2348159767554",
-  },
- {
-    type: "video",
-    url: "https://res.cloudinary.com/dxdnhc1hm/video/upload/v1770647493/VID-20260208-WA0078_niavqq.mp4",
-    duration: 10,
-    whatsapp: "2348163186790",
   },
 ];
 

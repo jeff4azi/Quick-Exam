@@ -4,7 +4,6 @@ import { FiArrowLeft } from "react-icons/fi";
 import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
-import allCourses from "../courses";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -22,7 +21,7 @@ const getCurrentWeekStartIso = () => {
   return weekStart.toISOString();
 };
 
-const LeaderboardScreen = () => {
+const LeaderboardScreen = ({ courses }) => {
   const navigate = useNavigate();
   const [attempts, setAttempts] = useState([]);
   const [profiles, setProfiles] = useState({});
@@ -130,12 +129,25 @@ const LeaderboardScreen = () => {
   }, []);
 
   const courseOptions = useMemo(() => {
-    const options = allCourses.map((c) => ({
-      id: c.id,
-      label: c.name,
-    }));
-    return [{ id: "all", label: "All Courses" }, ...options];
-  }, []);
+    if (!Array.isArray(courses) || courses.length === 0) {
+      return [{ id: "all", label: "All Courses" }];
+    }
+
+    const deduped = [];
+    const seen = new Set();
+
+    courses.forEach((c) => {
+      const id = c.id ?? c.course_id;
+      if (!id || seen.has(id)) return;
+      seen.add(id);
+      deduped.push({
+        id,
+        label: c.name || c.title || c.code || "Course",
+      });
+    });
+
+    return [{ id: "all", label: "All Courses" }, ...deduped];
+  }, [courses]);
 
   const leaderboardEntries = useMemo(() => {
     if (!attempts.length) return [];

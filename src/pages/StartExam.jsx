@@ -3,23 +3,16 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import BannerAd from "../components/BannerAd";
 
-import { FaCrown, FaTrophy } from "react-icons/fa"; // Add leaderboard icon
-import { SiTiktok } from "react-icons/si";
-import { FaFacebookF, FaWhatsapp, FaGraduationCap } from "react-icons/fa";
-import { FiBookmark, FiInfo, FiUser, FiLogOut, FiZap, FiAlertTriangle } from "react-icons/fi";
-import { HiOutlineMoon } from "react-icons/hi";
+import { FaCrown, FaTrophy, FaGraduationCap } from "react-icons/fa";
+import { FiBookmark } from "react-icons/fi";
 import { MdOutlineHistory } from 'react-icons/md';
 
 const StartExam = ({
-  isDarkMode,
-  toggleDarkMode,
   userProfile,
   loadingProfile,
   isPremium,
-  handleLogout,
 }) => {
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(false);
 
@@ -34,47 +27,11 @@ const StartExam = ({
   }, [isPremium]);
 
 
-  const toggleMenu = () => setIsMenuOpen(prev => !prev);
-
-  const MenuItem = ({ icon, label, onClick, href, variant = "default" }) => {
-    const content = (
-      <div className={`flex items-center gap-4 w-full p-3.5 rounded-2xl transition-all duration-200 group active:scale-[0.98] ${
-        variant === "danger" ? "hover:bg-red-50 dark:hover:bg-red-900/20" : "hover:bg-gray-100 dark:hover:bg-slate-700/50"
-      }`}>
-        <div className={`text-xl transition-colors ${
-          variant === "danger" ? "text-red-500" : "text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400"
-        }`}>
-          {icon}
-        </div>
-        <span className={`font-medium text-[15px] ${
-          variant === "danger" ? "text-red-600" : "text-slate-700 dark:text-slate-200"
-        }`}>
-          {label}
-        </span>
-      </div>
-    );
-
-    return href ? (
-      <li><a href={href} target="_blank" rel="noopener noreferrer" className="block">{content}</a></li>
-    ) : (
-      <li className="cursor-pointer" onClick={onClick}>{content}</li>
-    );
-  };
-
   return (
     <div className="max-w-2xl mx-auto relative h-[100dvh] flex flex-col bg-gray-50 dark:bg-slate-900 transition-colors duration-500 overflow-hidden">
       
       {/* Top Navigation Bar */}
-      <div className="p-6 flex justify-between items-center z-50">
-        <button
-          onClick={toggleMenu}
-          className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-transform"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="size-6 text-slate-700 dark:text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-
+      <div className="p-6 flex justify-end items-center z-50">
         {/* User Initial Avatar with Premium Crown - navigates to Profile */}
         <button
           type="button"
@@ -121,75 +78,8 @@ const StartExam = ({
         </div>
 
         <div className="mt-auto mb-32 flex flex-col items-center opacity-40 grayscale">
-            <Logo className="size-12" />
-            <p className="text-[10px] font-bold tracking-[0.2em] uppercase mt-2 text-slate-400">Quiz Bolt</p>
-        </div>
-      </div>
-
-      {/* Side Menu Overlay */}
-      <div className={`fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[60] transition-opacity duration-300 ${isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"}`} onClick={toggleMenu} />
-      
-      {/* Side Menu Drawer */}
-      <div className={`fixed top-0 left-0 h-full w-[85%] max-w-[320px] bg-white dark:bg-slate-900 z-[70] shadow-2xl transition-all duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] border-r border-gray-100 dark:border-slate-800 flex flex-col ${isMenuOpen ? "translate-x-0" : "-translate-x-full"}`}>
-        <div className="p-8 flex flex-col h-full">
-          <div className="mb-8 pt-4">
-            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Menu</h2>
-            <div className="h-1.5 w-10 bg-blue-600 rounded-full mt-2" />
-          </div>
-
-          <nav className="flex-grow space-y-6 overflow-y-auto no-scrollbar">
-            {/* Premium CTA Card */}
-            <div className="mb-4">
-              {!isPremium && <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-5 shadow-lg shadow-blue-200 dark:shadow-none relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all" onClick={() => navigate("/premium")}>
-                {/* Decorative background circle */}
-                <div className="absolute -right-4 -top-4 size-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-all" />
-                
-                <div className="flex flex-col gap-3 relative z-10">
-                  <div className="size-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-md">
-                    <FiZap className="text-yellow-300 text-xl animate-pulse" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-black text-lg">Get Premium</h4>
-                    <p className="text-blue-100 text-[11px] leading-relaxed font-medium">Remove ads and unlock a better exam experience.</p>
-                  </div>
-                </div>
-              </div>}
-            </div>
-
-            <div>
-              <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-2">Community</h3>
-              <ul className="space-y-1">
-                <MenuItem icon={<FaWhatsapp className="text-green-500" />} label="WhatsApp Group" href="https://chat.whatsapp.com/FMPmsBbwU9kL6t2vJ6C8qq" />
-                <MenuItem icon={<FaFacebookF className="text-blue-600" />} label="Facebook Page" href="https://www.facebook.com/share/17RabkxuWY/" />
-                <MenuItem icon={<SiTiktok className="dark:text-white text-black" />} label="TikTok" href="https://www.tiktok.com/@codejeffrey18" />
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-2">App</h3>
-              <ul className="space-y-1">
-                <MenuItem icon={<FiInfo />} label="About" onClick={() => navigate("/about-page")} />
-                <MenuItem 
-                  icon={<FiAlertTriangle />} 
-                  label="Report Problem" 
-                  href="https://wa.me/2347015585397?text=Hi%20Quiz%20Bolt%20Support,%20I%20found%20an%20issue..." 
-                />
-                <MenuItem icon={<FiLogOut />} label="Sign Out" onClick={handleLogout} variant="danger" />
-              </ul>
-            </div>
-          </nav>
-
-          <div className="mt-auto pt-6 border-t border-gray-100 dark:border-slate-800">
-            <div className="flex items-center justify-between p-4 bg-gray-50 dark:bg-slate-800/50 rounded-2xl">
-              <div className="flex items-center gap-3">
-                <HiOutlineMoon className="text-xl dark:text-blue-400 text-gray-400" />
-                <span className="font-semibold text-sm dark:text-slate-200">Dark Mode</span>
-              </div>
-              <button onClick={toggleDarkMode} className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${isDarkMode ? 'bg-blue-600' : 'bg-gray-300'}`}>
-                <div className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${isDarkMode ? 'translate-x-6' : ''}`} />
-              </button>
-            </div>
-          </div>
+          <Logo className="size-12" />
+          <p className="text-[10px] font-bold tracking-[0.2em] uppercase mt-2 text-slate-400">Quiz Bolt</p>
         </div>
       </div>
 

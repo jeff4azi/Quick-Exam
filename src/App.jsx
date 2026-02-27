@@ -283,20 +283,11 @@ function App() {
 
       const { full_name, department } = updates || {};
 
-      // Names and related user info now live in the profiles table
-      const currentFullName = userProfile?.full_name || "";
-      const currentDepartment = userProfile?.department || "";
+      // Determine next values, falling back to existing profile data
+      const nextFullName = full_name ?? userProfile?.full_name ?? "";
+      const nextDepartment = department ?? userProfile?.department ?? "";
 
-      const nextFullName = full_name ?? currentFullName;
-      const nextDepartment = department ?? currentDepartment;
-
-      // If nothing actually changed, skip any network calls
-      if (nextFullName === currentFullName && nextDepartment === currentDepartment) {
-        return;
-      }
-
-      // Update auth metadata for full_name if it changed
-      // Upsert profile fields (name and department) in profiles table
+      // Upsert profile fields in profiles table (include other known fields for safety)
       const { error: upsertError } = await withTimeout(
         supabase
           .from("profiles")
@@ -304,6 +295,13 @@ function App() {
             id: user.id,
             full_name: nextFullName || null,
             department: nextDepartment || null,
+            college: userProfile?.college ?? null,
+            year: userProfile?.year ? Number(userProfile.year) : null,
+            is_premium: userProfile?.isPremium ?? null,
+            // Ensure NOT NULL onboarding_complete is always set
+            onboarding_complete: true,
+            // Ensure NOT NULL updated_at is always set
+            updated_at: new Date().toISOString(),
           }),
         15000,
         "Saving your profile took too long. Please try again."
@@ -377,7 +375,7 @@ function App() {
             <Route path="/choose-course" element={<ProtectedRoute><ChooseCourseScreen {...props} /></ProtectedRoute>} />
             <Route path="/bookmarks" element={<ProtectedRoute><BookMark {...props} /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><HistoryScreen {...props} /></ProtectedRoute>} />
-            <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardScreen /></ProtectedRoute>} />
+            <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardScreen courses={availableCourses} /></ProtectedRoute>} />
             <Route
               path="/profile"
               element={
@@ -386,6 +384,9 @@ function App() {
                     userProfile={userProfile}
                     isPremium={isPremium}
                     onUpdateProfile={handleUpdateProfile}
+                    onLogout={handleLogout}
+                    isDarkMode={isDarkMode}
+                    toggleDarkMode={() => setIsDarkMode(prev => !prev)}
                   />
                 </ProtectedRoute>
               }
