@@ -4,6 +4,7 @@ import { FiArrowLeft } from "react-icons/fi";
 import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
+import ProfileSheet from "../components/ProfileSheet";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -28,6 +29,11 @@ const LeaderboardScreen = ({ courses }) => {
   const [selectedCourseId, setSelectedCourseId] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [isSheetOpen, setIsSheetOpen] = useState(false);
+  const [sheetProfile, setSheetProfile] = useState(null);
+  const [sheetStats, setSheetStats] = useState(null);
+  const [sheetIsPremium, setSheetIsPremium] = useState(false);
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
@@ -198,6 +204,7 @@ const LeaderboardScreen = ({ courses }) => {
         ...entry,
         bestPercent: Math.round(entry.bestPercent),
         avgTimeSeconds,
+        fullName,
         displayName: firstName,
         college,
         isPremium: profile.isPremium === true,
@@ -311,25 +318,57 @@ const LeaderboardScreen = ({ courses }) => {
                   key={entry.userId}
                   rank={index + 1}
                   name={entry.displayName}
+                  fullName={entry.fullName}
                   college={entry.college}
                   isPremium={entry.isPremium}
                   bestPercent={entry.bestPercent}
                   attempts={entry.attemptsCount}
                   avgTime={formatTime(entry.avgTimeSeconds)}
+                  onClick={() => {
+                    setSheetProfile({
+                      full_name: entry.fullName,
+                      college: entry.college,
+                    });
+                    setSheetStats({
+                      rank: `#${index + 1}`,
+                      bestScore: `${entry.bestPercent}%`,
+                    });
+                    setSheetIsPremium(entry.isPremium);
+                    setIsSheetOpen(true);
+                  }}
                 />
               ))}
             </div>
           </section>
         )}
       </main>
+
+      <ProfileSheet
+        isOpen={isSheetOpen}
+        onClose={() => setIsSheetOpen(false)}
+        userProfile={sheetProfile}
+        isPremium={sheetIsPremium}
+        stats={sheetStats}
+      />
     </div>
   );
 };
 
-const LeaderboardRow = ({ rank, name, college, isPremium, bestPercent, attempts, avgTime }) => {
+const LeaderboardRow = ({
+  rank,
+  name,
+  fullName,
+  college,
+  isPremium,
+  bestPercent,
+  attempts,
+  avgTime,
+  onClick,
+}) => {
   const isTop1 = rank === 1;
   const isTop2 = rank === 2;
   const isTop3 = rank === 3;
+  const initial = (fullName || name || "S").charAt(0).toUpperCase();
 
   let badgeBg =
     "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200";
@@ -350,12 +389,20 @@ const LeaderboardRow = ({ rank, name, college, isPremium, bestPercent, attempts,
   }
 
   return (
-    <div className="group flex items-center justify-between p-4 rounded-[1.8rem] bg-white dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-slate-200/40 dark:hover:shadow-none transition-all duration-300 active:scale-[0.98]">
+    <div
+      className="group flex items-center justify-between p-4 rounded-[1.8rem] bg-white dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-slate-200/40 dark:hover:shadow-none transition-all duration-300 active:scale-[0.98] cursor-pointer"
+      onClick={onClick}
+    >
       <div className="flex items-center gap-4 min-w-0">
-        <div
-          className={`size-10 rounded-2xl flex items-center justify-center font-black text-sm ${badgeBg}`}
-        >
-          {badgeIcon ? badgeIcon : <span>#{rank}</span>}
+        <div className="flex items-center gap-3">
+          <div
+            className={`size-10 rounded-2xl flex items-center justify-center font-black text-sm ${badgeBg}`}
+          >
+            {badgeIcon ? badgeIcon : <span>#{rank}</span>}
+          </div>
+          <div className="size-9 rounded-2xl bg-blue-600/10 dark:bg-blue-500/20 flex items-center justify-center text-xs font-black text-blue-700 dark:text-blue-200">
+            {initial}
+          </div>
         </div>
         <div className="min-w-0">
           <p className="font-black text-slate-900 dark:text-white truncate flex items-center gap-1.5">
