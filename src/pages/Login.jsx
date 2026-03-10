@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
+import { FcGoogle } from "react-icons/fc";
 import { supabase } from "../supabaseClient";
 
 const LoginScreen = () => {
@@ -38,6 +39,20 @@ const LoginScreen = () => {
       setError(err.message);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    try {
+      await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+    } catch (err) {
+      setError(err.message || "Google sign-in failed. Please try again.");
     }
   };
 
@@ -125,6 +140,25 @@ const LoginScreen = () => {
           >
             <span>{loading ? "Signing In..." : "Sign In"}</span>
             {!loading && <FiArrowRight className="group-hover:translate-x-1 transition-transform" />}
+          </button>
+
+          {/* Or divider */}
+          <div className="flex items-center gap-3 pt-4">
+            <div className="h-px flex-1 bg-gray-200 dark:bg-slate-800" />
+            <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+              OR
+            </span>
+            <div className="h-px flex-1 bg-gray-200 dark:bg-slate-800" />
+          </div>
+
+          {/* Google Sign In */}
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            className="mt-3 w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 py-3.5 rounded-2xl font-semibold text-sm text-slate-700 dark:text-slate-100 shadow-sm hover:bg-gray-50 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-3"
+          >
+            <FcGoogle className="text-lg" />
+            <span>Continue with Google</span>
           </button>
         </form>
 
