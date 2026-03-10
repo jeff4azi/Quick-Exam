@@ -2,13 +2,14 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react"
 import RouteChangeTracker from "./components/RouteChangeTracker";
 import { useState, useEffect } from "react";
-import StartExam from "./pages/StartExam";
+import Home from "./pages/Home.jsx";
 import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
 import ChooseCourseScreen from "./pages/ChooseCourseScreen";
 import OnboardingScreen from "./pages/OnboardingScreen";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import AboutPage from "./pages/AboutPage";
 import ResetPassword from "./pages/ResetPassword";
 import ConfirmEmailScreen from "./pages/ConfirmEmailScreen";
 import HistoryScreen from "./pages/HistoryScreen.jsx"
@@ -368,10 +369,11 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
+            <Route path="/about-page" element={<AboutPage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/confirm-email" element={<ConfirmEmailScreen />} />
             <Route path="/onboarding" element={<OnboardingScreen />} />
-            <Route path="/" element={<ProtectedRoute><StartExam {...props} /></ProtectedRoute>} />
+            <Route path="/" element={<ProtectedRoute><Home {...props} /></ProtectedRoute>} />
             <Route path="/choose-course" element={<ProtectedRoute><ChooseCourseScreen {...props} /></ProtectedRoute>} />
             <Route path="/bookmarks" element={<ProtectedRoute><BookMark {...props} /></ProtectedRoute>} />
             <Route path="/history" element={<ProtectedRoute><HistoryScreen {...props} /></ProtectedRoute>} />

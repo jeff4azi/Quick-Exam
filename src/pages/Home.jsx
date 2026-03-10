@@ -1,0 +1,366 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Logo from "../images/Logo";
+import BannerAd from "../components/BannerAd";
+import ConfirmOverlay from "../components/ConfirmOverlay";
+import { supabase } from "../supabaseClient";
+import { withTimeout } from "../utils/withTimeout";
+
+import { FaCrown, FaTrophy, FaGraduationCap, FaFire } from "react-icons/fa";
+import { FiBookmark, FiStar, FiZap } from "react-icons/fi";
+import { MdOutlineHistory } from "react-icons/md";
+
+const getCurrentWeekStartIso = () => {
+  const now = new Date();
+  const day = now.getDay(); // 0 = Sunday
+  const diff = day;
+  const weekStart = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() - diff,
+    0,
+    0,
+    0,
+    0
+  );
+  return weekStart.toISOString();
+};
+
+const Home = ({ userProfile, loadingProfile, isPremium }) => {
+  const navigate = useNavigate();
+  const [showAd, setShowAd] = useState(false);
+  const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+  const [stats, setStats] = useState({
+    bestScore: "--",
+    position: "--",
+    streak: 0,
+  });
+
+  useEffect(() => {
+    if (isPremium) {
+      setShowAd(false); // force hide if user is premium
+      return;
+    }
+
+    const timer = setTimeout(() => setShowAd(true), 750);
+    return () => clearTimeout(timer);
+  }, [isPremium]);
+
+  // Fetch best score and leaderboard position from Supabase
+  useEffect(() => {
+    const fetchSupabaseStats = async () => {
+      try {
+        const {
+          data: { user },
+          error: userError,
+        } = await withTimeout(
+          supabase.auth.getUser(),
+          15000,
+          "Checking your session took too long."
+        );
+
+        if (userError || !user) {
+          return;
+        }
+
+        const weekStartIso = getCurrentWeekStartIso();
+
+        const { data: attemptsData, error: attemptsError } = await withTimeout(
+          supabase
+            .from("exam_attempts")
+            .select("user_id, score, total_questions, time_taken, date_taken, is_retake")
+            .eq("is_retake", false)
+            .gte("date_taken", weekStartIso),
+          15000,
+          "Loading your stats took too long."
+        );
+
+        if (attemptsError || !attemptsData) {
+          console.error("Failed to load attempts for stats:", attemptsError);
+          return;
+        }
+
+        const attempts = attemptsData || [];
+
+        // Best score for this user (weekly)
+        const myAttempts = attempts.filter(
+          (a) => a.user_id === user.id && a.total_questions
+        );
+        let best = null;
+        myAttempts.forEach((a) => {
+          const pct =
+            (Number(a.score) / Number(a.total_questions || 1)) * 100;
+          if (!Number.isFinite(pct)) return;
+          if (best === null || pct > best) best = pct;
+        });
+
+        // Leaderboard-like aggregation to get position
+        const byUser = new Map();
+        attempts.forEach((a) => {
+          if (!a.user_id || !a.total_questions) return;
+          const pct =
+            (Number(a.score) / Number(a.total_questions || 1)) * 100;
+          if (!Number.isFinite(pct)) return;
+          const existing = byUser.get(a.user_id);
+          if (!existing || pct > existing.bestPercent) {
+            byUser.set(a.user_id, { bestPercent: pct });
+          }
+        });
+
+        const sorted = Array.from(byUser.entries()).sort(
+          (a, b) => b[1].bestPercent - a[1].bestPercent
+        );
+        const idx = sorted.findIndex(([id]) => id === user.id);
+
+        setStats((prev) => ({
+          ...prev,
+          bestScore: best !== null ? `${Math.round(best)}%` : "--",
+          position: idx !== -1 ? `#${idx + 1}` : "--",
+        }));
+      } catch (err) {
+        console.error("Failed to load Supabase stats:", err);
+      }
+    };
+
+    fetchSupabaseStats();
+  }, []);
+
+  // Handle streak entirely via localStorage examHistory
+  useEffect(() => {
+    try {
+      const history =
+        JSON.parse(localStorage.getItem("examHistory") || "[]") || [];
+      if (!Array.isArray(history) || history.length === 0) {
+        setStats((prev) => ({ ...prev, streak: 0 }));
+        return;
+      }
+
+      const dateSet = new Set(
+        history
+          .map((h) => h?.date)
+          .filter(Boolean)
+      );
+
+      let streak = 0;
+      const today = new Date();
+
+      for (let offset = 0; ; offset++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - offset);
+        const key = d.toLocaleDateString("en-US", {
+          month: "short",
+          day: "numeric",
+          year: "numeric",
+        });
+        if (dateSet.has(key)) {
+          streak += 1;
+        } else {
+          break;
+        }
+      }
+
+      setStats((prev) => ({ ...prev, streak }));
+    } catch (err) {
+      console.error("Failed to compute streak from history:", err);
+      setStats((prev) => ({ ...prev, streak: 0 }));
+    }
+  }, []);
+
+  const firstName = loadingProfile
+    ? "Scholar"
+    : userProfile?.full_name?.split(" ")[0] || "Scholar";
+
+  return (
+    <div className="max-w-2xl mx-auto relative min-h-[100dvh] flex flex-col bg-gray-50 dark:bg-slate-900 transition-colors duration-500 overflow-hidden">
+      {/* Top Navigation Bar */}
+      <div className="px-6 pt-4 pb-7 flex items-center justify-between z-50">
+        <div className="flex items-center gap-2">
+          <Logo className="w-12 lg:w-24 h-auto text-slate-800 dark:text-slate-100" />
+          <p className="text-sm font-bold tracking-[0.2em] uppercase mt-2 text-slate-400">
+            Quiz Bolt
+          </p>
+        </div>
+
+        {/* User Initial Avatar with Premium Crown - navigates to Profile */}
+        <button
+          type="button"
+          onClick={() => navigate("/profile")}
+          className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl"
+        >
+          <div className="size-10 rounded-2xl bg-blue-600 flex items-center justify-center text-sm text-white font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all duration-300">
+            {loadingProfile ? "..." : userProfile?.full_name?.charAt(0) || "S"}
+          </div>
+
+          {/* Premium Badge */}
+          {isPremium && (
+            <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+              <FaCrown className="text-[8px] text-white" />
+            </div>
+          )}
+        </button>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 px-6 pb-32 pt-2 flex flex-col gap-6 overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+        {/* Greeting */}
+        <div>
+          <h1 className="mt-1 text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+            Hello, {firstName}!{" "}
+            <span role="img" aria-label="wave">
+              👋
+            </span>
+          </h1>
+          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400 max-w-md">
+            Ready for your next challenge?
+          </p>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-3 gap-3">
+          {[
+            {
+              label: "Best Score",
+              value: stats.bestScore,
+              icon: <FiStar />,
+              color: "text-amber-500",
+              bg: "bg-amber-50 dark:bg-amber-900/20",
+            },
+            {
+              label: "Position",
+              value: stats.position || "--",
+              icon: <FiZap />,
+              color: "text-blue-500",
+              bg: "bg-blue-50 dark:bg-blue-900/20",
+            },
+            {
+              label: "Streak",
+              value: stats.streak || 0,
+              icon: <FaFire />,
+              color: "text-orange-500",
+              bg: "bg-orange-50 dark:bg-orange-900/20",
+            },
+          ].map((stat, index) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-slate-800 p-3 rounded-[1.6rem] border border-gray-100 dark:border-slate-700 flex flex-col items-center text-center"
+            >
+              <div
+                className={`size-8 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center mb-2`}
+              >
+                {stat.icon}
+              </div>
+              <span className="text-lg font-black text-slate-900 dark:text-white leading-none">
+                {stat.value}
+              </span>
+              <span className="text-[10px] font-bold text-slate-400 uppercase mt-1">
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+
+        {/* Premium Call to Action (non-premium users) */}
+        {!isPremium && (
+          <div
+            onClick={() => navigate("/premium")}
+            className="group relative overflow-hidden bg-gradient-to-br from-indigo-600 to-blue-700 p-5 rounded-[2.25rem] shadow-xl shadow-blue-200 dark:shadow-none cursor-pointer active:scale-[0.98] transition-all"
+          >
+            <div className="absolute -right-6 -top-6 size-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors" />
+            <div className="relative z-10 flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <div className="size-11 bg-white/15 rounded-2xl flex items-center justify-center backdrop-blur-md">
+                  <FiZap className="text-yellow-300 text-xl" />
+                </div>
+                <div>
+                  <h4 className="text-white font-black text-lg leading-tight">
+                    Go Premium
+                  </h4>
+                  <p className="text-blue-100 text-[11px] font-medium">
+                    Unlock Unlimited Questions & No Interruptions
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Bottom CTA + Navbar */}
+      <div className="mx-auto max-w-2xl fixed bottom-0 inset-x-0 bg-gradient-to-t from-gray-50 via-gray-50/90 to-transparent dark:from-slate-900 dark:via-slate-900/90">
+        <div className="space-y-3">
+          <div className="px-6">
+            <button
+              onClick={() => navigate("/choose-course")}
+              className="w-full bg-blue-600 dark:bg-blue-700 py-4.5 rounded-2xl font-black text-white text-lg shadow-xl shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all active:scale-95"
+            >
+              Choose Course
+            </button>
+          </div>
+
+          <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-gray-100 dark:border-slate-700 px-4 py-2 flex items-center justify-between">
+            {/* History */}
+            <button
+              type="button"
+              onClick={() => navigate("/history")}
+              className="flex flex-col items-center flex-1 text-xs font-semibold text-slate-500 dark:text-slate-300"
+            >
+              <div className="size-9 rounded-2xl flex items-center justify-center">
+                <MdOutlineHistory size={22} />
+              </div>
+              <span>History</span>
+            </button>
+
+            {/* Saved */}
+            <button
+              type="button"
+              onClick={() => {
+                if (isPremium) {
+                  navigate("/bookmarks");
+                } else {
+                  setPremiumOverlayOpen(true);
+                }
+              }}
+              className={`flex flex-col items-center flex-1 text-xs font-semibold text-slate-500 dark:text-slate-300 ${!isPremium ? "opacity-60 cursor-not-allowed" : ""}`}
+            >
+              <div className="relative size-9 rounded-2xl flex items-center justify-center">
+                <FiBookmark size={20} />
+                {!isPremium && (
+                  <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                    <FaCrown className="text-[8px] text-white" />
+                  </div>
+                )}
+              </div>
+              <span>Saved</span>
+            </button>
+
+            {/* Leaderboard */}
+            <button
+              type="button"
+              onClick={() => navigate("/leaderboard")}
+              className="flex flex-col items-center flex-1 text-xs font-semibold text-slate-500 dark:text-slate-300"
+            >
+              <div className="size-9 rounded-2xl flex items-center justify-center">
+                <FaTrophy size={18} />
+              </div>
+              <span>Leaders</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {!isPremium && showAd && <BannerAd onAdClose={() => setShowAd(false)} />}
+
+      <ConfirmOverlay
+        isOpen={isPremiumOverlayOpen}
+        onClose={() => setPremiumOverlayOpen(false)}
+        onConfirm={() => navigate("/premium")}
+        title="Unlock Premium Features"
+        message="Get Premium to save questions for revision, bookmark during exams, and enjoy an ad-free experience."
+        confirmText="Get Premium"
+        cancelText="Maybe later"
+      />
+    </div>
+  );
+}
+
+export default Home;

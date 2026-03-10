@@ -5,25 +5,13 @@ import { FiX, FiVolume2, FiVolumeX } from "react-icons/fi";
 const AD_DATABASE = [
   {
     type: "image",
-    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770389773/Advertise_Here_20260206_152922_0000_kxlh99.png",
-    duration: 5,
-    whatsapp: "2347015585397",
-  },
-  {
-    type: "image",
     url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770389975/Advertise_Here_20260206_152335_0000_lg0smh.png",
     duration: 5,
     whatsapp: "2347015585397",
   },
   {
     type: "image",
-    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770738898/Advertise_Here_20260210_164652_0001_t8oeiu.png",
-    duration: 5,
-    whatsapp: "2347015585397",
-  },
-  {
-    type: "image",
-    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770738882/Advertise_Here_20260210_163207_0001_e1ihib.png",
+    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1773144280/Advertise_Here_20260206_152922_0000_bns87b.png",
     duration: 5,
     whatsapp: "2347015585397",
   },

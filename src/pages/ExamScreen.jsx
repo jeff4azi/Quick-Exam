@@ -7,7 +7,7 @@ import Timer from "../components/Timer"
 import { FiChevronLeft, FiBookmark, FiSend, FiChevronRight, FiLoader } from "react-icons/fi"
 import { supabase } from "../supabaseClient"
 import { withTimeout } from "../utils/withTimeout"
-
+import { FaCrown } from "react-icons/fa"
 
 const calculateTotalTime = (questionCount, isMath) => {
   const timePer10 = isMath ? 6 * 60 : 3.33 * 60
@@ -35,6 +35,7 @@ const ExamScreen = ({
   setBookmarks,
   hasRetaken,
   questionsLoading,
+  isPremium,
 }) => {
   const isMathCourse = selectedCourse?.id === "MTH101"
   const navigate = useNavigate()
@@ -79,10 +80,12 @@ const ExamScreen = ({
   const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false)
   const [isExitOverlayOpen, setExitOverlayOpen] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
 
   const currentQuestion = shuffledQuestions[currentIndex]
   const selectedOption = answers[currentIndex]
   const isBookmarked = bookmarks.includes(currentQuestion?.id)
+  const isBookmarkLocked = !isPremium
 
   useEffect(() => {
     // 1. Try to restore an in‑progress exam from localStorage
@@ -352,10 +355,15 @@ const ExamScreen = ({
                 {selectedCourse.name}
               </div>
               <button
-                onClick={handleBookmarkClick}
-                className={`p-2 rounded-xl transition-all ${isBookmarked ? "bg-yellow-100 text-yellow-600" : "bg-gray-50 dark:bg-slate-700 text-gray-400"}`}
+                onClick={isBookmarkLocked ? () => setPremiumOverlayOpen(true) : handleBookmarkClick}
+                className={`relative p-2 rounded-xl transition-all ${isBookmarked ? "bg-yellow-100 text-yellow-600" : "bg-gray-50 dark:bg-slate-700 text-gray-400"} ${isBookmarkLocked ? "opacity-60 cursor-not-allowed" : ""}`}
               >
                 <FiBookmark className={`size-5 ${isBookmarked ? "fill-current" : ""}`} />
+                {isBookmarkLocked && (
+                  <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                    <FaCrown className="text-[8px] text-white" />
+                  </div>
+                )}
               </button>
             </div>
 
@@ -457,6 +465,16 @@ const ExamScreen = ({
         confirmText="Quit"
         cancelText="Stay"
         danger={true}
+      />
+
+      <ConfirmOverlay
+        isOpen={isPremiumOverlayOpen}
+        onClose={() => setPremiumOverlayOpen(false)}
+        onConfirm={() => navigate("/premium")}
+        title="Bookmark with Premium"
+        message="Upgrade to Premium to bookmark questions during exams and review them later from your Saved list."
+        confirmText="Upgrade to Premium"
+        cancelText="Not now"
       />
     </div>
   )

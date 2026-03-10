@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  FiChevronLeft,
+  FiArrowLeft,
   FiEdit2,
   FiCheck,
   FiLoader,
@@ -16,6 +16,8 @@ import {
 import { FaCrown, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { SiTiktok } from "react-icons/si";
 import { HiOutlineMoon } from "react-icons/hi";
+import ConfirmOverlay from "../components/ConfirmOverlay";
+import { supabase } from "../supabaseClient";
 
 const Profile = ({
   userProfile,
@@ -28,6 +30,8 @@ const Profile = ({
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDeleteOverlayOpen, setDeleteOverlayOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [formData, setFormData] = useState({
     full_name: userProfile?.full_name || "",
     department: userProfile?.department || "",
@@ -59,18 +63,53 @@ const Profile = ({
     }
   };
 
+  const handleDeleteAccount = async () => {
+    if (isDeleting) return;
+    try {
+      setIsDeleting(true);
+
+      const { data, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+      const user = data?.user;
+
+      if (user?.id) {
+        await supabase.from("profiles").delete().eq("id", user.id);
+      }
+
+      try {
+        localStorage.removeItem("examHistory");
+        localStorage.removeItem("bookmarkedQuestions");
+        localStorage.removeItem("currentExamSession");
+      } catch (err) {
+        console.error("Failed to clear local data on delete:", err);
+      }
+
+      if (onLogout) {
+        await onLogout();
+      } else {
+        await supabase.auth.signOut();
+        navigate("/login");
+      }
+    } catch (err) {
+      console.error("Delete account failed:", err.message);
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex flex-col overflow-hidden relative">
-
       {/* Header */}
-      <div className="p-6 flex items-center justify-between">
+      <div className="px-6 py-4 flex items-center justify-between">
         <button
           onClick={() => navigate(-1)}
           className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-transform"
         >
-          <FiChevronLeft className="size-6 text-slate-700 dark:text-slate-200" />
+          <FiArrowLeft className="size-6 text-slate-700 dark:text-slate-200" />
         </button>
-        <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">My Profile</h2>
+        <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+          My Profile
+        </h2>
         <div className="w-12"></div> {/* Spacer for symmetry */}
       </div>
 
@@ -102,13 +141,17 @@ const Profile = ({
               <div className="size-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600">
                 <FiUser size={20} />
               </div>
-              <label className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">Full Name</label>
+              <label className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
+                Full Name
+              </label>
             </div>
             {isEditing ? (
               <input
                 type="text"
                 value={formData.full_name}
-                onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, full_name: e.target.value })
+                }
                 className="w-full bg-gray-50 dark:bg-slate-900/50 border-none rounded-xl p-3 text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-blue-500 outline-none"
                 placeholder="Enter your name"
               />
@@ -125,13 +168,17 @@ const Profile = ({
               <div className="size-10 rounded-xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600">
                 <FiBookOpen size={20} />
               </div>
-              <label className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">Department</label>
+              <label className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
+                Department
+              </label>
             </div>
             {isEditing ? (
               <input
                 type="text"
                 value={formData.department}
-                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, department: e.target.value })
+                }
                 className="w-full bg-gray-50 dark:bg-slate-900/50 border-none rounded-xl p-3 text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-blue-500 outline-none"
                 placeholder="Enter department"
               />
@@ -149,8 +196,12 @@ const Profile = ({
                 <FiShield size={20} />
               </div>
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">College</p>
-                <p className="text-sm font-bold text-slate-500 dark:text-slate-400">{userProfile?.college || "TASUED"}</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                  College
+                </p>
+                <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
+                  {userProfile?.college || "TASUED"}
+                </p>
               </div>
             </div>
           </div>
@@ -162,7 +213,9 @@ const Profile = ({
                 <FiZap size={20} />
               </div>
               <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Current Level</p>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                  Current Level
+                </p>
                 <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
                   Level {userProfile?.year || "1"}00 Student
                 </p>
@@ -172,7 +225,10 @@ const Profile = ({
 
           {/* Premium & App Section */}
           {!isPremium && (
-            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-5 shadow-lg shadow-blue-200 dark:shadow-none relative overflow-hidden">
+            <div
+              onClick={() => navigate("/premium")}
+              className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-5 shadow-lg shadow-blue-200 dark:shadow-none relative overflow-hidden"
+            >
               <div className="absolute -right-6 -top-6 size-28 bg-white/10 rounded-full blur-2xl" />
               <div className="relative z-10 flex items-center justify-between gap-4">
                 <div className="flex items-center gap-3">
@@ -180,19 +236,14 @@ const Profile = ({
                     <FiZap className="text-yellow-300 text-xl" />
                   </div>
                   <div>
-                    <h4 className="text-white font-black text-lg">Upgrade to Premium</h4>
+                    <h4 className="text-white font-black text-lg">
+                      Go Premium
+                    </h4>
                     <p className="text-blue-100 text-[11px] leading-relaxed font-medium">
-                      Remove ads and unlock a smoother exam experience.
+                      Unlock Unlimited Questions & No Interruptions
                     </p>
                   </div>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => navigate("/premium")}
-                  className="shrink-0 px-4 py-2 rounded-full bg-white/90 text-blue-700 text-xs font-bold uppercase tracking-wide hover:bg-white"
-                >
-                  View Plans
-                </button>
               </div>
             </div>
           )}
@@ -305,6 +356,20 @@ const Profile = ({
                 </span>
               </div>
             </button>
+            <button
+              type="button"
+              onClick={() => setDeleteOverlayOpen(true)}
+              className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
+            >
+              <div className="flex items-center gap-3">
+                <span className="size-9 rounded-2xl bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-600">
+                  <FiAlertTriangle />
+                </span>
+                <span className="text-sm font-semibold text-red-700 dark:text-red-400">
+                  Delete Account
+                </span>
+              </div>
+            </button>
           </div>
 
           {/* Appearance / Dark Mode */}
@@ -351,8 +416,8 @@ const Profile = ({
             isSaving
               ? "bg-green-600/80 cursor-wait"
               : isEditing
-              ? "bg-green-600 hover:bg-green-700 active:scale-95"
-              : "bg-blue-600 hover:bg-blue-700 active:scale-95"
+                ? "bg-green-600 hover:bg-green-700 active:scale-95"
+                : "bg-blue-600 hover:bg-blue-700 active:scale-95"
           }`}
         >
           {isSaving ? (
@@ -364,6 +429,17 @@ const Profile = ({
           )}
         </div>
       </button>
+
+      <ConfirmOverlay
+        isOpen={isDeleteOverlayOpen}
+        onClose={() => setDeleteOverlayOpen(false)}
+        onConfirm={handleDeleteAccount}
+        title="Delete Account?"
+        message="This will remove your profile and exam history from this device. This action cannot be undone."
+        confirmText={isDeleting ? "Deleting..." : "Yes, delete my account"}
+        cancelText="Cancel"
+        danger={true}
+      />
     </div>
   );
 };

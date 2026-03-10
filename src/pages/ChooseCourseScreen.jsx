@@ -9,6 +9,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
+import ConfirmOverlay from "../components/ConfirmOverlay";
 
 const ChooseCourseScreen = ({
   selectedQuestionCount,
@@ -24,6 +25,7 @@ const ChooseCourseScreen = ({
 }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
 
   const userCollege = userProfile?.college;
 
@@ -221,8 +223,13 @@ const ChooseCourseScreen = ({
                   return (
                     <button
                       key={num}
-                      onClick={() => !isLocked && setSelectedQuestionCount(num)}
-                      disabled={isLocked}
+                      onClick={() => {
+                        if (isLocked) {
+                          setPremiumOverlayOpen(true);
+                          return;
+                        }
+                        setSelectedQuestionCount(num);
+                      }}
                       className={`relative py-4 rounded-2xl font-black transition-all ${selectedQuestionCount === num
                           ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
                           : "bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200"
@@ -246,6 +253,16 @@ const ChooseCourseScreen = ({
           </div>
         </div>
       )}
+
+      <ConfirmOverlay
+        isOpen={isPremiumOverlayOpen}
+        onClose={() => setPremiumOverlayOpen(false)}
+        onConfirm={() => navigate("/premium")}
+        title="Unlock Full Exam Access"
+        message="Upgrade to Premium to unlock longer exams and full-question modes for all your courses."
+        confirmText="Get Premium"
+        cancelText="Maybe later"
+      />
     </div>
   );
 };
