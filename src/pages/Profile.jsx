@@ -27,12 +27,15 @@ const Profile = ({
   onLogout,
   isDarkMode,
   toggleDarkMode,
+  autoAdvance,
+  toggleAutoAdvance,
 }) => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [isDeleteOverlayOpen, setDeleteOverlayOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [formData, setFormData] = useState({
     full_name: userProfile?.full_name || "",
     department: userProfile?.department || "",
@@ -382,34 +385,83 @@ const Profile = ({
             </button>
           </div>
 
-          {/* Appearance / Dark Mode */}
-          <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <span className="size-9 rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-blue-300">
-                <HiOutlineMoon className="text-lg" />
-              </span>
-              <div>
-                <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                  Dark Mode
-                </p>
-                <p className="text-[11px] text-slate-400 dark:text-slate-500">
-                  Toggle between light and dark themes.
-                </p>
+          <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm space-y-7">
+            <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">
+              Preferences
+            </h3>
+
+            {/* Dark Mode Toggle */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="size-9 rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-blue-300">
+                  <HiOutlineMoon className="text-lg" />
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                    Dark Mode
+                  </p>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                    Toggle between light and dark themes.
+                  </p>
+                </div>
               </div>
-            </div>
-            <button
-              type="button"
-              onClick={toggleDarkMode}
-              className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
-                isDarkMode ? "bg-blue-600" : "bg-gray-300"
-              }`}
-            >
-              <div
-                className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
-                  isDarkMode ? "translate-x-6" : ""
+              <button
+                type="button"
+                onClick={toggleDarkMode}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
+                  isDarkMode ? "bg-blue-600" : "bg-gray-300"
                 }`}
-              />
-            </button>
+              >
+                <div
+                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                    isDarkMode ? "translate-x-6" : ""
+                  }`}
+                />
+              </button>
+            </div>
+
+            {/* Auto-Advance Toggle */}
+            <div className="flex items-center justify-between relative">
+              <div className="flex items-center gap-3">
+                <span className="size-9 rounded-2xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-amber-600 dark:text-amber-400">
+                  <FiZap className="text-lg" />
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                    Auto-Advance
+                  </p>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                    Automatically go to next question.
+                  </p>
+                </div>
+              </div>
+
+              {/* Toggle Button */}
+              <button
+                type="button"
+                onClick={
+                  isPremium
+                    ? toggleAutoAdvance
+                    : () => setPremiumOverlayOpen(true)
+                }
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
+                  autoAdvance && isPremium ? "bg-blue-600" : "bg-gray-300"
+                } ${!isPremium ? "opacity-60 cursor-not-allowed" : ""}`}
+              >
+                <div
+                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                    autoAdvance && isPremium ? "translate-x-6" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Crown overlay for non-premium users */}
+              {!isPremium && (
+                <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                  <FaCrown className="text-[8px] text-white" />
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -449,6 +501,16 @@ const Profile = ({
         confirmText={isDeleting ? "Deleting..." : "Yes, delete my account"}
         cancelText="Cancel"
         danger={true}
+      />
+
+      <ConfirmOverlay
+        isOpen={isPremiumOverlayOpen}
+        onClose={() => setPremiumOverlayOpen(false)}
+        onConfirm={() => navigate("/premium")}
+        title="Auto-Advance with Premium"
+        message="Upgrade to Premium to control whether questions automatically advance after answering. Give yourself more time to think or speed through your exams!"
+        confirmText="Upgrade to Premium"
+        cancelText="Not now"
       />
     </div>
   );

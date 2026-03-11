@@ -1,27 +1,33 @@
-import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
-import ConfirmOverlay from "../components/ConfirmOverlay"
-import { RenderMathText } from "../utils/RenderMathText"
-import ProgressBar from "../components/ProgressBar"
-import Timer from "../components/Timer"
-import { FiChevronLeft, FiBookmark, FiSend, FiChevronRight, FiLoader } from "react-icons/fi"
-import { supabase } from "../supabaseClient"
-import { withTimeout } from "../utils/withTimeout"
-import { FaCrown } from "react-icons/fa"
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import ConfirmOverlay from "../components/ConfirmOverlay";
+import { RenderMathText } from "../utils/RenderMathText";
+import ProgressBar from "../components/ProgressBar";
+import Timer from "../components/Timer";
+import {
+  FiChevronLeft,
+  FiBookmark,
+  FiSend,
+  FiChevronRight,
+  FiLoader,
+} from "react-icons/fi";
+import { supabase } from "../supabaseClient";
+import { withTimeout } from "../utils/withTimeout";
+import { FaCrown } from "react-icons/fa";
 
 const calculateTotalTime = (questionCount, isMath) => {
-  const timePer10 = isMath ? 6 * 60 : 3.33 * 60
-  return Math.ceil((questionCount / 10) * timePer10)
-}
+  const timePer10 = isMath ? 6 * 60 : 3.33 * 60;
+  return Math.ceil((questionCount / 10) * timePer10);
+};
 
 const shuffleArray = (array) => {
-  const arr = [...array]
+  const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [arr[i], arr[j]] = [arr[j], arr[i]]
+    [arr[i], arr[j]] = [arr[j], arr[i]];
   }
-  return arr
-}
+  return arr;
+};
 
 const EXAM_SESSION_KEY = "currentExamSession";
 
@@ -36,16 +42,17 @@ const ExamScreen = ({
   hasRetaken,
   questionsLoading,
   isPremium,
+  autoAdvance,
 }) => {
-  const isMathCourse = selectedCourse?.id === "MTH101"
-  const navigate = useNavigate()
+  const isMathCourse = selectedCourse?.id === "MTH101";
+  const navigate = useNavigate();
 
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
 
   // Prefer the shuffled list length (restored from localStorage on refresh),
   // but fall back to the raw questions length.
-  const totalQuestions = shuffledQuestions.length || questions.length
-  const initialTotalTime = calculateTotalTime(totalQuestions, isMathCourse)
+  const totalQuestions = shuffledQuestions.length || questions.length;
+  const initialTotalTime = calculateTotalTime(totalQuestions, isMathCourse);
 
   const [currentIndex, setCurrentIndex] = useState(() => {
     try {
@@ -60,7 +67,7 @@ const ExamScreen = ({
       console.error("Failed to restore currentIndex from storage:", err);
     }
     return 0;
-  })
+  });
 
   const [timeLeft, setTimeLeft] = useState(() => {
     try {
@@ -75,17 +82,17 @@ const ExamScreen = ({
       console.error("Failed to restore timeLeft from storage:", err);
     }
     return initialTotalTime;
-  })
-  const [hasSaved, setHasSaved] = useState(false)
-  const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false)
-  const [isExitOverlayOpen, setExitOverlayOpen] = useState(false)
+  });
+  const [hasSaved, setHasSaved] = useState(false);
+  const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false);
+  const [isExitOverlayOpen, setExitOverlayOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
 
-  const currentQuestion = shuffledQuestions[currentIndex]
-  const selectedOption = answers[currentIndex]
-  const isBookmarked = bookmarks.includes(currentQuestion?.id)
-  const isBookmarkLocked = !isPremium
+  const currentQuestion = shuffledQuestions[currentIndex];
+  const selectedOption = answers[currentIndex];
+  const isBookmarked = bookmarks.includes(currentQuestion?.id);
+  const isBookmarkLocked = !isPremium;
 
   useEffect(() => {
     // 1. Try to restore an in‑progress exam from localStorage
@@ -111,7 +118,7 @@ const ExamScreen = ({
 
     // 2. Fresh exam – shuffle options and start a new session
     if (questions.length > 0 && shuffledQuestions.length === 0) {
-      const shuffled = questions.map(q => ({
+      const shuffled = questions.map((q) => ({
         ...q,
         options: shuffleArray([...q.options]),
       }));
@@ -135,7 +142,15 @@ const ExamScreen = ({
     } catch (err) {
       console.error("Failed to persist exam session:", err);
     }
-  }, [answers, currentIndex, timeLeft, shuffledQuestions, selectedCourse, totalQuestions, questions]);
+  }, [
+    answers,
+    currentIndex,
+    timeLeft,
+    shuffledQuestions,
+    selectedCourse,
+    totalQuestions,
+    questions,
+  ]);
 
   const saveResultToSupabase = async (finalTime) => {
     try {
@@ -145,7 +160,7 @@ const ExamScreen = ({
       // Calculate score
       const correctCount = shuffledQuestions.reduce(
         (acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc),
-        0
+        0,
       );
 
       // Insert into Supabase
@@ -159,54 +174,64 @@ const ExamScreen = ({
       });
 
       console.log("Saved to Supabase ✅");
-
     } catch (error) {
       console.error("Error saving attempt:", error.message);
     }
   };
 
   const handleBookmarkClick = () => {
-    setBookmarks(prev => {
+    setBookmarks((prev) => {
       const updated = prev.includes(currentQuestion.id)
-        ? prev.filter(id => id !== currentQuestion.id)
-        : [...prev, currentQuestion.id]
-      localStorage.setItem("bookmarkedQuestions", JSON.stringify(updated))
-      return updated
-    })
-  }
+        ? prev.filter((id) => id !== currentQuestion.id)
+        : [...prev, currentQuestion.id];
+      localStorage.setItem("bookmarkedQuestions", JSON.stringify(updated));
+      return updated;
+    });
+  };
 
   const onOptionClick = (option) => {
     const newAnswers = [...answers];
     newAnswers[currentIndex] = option;
     setAnswers(newAnswers);
 
-    setTimeout(() => {
-      if (currentIndex < totalQuestions - 1) {
-        const nextIndex = currentIndex + 1;
-        setCurrentIndex(nextIndex);
-      } else {
-        setSubmitOverlayOpen(true);
-      }
-    }, 200); // small delay for UX smoothness
+    // Only auto-advance if the preference is enabled
+    if (autoAdvance) {
+      setTimeout(() => {
+        if (currentIndex < totalQuestions - 1) {
+          const nextIndex = currentIndex + 1;
+          setCurrentIndex(nextIndex);
+        } else {
+          setSubmitOverlayOpen(true);
+        }
+      }, 200); // small delay for UX smoothness
+    }
   };
 
   const saveResultToHistory = (finalTime) => {
-    if (hasSaved) return
+    if (hasSaved) return;
     const correctCount = shuffledQuestions.reduce(
       (acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc),
-      0
+      0,
     );
     const newResult = {
       id: Date.now(),
       course: selectedCourse.name,
-      date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      date: new Date().toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }),
       score: correctCount,
       total: totalQuestions,
-      timeTaken: finalTime
-    }
-    const existingHistory = JSON.parse(localStorage.getItem("examHistory")) || []
-    localStorage.setItem("examHistory", JSON.stringify([...existingHistory, newResult]))
-    setHasSaved(true)
+      timeTaken: finalTime,
+    };
+    const existingHistory =
+      JSON.parse(localStorage.getItem("examHistory")) || [];
+    localStorage.setItem(
+      "examHistory",
+      JSON.stringify([...existingHistory, newResult]),
+    );
+    setHasSaved(true);
 
     // Exam is complete – clear any persisted in‑progress state
     try {
@@ -214,7 +239,7 @@ const ExamScreen = ({
     } catch (err) {
       console.error("Failed to clear exam session:", err);
     }
-  }
+  };
 
   const handleSubmit = async () => {
     setSubmitOverlayOpen(false);
@@ -229,7 +254,7 @@ const ExamScreen = ({
       await withTimeout(
         saveResultToSupabase(finalTime),
         15000,
-        "Saving results took too long. They may not have been stored online."
+        "Saving results took too long. They may not have been stored online.",
       );
     } catch (err) {
       console.error("Error while saving to Supabase:", err);
@@ -242,7 +267,7 @@ const ExamScreen = ({
       console.error("Failed to clear exam session on submit:", err);
     }
     navigate("/results");
-  }
+  };
 
   const handleTimeUp = async () => {
     setIsSubmitting(true);
@@ -264,7 +289,7 @@ const ExamScreen = ({
       console.error("Failed to clear exam session on timeout:", err);
     }
     navigate("/results");
-  }
+  };
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
@@ -289,7 +314,6 @@ const ExamScreen = ({
 
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex flex-col">
-
       {/* SUBMITTING LOADING OVERLAY */}
       {isSubmitting && (
         <div className="fixed inset-0 z-[100] bg-gray-50/80 dark:bg-slate-900/80 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-300">
@@ -323,9 +347,14 @@ const ExamScreen = ({
           </button>
 
           <div className="absolute left-1/2 flex flex-col items-center -translate-x-1/2">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-0.5">Progress</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-0.5">
+              Progress
+            </span>
             <div className="font-black text-slate-900 dark:text-white">
-              {currentIndex + 1} <span className="text-slate-400 font-medium">/ {totalQuestions}</span>
+              {currentIndex + 1}{" "}
+              <span className="text-slate-400 font-medium">
+                / {totalQuestions}
+              </span>
             </div>
           </div>
 
@@ -347,18 +376,22 @@ const ExamScreen = ({
       {/* QUESTION CONTENT */}
       <div className="flex-1 px-5 pb-32 pt-4 overflow-y-auto">
         <div className="max-w-2xl mx-auto">
-
           <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-gray-50 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
-
             <div className="flex justify-between items-center mb-4">
               <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">
                 {selectedCourse.name}
               </div>
               <button
-                onClick={isBookmarkLocked ? () => setPremiumOverlayOpen(true) : handleBookmarkClick}
+                onClick={
+                  isBookmarkLocked
+                    ? () => setPremiumOverlayOpen(true)
+                    : handleBookmarkClick
+                }
                 className={`relative p-2 rounded-xl transition-all ${isBookmarked ? "bg-yellow-100 text-yellow-600" : "bg-gray-50 dark:bg-slate-700 text-gray-400"} ${isBookmarkLocked ? "opacity-60 cursor-not-allowed" : ""}`}
               >
-                <FiBookmark className={`size-5 ${isBookmarked ? "fill-current" : ""}`} />
+                <FiBookmark
+                  className={`size-5 ${isBookmarked ? "fill-current" : ""}`}
+                />
                 {isBookmarkLocked && (
                   <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
                     <FaCrown className="text-[8px] text-white" />
@@ -368,7 +401,10 @@ const ExamScreen = ({
             </div>
 
             <div className="lg:text-xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-5">
-              <RenderMathText text={currentQuestion.question} courseId={selectedCourse?.id} />
+              <RenderMathText
+                text={currentQuestion.question}
+                courseId={selectedCourse?.id}
+              />
             </div>
 
             <div className="space-y-4">
@@ -380,22 +416,31 @@ const ExamScreen = ({
                   <button
                     key={index}
                     onClick={() => onOptionClick(option)}
-                    className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${isSelected
+                    className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
+                      isSelected
                         ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
                         : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                      }`}
+                    }`}
                   >
-                    <div className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isSelected
-                        ? "bg-blue-600 text-white"
-                        : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
-                      }`}>
+                    <div
+                      className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                        isSelected
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                      }`}
+                    >
                       {label}
                     </div>
-                    <div className={`text-left font-semibold ${isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}>
-                      <RenderMathText text={option} courseId={selectedCourse?.id} />
+                    <div
+                      className={`text-left font-semibold ${isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
+                    >
+                      <RenderMathText
+                        text={option}
+                        courseId={selectedCourse?.id}
+                      />
                     </div>
                   </button>
-                )
+                );
               })}
             </div>
           </div>
@@ -477,7 +522,7 @@ const ExamScreen = ({
         cancelText="Not now"
       />
     </div>
-  )
-}
+  );
+};
 
-export default ExamScreen
+export default ExamScreen;

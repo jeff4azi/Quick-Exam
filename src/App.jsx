@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { SpeedInsights } from "@vercel/speed-insights/react"
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import RouteChangeTracker from "./components/RouteChangeTracker";
 import { useState, useEffect } from "react";
 import Home from "./pages/Home.jsx";
@@ -12,14 +12,14 @@ import SignUp from "./pages/SignUp";
 import AboutPage from "./pages/AboutPage";
 import ResetPassword from "./pages/ResetPassword";
 import ConfirmEmailScreen from "./pages/ConfirmEmailScreen";
-import HistoryScreen from "./pages/HistoryScreen.jsx"
+import HistoryScreen from "./pages/HistoryScreen.jsx";
 import { supabase } from "./supabaseClient";
 import { withTimeout } from "./utils/withTimeout";
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
 import ReactGA from "react-ga4";
 import ProtectedRoute from "./components/ProtectedRoutes";
-import PremiumPage from "./pages/PremiumPage"
+import PremiumPage from "./pages/PremiumPage";
 import Profile from "./pages/Profile";
 import { AuthProvider } from "./context/AuthContext";
 import "katex/dist/katex.min.css";
@@ -34,12 +34,23 @@ function App() {
   const [hasRetaken, setHasRetaken] = useState(false);
   const [coursesLoading, setCoursesLoading] = useState(false);
 
-  const [answers, setAnswers] = useState([])
-  const [selectedCourse, setSelectedCourse] = useState(null)
+  const [answers, setAnswers] = useState([]);
+  const [selectedCourse, setSelectedCourse] = useState(null);
   const [questions, setQuestions] = useState([]);
-  const [bookmarks, setBookmarks] = useState([])
+  const [bookmarks, setBookmarks] = useState([]);
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    return window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    return (
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+    );
+  });
+  const [autoAdvance, setAutoAdvance] = useState(() => {
+    try {
+      const saved = localStorage.getItem("autoAdvancePreference");
+      return saved !== null ? JSON.parse(saved) : false; // Default to false
+    } catch {
+      return true;
+    }
   });
 
   // FIX: Initialize results logic
@@ -61,15 +72,14 @@ function App() {
     setResults({
       correct: correctCount,
       wrong: questions.length - correctCount,
-      answered: questions.length // This allows navigation to /results
+      answered: questions.length, // This allows navigation to /results
     });
   };
 
   // In App.js
   const handlePremiumActivation = () => {
-    setUserProfile(prev => ({ ...prev, isPremium: true }));
+    setUserProfile((prev) => ({ ...prev, isPremium: true }));
   };
-
 
   useEffect(() => {
     let isInitialLoad = true;
@@ -84,13 +94,9 @@ function App() {
 
       try {
         const { data: profileData, error } = await withTimeout(
-          supabase
-            .from("profiles")
-            .select("*")
-            .eq("id", user.id)
-            .single(),
+          supabase.from("profiles").select("*").eq("id", user.id).single(),
           15000,
-          "Loading your profile took too long. Please try again."
+          "Loading your profile took too long. Please try again.",
         );
 
         if (error) throw error;
@@ -118,7 +124,7 @@ function App() {
             }
 
             const res = await fetch(
-              `${API_BASE_URL}/courses?${params.toString()}`
+              `${API_BASE_URL}/courses?${params.toString()}`,
             );
             const data = await res.json();
             if (!res.ok) {
@@ -136,7 +142,6 @@ function App() {
         } else {
           setAvailableCourses([]);
         }
-
       } catch (err) {
         console.error("Profile fetch error:", err.message);
         // On initial load, fall back to logged-out state.
@@ -162,7 +167,7 @@ function App() {
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         getProfile(session?.user);
-      }
+      },
     );
 
     return () => {
@@ -170,11 +175,9 @@ function App() {
     };
   }, []);
 
-
   useEffect(() => {
-    setHasRetaken(false);   // every time new questions are loaded
+    setHasRetaken(false); // every time new questions are loaded
   }, [questions]);
-
 
   const isPremium = userProfile?.isPremium === true; // only pasing what's needed
 
@@ -208,11 +211,22 @@ function App() {
 
   useEffect(() => {
     if (isDarkMode) {
-      document.documentElement.classList.add("dark")
+      document.documentElement.classList.add("dark");
     } else {
-      document.documentElement.classList.remove("dark")
+      document.documentElement.classList.remove("dark");
     }
-  }, [isDarkMode])
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        "autoAdvancePreference",
+        JSON.stringify(autoAdvance),
+      );
+    } catch (err) {
+      console.error("Failed to save auto-advance preference:", err);
+    }
+  }, [autoAdvance]);
 
   useEffect(() => {
     const loadQuestionsForSelectedCourse = async () => {
@@ -230,7 +244,7 @@ function App() {
         if (!res.ok) {
           console.error(
             "Failed to load questions for course:",
-            data?.msg || res.status
+            data?.msg || res.status,
           );
           setQuestions([]);
           return;
@@ -257,9 +271,9 @@ function App() {
   }, [selectedCourse, selectedQuestionCount]);
 
   useEffect(() => {
-    const saved = localStorage.getItem("bookmarkedQuestions")
-    if (saved) setBookmarks(JSON.parse(saved))
-  }, [])
+    const saved = localStorage.getItem("bookmarkedQuestions");
+    if (saved) setBookmarks(JSON.parse(saved));
+  }, []);
 
   const handleLogout = async () => {
     try {
@@ -269,6 +283,23 @@ function App() {
       setQuestions([]);
       setAnswers([]);
       setResults({ correct: 0, wrong: 0, answered: 0 });
+
+      // Clear all localStorage data except bookmarked questions
+      try {
+        // Save bookmarked questions temporarily
+        const bookmarkedQuestions = localStorage.getItem("bookmarkedQuestions");
+
+        // Clear all localStorage
+        localStorage.clear();
+
+        // Restore bookmarked questions if they existed
+        if (bookmarkedQuestions) {
+          localStorage.setItem("bookmarkedQuestions", bookmarkedQuestions);
+        }
+      } catch (err) {
+        console.error("Failed to clear localStorage on logout:", err);
+      }
+
       window.location.href = "/login";
     } catch (err) {
       console.error("Logout failed:", err.message);
@@ -277,10 +308,13 @@ function App() {
 
   const handleUpdateProfile = async (updates) => {
     try {
-      const { data: { user }, error: userError } = await withTimeout(
+      const {
+        data: { user },
+        error: userError,
+      } = await withTimeout(
         supabase.auth.getUser(),
         15000,
-        "Session check took too long while updating your profile."
+        "Session check took too long while updating your profile.",
       );
       if (userError) throw userError;
 
@@ -292,28 +326,26 @@ function App() {
 
       // Upsert profile fields in profiles table (include other known fields for safety)
       const { error: upsertError } = await withTimeout(
-        supabase
-          .from("profiles")
-          .upsert({
-            id: user.id,
-            full_name: nextFullName || null,
-            department: nextDepartment || null,
-            college: userProfile?.college ?? null,
-            year: userProfile?.year ? Number(userProfile.year) : null,
-            is_premium: userProfile?.isPremium ?? null,
-            // Ensure NOT NULL onboarding_complete is always set
-            onboarding_complete: true,
-            // Ensure NOT NULL updated_at is always set
-            updated_at: new Date().toISOString(),
-          }),
+        supabase.from("profiles").upsert({
+          id: user.id,
+          full_name: nextFullName || null,
+          department: nextDepartment || null,
+          college: userProfile?.college ?? null,
+          year: userProfile?.year ? Number(userProfile.year) : null,
+          is_premium: userProfile?.isPremium ?? null,
+          // Ensure NOT NULL onboarding_complete is always set
+          onboarding_complete: true,
+          // Ensure NOT NULL updated_at is always set
+          updated_at: new Date().toISOString(),
+        }),
         15000,
-        "Saving your profile took too long. Please try again."
+        "Saving your profile took too long. Please try again.",
       );
 
       if (upsertError) throw upsertError;
 
       // Update local React state so UI reflects changes immediately
-      setUserProfile(prev => ({
+      setUserProfile((prev) => ({
         ...prev,
         full_name: nextFullName,
         department: nextDepartment,
@@ -323,7 +355,6 @@ function App() {
       throw err;
     }
   };
-
 
   const props = {
     answers,
@@ -339,7 +370,9 @@ function App() {
     bookmarks,
     setBookmarks,
     isDarkMode,
-    toggleDarkMode: () => setIsDarkMode(prev => !prev),
+    toggleDarkMode: () => setIsDarkMode((prev) => !prev),
+    autoAdvance,
+    toggleAutoAdvance: () => setAutoAdvance((prev) => !prev),
     selectedQuestionCount,
     setSelectedQuestionCount,
     userProfile,
@@ -350,7 +383,7 @@ function App() {
     hasRetaken,
     setHasRetaken,
     questionsLoading,
-  }
+  };
 
   return (
     <Router>
@@ -375,11 +408,46 @@ function App() {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/confirm-email" element={<ConfirmEmailScreen />} />
             <Route path="/onboarding" element={<OnboardingScreen />} />
-            <Route path="/" element={<ProtectedRoute><Home {...props} /></ProtectedRoute>} />
-            <Route path="/choose-course" element={<ProtectedRoute><ChooseCourseScreen {...props} /></ProtectedRoute>} />
-            <Route path="/bookmarks" element={<ProtectedRoute><BookMark {...props} /></ProtectedRoute>} />
-            <Route path="/history" element={<ProtectedRoute><HistoryScreen {...props} /></ProtectedRoute>} />
-            <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardScreen courses={availableCourses} /></ProtectedRoute>} />
+            <Route
+              path="/"
+              element={
+                <ProtectedRoute>
+                  <Home {...props} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/choose-course"
+              element={
+                <ProtectedRoute>
+                  <ChooseCourseScreen {...props} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/bookmarks"
+              element={
+                <ProtectedRoute>
+                  <BookMark {...props} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/history"
+              element={
+                <ProtectedRoute>
+                  <HistoryScreen {...props} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/leaderboard"
+              element={
+                <ProtectedRoute>
+                  <LeaderboardScreen courses={availableCourses} />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/profile"
               element={
@@ -390,18 +458,64 @@ function App() {
                     onUpdateProfile={handleUpdateProfile}
                     onLogout={handleLogout}
                     isDarkMode={isDarkMode}
-                    toggleDarkMode={() => setIsDarkMode(prev => !prev)}
+                    toggleDarkMode={() => setIsDarkMode((prev) => !prev)}
+                    autoAdvance={autoAdvance}
+                    toggleAutoAdvance={() => setAutoAdvance((prev) => !prev)}
                   />
                 </ProtectedRoute>
               }
             />
-            <Route path="/exam" element={<ProtectedRoute stateCheck={questions.length > 0 && selectedCourse}><ExamScreen {...props} /></ProtectedRoute>} />
+            <Route
+              path="/exam"
+              element={
+                <ProtectedRoute
+                  stateCheck={questions.length > 0 && selectedCourse}
+                >
+                  <ExamScreen {...props} />
+                </ProtectedRoute>
+              }
+            />
 
             {/* FIX: Results route checks results.answered, which handleExamSubmit updates */}
-            <Route path="/results" element={<ProtectedRoute stateCheck={results.answered > 0}><ResultScreen {...props} /></ProtectedRoute>} />
-            <Route path="/review-answers" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><ReviewAnswers {...props} /></ProtectedRoute>} />
-            <Route path="/premium" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><PremiumPage {...props} onActivatePremium={handlePremiumActivation} /></ProtectedRoute>} />
-            <Route path="/upload-profile-pic" element={<ProtectedRoute><UploadProfilePic {...props} /></ProtectedRoute>} />
+            <Route
+              path="/results"
+              element={
+                <ProtectedRoute stateCheck={results.answered > 0}>
+                  <ResultScreen {...props} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/review-answers"
+              element={
+                <ProtectedRoute
+                  stateCheck={answers.length > 0 && questions.length > 0}
+                >
+                  <ReviewAnswers {...props} />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/premium"
+              element={
+                <ProtectedRoute
+                  stateCheck={answers.length > 0 && questions.length > 0}
+                >
+                  <PremiumPage
+                    {...props}
+                    onActivatePremium={handlePremiumActivation}
+                  />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/upload-profile-pic"
+              element={
+                <ProtectedRoute>
+                  <UploadProfilePic {...props} />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
         </AuthProvider>
       )}
