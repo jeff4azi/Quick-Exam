@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [profileValid, setProfileValid] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [hasAvatar, setHasAvatar] = useState(false);
 
   // Professional: centralize common auth helpers here so
   // screens like ResetPassword don't talk to Supabase directly.
@@ -16,8 +17,6 @@ export const AuthProvider = ({ children }) => {
     }
 
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      // After user clicks the email link and finishes resetting,
-      // send them back to the login screen.
       redirectTo: `${window.location.origin}/login`,
     });
 
@@ -41,13 +40,15 @@ export const AuthProvider = ({ children }) => {
         if (currentUser) {
           const { data } = await supabase
             .from("profiles")
-            .select("onboarding_complete")
+            .select("onboarding_complete, avatar_url")
             .eq("id", currentUser.id)
             .single();
 
           setProfileValid(!!data?.onboarding_complete);
+          setHasAvatar(!!data?.avatar_url);
         } else {
           setProfileValid(false);
+          setHasAvatar(false);
         }
 
         setLoading(false);
@@ -65,6 +66,7 @@ export const AuthProvider = ({ children }) => {
         user,
         loading,
         profileValid,
+        hasAvatar,
         resetPassword,
       }}
     >

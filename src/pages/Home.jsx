@@ -5,6 +5,7 @@ import BannerAd from "../components/BannerAd";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
+import Avatar from "../components/Avatar";
 
 import { FaCrown, FaTrophy, FaGraduationCap, FaFire } from "react-icons/fa";
 import { FiBookmark, FiStar, FiZap } from "react-icons/fi";
@@ -181,15 +182,23 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
           </p>
         </div>
 
-        {/* User Initial Avatar with Premium Crown - navigates to Profile */}
+        {/* User Avatar with Premium Crown - navigates to Profile */}
         <button
           type="button"
           onClick={() => navigate("/profile")}
           className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl"
         >
-          <div className="size-10 rounded-2xl bg-blue-600 flex items-center justify-center text-sm text-white font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all duration-300">
-            {loadingProfile ? "..." : userProfile?.full_name?.charAt(0) || "S"}
-          </div>
+          {loadingProfile ? (
+            <div className="size-10 rounded-2xl bg-blue-600 flex items-center justify-center text-sm text-white font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all duration-300">
+              ...
+            </div>
+          ) : (
+            <Avatar
+              avatarUrl={userProfile?.avatar_url}
+              size="sm"
+              fallbackText={userProfile?.full_name}
+            />
+          )}
 
           {/* Premium Badge */}
           {isPremium && (

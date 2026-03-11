@@ -18,6 +18,7 @@ import { SiTiktok } from "react-icons/si";
 import { HiOutlineMoon } from "react-icons/hi";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { supabase } from "../supabaseClient";
+import Avatar from "../components/Avatar";
 
 const Profile = ({
   userProfile,
@@ -116,17 +117,27 @@ const Profile = ({
       <div className="flex-1 px-6 overflow-y-auto no-scrollbar pb-32">
         {/* Avatar Section */}
         <div className="flex flex-col items-center mt-4 mb-8">
-          <div className="relative">
-            <div className="size-28 rounded-[2.5rem] bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white text-4xl font-black shadow-2xl shadow-blue-200 dark:shadow-none">
-              {formData.full_name.charAt(0) || "S"}
-            </div>
+          <button
+            type="button"
+            onClick={() => navigate("/upload-profile-pic")}
+            className="relative group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-[2.5rem]"
+          >
+            <Avatar
+              avatarUrl={userProfile?.avatar_url}
+              size="lg"
+              fallbackText={formData.full_name}
+              className="shadow-2xl shadow-blue-200 dark:shadow-none"
+            />
             {isPremium && (
               <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-2xl p-2 border-4 border-gray-50 dark:border-slate-900 shadow-lg">
                 <FaCrown className="text-sm text-white" />
               </div>
             )}
-          </div>
-          <div className="mt-4 text-center">
+            <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white text-[10px] font-bold px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
+              Change photo
+            </span>
+          </button>
+          <div className="mt-6 text-center">
             <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
               {isPremium ? "Premium Scholar" : "Standard Account"}
             </span>

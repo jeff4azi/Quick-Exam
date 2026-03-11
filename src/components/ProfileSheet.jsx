@@ -1,6 +1,7 @@
 import React from "react";
 import { FaCrown, FaTrophy } from "react-icons/fa";
 import { FiX, FiShield, FiZap } from "react-icons/fi";
+import Avatar from "./Avatar";
 
 const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
   if (!isOpen) return null;
@@ -36,9 +37,12 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
           {/* User Info Section */}
           <div className="flex items-center gap-5 mb-8">
             <div className="relative">
-              <div className="size-20 rounded-[2rem] bg-blue-600 flex items-center justify-center text-white text-3xl font-black shadow-xl shadow-blue-200 dark:shadow-none">
-                {userProfile?.full_name?.charAt(0) || "S"}
-              </div>
+              <Avatar
+                avatarUrl={userProfile?.avatar_url}
+                size="md"
+                fallbackText={userProfile?.full_name}
+                className="rounded-[2rem] shadow-xl shadow-blue-200 dark:shadow-none"
+              />
               {isPremium && (
                 <div className="absolute -top-2 -right-2 bg-amber-400 p-2 rounded-2xl border-4 border-gray-50 dark:border-slate-900 shadow-lg">
                   <FaCrown className="text-white text-xs" />

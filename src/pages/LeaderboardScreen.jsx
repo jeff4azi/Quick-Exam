@@ -5,6 +5,7 @@ import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import ProfileSheet from "../components/ProfileSheet";
+import Avatar from "../components/Avatar";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -92,7 +93,7 @@ const LeaderboardScreen = ({ courses }) => {
             await withTimeout(
               supabase
                 .from("profiles")
-                .select("id, full_name, college, is_premium")
+                .select("id, full_name, college, is_premium, avatar_url")
                 .in("id", userIds),
               15000,
               "Loading leaderboard profiles took too long."
@@ -111,6 +112,7 @@ const LeaderboardScreen = ({ courses }) => {
               profileMap[p.id] = {
                 full_name: p.full_name,
                 college: p.college,
+                avatar_url: p.avatar_url,
                 isPremium: p.is_premium === true,
               };
             });
@@ -207,6 +209,7 @@ const LeaderboardScreen = ({ courses }) => {
         fullName,
         displayName: firstName,
         college,
+        avatarUrl: profile.avatar_url || null,
         isPremium: profile.isPremium === true,
       };
     });
@@ -320,6 +323,7 @@ const LeaderboardScreen = ({ courses }) => {
                   name={entry.displayName}
                   fullName={entry.fullName}
                   college={entry.college}
+                  avatarUrl={entry.avatarUrl}
                   isPremium={entry.isPremium}
                   bestPercent={entry.bestPercent}
                   attempts={entry.attemptsCount}
@@ -328,6 +332,7 @@ const LeaderboardScreen = ({ courses }) => {
                     setSheetProfile({
                       full_name: entry.fullName,
                       college: entry.college,
+                      avatar_url: entry.avatarUrl,
                     });
                     setSheetStats({
                       rank: `#${index + 1}`,
@@ -359,6 +364,7 @@ const LeaderboardRow = ({
   name,
   fullName,
   college,
+  avatarUrl,
   isPremium,
   bestPercent,
   attempts,
@@ -368,7 +374,6 @@ const LeaderboardRow = ({
   const isTop1 = rank === 1;
   const isTop2 = rank === 2;
   const isTop3 = rank === 3;
-  const initial = (fullName || name || "S").charAt(0).toUpperCase();
 
   let badgeBg =
     "bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200";
@@ -400,9 +405,11 @@ const LeaderboardRow = ({
           >
             {badgeIcon ? badgeIcon : <span>#{rank}</span>}
           </div>
-          <div className="size-9 rounded-2xl bg-blue-600/10 dark:bg-blue-500/20 flex items-center justify-center text-xs font-black text-blue-700 dark:text-blue-200">
-            {initial}
-          </div>
+          <Avatar
+            avatarUrl={avatarUrl}
+            size="sm"
+            fallbackText={fullName || name}
+          />
         </div>
         <div className="min-w-0">
           <p className="font-black text-slate-900 dark:text-white truncate flex items-center gap-1.5">

@@ -25,6 +25,7 @@ import { AuthProvider } from "./context/AuthContext";
 import "katex/dist/katex.min.css";
 import LeaderboardScreen from "./pages/LeaderboardScreen";
 import { API_BASE_URL } from "./apiConfig";
+import UploadProfilePic from "./pages/UploadProfilePic";
 
 function App() {
   const [userProfile, setUserProfile] = useState(null);
@@ -101,6 +102,7 @@ function App() {
           department: profileData?.department || "General Studies",
           year: profileData?.year?.toString() || "1",
           isPremium: profileData?.is_premium === true,
+          avatar_url: profileData?.avatar_url || null,
         };
 
         setUserProfile(profile);
@@ -399,6 +401,7 @@ function App() {
             <Route path="/results" element={<ProtectedRoute stateCheck={results.answered > 0}><ResultScreen {...props} /></ProtectedRoute>} />
             <Route path="/review-answers" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><ReviewAnswers {...props} /></ProtectedRoute>} />
             <Route path="/premium" element={<ProtectedRoute stateCheck={answers.length > 0 && questions.length > 0}><PremiumPage {...props} onActivatePremium={handlePremiumActivation} /></ProtectedRoute>} />
+            <Route path="/upload-profile-pic" element={<ProtectedRoute><UploadProfilePic {...props} /></ProtectedRoute>} />
           </Routes>
         </AuthProvider>
       )}

@@ -4,7 +4,7 @@ import { useAuth } from "../context/AuthContext";
 
 
 const ProtectedRoute = ({ children, stateCheck = true }) => {
-  const { user, loading, profileValid } = useAuth();
+  const { user, loading, profileValid, hasAvatar } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -47,6 +47,21 @@ const ProtectedRoute = ({ children, stateCheck = true }) => {
   
   if (stateCheck && !profileValid) {
     return <Navigate to="/onboarding" replace />;
+  }
+
+  // Force avatar upload before accessing main app, except on upload screen itself
+  if (
+    user &&
+    profileValid &&
+    !hasAvatar &&
+    location.pathname !== "/upload-profile-pic"
+  ) {
+    const skip =
+      typeof window !== "undefined" &&
+      localStorage.getItem("skipAvatar") === "true";
+    if (!skip) {
+      return <Navigate to="/upload-profile-pic" replace />;
+    }
   }
 
   return children;
