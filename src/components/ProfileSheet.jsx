@@ -45,7 +45,7 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
                   console.log("Avatar URL:", userProfile?.avatar_url);
                   setIsImageOverlayOpen(true);
                 }}
-                className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-[2rem] transition-transform active:scale-95"
+                className="pl-4 pr-2 scale-150 relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-[2rem] transition-transform active:scale-95"
               >
                 <Avatar
                   avatarUrl={userProfile?.avatar_url}
