@@ -6,10 +6,10 @@ export const RenderMathText = ({ text, courseId }) => {
   // Only render math for math/physics courses
   if (
     typeof courseId !== "string" ||
-    (!courseId.toUpperCase().startsWith("MTH101") &&
-      !courseId.toUpperCase().startsWith("PHY101") &&
-      !courseId.toUpperCase().startsWith("CSM111") &&
-      !courseId.toUpperCase().startsWith("CSC113"))
+    (!courseId.toUpperCase().startsWith("MTH") &&
+      !courseId.toUpperCase().startsWith("PHY") &&
+      !courseId.toUpperCase().startsWith("CSM") &&
+      !courseId.toUpperCase().startsWith("CSC"))
   ) {
     return <span>{text}</span>;
   }
