@@ -22,7 +22,7 @@ const getCurrentWeekStartIso = () => {
     0,
     0,
     0,
-    0
+    0,
   );
   return weekStart.toISOString();
 };
@@ -57,7 +57,7 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
         } = await withTimeout(
           supabase.auth.getUser(),
           15000,
-          "Checking your session took too long."
+          "Checking your session took too long.",
         );
 
         if (userError || !user) {
@@ -69,11 +69,13 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
         const { data: attemptsData, error: attemptsError } = await withTimeout(
           supabase
             .from("exam_attempts")
-            .select("user_id, score, total_questions, time_taken, date_taken, is_retake")
+            .select(
+              "user_id, score, total_questions, time_taken, date_taken, is_retake",
+            )
             .eq("is_retake", false)
             .gte("date_taken", weekStartIso),
           15000,
-          "Loading your stats took too long."
+          "Loading your stats took too long.",
         );
 
         if (attemptsError || !attemptsData) {
@@ -85,12 +87,11 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
 
         // Best score for this user (weekly)
         const myAttempts = attempts.filter(
-          (a) => a.user_id === user.id && a.total_questions
+          (a) => a.user_id === user.id && a.total_questions,
         );
         let best = null;
         myAttempts.forEach((a) => {
-          const pct =
-            (Number(a.score) / Number(a.total_questions || 1)) * 100;
+          const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
           if (!Number.isFinite(pct)) return;
           if (best === null || pct > best) best = pct;
         });
@@ -99,8 +100,7 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
         const byUser = new Map();
         attempts.forEach((a) => {
           if (!a.user_id || !a.total_questions) return;
-          const pct =
-            (Number(a.score) / Number(a.total_questions || 1)) * 100;
+          const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
           if (!Number.isFinite(pct)) return;
           const existing = byUser.get(a.user_id);
           if (!existing || pct > existing.bestPercent) {
@@ -109,7 +109,7 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
         });
 
         const sorted = Array.from(byUser.entries()).sort(
-          (a, b) => b[1].bestPercent - a[1].bestPercent
+          (a, b) => b[1].bestPercent - a[1].bestPercent,
         );
         const idx = sorted.findIndex(([id]) => id === user.id);
 
@@ -136,11 +136,7 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
         return;
       }
 
-      const dateSet = new Set(
-        history
-          .map((h) => h?.date)
-          .filter(Boolean)
-      );
+      const dateSet = new Set(history.map((h) => h?.date).filter(Boolean));
 
       let streak = 0;
       const today = new Date();
@@ -193,11 +189,7 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
               ...
             </div>
           ) : (
-            <Avatar
-              avatarUrl={userProfile?.avatar_url}
-              size="sm"
-              fallbackText={userProfile?.full_name}
-            />
+            <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
           )}
 
           {/* Premium Badge */}
@@ -370,6 +362,6 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
       />
     </div>
   );
-}
+};
 
 export default Home;

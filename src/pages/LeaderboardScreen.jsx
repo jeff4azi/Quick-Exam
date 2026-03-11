@@ -18,7 +18,7 @@ const getCurrentWeekStartIso = () => {
     0,
     0,
     0,
-    0
+    0,
   );
   return weekStart.toISOString();
 };
@@ -58,19 +58,19 @@ const LeaderboardScreen = ({ courses }) => {
               time_taken,
               date_taken,
               is_retake
-            `
+            `,
             )
             .eq("is_retake", false)
             .gte("date_taken", weekStartIso),
           15000,
-          "Loading leaderboard took too long. Please try again."
+          "Loading leaderboard took too long. Please try again.",
         );
 
         if (attemptsError) {
           console.error(
             "Failed to fetch leaderboard attempts:",
             attemptsError.message,
-            attemptsError.details
+            attemptsError.details,
           );
           // Gracefully fall back to empty leaderboard instead of hard error
           setAttempts([]);
@@ -83,9 +83,9 @@ const LeaderboardScreen = ({ courses }) => {
 
         setAttempts(safeAttempts);
 
-        // Fetch profile data (full_name + college + premium) for all users in these attempts
+        // Fetch profile data (full_name + year + premium) for all users in these attempts
         const userIds = Array.from(
-          new Set(safeAttempts.map((a) => a.user_id).filter(Boolean))
+          new Set(safeAttempts.map((a) => a.user_id).filter(Boolean)),
         );
 
         if (userIds.length > 0) {
@@ -93,17 +93,17 @@ const LeaderboardScreen = ({ courses }) => {
             await withTimeout(
               supabase
                 .from("profiles")
-                .select("id, full_name, college, is_premium, avatar_url")
+                .select("id, full_name, year, college, is_premium, avatar_url")
                 .in("id", userIds),
               15000,
-              "Loading leaderboard profiles took too long."
+              "Loading leaderboard profiles took too long.",
             );
 
           if (profilesError) {
             console.error(
               "Failed to fetch leaderboard profiles:",
               profilesError.message,
-              profilesError.details
+              profilesError.details,
             );
             setProfiles({});
           } else {
@@ -111,6 +111,7 @@ const LeaderboardScreen = ({ courses }) => {
             (profilesData || []).forEach((p) => {
               profileMap[p.id] = {
                 full_name: p.full_name,
+                year: p.year,
                 college: p.college,
                 avatar_url: p.avatar_url,
                 isPremium: p.is_premium === true,
@@ -124,7 +125,7 @@ const LeaderboardScreen = ({ courses }) => {
       } catch (err) {
         console.error("Leaderboard fetch error:", err.message);
         setError(
-          "We couldn’t load the leaderboard right now. Please try again shortly."
+          "We couldn’t load the leaderboard right now. Please try again shortly.",
         );
         setAttempts([]);
         setProfiles({});
@@ -200,7 +201,7 @@ const LeaderboardScreen = ({ courses }) => {
       const profile = profiles[entry.userId] || {};
       const fullName = profile.full_name || "Scholar";
       const firstName = fullName.split(" ")[0] || fullName;
-      const college = profile.college || "TASUED";
+      const year = profile.year || "1";
 
       return {
         ...entry,
@@ -208,7 +209,7 @@ const LeaderboardScreen = ({ courses }) => {
         avgTimeSeconds,
         fullName,
         displayName: firstName,
-        college,
+        year,
         avatarUrl: profile.avatar_url || null,
         isPremium: profile.isPremium === true,
       };
@@ -322,16 +323,17 @@ const LeaderboardScreen = ({ courses }) => {
                   rank={index + 1}
                   name={entry.displayName}
                   fullName={entry.fullName}
-                  college={entry.college}
+                  year={entry.year}
                   avatarUrl={entry.avatarUrl}
                   isPremium={entry.isPremium}
                   bestPercent={entry.bestPercent}
                   attempts={entry.attemptsCount}
                   avgTime={formatTime(entry.avgTimeSeconds)}
                   onClick={() => {
+                    const profile = profiles[entry.userId] || {};
                     setSheetProfile({
                       full_name: entry.fullName,
-                      college: entry.college,
+                      college: profile.college || "TASUED",
                       avatar_url: entry.avatarUrl,
                     });
                     setSheetStats({
@@ -362,8 +364,7 @@ const LeaderboardScreen = ({ courses }) => {
 const LeaderboardRow = ({
   rank,
   name,
-  fullName,
-  college,
+  year,
   avatarUrl,
   isPremium,
   bestPercent,
@@ -405,11 +406,7 @@ const LeaderboardRow = ({
           >
             {badgeIcon ? badgeIcon : <span>#{rank}</span>}
           </div>
-          <Avatar
-            avatarUrl={avatarUrl}
-            size="sm"
-            fallbackText={fullName || name}
-          />
+          <Avatar avatarUrl={avatarUrl} size="sm" lazy={true} />
         </div>
         <div className="min-w-0">
           <p className="font-black text-slate-900 dark:text-white truncate flex items-center gap-1.5">
@@ -425,7 +422,7 @@ const LeaderboardRow = ({
             )}
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
-            {college}
+            {year}00 Level
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
             Best: {bestPercent}% • Attempts: {attempts}
@@ -446,4 +443,3 @@ const LeaderboardRow = ({
 };
 
 export default LeaderboardScreen;
-

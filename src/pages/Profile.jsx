@@ -125,7 +125,6 @@ const Profile = ({
             <Avatar
               avatarUrl={userProfile?.avatar_url}
               size="lg"
-              fallbackText={formData.full_name}
               className="shadow-2xl shadow-blue-200 dark:shadow-none"
             />
             {isPremium && (

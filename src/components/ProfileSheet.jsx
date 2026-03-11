@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaCrown, FaTrophy } from "react-icons/fa";
 import { FiX, FiShield, FiZap } from "react-icons/fi";
 import Avatar from "./Avatar";
 
 const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
+  const [isImageOverlayOpen, setIsImageOverlayOpen] = useState(false);
+
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 z-[100] flex flex-col justify-end">
@@ -33,21 +35,29 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
           </button>
         </div>
 
-        <div className="px-8 pb-12 overflow-y-auto max-h-[80vh]">
+        <div className="px-8 pb-12 max-h-[80vh]">
           {/* User Info Section */}
           <div className="flex items-center gap-5 mb-8">
             <div className="relative">
-              <Avatar
-                avatarUrl={userProfile?.avatar_url}
-                size="md"
-                fallbackText={userProfile?.full_name}
-                className="rounded-[2rem] shadow-xl shadow-blue-200 dark:shadow-none"
-              />
-              {isPremium && (
-                <div className="absolute -top-2 -right-2 bg-amber-400 p-2 rounded-2xl border-4 border-gray-50 dark:border-slate-900 shadow-lg">
-                  <FaCrown className="text-white text-xs" />
-                </div>
-              )}
+              <button
+                onClick={() => {
+                  console.log("Avatar clicked, opening overlay");
+                  console.log("Avatar URL:", userProfile?.avatar_url);
+                  setIsImageOverlayOpen(true);
+                }}
+                className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-[2rem] transition-transform active:scale-95"
+              >
+                <Avatar
+                  avatarUrl={userProfile?.avatar_url}
+                  size="md"
+                  className="rounded-[2rem] shadow-xl shadow-blue-200 dark:shadow-none"
+                />
+                {isPremium && (
+                  <div className="absolute -top-2 -right-2 bg-amber-400 p-1 rounded-2xl border-3 border-gray-50 dark:border-slate-900 shadow-lg">
+                    <FaCrown className="text-white text-xs" />
+                  </div>
+                )}
+              </button>
             </div>
             <div>
               <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-tight">
@@ -79,9 +89,7 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
             </div>
             <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
               <FiZap className="mx-auto text-amber-500 mb-1" />
-              <p className="text-xs font-bold text-slate-400 uppercase">
-                Best
-              </p>
+              <p className="text-xs font-bold text-slate-400 uppercase">Best</p>
               <p className="font-black text-slate-900 dark:text-white">
                 {stats?.bestScore || "0%"}
               </p>
@@ -89,6 +97,41 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
           </div>
         </div>
       </div>
+
+      {/* Full Image Overlay */}
+      {isImageOverlayOpen && (
+        <div
+          className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-in fade-in duration-300"
+          onClick={() => {
+            console.log("Overlay backdrop clicked, closing");
+            setIsImageOverlayOpen(false);
+          }}
+        >
+          <div className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center">
+            <img
+              src={
+                userProfile?.avatar_url && userProfile.avatar_url !== "NULL"
+                  ? userProfile.avatar_url
+                  : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+              }
+              alt={`${userProfile?.full_name || "User"}'s profile picture`}
+              className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl"
+              onClick={(e) => e.stopPropagation()}
+              onError={(e) => {
+                console.log("Image load error:", userProfile?.avatar_url);
+                e.target.src =
+                  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+              }}
+            />
+            <button
+              onClick={() => setIsImageOverlayOpen(false)}
+              className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/30 transition-colors"
+            >
+              <FiX size={24} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

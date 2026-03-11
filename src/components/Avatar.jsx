@@ -1,9 +1,13 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+
+// URL to use when no picture is supplied by the user
+export const DEFAULT_AVATAR_URL =
+  "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
 
 const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
 const sizeMap = {
-  sm: { w: 40, h: 40 },
+  sm: { w: 50, h: 50 },
   md: { w: 100, h: 100 },
   lg: { w: 400, h: 400 },
 };
@@ -32,44 +36,37 @@ const Avatar = ({
   avatarUrl,
   size = "sm",
   alt = "User avatar",
-  fallbackText = "",
   className = "",
+  lazy = false, // only leaderboard should load lazily
 }) => {
-  const transformedUrl = buildTransformedUrl(avatarUrl, size);
-  const initial =
-    fallbackText?.trim()?.charAt(0)?.toUpperCase() || "S";
+  // ensure we always have a URL to display and update when prop changes
+  const [imgSrc, setImgSrc] = useState(avatarUrl || DEFAULT_AVATAR_URL);
 
-  if (!transformedUrl) {
-    return (
-      <div
-        className={`rounded-full bg-blue-600 flex items-center justify-center text-white font-black ${
-          size === "lg"
-            ? "w-24 h-24 text-4xl"
-            : size === "md"
-            ? "w-14 h-14 text-xl"
-            : "w-10 h-10 text-sm"
-        } ${className}`}
-      >
-        {initial}
-      </div>
-    );
-  }
+  useEffect(() => {
+    setImgSrc(avatarUrl || DEFAULT_AVATAR_URL);
+  }, [avatarUrl]);
+
+  const transformedUrl = buildTransformedUrl(imgSrc, size) || imgSrc;
+
+  const handleError = () => {
+    if (imgSrc !== DEFAULT_AVATAR_URL) {
+      setImgSrc(DEFAULT_AVATAR_URL);
+    }
+  };
 
   return (
+    <div className={`rounded-full overflow-hidden ${className}`}>
     <img
       src={transformedUrl}
       alt={alt}
-      loading="lazy"
-      className={`rounded-full object-cover ${
-        size === "lg"
-          ? "w-24 h-24"
-          : size === "md"
-          ? "w-14 h-14"
-          : "w-10 h-10"
+      loading={lazy ? "lazy" : "eager"}
+      onError={handleError}
+      className={`object-cover ${
+        size === "lg" ? "w-24 h-24" : size === "md" ? "w-14 h-14" : "w-10 h-10"
       } ${className}`}
-    />
+  />
+    </div>
   );
 };
 
 export default Avatar;
-

@@ -10,29 +10,29 @@ import {
 import imageCompression from "browser-image-compression";
 import { supabase } from "../supabaseClient";
 
-// Helper to create initials if no image exists
-const getInitials = (name) => {
-  if (!name) return "S";
-  const names = name.split(" ");
-  if (names.length >= 2) return `${names[0][0]}${names[1][0]}`.toUpperCase();
-  return names[0][0].toUpperCase();
-};
-
 const CLOUDINARY_CLOUD_NAME =
   import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dxdnhc1hm";
 const CLOUDINARY_UPLOAD_PRESET = "profile_pictures";
 
-const UploadProfilePic = ({ userProfile }) => {
+// Validate Cloudinary configuration
+const validateCloudinaryConfig = () => {
+  if (!CLOUDINARY_CLOUD_NAME) {
+    throw new Error("Cloudinary cloud name is not configured");
+  }
+  if (!CLOUDINARY_UPLOAD_PRESET) {
+    throw new Error("Cloudinary upload preset is not configured");
+  }
+};
+
+const UploadProfilePic = ({ userProfile, setUserProfile }) => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
-  // States
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(userProfile?.avatar_url || null);
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
 
-  // Handle file selection from input
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
     if (!selectedFile) return;
@@ -46,90 +46,163 @@ const UploadProfilePic = ({ userProfile }) => {
       return;
     }
 
-    if (selectedFile.size > 5 * 1024 * 1024) {
-      setStatus({
-        type: "error",
-        message: "Image must be smaller than 5MB.",
-      });
-      return;
-    }
-
     setFile(selectedFile);
     setPreviewUrl(URL.createObjectURL(selectedFile));
     setStatus({ type: "", message: "" });
   };
 
-  // Trigger the hidden file input
-  const triggerFileInput = () => {
-    fileInputRef.current.click();
-  };
+  const triggerFileInput = () => fileInputRef.current.click();
 
-  // Upload logic: compress then upload to Cloudinary, then persist URL in Supabase
+  // Upload new profile picture
   const handleSave = async () => {
     if (!file) return;
 
     setUploading(true);
-    setStatus({ type: "info", message: "Optimizing and uploading your picture..." });
+    setStatus({ type: "info", message: "Optimizing and uploading..." });
 
     try {
-      // 1. Compress image
+      // Validate Cloudinary configuration first
+      validateCloudinaryConfig();
+
+      // 1️⃣ Get current user
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+      if (userError || !user) throw new Error("Could not get user.");
+
+      // 2️⃣ Compress image
+      console.log("Compressing image...");
       const compressed = await imageCompression(file, {
         maxSizeMB: 1,
         maxWidthOrHeight: 1024,
         useWebWorker: true,
       });
+      console.log("Image compressed successfully");
 
-      // 2. Prepare Cloudinary upload
+      // 3️⃣ Upload to Cloudinary as new image (no override)
+      const timestamp = Date.now();
+      const randomId = Math.random().toString(36).substring(2, 9);
+      const uniquePublicId = `profile_pictures/${user.id}_${timestamp}_${randomId}`;
+
       const formData = new FormData();
       formData.append("file", compressed);
       formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      formData.append("public_id", uniquePublicId);
 
       const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+      console.log("Uploading to Cloudinary...", {
+        cloudName: CLOUDINARY_CLOUD_NAME,
+        preset: CLOUDINARY_UPLOAD_PRESET,
+        publicId: uniquePublicId,
+      });
+
       const cloudRes = await fetch(uploadUrl, {
         method: "POST",
         body: formData,
       });
 
-      if (!cloudRes.ok) {
-        throw new Error("Failed to upload image to Cloudinary.");
-      }
-
       const cloudJson = await cloudRes.json();
-      const secureUrl = cloudJson.secure_url;
-      if (!secureUrl) {
-        throw new Error("Cloudinary did not return a secure URL.");
+
+      if (!cloudRes.ok) {
+        console.error("Cloudinary error response:", cloudJson);
+        throw new Error(
+          cloudJson.error?.message ||
+            `Cloudinary upload failed: ${cloudRes.status}`,
+        );
       }
 
-      // 3. Get current Supabase user id
+      console.log("Cloudinary upload successful:", cloudJson);
+
+      // 4️⃣ Update Supabase
+      console.log("Updating Supabase profile...");
+      const { error: updateError } = await supabase
+        .from("profiles")
+        .update({
+          avatar_url: cloudJson.secure_url,
+          avatar_public_id: cloudJson.public_id,
+        })
+        .eq("id", user.id);
+      if (updateError) {
+        console.error("Supabase update error:", updateError);
+        throw new Error("Failed to update profile in database");
+      }
+      console.log("Profile updated successfully");
+
+      // 5️⃣ Update UI & status
+      setStatus({ type: "success", message: "Profile updated!" });
+      setPreviewUrl(cloudJson.secure_url);
+      setFile(null);
+
+      // Update local user profile state to reflect changes immediately
+      if (setUserProfile && userProfile) {
+        setUserProfile({
+          ...userProfile,
+          avatar_url: cloudJson.secure_url,
+          avatar_public_id: cloudJson.public_id,
+        });
+      }
+
+      setTimeout(() => navigate("/"), 1000);
+    } catch (error) {
+      console.error("Upload error:", error);
+      let errorMessage = "Upload failed.";
+
+      if (error.message.includes("Cloudinary")) {
+        errorMessage = "Image upload service error. Please try again.";
+      } else if (
+        error.message.includes("network") ||
+        error.message.includes("fetch")
+      ) {
+        errorMessage = "Network error. Please check your connection.";
+      } else if (error.message.includes("database")) {
+        errorMessage = "Database error. Please try again.";
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
+
+      setStatus({ type: "error", message: errorMessage });
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Remove current photo
+  const handleRemovePhoto = async () => {
+    setUploading(true);
+
+    try {
+      // 1️⃣ Get current user
       const {
         data: { user },
         error: userError,
       } = await supabase.auth.getUser();
-      if (userError || !user) {
-        throw new Error("Unable to determine current user for profile update.");
-      }
+      if (userError || !user) throw new Error("Could not get user.");
 
-      // 4. Save avatar_url into profiles table
-      const { error: updateError } = await supabase
+      // 2️⃣ Update Supabase to clear avatar
+      const { error } = await supabase
         .from("profiles")
-        .update({ avatar_url: secureUrl })
+        .update({ avatar_url: null, avatar_public_id: null })
         .eq("id", user.id);
+      if (error) throw error;
 
-      if (updateError) throw updateError;
+      // 3️⃣ Update UI
+      setFile(null);
+      setPreviewUrl(null);
+      setStatus({ type: "success", message: "Photo removed." });
 
-      setStatus({
-        type: "success",
-        message: "Profile picture updated successfully!",
-      });
-
-      // Redirect into main app after short delay
-      setTimeout(() => navigate("/"), 1000);
-    } catch (error) {
-      console.error("Error uploading avatar:", error);
-      setStatus({
-        type: "error",
-        message: error.message || "Failed to upload image.",
-      });
+      // Update local user profile state to reflect changes immediately
+      if (setUserProfile && userProfile) {
+        setUserProfile({
+          ...userProfile,
+          avatar_url: null,
+          avatar_public_id: null,
+        });
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus({ type: "error", message: "Failed to remove photo." });
     } finally {
       setUploading(false);
     }
@@ -140,23 +213,19 @@ const UploadProfilePic = ({ userProfile }) => {
       {/* Header */}
       <div className="w-full max-w-xl flex items-center justify-between mb-10 mt-4">
         <button
-          onClick={() => {
-            localStorage.setItem("skipAvatar", "true");
-            navigate("/");
-          }}
-          className="text-xs font-semibold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 transition-colors"
+          onClick={() => navigate("/")}
+          className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-transform"
         >
-          Skip for now
+          <FiArrowLeft className="size-6 text-slate-700 dark:text-slate-200" />
         </button>
         <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
           Profile Picture
         </h1>
-        <div className="w-10" /> {/* Spacer for centering */}
+        <div className="w-10" />
       </div>
 
       {/* Main Card */}
       <div className="w-full max-w-sm bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 border border-gray-100 dark:border-slate-700 shadow-xl flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-700">
-        {/* Hidden File Input */}
         <input
           type="file"
           ref={fileInputRef}
@@ -165,21 +234,17 @@ const UploadProfilePic = ({ userProfile }) => {
           className="hidden"
         />
 
-        {/* Avatar Display Area */}
         <div className="relative mb-10">
-          {previewUrl ? (
-            <img
-              src={previewUrl}
-              alt="Profile Preview"
-              className="size-40 rounded-[3rem] object-cover border-4 border-white dark:border-slate-700 shadow-2xl ring-4 ring-blue-50 dark:ring-blue-900/30"
-            />
-          ) : (
-            <div className="size-40 rounded-[3rem] bg-blue-600 flex items-center justify-center text-white text-6xl font-black shadow-xl shadow-blue-200 dark:shadow-none border-4 border-white dark:border-slate-700">
-              {getInitials(userProfile?.full_name)}
-            </div>
-          )}
+          <img
+            src={
+              previewUrl && previewUrl.trim() !== "" && previewUrl !== "NULL"
+                ? previewUrl
+                : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            }
+            alt="Profile Preview"
+            className="size-40 rounded-[3rem] object-cover border-4 border-white dark:border-slate-700 shadow-2xl ring-4 ring-blue-50 dark:ring-blue-900/30"
+          />
 
-          {/* Edit Icon Overlay */}
           <button
             onClick={triggerFileInput}
             className="absolute -bottom-3 -right-3 size-12 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white dark:border-slate-800 active:scale-90 transition-all"
@@ -189,9 +254,7 @@ const UploadProfilePic = ({ userProfile }) => {
           </button>
         </div>
 
-        {/* Action Buttons */}
         <div className="w-full space-y-3">
-          {/* Main action: Change Photo / Choose Photo */}
           <button
             onClick={triggerFileInput}
             disabled={uploading}
@@ -201,13 +264,9 @@ const UploadProfilePic = ({ userProfile }) => {
             {previewUrl ? "Change Photo" : "Choose Photo"}
           </button>
 
-          {/* Remove photo option (only if a photo exists) */}
           {previewUrl && (
             <button
-              onClick={() => {
-                setFile(null);
-                setPreviewUrl(null);
-              }}
+              onClick={handleRemovePhoto}
               disabled={uploading}
               className="w-full flex items-center justify-center gap-3 p-4 text-red-500 font-semibold text-sm active:scale-95 transition-all"
             >
@@ -218,7 +277,6 @@ const UploadProfilePic = ({ userProfile }) => {
         </div>
       </div>
 
-      {/* Status Message */}
       {status.message && (
         <div
           className={`mt-8 px-6 py-3 rounded-full text-xs font-bold ${status.type === "error" ? "bg-red-50 text-red-600" : "bg-blue-50 text-blue-700"} animate-in fade-in`}
@@ -227,18 +285,16 @@ const UploadProfilePic = ({ userProfile }) => {
         </div>
       )}
 
-      {/* Save Button (Fixed at the bottom) */}
       {file && (
-        <div className="fixed bottom-6 inset-x-6 max-w-sm mx-auto animate-in slide-in-from-bottom-10">
+        <div className="fixed bottom-6 inset-x-6 max-w-sm mx-auto">
           <button
             onClick={handleSave}
             disabled={uploading}
-            className="w-full bg-blue-600 dark:bg-blue-700 py-5 rounded-2xl font-black text-white text-lg shadow-2xl shadow-blue-200 dark:shadow-none flex items-center justify-center gap-3 hover:bg-blue-700 active:scale-95 transition-all disabled:opacity-70"
+            className="w-full bg-blue-600 dark:bg-blue-700 py-5 rounded-2xl font-black text-white text-lg shadow-2xl shadow-blue-200 dark:shadow-none flex items-center justify-center gap-3 active:scale-95 transition-all disabled:opacity-70"
           >
             {uploading ? (
               <>
-                <FiLoader className="animate-spin" />
-                Saving...
+                <FiLoader className="animate-spin" /> Saving...
               </>
             ) : (
               "Save Changes"

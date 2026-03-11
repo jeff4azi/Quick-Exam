@@ -1,10 +1,11 @@
-import { useNavigate } from "react-router-dom"
-import WhatsAppCard from "../components/WhatsAppCard"
-import { useEffect, useState } from "react"
-import ReactGA from "react-ga4"
+import { useNavigate } from "react-router-dom";
+import WhatsAppCard from "../components/WhatsAppCard";
+import { useEffect, useState } from "react";
+import ReactGA from "react-ga4";
 import BannerAd from "../components/BannerAd";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { FaCrown } from "react-icons/fa";
+import Avatar from "../components/Avatar";
 
 const ResultScreen = ({
   questions,
@@ -22,8 +23,8 @@ const ResultScreen = ({
 
   const userData = userProfile || { full_name: "Scholar", college: "" }; // use App.jsx profile
 
-  const formatNum = (num) => String(num).padStart(2, '0');
-  const answeredCount = answers.filter(a => a !== undefined).length;
+  const formatNum = (num) => String(num).padStart(2, "0");
+  const answeredCount = answers.filter((a) => a !== undefined).length;
 
   useEffect(() => {
     ReactGA.event({
@@ -33,33 +34,54 @@ const ResultScreen = ({
     });
   }, [selectedCourse.id]);
 
-
   const getLatestResult = () => {
-    const history = JSON.parse(localStorage.getItem("examHistory")) || []
-    const courseResults = history.filter(r => r.course === selectedCourse.name)
-    return courseResults.length > 0 ? courseResults[courseResults.length - 1] : null
-  }
+    const history = JSON.parse(localStorage.getItem("examHistory")) || [];
+    const courseResults = history.filter(
+      (r) => r.course === selectedCourse.name,
+    );
+    return courseResults.length > 0
+      ? courseResults[courseResults.length - 1]
+      : null;
+  };
 
-  const latestResult = getLatestResult()
-  if (!latestResult) return null 
+  const latestResult = getLatestResult();
+  if (!latestResult) return null;
 
-  const timeTaken = latestResult?.timeTaken ?? 0
-  const minutes = String(Math.floor(timeTaken / 60)).padStart(2, "0")
-  const seconds = String(timeTaken % 60).padStart(2, "0")
+  const timeTaken = latestResult?.timeTaken ?? 0;
+  const minutes = String(Math.floor(timeTaken / 60)).padStart(2, "0");
+  const seconds = String(timeTaken % 60).padStart(2, "0");
 
-  const scorePercentage = Math.round((results.correct / questions.length) * 100)
-  const strokeDasharray = 2 * Math.PI * 90
-  const strokeDashoffset = strokeDasharray - (scorePercentage / 100) * strokeDasharray
+  const scorePercentage = Math.round(
+    (results.correct / questions.length) * 100,
+  );
+  const strokeDasharray = 2 * Math.PI * 90;
+  const strokeDashoffset =
+    strokeDasharray - (scorePercentage / 100) * strokeDasharray;
 
   // DYNAMIC FEEDBACK LOGIC
   const getFeedback = () => {
-    if (scorePercentage >= 80) return { msg: `Outstanding work, ${userData.full_name.split(' ')[0]}! You've mastered this.`, color: "text-green-500" }
-    if (scorePercentage >= 60) return { msg: `Great job, ${userData.full_name.split(' ')[0]}! You're on the right track.`, color: "text-blue-500" }
-    if (scorePercentage >= 45) return { msg: `Good effort, ${userData.full_name.split(' ')[0]}. A little more study and you'll ace it!`, color: "text-amber-500" }
-    return { msg: `Don't give up, ${userData.full_name.split(' ')[0]}. Review your errors and try again!`, color: "text-red-500" }
-  }
+    if (scorePercentage >= 80)
+      return {
+        msg: `Outstanding work, ${userData.full_name.split(" ")[0]}! You've mastered this.`,
+        color: "text-green-500",
+      };
+    if (scorePercentage >= 60)
+      return {
+        msg: `Great job, ${userData.full_name.split(" ")[0]}! You're on the right track.`,
+        color: "text-blue-500",
+      };
+    if (scorePercentage >= 45)
+      return {
+        msg: `Good effort, ${userData.full_name.split(" ")[0]}. A little more study and you'll ace it!`,
+        color: "text-amber-500",
+      };
+    return {
+      msg: `Don't give up, ${userData.full_name.split(" ")[0]}. Review your errors and try again!`,
+      color: "text-red-500",
+    };
+  };
 
-  const feedback = getFeedback()
+  const feedback = getFeedback();
 
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300">
@@ -74,7 +96,7 @@ const ResultScreen = ({
           </span>
         </div>
 
-        {/* Profile with Name Initial and College */}
+        {/* Profile picture and college */}
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
             <p className="text-xs font-black text-gray-800 dark:text-gray-200 leading-none">
@@ -91,9 +113,11 @@ const ResultScreen = ({
             onClick={() => navigate("/profile")}
             className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl"
           >
-            <div className="size-10 rounded-2xl bg-blue-600 flex items-center justify-center text-sm text-white font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all duration-300">
-              {userData.full_name.charAt(0)}
-            </div>
+            <Avatar
+              avatarUrl={userProfile?.avatar_url}
+              size="sm"
+              className="shadow-lg shadow-blue-200 dark:shadow-none transition-all duration-300"
+            />
 
             {/* Premium Crown Badge */}
             {isPremium && (
@@ -250,27 +274,40 @@ const ResultScreen = ({
       />
     </div>
   );
-}
+};
 
 const StatItem = ({ label, value, color, textColor }) => (
-  <div className='flex items-center gap-3 p-2'>
+  <div className="flex items-center gap-3 p-2">
     <div className={`size-2 rounded-full ${color}`}></div>
-    <div className='flex flex-col'>
-      <span className={`text-xl font-bold leading-none ${textColor}`}>{value}</span>
-      <span className='text-[10px] uppercase tracking-wider text-gray-400 font-semibold mt-1'>{label}</span>
+    <div className="flex flex-col">
+      <span className={`text-xl font-bold leading-none ${textColor}`}>
+        {value}
+      </span>
+      <span className="text-[10px] uppercase tracking-wider text-gray-400 font-semibold mt-1">
+        {label}
+      </span>
     </div>
   </div>
-)
+);
 
-const ActionButton = ({ label, icon, onClick, onLockedClick, color, disabled }) => (
+const ActionButton = ({
+  label,
+  icon,
+  onClick,
+  onLockedClick,
+  color,
+  disabled,
+}) => (
   <button
     onClick={disabled ? onLockedClick : onClick}
-    className={`relative flex flex-col items-center gap-2 group ${disabled ? "cursor-not-allowed opacity-60" : ""
-      }`}
+    className={`relative flex flex-col items-center gap-2 group ${
+      disabled ? "cursor-not-allowed opacity-60" : ""
+    }`}
   >
     <div
-      className={`p-3 rounded-2xl transition-all duration-200 ${!disabled && "group-hover:scale-110 group-active:scale-95"
-        } ${color}`}
+      className={`p-3 rounded-2xl transition-all duration-200 ${
+        !disabled && "group-hover:scale-110 group-active:scale-95"
+      } ${color}`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
