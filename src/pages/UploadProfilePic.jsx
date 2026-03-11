@@ -11,7 +11,7 @@ import imageCompression from "browser-image-compression";
 import { supabase } from "../supabaseClient";
 
 const CLOUDINARY_CLOUD_NAME =
-  import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dxdnhc1hm";
+  import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dn5h1cghb";
 const CLOUDINARY_UPLOAD_PRESET = "profile_pictures";
 
 // Validate Cloudinary configuration
