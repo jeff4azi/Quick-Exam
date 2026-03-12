@@ -10,7 +10,7 @@ const AboutPage = () => {
 
       {/* ---------------- HERO SECTION ---------------- */}
       <section className="relative bg-gradient-to-r from-blue-500 to-indigo-600 dark:from-indigo-700 dark:to-blue-900 text-white py-20 px-5 text-center shadow-lg">
-        <h1 className="text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">About Quiz Bolt</h1>
+        <h1 className="text-5xl md:text-6xl font-extrabold mb-4 drop-shadow-lg">About Quiz Bolt 👍</h1>
         <p className="max-w-2xl mx-auto text-lg md:text-xl drop-shadow-sm">
           Your go-to platform for exam preparation. Curated, interactive quizzes designed to help you master your courses efficiently.
         </p>
