@@ -4,6 +4,15 @@ import Logo from "../images/Logo";
 import { FiBookOpen, FiNavigation, FiCalendar, FiCheckCircle } from "react-icons/fi";
 import { supabase } from "../supabaseClient"; // Import your supabase client
 
+function generateUsername(base = "scholar", length = 4) {
+  const chars = "0123456789abcdefghijklmnopqrstuvwxyz";
+  let suffix = "";
+  for (let i = 0; i < length; i++) {
+    suffix += chars[Math.floor(Math.random() * chars.length)];
+  }
+  return `${base}${suffix}`;
+}
+
 const OnboardingScreen = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -41,7 +50,7 @@ const OnboardingScreen = () => {
           onboarding_complete: true,
           is_premium: false,
           updated_at: new Date().toISOString(),
-          full_name: user.user_metadata?.full_name || "Scholar",
+          full_name: user.user_metadata?.full_name || generateUsername(),
         });
 
       if (upsertError) throw upsertError;
