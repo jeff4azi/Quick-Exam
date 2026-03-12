@@ -155,7 +155,7 @@ const Profile = ({
                 <FiUser size={20} />
               </div>
               <label className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
-                Full Name
+                User Name
               </label>
             </div>
             {isEditing ? (
