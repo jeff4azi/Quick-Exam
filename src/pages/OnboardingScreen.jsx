@@ -41,6 +41,7 @@ const OnboardingScreen = () => {
           onboarding_complete: true,
           is_premium: false,
           updated_at: new Date().toISOString(),
+          full_name: user.user_metadata?.full_name || "Scholar",
         });
 
       if (upsertError) throw upsertError;
