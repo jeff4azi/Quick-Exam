@@ -134,8 +134,7 @@ const ChooseCourseScreen = ({
             </div>
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">No Courses Available</h2>
             <p className="mt-3 text-slate-500 dark:text-slate-400 max-w-[280px] leading-relaxed font-medium">
-              We couldn't find any 100 level courses for your profile. 
-              {userProfile?.year !== "1" && " Access is currently restricted to 100 Level students."}
+              We couldn't find any course for your profile. This might be because you haven't set up your profile or there are no courses available for your faculty yet. Please check back later or contact support for assistance.
             </p>
             <button
               onClick={() => navigate("/")}
