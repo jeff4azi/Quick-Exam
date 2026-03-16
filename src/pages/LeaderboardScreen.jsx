@@ -110,7 +110,7 @@ const LeaderboardScreen = ({ courses }) => {
             const profileMap = {};
             (profilesData || []).forEach((p) => {
               profileMap[p.id] = {
-                full_name: p.full_name,
+                full_name: p.user_name,
                 year: p.year,
                 college: p.college,
                 avatar_url: p.avatar_url,
@@ -200,7 +200,7 @@ const LeaderboardScreen = ({ courses }) => {
 
       const profile = profiles[entry.userId] || {};
       const fullName = profile.full_name || "Scholar";
-      const firstName = fullName.split(" ")[0] || fullName;
+      const firstName = profile.user_name.split(" ")[0] || fullName.split(" ")[0];
       const year = profile.year || "1";
 
       return {
