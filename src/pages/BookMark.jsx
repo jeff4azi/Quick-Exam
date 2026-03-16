@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaTrashAlt, FaBookmark, FaLightbulb } from "react-icons/fa";
-import { FiArrowLeft, FiTrash2 } from "react-icons/fi";
+import { FiArrowLeft, FiTrash2, FiLock } from "react-icons/fi";
 import { RenderMathText } from "../utils/RenderMathText";
 import ConfirmOverlay from "../components/ConfirmOverlay"; // Added this import
 import { API_BASE_URL } from "../apiConfig";
 
-const BookMark = ({ bookmarks, setBookmarks }) => {
+const BookMark = ({ bookmarks, setBookmarks, isPremium }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false); // New state for overlay
@@ -84,6 +84,39 @@ const BookMark = ({ bookmarks, setBookmarks }) => {
     localStorage.setItem("bookmarkedQuestions", JSON.stringify([]));
     setOverlayOpen(false);
   };
+
+  if (!isPremium) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] dark:bg-[#0F172A] px-6">
+        <div className="max-w-sm w-full bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-700 text-center">
+          <div className="text-4xl mb-4 flex justify-center items-center">
+            <FiLock />
+          </div>
+
+          <h2 className="text-xl font-black mb-2">Premium Required</h2>
+
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+            Bookmark review is a premium feature. Upgrade to unlock your saved
+            questions.
+          </p>
+
+          <button
+            onClick={() => navigate("/premium")}
+            className="w-full py-3 rounded-2xl bg-blue-600 text-white font-bold hover:scale-[1.02] active:scale-[0.98] transition"
+          >
+            Get Premium
+          </button>
+
+          <span
+            onClick={() => navigate(-1)}
+            className="text-xs text-slate-500 dark:text-slate-400 mt-4 block cursor-pointer"
+          >
+            Go back
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
