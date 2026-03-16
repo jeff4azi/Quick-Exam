@@ -23,13 +23,30 @@ const AD_DATABASE = [
   },
 ];
 
-function resizeCloudinaryUrl(url, width = 800, height = 1131) {
-  if (!url.includes("cloudinary.com")) return url;
+function resizeCloudinaryUrl(url) {
+   if (!url.includes("cloudinary.com")) return url;
 
-  return url.replace(
-    "/upload/",
-    `/upload/w_${width},h_${height},c_fit,q_auto,f_auto/`,
-  );
+   // Base size
+   let w = 800;
+   let h = 1131;
+
+   const width = window.innerWidth;
+
+   if (width < 768) {
+     // Mobile
+     w = 600;
+     h = 849;
+   } else if (width < 1024) {
+     // Tablet
+     w = 700;
+     h = 992;
+   }
+   // Desktop stays at 800x1131
+
+   return url.replace(
+     "/upload/",
+     `/upload/w_${w},h_${h},c_fill,q_auto,f_auto/`,
+   );
 }
 
 const BannerAd = ({ onAdClose }) => {
@@ -80,7 +97,7 @@ const BannerAd = ({ onAdClose }) => {
       />
 
       {/* 2. Responsive Aspect Ratio: A4 on mobile, 16:9 on LG */}
-      <div className="relative w-full max-w-md lg:max-w-4xl aspect-[1/1.414] lg:aspect-video bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/20 dark:border-slate-800 animate-in zoom-in-95 duration-500">
+      <div className="relative w-full max-w-md aspect-[1/1.414] bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/20 dark:border-slate-800 animate-in zoom-in-95 duration-500">
         {/* 3. Clickable WhatsApp Area */}
         <a
           href={`https://wa.me/${currentAd.whatsapp}`}
