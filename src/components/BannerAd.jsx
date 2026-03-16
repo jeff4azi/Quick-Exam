@@ -23,6 +23,15 @@ const AD_DATABASE = [
   },
 ];
 
+function resizeCloudinaryUrl(url, width = 800, height = 1131) {
+  if (!url.includes("cloudinary.com")) return url;
+
+  return url.replace(
+    "/upload/",
+    `/upload/w_${width},h_${height},c_fit,q_auto,f_auto/`,
+  );
+}
+
 const BannerAd = ({ onAdClose }) => {
   const currentAd = useMemo(() => {
     const randomIndex = Math.floor(Math.random() * AD_DATABASE.length);
@@ -72,7 +81,6 @@ const BannerAd = ({ onAdClose }) => {
 
       {/* 2. Responsive Aspect Ratio: A4 on mobile, 16:9 on LG */}
       <div className="relative w-full max-w-md lg:max-w-4xl aspect-[1/1.414] lg:aspect-video bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/20 dark:border-slate-800 animate-in zoom-in-95 duration-500">
-
         {/* 3. Clickable WhatsApp Area */}
         <a
           href={`https://wa.me/${currentAd.whatsapp}`}
@@ -89,22 +97,22 @@ const BannerAd = ({ onAdClose }) => {
 
           {currentAd.type === "video" ? (
             <video
-              src={currentAd.url}
+              src={resizeCloudinaryUrl(currentAd.url)}
               autoPlay
               muted={isMuted}
               loop
               playsInline
               onCanPlayThrough={() => setIsReady(true)}
               // 4. Object-contain prevents cropping
-              className={`w-full h-full object-contain transition-opacity duration-500 ${isReady ? 'opacity-100' : 'opacity-0'}`}
+              className={`w-full h-full object-contain transition-opacity duration-500 ${isReady ? "opacity-100" : "opacity-0"}`}
             />
           ) : (
             <img
-              src={currentAd.url}
+              src={resizeCloudinaryUrl(currentAd.url)}
               alt="Sponsored Content"
               onLoad={() => setIsReady(true)}
               // 4. Object-contain prevents cropping
-              className={`w-full h-full object-contain transition-opacity duration-500 ${isReady ? 'opacity-100' : 'opacity-0'}`}
+              className={`w-full h-full object-contain transition-opacity duration-500 ${isReady ? "opacity-100" : "opacity-0"}`}
             />
           )}
         </a>
@@ -126,9 +134,17 @@ const BannerAd = ({ onAdClose }) => {
             <div className="relative size-12 flex items-center justify-center bg-black/40 backdrop-blur-xl rounded-full border border-white/20 shadow-lg">
               <svg className="absolute inset-0 size-full -rotate-90">
                 <circle
-                  cx="24" cy="24" r={radius} stroke="white" strokeWidth="3" fill="transparent"
+                  cx="24"
+                  cy="24"
+                  r={radius}
+                  stroke="white"
+                  strokeWidth="3"
+                  fill="transparent"
                   strokeDasharray={circumference}
-                  style={{ strokeDashoffset, transition: "stroke-dashoffset 1s linear" }}
+                  style={{
+                    strokeDashoffset,
+                    transition: "stroke-dashoffset 1s linear",
+                  }}
                   className="opacity-90"
                 />
               </svg>
