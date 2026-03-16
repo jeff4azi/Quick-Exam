@@ -53,8 +53,12 @@ const OnboardingScreen = () => {
         "Scholar";
       
       // get avatar url
-      const avatarUrl =
+      let avatarUrl =
         user.user_metadata?.avatar_url || user.user_metadata?.picture || null;
+
+      if (avatarUrl && avatarUrl.includes("googleusercontent.com")) {
+        avatarUrl = avatarUrl.replace(/s\d+-c/, "s400-c"); // higher quality
+      }
 
       // Create user_name as slug (lowercase, no spaces, no special chars)
       const userName = fullName
