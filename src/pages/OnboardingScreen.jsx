@@ -51,6 +51,10 @@ const OnboardingScreen = () => {
         user.user_metadata?.name ||
         user.email?.split("@")[0] ||
         "Scholar";
+      
+      // get avatar url
+      const avatarUrl =
+        user.user_metadata?.avatar_url || user.user_metadata?.picture || null;
 
       // Create user_name as slug (lowercase, no spaces, no special chars)
       const userName = fullName
@@ -67,6 +71,7 @@ const OnboardingScreen = () => {
         year: parseInt(formData.year, 10) || null,
         onboarding_complete: true,
         is_premium: false,
+        avatar_url: avatarUrl,
         updated_at: new Date().toISOString(),
       });
 
