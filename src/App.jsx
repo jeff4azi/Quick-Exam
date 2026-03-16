@@ -105,6 +105,7 @@ function App() {
         const profile = {
           full_name:
             profileData?.full_name ||
+            profileData?.name ||
             user.user_metadata?.full_name ||
             user.user_metadata?.name ||
             "Scholar", // Get from metadata
