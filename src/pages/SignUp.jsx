@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
-import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight, FiUser } from "react-icons/fi";
+import {
+  FiMail,
+  FiLock,
+  FiEye,
+  FiEyeOff,
+  FiArrowRight,
+  FiUser,
+} from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { supabase } from "../supabaseClient";
 
@@ -15,7 +22,7 @@ const SignUpScreen = () => {
     fullName: "",
     email: "",
     password: "",
-    confirmPassword: "" // Added field
+    confirmPassword: "", // Added field
   });
 
   const handleChange = (e) => {
@@ -44,20 +51,20 @@ const SignUpScreen = () => {
 
       if (signUpError) throw signUpError;
 
-      // Store the user's name in the profiles table (single source of truth)
-      if (data?.user) {
-        const { error: profileError } = await supabase
-          .from("profiles")
-          .upsert({
-            id: data.user.id,
-            full_name: fullName,
-          });
+      // Store the user's name in metadata (temporary storage until onboarding)
+      if (data?.user?.id) {
+        const { error: metadataError } = await supabase.auth.updateUser({
+          data: {
+            full_name: fullName.trim(),
+          },
+        });
 
-        if (profileError) {
+        if (metadataError) {
           console.error(
-            "Failed to create/update profile on sign up:",
-            profileError.message
+            "Failed to store name in metadata:",
+            metadataError.message,
           );
+          // Don't throw error here - user account is created, metadata can be fixed later
         }
       }
 
@@ -90,7 +97,6 @@ const SignUpScreen = () => {
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
       <div className="w-full max-w-sm flex flex-col items-center animate-in fade-in zoom-in duration-700">
-        
         {/* Header Section */}
         <div className="mb-8 flex flex-col items-center">
           <div className="mb-6 scale-110">
@@ -163,7 +169,11 @@ const SignUpScreen = () => {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
             >
-              {showPassword ? <FiEyeOff className="text-xl" /> : <FiEye className="text-xl" />}
+              {showPassword ? (
+                <FiEyeOff className="text-xl" />
+              ) : (
+                <FiEye className="text-xl" />
+              )}
             </button>
           </div>
 
@@ -199,13 +209,15 @@ const SignUpScreen = () => {
             type="submit"
             disabled={loading}
             className={`w-full bg-blue-600 dark:bg-blue-700 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 group mt-4 ${
-              loading 
-                ? "opacity-70 cursor-not-allowed" 
+              loading
+                ? "opacity-70 cursor-not-allowed"
                 : "hover:bg-blue-700 hover:-translate-y-1 active:scale-95 active:translate-y-0"
             }`}
           >
             <span>{loading ? "Creating..." : "Create Account"}</span>
-            {!loading && <FiArrowRight className="group-hover:translate-x-1 transition-transform" />}
+            {!loading && (
+              <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+            )}
           </button>
         </form>
 

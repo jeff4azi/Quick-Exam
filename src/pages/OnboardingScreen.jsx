@@ -1,17 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
-import { FiBookOpen, FiNavigation, FiCalendar, FiCheckCircle } from "react-icons/fi";
+import {
+  FiBookOpen,
+  FiNavigation,
+  FiCalendar,
+  FiCheckCircle,
+} from "react-icons/fi";
 import { supabase } from "../supabaseClient"; // Import your supabase client
-
-function generateUsername(base = "scholar", length = 4) {
-  const chars = "0123456789abcdefghijklmnopqrstuvwxyz";
-  let suffix = "";
-  for (let i = 0; i < length; i++) {
-    suffix += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return `${base}${suffix}`;
-}
 
 const OnboardingScreen = () => {
   const navigate = useNavigate();
@@ -24,7 +20,14 @@ const OnboardingScreen = () => {
     year: "",
   });
 
-  const collegeSuggestions = ["COSIT", "COVTED", "COSPED", "COHUM", "COSMAS", "COAHM"];
+  const collegeSuggestions = [
+    "COSIT",
+    "COVTED",
+    "COSPED",
+    "COHUM",
+    "COSMAS",
+    "COAHM",
+  ];
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -34,24 +37,38 @@ const OnboardingScreen = () => {
 
     try {
       // 1. Ensure user exists
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
       if (authError || !user) {
         throw new Error("No authenticated user found. Please sign in again.");
       }
 
-      // 2. Save onboarding data + mark complete
-      const { error: upsertError } = await supabase
-        .from("profiles")
-        .upsert({
-          id: user.id,
-          college: formData.college,
-          department: formData.department,
-          year: parseInt(formData.year, 10) || null,
-          onboarding_complete: true,
-          is_premium: false,
-          updated_at: new Date().toISOString(),
-          full_name: user.user_metadata?.full_name || generateUsername(),
-        });
+      // 2. Get name from user metadata (temporary storage)
+      const fullName =
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.email?.split("@")[0] ||
+        "Scholar";
+
+      // Create user_name as slug (lowercase, no spaces, no special chars)
+      const userName = fullName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "") // Remove non-alphanumeric chars
+        .trim();
+
+      // 3. Save onboarding data + create user_name from full_name
+      const { error: upsertError } = await supabase.from("profiles").upsert({
+        id: user.id,
+        user_name: userName, // Store slugified name
+        college: formData.college,
+        department: formData.department,
+        year: parseInt(formData.year, 10) || null,
+        onboarding_complete: true,
+        is_premium: false,
+        updated_at: new Date().toISOString(),
+      });
 
       if (upsertError) throw upsertError;
 
@@ -60,7 +77,6 @@ const OnboardingScreen = () => {
 
       // 4. Exit onboarding permanently
       navigate("/login", { replace: true });
-
     } catch (err) {
       setError(err.message);
     } finally {
@@ -70,9 +86,7 @@ const OnboardingScreen = () => {
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
-
       <div className="w-full max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
-
         {/* Header */}
         <div className="flex flex-col items-center text-center">
           <div className="mb-6">
@@ -94,7 +108,6 @@ const OnboardingScreen = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5 mt-6">
-
           {/* College with Autocomplete Logic */}
           <div className="relative group">
             <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-4 mb-1 block">
@@ -150,7 +163,9 @@ const OnboardingScreen = () => {
                 type="text"
                 placeholder="e.g. Computer Science"
                 value={formData.department}
-                onChange={(e) => setFormData({ ...formData, department: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, department: e.target.value })
+                }
                 className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all shadow-sm"
                 required
               />
@@ -168,11 +183,15 @@ const OnboardingScreen = () => {
               </div>
               <select
                 value={formData.year}
-                onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, year: e.target.value })
+                }
                 className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all shadow-sm appearance-none"
                 required
               >
-                <option value="" disabled>Select Level</option>
+                <option value="" disabled>
+                  Select Level
+                </option>
                 <option value="1">Year 1 (Fresher)</option>
                 <option value="2">Year 2 (Sophomore)</option>
                 <option value="3">Year 3 (Junior)</option>
@@ -185,15 +204,15 @@ const OnboardingScreen = () => {
           <button
             type="submit"
             disabled={loading}
-            className={`w-full mt-4 bg-blue-600 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 ${loading
+            className={`w-full mt-4 bg-blue-600 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 ${
+              loading
                 ? "opacity-70 cursor-not-allowed"
                 : "hover:bg-blue-700 hover:-translate-y-1 active:scale-95"
-              }`}
+            }`}
           >
             <span>{loading ? "Saving..." : "Complete Setup"}</span>
             {!loading && <FiCheckCircle className="text-xl" />}
           </button>
-
         </form>
       </div>
     </div>

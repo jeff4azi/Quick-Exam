@@ -37,7 +37,7 @@ const Profile = ({
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [formData, setFormData] = useState({
-    full_name: userProfile?.full_name || "",
+    user_name: userProfile?.user_name || "",
     department: userProfile?.department || "",
   });
 
@@ -45,7 +45,7 @@ const Profile = ({
   useEffect(() => {
     if (!userProfile || isEditing || isSaving) return;
     setFormData({
-      full_name: userProfile.full_name || "",
+      user_name: userProfile.user_name || "",
       department: userProfile.department || "",
     });
   }, [userProfile, isEditing, isSaving]);
@@ -148,7 +148,7 @@ const Profile = ({
 
         {/* Input Fields Container */}
         <div className="space-y-4">
-          {/* Full Name Field */}
+          {/* User Name Field (Editable) */}
           <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm transition-all">
             <div className="flex items-center gap-4 mb-2">
               <div className="size-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600">
@@ -161,18 +161,38 @@ const Profile = ({
             {isEditing ? (
               <input
                 type="text"
-                value={formData.full_name}
+                value={formData.user_name}
                 onChange={(e) =>
-                  setFormData({ ...formData, full_name: e.target.value })
+                  setFormData({ ...formData, user_name: e.target.value })
                 }
                 className="w-full bg-gray-50 dark:bg-slate-900/50 border-none rounded-xl p-3 text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="Enter your name"
+                placeholder="Enter your username"
               />
             ) : (
               <p className="text-lg font-bold text-slate-800 dark:text-white px-1">
-                {formData.full_name || "Scholar"}
+                {formData.user_name || "username"}
               </p>
             )}
+          </div>
+
+          {/* Full Name Field (Non-Editable) */}
+          <div className="bg-gray-100/50 dark:bg-slate-800/40 p-5 rounded-[2rem] border border-dashed border-gray-200 dark:border-slate-700 flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="size-10 rounded-xl bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
+                <FiUser size={20} />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
+                  Full Name
+                </p>
+                <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
+                  {userProfile?.full_name || "Scholar"}
+                </p>
+              </div>
+            </div>
+            <div className="text-[10px] text-gray-400 dark:text-slate-500">
+              Cannot be edited
+            </div>
           </div>
 
           {/* Department Field */}

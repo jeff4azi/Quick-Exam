@@ -101,9 +101,13 @@ function App() {
 
         if (error) throw error;
 
-        // Profiles table is now the single source of truth for user info
+        // Profiles table is now the single source of truth for user info (except name)
         const profile = {
-          full_name: profileData?.full_name || "Scholar",
+          full_name:
+            user.user_metadata?.full_name ||
+            user.user_metadata?.name ||
+            "Scholar", // Get from metadata
+          user_name: profileData?.user_name || null, // Get slugified username from profiles
           college: profileData?.college || "TASUED",
           department: profileData?.department || "General Studies",
           year: profileData?.year?.toString() || "1",
