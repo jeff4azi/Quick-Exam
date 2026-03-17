@@ -182,7 +182,7 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
         <button
           type="button"
           onClick={() => navigate("/profile")}
-          className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl"
+          className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl lg:scale-150"
         >
           {loadingProfile ? (
             <div className="size-10 rounded-2xl bg-blue-600 flex items-center justify-center text-sm text-white font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all duration-300">

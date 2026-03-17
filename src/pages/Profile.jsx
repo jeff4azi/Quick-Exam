@@ -70,17 +70,33 @@ const Profile = ({
 
   const handleDeleteAccount = async () => {
     if (isDeleting) return;
+
     try {
       setIsDeleting(true);
 
+      // 1. Get current user
       const { data, error: userError } = await supabase.auth.getUser();
       if (userError) throw userError;
       const user = data?.user;
+      if (!user?.id) throw new Error("No authenticated user found.");
 
-      if (user?.id) {
-        await supabase.from("profiles").delete().eq("id", user.id);
-      }
+      // 2. Delete profile
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .delete()
+        .eq("id", user.id);
+      if (profileError)
+        console.error("Failed to delete profile:", profileError);
 
+      // 3. Delete all exam attempts for this user
+      const { error: attemptsError } = await supabase
+        .from("exam_attempts")
+        .delete()
+        .eq("user_id", user.id);
+      if (attemptsError)
+        console.error("Failed to delete exam attempts:", attemptsError);
+
+      // 4. Clear local storage / session
       try {
         localStorage.removeItem("examHistory");
         localStorage.removeItem("bookmarkedQuestions");
@@ -89,6 +105,7 @@ const Profile = ({
         console.error("Failed to clear local data on delete:", err);
       }
 
+      // 5. Sign out / navigate
       if (onLogout) {
         await onLogout();
       } else {

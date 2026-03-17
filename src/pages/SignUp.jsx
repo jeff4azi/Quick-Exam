@@ -51,7 +51,6 @@ const SignUpScreen = () => {
 
       if (signUpError) throw signUpError;
 
-      // Store the user's name in metadata (temporary storage until onboarding)
       if (data?.user?.id) {
         const { error: metadataError } = await supabase.auth.updateUser({
           data: {
