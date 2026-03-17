@@ -98,6 +98,21 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
               </p>
             </div>
           </div>
+
+          {/* Department Section */}
+          <div className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-gray-100 dark:border-slate-800 flex items-center gap-4">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
+              <FiShield className="text-blue-600 dark:text-blue-400 text-xl" />
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                Department
+              </p>
+              <p className="font-bold text-slate-900 dark:text-white truncate">
+                {userProfile?.department}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 

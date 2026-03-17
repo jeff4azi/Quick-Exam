@@ -93,7 +93,7 @@ const LeaderboardScreen = ({ courses }) => {
             await withTimeout(
               supabase
                 .from("profiles")
-                .select("id, full_name, user_name, year, college, is_premium, avatar_url")
+                .select("id, full_name, user_name, year, college, is_premium, avatar_url, department")
                 .in("id", userIds),
               15000,
               "Loading leaderboard profiles took too long.",
@@ -116,6 +116,7 @@ const LeaderboardScreen = ({ courses }) => {
                 college: p.college,
                 avatar_url: p.avatar_url,
                 isPremium: p.is_premium === true,
+                department: p.department || "General Studies",
               };
             });
             setProfiles(profileMap);
@@ -213,6 +214,7 @@ const LeaderboardScreen = ({ courses }) => {
         year,
         avatarUrl: profile.avatar_url || null,
         isPremium: profile.isPremium === true,
+        department: profile.department,
       };
     });
 
@@ -337,6 +339,7 @@ const LeaderboardScreen = ({ courses }) => {
                       user_name: entry.userName || null,
                       college: profile.college || "TASUED",
                       avatar_url: entry.avatarUrl,
+                      department: entry.department,
                     });
                     setSheetStats({
                       rank: `#${index + 1}`,
