@@ -93,7 +93,7 @@ const LeaderboardScreen = ({ courses }) => {
             await withTimeout(
               supabase
                 .from("profiles")
-                .select("id, full_name, year, college, is_premium, avatar_url")
+                .select("id, full_name, user_name, year, college, is_premium, avatar_url")
                 .in("id", userIds),
               15000,
               "Loading leaderboard profiles took too long.",
@@ -110,7 +110,8 @@ const LeaderboardScreen = ({ courses }) => {
             const profileMap = {};
             (profilesData || []).forEach((p) => {
               profileMap[p.id] = {
-                full_name: p.user_name,
+                full_name: p.full_name,
+                user_name: p.user_name,
                 year: p.year,
                 college: p.college,
                 avatar_url: p.avatar_url,
@@ -200,15 +201,15 @@ const LeaderboardScreen = ({ courses }) => {
 
       const profile = profiles[entry.userId] || {};
       const fullName = profile.full_name || "Scholar";
-      const firstName = profile.user_name.split(" ")[0] || fullName.split(" ")[0];
+      const userName = profile.user_name || null;
       const year = profile.year || "1";
 
       return {
         ...entry,
         bestPercent: Math.round(entry.bestPercent),
         avgTimeSeconds,
-        fullName,
-        displayName: firstName,
+        fullName, // primary display name
+        userName, // handle/slug (not used as display fallback)
         year,
         avatarUrl: profile.avatar_url || null,
         isPremium: profile.isPremium === true,
@@ -321,8 +322,8 @@ const LeaderboardScreen = ({ courses }) => {
                 <LeaderboardRow
                   key={entry.userId}
                   rank={index + 1}
-                  name={entry.displayName}
                   fullName={entry.fullName}
+                  userName={entry.userName}
                   year={entry.year}
                   avatarUrl={entry.avatarUrl}
                   isPremium={entry.isPremium}
@@ -333,6 +334,7 @@ const LeaderboardScreen = ({ courses }) => {
                     const profile = profiles[entry.userId] || {};
                     setSheetProfile({
                       full_name: entry.fullName,
+                      user_name: entry.userName || null,
                       college: profile.college || "TASUED",
                       avatar_url: entry.avatarUrl,
                     });
@@ -363,7 +365,8 @@ const LeaderboardScreen = ({ courses }) => {
 
 const LeaderboardRow = ({
   rank,
-  name,
+  fullName,
+  userName,
   year,
   avatarUrl,
   isPremium,
@@ -410,7 +413,7 @@ const LeaderboardRow = ({
         </div>
         <div className="min-w-0">
           <p className="font-black text-slate-900 dark:text-white truncate flex items-center gap-1.5">
-            {name}
+            {fullName}
             {isPremium && (
               <span
                 className="inline-flex items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-500 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-[0.12em]"
@@ -422,6 +425,7 @@ const LeaderboardRow = ({
             )}
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
+            {userName ? `@${userName} • ` : ""}
             {year}00 Level
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">

@@ -41,8 +41,6 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
             <div className="relative">
               <button
                 onClick={() => {
-                  console.log("Avatar clicked, opening overlay");
-                  console.log("Avatar URL:", userProfile?.avatar_url);
                   setIsImageOverlayOpen(true);
                 }}
                 className="pl-4 pr-2 scale-150 relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-[2rem] transition-transform active:scale-95"
@@ -63,6 +61,11 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
               <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-tight">
                 {userProfile?.full_name || "Scholar Name"}
               </h3>
+              {userProfile?.user_name ? (
+                <p className="text-slate-400 dark:text-slate-500 font-bold text-xs tracking-wider">
+                  @{userProfile.user_name}
+                </p>
+              ) : null}
               <p className="text-slate-500 font-bold text-sm uppercase tracking-wider">
                 {isPremium ? "Premium Member" : "Free Tier"}
               </p>
@@ -103,7 +106,6 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
         <div
           className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-in fade-in duration-300"
           onClick={() => {
-            console.log("Overlay backdrop clicked, closing");
             setIsImageOverlayOpen(false);
           }}
         >
@@ -118,7 +120,6 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
               className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl"
               onClick={(e) => e.stopPropagation()}
               onError={(e) => {
-                console.log("Image load error:", userProfile?.avatar_url);
                 e.target.src =
                   "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
               }}

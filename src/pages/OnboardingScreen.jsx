@@ -69,6 +69,7 @@ const OnboardingScreen = () => {
       // 3. Save onboarding data + create user_name from full_name
       const { error: upsertError } = await supabase.from("profiles").upsert({
         id: user.id,
+        full_name: fullName,
         user_name: userName, // Store slugified name
         college: formData.college,
         department: formData.department,
