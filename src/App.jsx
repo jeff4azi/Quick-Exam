@@ -26,6 +26,7 @@ import "katex/dist/katex.min.css";
 import LeaderboardScreen from "./pages/LeaderboardScreen";
 import { API_BASE_URL } from "./apiConfig";
 import UploadProfilePic from "./pages/UploadProfilePic";
+import { loadExamSession } from "./utils/examSessionStorage";
 
 function App() {
   const [userProfile, setUserProfile] = useState(null);
@@ -194,10 +195,8 @@ function App() {
   // Restore any in‑progress exam from localStorage on hard refresh
   useEffect(() => {
     try {
-      const saved = localStorage.getItem("currentExamSession");
-      if (!saved) return;
-
-      const parsed = JSON.parse(saved);
+      const parsed = loadExamSession();
+      if (!parsed) return;
 
       if (parsed?.selectedCourse) {
         setSelectedCourse(parsed.selectedCourse);

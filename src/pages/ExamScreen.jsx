@@ -1,9 +1,14 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { RenderMathText } from "../utils/RenderMathText";
 import ProgressBar from "../components/ProgressBar";
 import Timer from "../components/Timer";
+import {
+  clearExamSession,
+  loadExamSession,
+  saveExamSession,
+} from "../utils/examSessionStorage";
 import {
   FiChevronLeft,
   FiBookmark,
@@ -29,7 +34,12 @@ const shuffleArray = (array) => {
   return arr;
 };
 
-const EXAM_SESSION_KEY = "currentExamSession";
+const getTimeLeftFromEndsAtMs = (endsAtMs) => {
+  if (!Number.isFinite(endsAtMs)) return null;
+  return Math.max(0, Math.ceil((endsAtMs - Date.now()) / 1000));
+};
+
+const DEFAULT_PERSIST_INTERVAL_MS = 15000;
 
 const ExamScreen = ({
   answers,
@@ -52,41 +62,45 @@ const ExamScreen = ({
   // Prefer the shuffled list length (restored from localStorage on refresh),
   // but fall back to the raw questions length.
   const totalQuestions = shuffledQuestions.length || questions.length;
-  const initialTotalTime = calculateTotalTime(totalQuestions, isMathCourse);
+  const totalTime = useMemo(
+    () => calculateTotalTime(totalQuestions, isMathCourse),
+    [totalQuestions, isMathCourse],
+  );
+
+  const savedSession = useMemo(() => loadExamSession(), []);
 
   const [currentIndex, setCurrentIndex] = useState(() => {
-    try {
-      const savedRaw = localStorage.getItem(EXAM_SESSION_KEY);
-      if (savedRaw) {
-        const saved = JSON.parse(savedRaw);
-        if (typeof saved.currentIndex === "number" && saved.currentIndex >= 0) {
-          return saved.currentIndex;
-        }
-      }
-    } catch (err) {
-      console.error("Failed to restore currentIndex from storage:", err);
-    }
+    const savedIndex = savedSession?.currentIndex;
+    if (typeof savedIndex === "number" && savedIndex >= 0) return savedIndex;
     return 0;
   });
 
-  const [timeLeft, setTimeLeft] = useState(() => {
-    try {
-      const savedRaw = localStorage.getItem(EXAM_SESSION_KEY);
-      if (savedRaw) {
-        const saved = JSON.parse(savedRaw);
-        if (typeof saved.timeLeft === "number" && saved.timeLeft > 0) {
-          return saved.timeLeft;
-        }
-      }
-    } catch (err) {
-      console.error("Failed to restore timeLeft from storage:", err);
-    }
-    return initialTotalTime;
+  const [endsAtMs, setEndsAtMs] = useState(() => {
+    const v = savedSession?.endsAtMs;
+    return Number.isFinite(v) ? v : null;
   });
+
+  const [timeLeft, setTimeLeft] = useState(() => {
+    const fromEnds = getTimeLeftFromEndsAtMs(savedSession?.endsAtMs);
+    if (typeof fromEnds === "number") return fromEnds;
+
+    const savedTimeLeft = savedSession?.timeLeft;
+    if (typeof savedTimeLeft === "number" && savedTimeLeft > 0) {
+      return savedTimeLeft;
+    }
+
+    return totalTime;
+  });
+  const timeLeftRef = useRef(timeLeft);
+  useEffect(() => {
+    timeLeftRef.current = timeLeft;
+  }, [timeLeft]);
+
   const [hasSaved, setHasSaved] = useState(false);
   const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false);
   const [isExitOverlayOpen, setExitOverlayOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmittingRef = useRef(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
 
   const currentQuestion = shuffledQuestions[currentIndex];
@@ -95,25 +109,33 @@ const ExamScreen = ({
   const isBookmarkLocked = !isPremium;
 
   useEffect(() => {
-    // 1. Try to restore an in‑progress exam from localStorage
-    try {
-      const savedRaw = localStorage.getItem(EXAM_SESSION_KEY);
-      if (savedRaw) {
-        const saved = JSON.parse(savedRaw);
+    // 1. Try to restore an in-progress exam from localStorage
+    if (Array.isArray(savedSession?.questions) && savedSession.questions.length) {
+      setShuffledQuestions(savedSession.questions);
+      setCurrentIndex(
+        typeof savedSession.currentIndex === "number" && savedSession.currentIndex >= 0
+          ? savedSession.currentIndex
+          : 0,
+      );
 
-        if (Array.isArray(saved?.questions) && saved.questions.length > 0) {
-          setShuffledQuestions(saved.questions);
-          setCurrentIndex(saved.currentIndex || 0);
+      if (Array.isArray(savedSession.answers)) {
+        setAnswers(savedSession.answers);
+      }
 
-          if (Array.isArray(saved.answers)) {
-            setAnswers(saved.answers);
-          }
-
-          return;
+      // If we only have timeLeft (legacy) but no endsAtMs, convert it once.
+      if (!Number.isFinite(savedSession.endsAtMs)) {
+        const legacyTimeLeft =
+          typeof savedSession.timeLeft === "number" && savedSession.timeLeft > 0
+            ? savedSession.timeLeft
+            : null;
+        if (legacyTimeLeft != null) {
+          const nextEndsAt = Date.now() + legacyTimeLeft * 1000;
+          setEndsAtMs(nextEndsAt);
+          setTimeLeft(legacyTimeLeft);
         }
       }
-    } catch (err) {
-      console.error("Failed to restore exam session:", err);
+
+      return;
     }
 
     // 2. Fresh exam – shuffle options and start a new session
@@ -124,33 +146,91 @@ const ExamScreen = ({
       }));
       setShuffledQuestions(shuffled);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [questions]);
+  }, [questions, savedSession, setAnswers, shuffledQuestions.length]);
 
-  // Persist exam progress (answers, index, time) whenever they change
+  // Ensure we always have an endsAtMs when exam starts/resumes.
   useEffect(() => {
     if (!totalQuestions) return;
-    try {
-      const payload = {
-        selectedCourse,
-        questions: shuffledQuestions.length ? shuffledQuestions : questions,
-        answers,
-        currentIndex,
-        timeLeft,
-      };
-      localStorage.setItem(EXAM_SESSION_KEY, JSON.stringify(payload));
-    } catch (err) {
-      console.error("Failed to persist exam session:", err);
-    }
+    if (Number.isFinite(endsAtMs)) return;
+
+    const baseTimeLeft =
+      typeof timeLeft === "number" && timeLeft > 0 ? timeLeft : totalTime;
+    const nextEndsAt = Date.now() + baseTimeLeft * 1000;
+    setEndsAtMs(nextEndsAt);
+    setTimeLeft(baseTimeLeft);
+  }, [endsAtMs, timeLeft, totalQuestions, totalTime]);
+
+  const persistMetaRef = useRef({ lastWriteMs: 0 });
+
+  const buildSessionPayload = useCallback(() => {
+    const effectiveTimeLeft =
+      getTimeLeftFromEndsAtMs(endsAtMs) ??
+      (typeof timeLeftRef.current === "number" ? timeLeftRef.current : 0);
+
+    return {
+      version: 2,
+      selectedCourse,
+      questions: shuffledQuestions.length ? shuffledQuestions : questions,
+      answers,
+      currentIndex,
+      endsAtMs,
+      timeLeft: effectiveTimeLeft, // snapshot for quick restore + legacy consumers
+    };
   }, [
     answers,
     currentIndex,
-    timeLeft,
-    shuffledQuestions,
-    selectedCourse,
-    totalQuestions,
+    endsAtMs,
     questions,
+    selectedCourse,
+    shuffledQuestions,
   ]);
+
+  const persistExamSessionThrottled = useCallback(
+    ({ force = false } = {}) => {
+      if (!totalQuestions) return;
+      const now = Date.now();
+      const { lastWriteMs } = persistMetaRef.current;
+      if (!force && now - lastWriteMs < DEFAULT_PERSIST_INTERVAL_MS) return;
+
+      persistMetaRef.current.lastWriteMs = now;
+      saveExamSession(buildSessionPayload());
+    },
+    [buildSessionPayload, totalQuestions],
+  );
+
+  // Persist immediately on key progress changes (but without per-second writes).
+  useEffect(() => {
+    persistExamSessionThrottled({ force: true });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [answers, currentIndex, shuffledQuestions, selectedCourse]);
+
+  // Persist time periodically + on page hide/unload (reliable refresh resume, minimal drift).
+  useEffect(() => {
+    if (!totalQuestions || !Number.isFinite(endsAtMs)) return;
+
+    const id = setInterval(() => {
+      persistExamSessionThrottled();
+    }, DEFAULT_PERSIST_INTERVAL_MS);
+
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        persistExamSessionThrottled({ force: true });
+      }
+    };
+
+    const onBeforeUnload = () => {
+      persistExamSessionThrottled({ force: true });
+    };
+
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("beforeunload", onBeforeUnload);
+
+    return () => {
+      clearInterval(id);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("beforeunload", onBeforeUnload);
+    };
+  }, [endsAtMs, persistExamSessionThrottled, totalQuestions]);
 
   const saveResultToSupabase = async (finalTime) => {
     try {
@@ -180,6 +260,7 @@ const ExamScreen = ({
   };
 
   const handleBookmarkClick = () => {
+    if (!currentQuestion?.id) return;
     setBookmarks((prev) => {
       const updated = prev.includes(currentQuestion.id)
         ? prev.filter((id) => id !== currentQuestion.id)
@@ -190,19 +271,20 @@ const ExamScreen = ({
   };
 
   const onOptionClick = (option) => {
-    const newAnswers = [...answers];
-    newAnswers[currentIndex] = option;
-    setAnswers(newAnswers);
+    setAnswers((prev) => {
+      const next = Array.isArray(prev) ? [...prev] : [];
+      next[currentIndex] = option;
+      return next;
+    });
 
     // Only auto-advance if the preference is enabled
     if (autoAdvance) {
       setTimeout(() => {
-        if (currentIndex < totalQuestions - 1) {
-          const nextIndex = currentIndex + 1;
-          setCurrentIndex(nextIndex);
-        } else {
+        setCurrentIndex((prev) => {
+          if (prev < totalQuestions - 1) return prev + 1;
           setSubmitOverlayOpen(true);
-        }
+          return prev;
+        });
       }, 200); // small delay for UX smoothness
     }
   };
@@ -234,18 +316,16 @@ const ExamScreen = ({
     setHasSaved(true);
 
     // Exam is complete – clear any persisted in‑progress state
-    try {
-      localStorage.removeItem(EXAM_SESSION_KEY);
-    } catch (err) {
-      console.error("Failed to clear exam session:", err);
-    }
+    clearExamSession();
   };
 
   const handleSubmit = async () => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setSubmitOverlayOpen(false);
     setIsSubmitting(true);
 
-    const finalTime = initialTotalTime - timeLeft;
+    const finalTime = totalTime - timeLeft;
 
     saveResultToHistory(finalTime);
 
@@ -261,17 +341,15 @@ const ExamScreen = ({
     }
 
     if (onSubmit) onSubmit();
-    try {
-      localStorage.removeItem(EXAM_SESSION_KEY);
-    } catch (err) {
-      console.error("Failed to clear exam session on submit:", err);
-    }
+    clearExamSession();
     navigate("/results");
   };
 
   const handleTimeUp = async () => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
-    const finalTime = initialTotalTime - timeLeft;
+    const finalTime = totalTime - timeLeft;
 
     saveResultToHistory(finalTime);
 
@@ -283,18 +361,14 @@ const ExamScreen = ({
     }
 
     if (onSubmit) onSubmit();
-    try {
-      localStorage.removeItem(EXAM_SESSION_KEY);
-    } catch (err) {
-      console.error("Failed to clear exam session on timeout:", err);
-    }
+    clearExamSession();
     navigate("/results");
   };
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
   // Show a loading screen while questions are being fetched or prepared
-  if (questionsLoading || shuffledQuestions.length === 0) {
+  if (questionsLoading || shuffledQuestions.length === 0 || !currentQuestion) {
     return (
       <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">
@@ -360,8 +434,8 @@ const ExamScreen = ({
 
           <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700">
             <Timer
-              totalTime={initialTotalTime}
-              initialTime={timeLeft}
+              endsAtMs={endsAtMs}
+              timeLeft={timeLeft}
               onTick={setTimeLeft}
               onTimeUp={handleTimeUp}
             />
@@ -402,7 +476,7 @@ const ExamScreen = ({
 
             <div className="lg:text-xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-5">
               <RenderMathText
-                text={currentQuestion.question}
+                text={currentQuestion?.question ?? ""}
                 courseId={selectedCourse?.id}
               />
             </div>
@@ -452,8 +526,7 @@ const ExamScreen = ({
         <div className="max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-3">
           <button
             onClick={() => {
-              const newIndex = currentIndex - 1;
-              setCurrentIndex(newIndex);
+              setCurrentIndex((prev) => Math.max(0, prev - 1));
             }}
             disabled={currentIndex === 0}
             className="size-14 rounded-full flex items-center justify-center bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-20 transition-all active:scale-90"
@@ -472,8 +545,7 @@ const ExamScreen = ({
           ) : (
             <button
               onClick={() => {
-                const newIndex = currentIndex + 1;
-                setCurrentIndex(newIndex);
+                setCurrentIndex((prev) => Math.min(totalQuestions - 1, prev + 1));
               }}
               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white h-14 rounded-[1.8rem] font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
             >
@@ -498,11 +570,7 @@ const ExamScreen = ({
         isOpen={isExitOverlayOpen}
         onClose={() => setExitOverlayOpen(false)}
         onConfirm={() => {
-          try {
-            localStorage.removeItem(EXAM_SESSION_KEY);
-          } catch (err) {
-            console.error("Failed to clear exam session on exit:", err);
-          }
+          clearExamSession();
           navigate("/");
         }}
         title="Quit Exam?"

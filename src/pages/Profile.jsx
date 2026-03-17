@@ -19,6 +19,7 @@ import { HiOutlineMoon } from "react-icons/hi";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { supabase } from "../supabaseClient";
 import Avatar from "../components/Avatar";
+import { clearExamSession } from "../utils/examSessionStorage";
 
 const Profile = ({
   userProfile,
@@ -83,7 +84,7 @@ const Profile = ({
       try {
         localStorage.removeItem("examHistory");
         localStorage.removeItem("bookmarkedQuestions");
-        localStorage.removeItem("currentExamSession");
+        clearExamSession();
       } catch (err) {
         console.error("Failed to clear local data on delete:", err);
       }
