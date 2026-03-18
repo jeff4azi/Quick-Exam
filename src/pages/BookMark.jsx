@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { FaTrashAlt, FaBookmark, FaLightbulb } from "react-icons/fa";
-import { FiArrowLeft, FiTrash2, FiLock } from "react-icons/fi";
+import { FiTrash2, FiLock } from "react-icons/fi";
 import { RenderMathText } from "../utils/RenderMathText";
 import ConfirmOverlay from "../components/ConfirmOverlay"; // Added this import
 import { API_BASE_URL } from "../apiConfig";
+import NavBar from "../components/NavBar";
 
 const BookMark = ({ bookmarks, setBookmarks, isPremium }) => {
   const navigate = useNavigate();
@@ -87,7 +88,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium }) => {
 
   if (!isPremium) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] dark:bg-[#0F172A] px-6">
+      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] dark:bg-[#0F172A] px-6 pb-32">
         <div className="max-w-sm w-full bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-700 text-center">
           <div className="text-4xl mb-4 flex justify-center items-center">
             <FiLock />
@@ -106,14 +107,9 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium }) => {
           >
             Get Premium
           </button>
-
-          <span
-            onClick={() => navigate(-1)}
-            className="text-xs text-slate-500 dark:text-slate-400 mt-4 block cursor-pointer"
-          >
-            Go back
-          </span>
         </div>
+
+        <NavBar isPremium={isPremium} />
       </div>
     );
   }
@@ -130,12 +126,6 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium }) => {
       >
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 active:scale-90 transition-all"
-            >
-              <FiArrowLeft size={20} />
-            </button>
             <h1 className="text-xl font-black tracking-tight">Saved Items</h1>
           </div>
 
@@ -160,7 +150,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium }) => {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-6 pt-4 pb-20">
+      <main className="max-w-2xl mx-auto px-6 pt-4 pb-32">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24">
             <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-b-4 mb-4"></div>
@@ -251,6 +241,8 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium }) => {
         message="Are you sure you want to remove all saved questions? This action cannot be undone."
         danger={true}
       />
+
+      <NavBar isPremium={isPremium} />
     </div>
   );
 };

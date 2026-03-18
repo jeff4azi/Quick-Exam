@@ -1,15 +1,20 @@
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import ReactGA from "react-ga4";
 import {
-  FiChevronLeft,
   FiBookOpen,
   FiLayers,
   FiCheckCircle,
   FiX,
 } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
+import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import ConfirmOverlay from "../components/ConfirmOverlay";
+import NavBar from "../components/NavBar";
+import {
+  loadFavouriteCourseIds,
+  toggleFavouriteCourseId,
+} from "../utils/favouriteCourses";
 
 const ChooseCourseScreen = ({
   selectedQuestionCount,
@@ -24,8 +29,12 @@ const ChooseCourseScreen = ({
   coursesLoading,
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+  const [favouriteIds, setFavouriteIds] = useState(() =>
+    loadFavouriteCourseIds(),
+  );
 
   const userCollege = userProfile?.college;
 
@@ -38,7 +47,8 @@ const ChooseCourseScreen = ({
   /* ----------------------------- FILTER COURSES ----------------------------- */
   const filteredCourses = useMemo(() => {
     if (!Array.isArray(courses)) return [];
-    return courses.filter(course => {
+    return courses.filter((course) => {
+      if (!course) return false;
       if (!Array.isArray(course.colleges)) return false;
       if (course.colleges.includes("ALL")) return true;
       if (!userCollege) return false;
@@ -46,9 +56,31 @@ const ChooseCourseScreen = ({
     });
   }, [courses, userCollege]);
 
+  // If Home deep-links to a course, preselect it
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(location?.search || "");
+      const courseId = params.get("course");
+      if (!courseId) return;
+      const match = filteredCourses.find((c) => c?.id === courseId);
+      if (match) {
+        setSelectedCourse(match);
+        setSelectedQuestionCount(null);
+      }
+    } catch {
+      // ignore
+    }
+  }, [
+    filteredCourses,
+    location?.search,
+    setSelectedCourse,
+    setSelectedQuestionCount,
+  ]);
+
   /* ----------------------------- GROUP COURSES ------------------------------ */
   const groupedCourses = useMemo(() => {
     return filteredCourses.reduce((acc, course) => {
+      if (!course) return acc;
       if (!acc[course.group]) acc[course.group] = [];
       acc[course.group].push(course);
       return acc;
@@ -87,7 +119,7 @@ const ChooseCourseScreen = ({
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-500 pb-10">
+    <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-500 pb-32">
       {/* HEADER */}
       <header
         className={`sticky top-0 z-50 px-6 py-4 transition-all duration-300 ${
@@ -97,12 +129,6 @@ const ChooseCourseScreen = ({
         }`}
       >
         <div className="max-w-2xl mx-auto flex items-center gap-4">
-          <button
-            onClick={() => navigate("/")}
-            className="p-3 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-all"
-          >
-            <FiChevronLeft className="-translate-x-1/18 size-6 text-slate-600 dark:text-slate-300" />
-          </button>
           <div>
             <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
               Select Course
@@ -158,11 +184,20 @@ const ChooseCourseScreen = ({
                 <div className="grid gap-4">
                   {groupedCourses[group].map(course => {
                     const isSelected = selectedCourse?.id === course.id;
+                    const isFavourite = favouriteIds.includes(course.id);
                     return (
-                      <button
+                      <div
                         key={course.id}
+                        role="button"
+                        tabIndex={0}
                         onClick={() => handleSelectCourse(course)}
-                        className={`group w-full text-left p-5 rounded-[2rem] border-2 transition-all active:scale-[0.98] ${
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            handleSelectCourse(course);
+                          }
+                        }}
+                        className={`group w-full text-left p-5 rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${
                           isSelected
                             ? "bg-blue-600 border-blue-600 shadow-xl shadow-blue-200"
                             : "bg-white dark:bg-slate-800 border-white dark:border-slate-800 hover:border-blue-100 shadow-sm"
@@ -188,13 +223,33 @@ const ChooseCourseScreen = ({
                             </div>
                           </div>
 
-                          <div className={`size-10 shrink-0 rounded-2xl flex items-center justify-center ${
-                            isSelected ? "bg-white text-blue-600" : "bg-gray-50 dark:bg-slate-700 text-gray-300"
-                          }`}>
-                            {isSelected ? <FiCheckCircle size={22} /> : <FiChevronLeft className="rotate-180" />}
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                const next = toggleFavouriteCourseId(course.id);
+                                setFavouriteIds(next);
+                              }}
+                              className={`size-10 shrink-0 rounded-2xl flex items-center justify-center transition-all active:scale-90 ${
+                                isSelected
+                                  ? "bg-white/20 text-white"
+                                  : "bg-gray-50 dark:bg-slate-700 text-slate-400 dark:text-slate-300"
+                              }`}
+                              title={
+                                isFavourite ? "Remove from favourites" : "Add to favourites"
+                              }
+                              aria-pressed={isFavourite}
+                            >
+                              {isFavourite ? (
+                                <IoHeart className={isSelected ? "text-white" : "text-rose-500"} size={22} />
+                              ) : (
+                                <IoHeartOutline size={22} />
+                              )}
+                            </button>
                           </div>
                         </div>
-                      </button>
+                      </div>
                     );
                   })}
                 </div>
@@ -261,6 +316,11 @@ const ChooseCourseScreen = ({
         message="Upgrade to Premium to unlock longer exams and full-question modes for all your courses."
         confirmText="Get Premium"
         cancelText="Maybe later"
+      />
+
+      <NavBar
+        isPremium={isPremium}
+        onLockedClick={() => setPremiumOverlayOpen(true)}
       />
     </div>
   );

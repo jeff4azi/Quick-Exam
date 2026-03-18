@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiArrowLeft } from "react-icons/fi";
 import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import ProfileSheet from "../components/ProfileSheet";
 import Avatar from "../components/Avatar";
+import NavBar from "../components/NavBar";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -23,7 +23,7 @@ const getCurrentWeekStartIso = () => {
   return weekStart.toISOString();
 };
 
-const LeaderboardScreen = ({ courses }) => {
+const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
   const navigate = useNavigate();
   const [attempts, setAttempts] = useState([]);
   const [profiles, setProfiles] = useState({});
@@ -243,12 +243,6 @@ const LeaderboardScreen = ({ courses }) => {
       <header className="sticky top-0 z-50 px-6 py-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-lg shadow-slate-200/50 dark:shadow-none border-b border-slate-100 dark:border-slate-800">
         <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 active:scale-90 transition-all"
-            >
-              <FiArrowLeft size={20} />
-            </button>
             <div>
               <h1 className="text-xl font-black tracking-tight flex items-center gap-2">
                 Weekly Leaderboard
@@ -267,7 +261,7 @@ const LeaderboardScreen = ({ courses }) => {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-6 pt-4 pb-20">
+      <main className="max-w-2xl mx-auto px-6 pt-4 pb-32">
         {/* Course filter */}
         <section className="mb-4">
           <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
@@ -362,6 +356,8 @@ const LeaderboardScreen = ({ courses }) => {
         isPremium={sheetIsPremium}
         stats={sheetStats}
       />
+
+      <NavBar isPremium={isUserPremium} />
     </div>
   );
 };

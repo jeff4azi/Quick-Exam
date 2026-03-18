@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { FaHistory, FaChevronRight, FaTrashAlt, FaTrophy, FaChartLine, FaLayerGroup, FaRedoAlt } from "react-icons/fa";
-import { FiArrowLeft, FiTrash2, FiClock, FiRefreshCw } from "react-icons/fi";
+import { FiTrash2, FiClock, FiRefreshCw } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
+import NavBar from "../components/NavBar";
 
 const formatTime = (seconds) => {
   if (!seconds) return null;
@@ -14,7 +15,7 @@ const formatTime = (seconds) => {
 };
 
 
-const HistoryScreen = () => {
+const HistoryScreen = ({ isPremium }) => {
   const navigate = useNavigate();
   const [historyData, setHistoryData] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -179,12 +180,6 @@ const HistoryScreen = () => {
         }`}>
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <button
-              onClick={() => navigate(-1)}
-              className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 active:scale-90 transition-all"
-            >
-              <FiArrowLeft size={20} />
-            </button>
             <h1 className="text-xl font-black tracking-tight">Activity Log</h1>
           </div>
 
@@ -199,7 +194,7 @@ const HistoryScreen = () => {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-6 pt-4 pb-20">
+      <main className="max-w-2xl mx-auto px-6 pt-4 pb-32">
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
@@ -279,6 +274,8 @@ const HistoryScreen = () => {
         message="This action cannot be undone. All your progress data will be reset."
         danger={true}
       />
+
+      <NavBar isPremium={isPremium} />
     </div>
   );
 };

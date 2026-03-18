@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import BannerAd from "../components/BannerAd";
@@ -6,10 +6,11 @@ import ConfirmOverlay from "../components/ConfirmOverlay";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import Avatar from "../components/Avatar";
+import NavBar from "../components/NavBar";
 
-import { FaCrown, FaTrophy, FaGraduationCap, FaFire } from "react-icons/fa";
-import { FiBookmark, FiStar, FiZap } from "react-icons/fi";
-import { MdOutlineHistory } from "react-icons/md";
+import { FaCrown, FaTrophy, FaFire } from "react-icons/fa";
+import { FiStar, FiZap } from "react-icons/fi";
+import { loadFavouriteCourseIds } from "../utils/favouriteCourses";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -27,10 +28,14 @@ const getCurrentWeekStartIso = () => {
   return weekStart.toISOString();
 };
 
-const Home = ({ userProfile, loadingProfile, isPremium }) => {
+const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+  const [favouriteIds, setFavouriteIds] = useState(() =>
+    loadFavouriteCourseIds(),
+  );
+  const [recentCourses, setRecentCourses] = useState([]);
   const [stats, setStats] = useState({
     bestScore: "--",
     position: "--",
@@ -163,6 +168,27 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
     }
   }, []);
 
+  // Recently done courses carousel (last 5 attempts)
+  useEffect(() => {
+    try {
+      const history =
+        JSON.parse(localStorage.getItem("examHistory") || "[]") || [];
+      const safe = Array.isArray(history) ? history : [];
+      const last5 = safe.slice(-5).reverse();
+      setRecentCourses(last5);
+    } catch {
+      setRecentCourses([]);
+    }
+  }, []);
+
+  const favouriteCourses = useMemo(() => {
+    const list = Array.isArray(courses) ? courses : [];
+    const map = new Map(list.map((c) => [c?.id, c]));
+    return favouriteIds
+      .map((id) => map.get(id))
+      .filter(Boolean);
+  }, [courses, favouriteIds]);
+
   const firstName = loadingProfile
     ? "Scholar"
     : userProfile?.full_name?.split(" ")[0] || "Scholar";
@@ -284,70 +310,102 @@ const Home = ({ userProfile, loadingProfile, isPremium }) => {
             </div>
           </div>
         )}
-      </div>
 
-      {/* Bottom CTA + Navbar */}
-      <div className="mx-auto max-w-2xl fixed bottom-0 inset-x-0 bg-gradient-to-t from-gray-50 via-gray-50/90 to-transparent dark:from-slate-900 dark:via-slate-900/90">
+        {/* Recently done (carousel) */}
         <div className="space-y-3">
-          <div className="px-6">
-            <button
-              onClick={() => navigate("/choose-course")}
-              className="w-full bg-blue-600 dark:bg-blue-700 py-4.5 rounded-2xl font-black text-white text-lg shadow-xl shadow-blue-200 dark:shadow-none hover:bg-blue-700 transition-all active:scale-95"
-            >
-              Choose Course
-            </button>
-          </div>
-
-          <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-gray-100 dark:border-slate-700 px-4 py-2 flex items-center justify-between">
-            {/* History */}
+          <div className="flex items-center justify-between">
+            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
+              Recently done
+            </h3>
             <button
               type="button"
               onClick={() => navigate("/history")}
-              className="flex flex-col items-center flex-1 text-xs font-semibold text-slate-500 dark:text-slate-300"
+              className="text-[11px] font-black text-blue-600 dark:text-blue-400"
             >
-              <div className="size-9 rounded-2xl flex items-center justify-center">
-                <MdOutlineHistory size={22} />
-              </div>
-              <span>History</span>
-            </button>
-
-            {/* Saved */}
-            <button
-              type="button"
-              onClick={() => {
-                if (isPremium) {
-                  navigate("/bookmarks");
-                } else {
-                  setPremiumOverlayOpen(true);
-                }
-              }}
-              className={`flex flex-col items-center flex-1 text-xs font-semibold text-slate-500 dark:text-slate-300 ${!isPremium ? "opacity-60 cursor-not-allowed" : ""}`}
-            >
-              <div className="relative size-9 rounded-2xl flex items-center justify-center">
-                <FiBookmark size={20} />
-                {!isPremium && (
-                  <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-                    <FaCrown className="text-[8px] text-white" />
-                  </div>
-                )}
-              </div>
-              <span>Saved</span>
-            </button>
-
-            {/* Leaderboard */}
-            <button
-              type="button"
-              onClick={() => navigate("/leaderboard")}
-              className="flex flex-col items-center flex-1 text-xs font-semibold text-slate-500 dark:text-slate-300"
-            >
-              <div className="size-9 rounded-2xl flex items-center justify-center">
-                <FaTrophy size={18} />
-              </div>
-              <span>Leaders</span>
+              View all
             </button>
           </div>
+
+          {recentCourses.length === 0 ? (
+            <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
+              No recent attempts yet. Complete an exam to see it here.
+            </div>
+          ) : (
+            <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory">
+              {recentCourses.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => navigate("/history")}
+                  className="snap-start shrink-0 w-64 bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 text-left shadow-sm active:scale-[0.98] transition-transform"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 truncate">
+                        {item?.date || "—"}
+                      </p>
+                      <p className="mt-1 text-lg font-black text-slate-900 dark:text-white truncate">
+                        {item?.course || "Course"}
+                      </p>
+                    </div>
+                    <div className="size-10 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black">
+                      {item?.score ?? 0}/{item?.total ?? 0}
+                    </div>
+                  </div>
+                  <div className="mt-3 flex items-center gap-2 text-[11px] font-bold text-slate-400 dark:text-slate-500">
+                    <span>Best: {item?.score != null && item?.total ? `${Math.round((item.score / item.total) * 100)}%` : "—"}</span>
+                    <span>•</span>
+                    <span>Time: {item?.timeTaken != null ? `${Math.floor(item.timeTaken / 60)}m ${item.timeTaken % 60}s` : "—"}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Favourite courses */}
+        <div className="space-y-3">
+          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
+            Favourite courses
+          </h3>
+
+          {favouriteCourses.length === 0 ? (
+            <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
+              You haven’t favourited any courses yet. Tap the heart on the Courses screen.
+            </div>
+          ) : (
+            <div className="grid gap-4">
+              {favouriteCourses.map((course) => (
+                <button
+                  key={course.id}
+                  type="button"
+                  onClick={() => navigate(`/choose-course?course=${course.id}`)}
+                  className="w-full text-left p-5 rounded-[2rem] border-2 bg-white dark:bg-slate-800 border-white dark:border-slate-800 hover:border-blue-100 shadow-sm active:scale-[0.98] transition-transform"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0">
+                      <p className="text-xl font-black text-slate-900 dark:text-white truncate">
+                        {course.name}
+                      </p>
+                      <p className="text-sm mt-1 leading-snug text-slate-500 dark:text-slate-400 truncate">
+                        {course.title}
+                      </p>
+                    </div>
+                    <div className="shrink-0 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 text-[10px] font-black tracking-wider text-blue-600 dark:text-blue-400">
+                      {course.questionCount || 0} Qs
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
+
+      <NavBar
+        isPremium={isPremium}
+        onLockedClick={() => setPremiumOverlayOpen(true)}
+      />
 
       {!isPremium && showAd && <BannerAd onAdClose={() => setShowAd(false)} />}
 

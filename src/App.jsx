@@ -449,7 +449,7 @@ function App() {
               path="/leaderboard"
               element={
                 <ProtectedRoute>
-                  <LeaderboardScreen courses={availableCourses} />
+                  <LeaderboardScreen courses={availableCourses} isPremium={isPremium} />
                 </ProtectedRoute>
               }
             />

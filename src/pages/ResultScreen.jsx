@@ -6,6 +6,7 @@ import BannerAd from "../components/BannerAd";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { FaCrown } from "react-icons/fa";
 import Avatar from "../components/Avatar";
+import NavBar from "../components/NavBar";
 
 const ResultScreen = ({
   questions,
@@ -84,7 +85,7 @@ const ResultScreen = ({
   const feedback = getFeedback();
 
   return (
-    <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300">
+    <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 pb-32 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300">
       {/* Header Section */}
       <header className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-2 bg-white dark:bg-gray-900 py-2 px-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
@@ -271,6 +272,11 @@ const ResultScreen = ({
         message="Get Premium to retake exams instantly and review detailed answers for every question."
         confirmText="Get Premium"
         cancelText="Maybe later"
+      />
+
+      <NavBar
+        isPremium={isPremium}
+        onLockedClick={() => setPremiumOverlayOpen(true)}
       />
     </div>
   );
