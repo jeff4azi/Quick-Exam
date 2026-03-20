@@ -30,6 +30,7 @@ const Profile = ({
   toggleDarkMode,
   autoAdvance,
   toggleAutoAdvance,
+  deleteImage,
 }) => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
@@ -73,6 +74,10 @@ const Profile = ({
 
     try {
       setIsDeleting(true);
+
+      if (userProfile.avatar_public_id) {
+        await deleteImage(userProfile.avatar_public_id);
+      }
 
       const {
         data: { session },

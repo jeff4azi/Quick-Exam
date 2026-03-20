@@ -59,6 +59,10 @@ function App() {
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(null);
   const [questionsLoading, setQuestionsLoading] = useState(false);
 
+  const CLOUDINARY_API_SECRET = import.meta.env.VITE_CLOUDINARY_API_SECRET;
+  const CLOUDINARY_API_KEY = import.meta.env.VITE_CLOUDINARY_API_KEY;
+  const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+
   // --- FIX 2: HANDLE SUBMIT LOGIC ---
   const handleExamSubmit = () => {
     // 1. Calculate Score
@@ -361,6 +365,38 @@ function App() {
     }
   };
 
+  const deleteImage = async (publicId) => {
+    const timestamp = Math.floor(Date.now() / 1000);
+    const stringToSign = `public_id=${publicId}&timestamp=${timestamp}${CLOUDINARY_API_SECRET}`;
+
+    const sha1 = crypto.subtle.digest(
+      "SHA-1",
+      new TextEncoder().encode(stringToSign),
+    );
+    const signature = await sha1.then((buf) =>
+      Array.from(new Uint8Array(buf))
+        .map((b) => b.toString(16).padStart(2, "0"))
+        .join(""),
+    );
+
+    const formData = new FormData();
+    formData.append("public_id", publicId);
+    formData.append("api_key", CLOUDINARY_API_KEY);
+    formData.append("timestamp", timestamp);
+    formData.append("signature", signature);
+
+    const res = await fetch(
+      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/destroy`,
+      {
+        method: "POST",
+        body: formData,
+      },
+    );
+
+    const data = await res.json();
+    console.log("Delete response:", data);
+  };
+
   const props = {
     answers,
     setAnswers,
@@ -388,6 +424,7 @@ function App() {
     hasRetaken,
     setHasRetaken,
     questionsLoading,
+    deleteImage,
   };
 
   return (
@@ -449,7 +486,10 @@ function App() {
               path="/leaderboard"
               element={
                 <ProtectedRoute>
-                  <LeaderboardScreen courses={availableCourses} isPremium={isPremium} />
+                  <LeaderboardScreen
+                    courses={availableCourses}
+                    isPremium={isPremium}
+                  />
                 </ProtectedRoute>
               }
             />

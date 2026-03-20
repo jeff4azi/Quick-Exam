@@ -11,7 +11,7 @@ import imageCompression from "browser-image-compression";
 import { supabase } from "../supabaseClient";
 
 const CLOUDINARY_CLOUD_NAME =
-  import.meta.env.VITE_CLOUDINARY_CLOUD_NAME || "dn5h1cghb";
+  import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
 const CLOUDINARY_UPLOAD_PRESET = "profile_pictures";
 
 // Validate Cloudinary configuration
@@ -24,7 +24,7 @@ const validateCloudinaryConfig = () => {
   }
 };
 
-const UploadProfilePic = ({ userProfile, setUserProfile }) => {
+const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
@@ -89,6 +89,11 @@ const UploadProfilePic = ({ userProfile, setUserProfile }) => {
       formData.append("file", compressed);
       formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
       formData.append("public_id", uniquePublicId);
+
+      // If user already has an avatar, delete the old one first
+      if (userProfile.avatar_public_id) {
+        await deleteImage(userProfile.avatar_public_id);
+      }
 
       const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
 
@@ -180,6 +185,10 @@ const UploadProfilePic = ({ userProfile, setUserProfile }) => {
       } = await supabase.auth.getUser();
       if (userError || !user) throw new Error("Could not get user.");
 
+      if (userProfile.avatar_public_id) {
+        await deleteImage(userProfile.avatar_public_id);
+      }
+
       // 2️⃣ Update Supabase to clear avatar
       const { error } = await supabase
         .from("profiles")
@@ -213,7 +222,7 @@ const UploadProfilePic = ({ userProfile, setUserProfile }) => {
       {/* Header */}
       <div className="w-full max-w-xl flex items-center justify-between mb-10 mt-4">
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate(-1)}
           className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-transform"
         >
           <FiArrowLeft className="size-6 text-slate-700 dark:text-slate-200" />
@@ -272,6 +281,19 @@ const UploadProfilePic = ({ userProfile, setUserProfile }) => {
             >
               <FiTrash2 size={16} />
               Remove Current Photo
+            </button>
+          )}
+
+          {!previewUrl && (
+            <button
+              onClick={() => {
+                localStorage.setItem("skipAvatar", "true");
+                navigate("/"); // go back to home
+              }}
+              disabled={uploading}
+              className="w-full mt-4 flex items-center justify-center gap-2 p-4 text-sm font-bold text-gray-500 dark:text-gray-400 hover:underline"
+            >
+              Skip for now
             </button>
           )}
         </div>
