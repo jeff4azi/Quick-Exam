@@ -20,6 +20,9 @@ const HistoryScreen = ({ isPremium }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -171,12 +174,14 @@ const HistoryScreen = ({ isPremium }) => {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
-
       {/* Sleek Glass Header */}
-      <header className={`sticky top-0 z-50 px-6 py-4 transition-all duration-300 ${isScrolled
-          ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-lg shadow-slate-200/50 dark:shadow-none border-b border-slate-100 dark:border-slate-800"
-          : "bg-transparent"
-        }`}>
+      <header
+        className={`sticky top-0 z-50 px-6 py-4 transition-all duration-300 ${
+          isScrolled
+            ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-lg shadow-slate-200/50 dark:shadow-none border-b border-slate-100 dark:border-slate-800"
+            : "bg-transparent"
+        }`}
+      >
         <div className="max-w-2xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-black tracking-tight">Activity Log</h1>
@@ -194,19 +199,30 @@ const HistoryScreen = ({ isPremium }) => {
       </header>
 
       <main className="max-w-2xl mx-auto px-6 pt-4 pb-32">
-
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-b-4 mb-4"></div>
-            <p className="text-slate-500 dark:text-slate-400 font-medium">Loading history...</p>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">
+              Loading history...
+            </p>
           </div>
         ) : (
           <>
             {/* Stats Bento Grid */}
             {totalExams > 0 && (
               <section className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-                <StatCard label="Completed" value={totalExams} icon={<FaLayerGroup />} color="blue" />
-                <StatCard label="Best Score" value={`${Math.round(bestScore)}%`} icon={<FaTrophy />} color="amber" />
+                <StatCard
+                  label="Completed"
+                  value={totalExams}
+                  icon={<FaLayerGroup />}
+                  color="blue"
+                />
+                <StatCard
+                  label="Best Score"
+                  value={`${Math.round(bestScore)}%`}
+                  icon={<FaTrophy />}
+                  color="amber"
+                />
                 <StatCard
                   label="Retake Rate"
                   value={formattedRetake}
@@ -241,7 +257,9 @@ const HistoryScreen = ({ isPremium }) => {
                     <FaHistory size={32} className="text-slate-300" />
                   </div>
                   <h3 className="text-lg font-bold">No History Found</h3>
-                  <p className="text-slate-500 text-sm max-w-[200px]">Complete an exam to see your performance here.</p>
+                  <p className="text-slate-500 text-sm max-w-[200px]">
+                    Complete an exam to see your performance here.
+                  </p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -262,7 +280,6 @@ const HistoryScreen = ({ isPremium }) => {
             </div>
           </>
         )}
-
       </main>
 
       <ConfirmOverlay
@@ -274,7 +291,20 @@ const HistoryScreen = ({ isPremium }) => {
         danger={true}
       />
 
-      <NavBar isPremium={isPremium} />
+      <ConfirmOverlay
+        isOpen={isPremiumOverlayOpen}
+        onClose={() => setPremiumOverlayOpen(false)}
+        onConfirm={() => navigate("/premium")}
+        title="Unlock Premium Features"
+        message="Get Premium to save questions for revision, bookmark during exams, and enjoy an ad-free experience."
+        confirmText="Get Premium"
+        cancelText="Maybe later"
+      />
+
+      <NavBar
+        isPremium={isPremium}
+        onLockedClick={() => setPremiumOverlayOpen(true)}
+      />
     </div>
   );
 };

@@ -1,10 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import ProfileSheet from "../components/ProfileSheet";
 import Avatar from "../components/Avatar";
+import {useNavigate} from "react-router-dom";
+import ConfirmOverlay from "../components/ConfirmOverlay";
 import NavBar from "../components/NavBar";
 
 const getCurrentWeekStartIso = () => {
@@ -24,17 +25,19 @@ const getCurrentWeekStartIso = () => {
 };
 
 const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
-  const navigate = useNavigate();
   const [attempts, setAttempts] = useState([]);
   const [profiles, setProfiles] = useState({});
   const [selectedCourseId, setSelectedCourseId] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [sheetProfile, setSheetProfile] = useState(null);
   const [sheetStats, setSheetStats] = useState(null);
   const [sheetIsPremium, setSheetIsPremium] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchLeaderboardData = async () => {
@@ -357,7 +360,20 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
         stats={sheetStats}
       />
 
-      <NavBar isPremium={isUserPremium} />
+      <ConfirmOverlay
+        isOpen={isPremiumOverlayOpen}
+        onClose={() => setPremiumOverlayOpen(false)}
+        onConfirm={() => navigate("/premium")}
+        title="Unlock Premium Features"
+        message="Get Premium to save questions for revision, bookmark during exams, and enjoy an ad-free experience."
+        confirmText="Get Premium"
+        cancelText="Maybe later"
+      />
+
+      <NavBar
+        isPremium={isUserPremium}
+        onLockedClick={() => setPremiumOverlayOpen(true)}
+      />
     </div>
   );
 };

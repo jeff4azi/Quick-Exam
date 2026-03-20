@@ -1,4 +1,3 @@
-import React from "react";
 import { FiAlertTriangle, FiHelpCircle, FiX } from "react-icons/fi";
 
 const ConfirmOverlay = ({
