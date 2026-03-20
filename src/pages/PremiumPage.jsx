@@ -12,37 +12,6 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
   const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
 
-  async function redeemPremiumCode(userId, code) {
-    const { data: codeEntry, error } = await supabase
-      .from("premium_codes")
-      .select("*")
-      .eq("code", code)
-      .eq("used", false)
-      .single();
-
-    if (error || !codeEntry) {
-      return { success: false, message: "Invalid or already used code." };
-    }
-
-    const { error: updateError } = await supabase
-      .from("premium_codes")
-      .update({ used: true })
-      .eq("id", codeEntry.id);
-
-    if (updateError)
-      return { success: false, message: "Failed to redeem code." };
-
-    const { error: userUpdateError } = await supabase
-      .from("profiles")
-      .update({ is_premium: true })
-      .eq("id", userId);
-
-    if (userUpdateError)
-      return { success: false, message: "Failed to activate premium." };
-
-    return { success: true, message: "Premium activated!" };
-  }
-
   const handleActivate = async (e) => {
     e.preventDefault();
     if (!premiumCode) return;
@@ -51,22 +20,33 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
     setStatus({ type: "", message: "" });
 
     try {
+      // 1️⃣ Get logged-in user
       const {
         data: { user },
-        error: userError,
       } = await withTimeout(
         supabase.auth.getUser(),
         15000,
         "Session check took too long. Please try again.",
       );
-      if (userError || !user) throw new Error("Please log in again.");
 
-      const result = await withTimeout(
-        redeemPremiumCode(user.id, premiumCode.trim()),
-        15000,
-        "Verifying the premium code took too long. Please try again.",
+      if (!user) throw new Error("Please log in again.");
+
+      // 2️⃣ Call your backend endpoint
+      const response = await fetch(
+        "https://quizbolt-ashy.vercel.app/api/premium/redeem",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: user.id,
+            code: premiumCode.trim(),
+          }),
+        },
       );
 
+      const result = await response.json();
+
+      // 3️⃣ Update UI based on result
       if (result.success) {
         setStatus({ type: "success", message: result.message });
         onActivatePremium?.();
@@ -76,7 +56,7 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
     } catch (err) {
       setStatus({
         type: "error",
-        message: err.message || "An unexpected error occurred.",
+        message: err.message || "Unexpected error",
       });
     } finally {
       setLoading(false);
