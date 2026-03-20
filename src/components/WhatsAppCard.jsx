@@ -24,7 +24,7 @@ const WhatsAppCard = () => {
 
   return (
     <div
-      className={`fixed bottom-6 right-6 z-[1000] w-[320px] max-w-[calc(100vw-3rem)]
+      className={`fixed bottom-30 right-6 z-50 w-[320px] max-w-[calc(100vw-3rem)]
       bg-white dark:bg-slate-800 rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.15)] 
       dark:shadow-[0_20px_50px_rgba(0,0,0,0.3)] p-5 border border-gray-100 dark:border-slate-700
       transform transition-all duration-700 ease-[cubic-bezier(0.23,1,0.32,1)]

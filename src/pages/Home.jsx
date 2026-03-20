@@ -184,9 +184,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   const favouriteCourses = useMemo(() => {
     const list = Array.isArray(courses) ? courses : [];
     const map = new Map(list.map((c) => [c?.id, c]));
-    return favouriteIds
-      .map((id) => map.get(id))
-      .filter(Boolean);
+    return favouriteIds.map((id) => map.get(id)).filter(Boolean);
   }, [courses, favouriteIds]);
 
   const firstName = loadingProfile
@@ -353,9 +351,19 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                     </div>
                   </div>
                   <div className="mt-3 flex items-center gap-2 text-[11px] font-bold text-slate-400 dark:text-slate-500">
-                    <span>Best: {item?.score != null && item?.total ? `${Math.round((item.score / item.total) * 100)}%` : "—"}</span>
+                    <span>
+                      Best:{" "}
+                      {item?.score != null && item?.total
+                        ? `${Math.round((item.score / item.total) * 100)}%`
+                        : "—"}
+                    </span>
                     <span>•</span>
-                    <span>Time: {item?.timeTaken != null ? `${Math.floor(item.timeTaken / 60)}m ${item.timeTaken % 60}s` : "—"}</span>
+                    <span>
+                      Time:{" "}
+                      {item?.timeTaken != null
+                        ? `${Math.floor(item.timeTaken / 60)}m ${item.timeTaken % 60}s`
+                        : "—"}
+                    </span>
                   </div>
                 </button>
               ))}
@@ -371,7 +379,8 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
 
           {favouriteCourses.length === 0 ? (
             <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
-              You haven’t favourited any courses yet. Tap the heart on the Courses screen.
+              You haven’t favourited any courses yet. Tap the heart on the
+              Courses screen.
             </div>
           ) : (
             <div className="grid gap-4">
