@@ -74,44 +74,39 @@ const Profile = ({
     try {
       setIsDeleting(true);
 
-      // 1. Get current user
-      const { data, error: userError } = await supabase.auth.getUser();
-      if (userError) throw userError;
-      const user = data?.user;
-      if (!user?.id) throw new Error("No authenticated user found.");
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
 
-      // 2. Delete profile
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .delete()
-        .eq("id", user.id);
-      if (profileError)
-        console.error("Failed to delete profile:", profileError);
-
-      // 3. Delete all exam attempts for this user
-      const { error: attemptsError } = await supabase
-        .from("exam_attempts")
-        .delete()
-        .eq("user_id", user.id);
-      if (attemptsError)
-        console.error("Failed to delete exam attempts:", attemptsError);
-
-      // 4. Clear local storage / session
-      try {
-        localStorage.removeItem("examHistory");
-        localStorage.removeItem("bookmarkedQuestions");
-        clearExamSession();
-      } catch (err) {
-        console.error("Failed to clear local data on delete:", err);
+      if (!session?.access_token) {
+        throw new Error("No session found");
       }
 
-      // 5. Sign out / navigate
-      if (onLogout) {
-        await onLogout();
-      } else {
-        await supabase.auth.signOut();
-        navigate("/login");
+      const res = await fetch(
+        "https://quizbolt-ashy.vercel.app/api/users/delete-account",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${session.access_token}`,
+          },
+        },
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Delete failed");
       }
+
+      // Clear local stuff
+      localStorage.removeItem("examHistory");
+      localStorage.removeItem("bookmarkedQuestions");
+      clearExamSession();
+
+      // Logout
+      await supabase.auth.signOut();
+      navigate("/login");
     } catch (err) {
       console.error("Delete account failed:", err.message);
     } finally {
