@@ -7,7 +7,6 @@ import {
   FiEye,
   FiEyeOff,
   FiArrowRight,
-  FiUser,
 } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { supabase } from "../supabaseClient";

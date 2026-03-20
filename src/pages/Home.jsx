@@ -36,9 +36,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
-  const [favouriteIds, _] = useState(() =>
-    loadFavouriteCourseIds(),
-  );
+  const [favouriteIds, _] = useState(() => loadFavouriteCourseIds());
   const [recentCourses, setRecentCourses] = useState([]);
   const [stats, setStats] = useState({
     bestScore: "--",
@@ -399,29 +397,33 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
               Courses screen.
             </div>
           ) : (
-            <div className="grid gap-4">
-              {favouriteCourses.map((course) => (
-                <button
-                  key={course.id}
-                  type="button"
-                  onClick={() => navigate(`/choose-course?course=${course.id}`)}
-                  className="w-full text-left p-5 rounded-[2rem] border bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:border-blue-100 shadow-sm active:scale-[0.98] transition-transform"
-                >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="min-w-0">
-                      <p className="text-xl font-black text-slate-900 dark:text-white truncate">
-                        {course.name}
-                      </p>
-                      <p className="text-sm mt-1 leading-snug text-slate-500 dark:text-slate-400 truncate">
-                        {course.title}
-                      </p>
+            <div className="overflow-x-auto">
+              <div className="grid gap-4 w-[min(100%,_600px)]">
+                {favouriteCourses.map((course) => (
+                  <button
+                    key={course.id}
+                    type="button"
+                    onClick={() =>
+                      navigate(`/choose-course?course=${course.id}`)
+                    }
+                    className="w-full text-left p-5 rounded-[2rem] border bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:border-blue-100 shadow-sm active:scale-[0.98] transition-transform"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <p className="text-xl font-black text-slate-900 dark:text-white truncate">
+                          {course.name}
+                        </p>
+                        <p className="text-sm mt-1 leading-snug text-slate-500 dark:text-slate-400 truncate">
+                          {course.title}
+                        </p>
+                      </div>
+                      <div className="shrink-0 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/40 text-[10px] font-semibold tracking-wider text-blue-600 dark:text-blue-400">
+                        {course.questionCount || 0} Qs
+                      </div>
                     </div>
-                    <div className="shrink-0 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/40 text-[10px] font-semibold tracking-wider text-blue-600 dark:text-blue-400">
-                      {course.questionCount || 0} Qs
-                    </div>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
         </div>
