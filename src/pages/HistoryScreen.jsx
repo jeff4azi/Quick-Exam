@@ -16,7 +16,6 @@ const formatTime = (seconds) => {
 
 
 const HistoryScreen = ({ isPremium }) => {
-  const navigate = useNavigate();
   const [historyData, setHistoryData] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false);
@@ -302,6 +301,7 @@ const StatCard = ({ label, value, icon, color, className = "" }) => {
 
 /* --- HISTORY ITEM COMPONENT --- */
 const HistoryItem = ({ exam, onDelete }) => {
+  const navigate = useNavigate();
   // Ensure values are treated as numbers to avoid calculation errors
   const score = Number(exam.score) || 0;
   const total = Number(exam.total) || 1;
@@ -313,7 +313,10 @@ const HistoryItem = ({ exam, onDelete }) => {
     : "border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800/50";
 
   return (
-    <div className={`group relative p-5 rounded-[2rem] border flex items-center justify-between transition-all duration-300 active:scale-[0.98] hover:shadow-xl hover:shadow-slate-200/40 dark:hover:shadow-none ${cardStyle}`}>
+    <div
+      onClick={() => navigate(`/choose-course?course=${exam.course_id}`)}
+      className={`group relative p-5 rounded-[2rem] border flex items-center justify-between transition-all duration-300 active:scale-[0.98] hover:shadow-xl hover:shadow-slate-200/40 dark:hover:shadow-none ${cardStyle}`}
+    >
       <div className="flex flex-col gap-0.5">
         <div className="flex items-center gap-2">
           <span className="font-black text-slate-900 dark:text-white capitalize truncate max-w-[150px] sm:max-w-none">
@@ -342,24 +345,29 @@ const HistoryItem = ({ exam, onDelete }) => {
               </span>
             </>
           )}
-
         </span>
-
       </div>
 
       <div className="flex items-center gap-4">
         <div className="text-right">
           <p className="text-xl font-black leading-none flex items-baseline justify-end">
             {score}
-            <span className="text-xs text-slate-300 dark:text-slate-600 font-medium ml-0.5">/{total}</span>
+            <span className="text-xs text-slate-300 dark:text-slate-600 font-medium ml-0.5">
+              /{total}
+            </span>
           </p>
-          <p className={`text-[10px] font-black mt-1 ${isPassed ? 'text-emerald-500' : 'text-red-500'}`}>
-            {percent}% {isPassed ? 'PASSED' : 'FAILED'}
+          <p
+            className={`text-[10px] font-black mt-1 ${isPassed ? "text-emerald-500" : "text-red-500"}`}
+          >
+            {percent}% {isPassed ? "PASSED" : "FAILED"}
           </p>
         </div>
 
         <button
-          onClick={(e) => { e.stopPropagation(); onDelete(); }}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete();
+          }}
           className="p-3 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hidden sm:block"
         >
           <FaTrashAlt size={14} />

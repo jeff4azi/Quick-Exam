@@ -19,7 +19,6 @@ const SignUpScreen = () => {
   const [error, setError] = useState(null);
 
   const [formData, setFormData] = useState({
-    fullName: "",
     email: "",
     password: "",
     confirmPassword: "", // Added field
@@ -34,7 +33,7 @@ const SignUpScreen = () => {
     setLoading(true);
     setError(null);
 
-    const { fullName, email, password, confirmPassword } = formData;
+    const { email, password, confirmPassword } = formData;
 
     // Industry Standard: Client-side validation check
     if (password !== confirmPassword) {
@@ -51,21 +50,7 @@ const SignUpScreen = () => {
 
       if (signUpError) throw signUpError;
 
-      if (data?.user?.id) {
-        const { error: metadataError } = await supabase.auth.updateUser({
-          data: {
-            full_name: fullName.trim(),
-          },
-        });
-
-        if (metadataError) {
-          console.error(
-            "Failed to store name in metadata:",
-            metadataError.message,
-          );
-          // Don't throw error here - user account is created, metadata can be fixed later
-        }
-      }
+      
 
       console.log("User signed up:", data);
       // After sign up, guide user to check email for verification
@@ -117,22 +102,6 @@ const SignUpScreen = () => {
         )}
 
         <form onSubmit={handleSignUp} className="w-full space-y-4">
-          {/* Full Name Input */}
-          <div className="relative group">
-            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <FiUser className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
-            </div>
-            <input
-              type="text"
-              name="fullName"
-              placeholder="Full Name"
-              value={formData.fullName}
-              onChange={handleChange}
-              className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all shadow-sm"
-              required
-            />
-          </div>
-
           {/* Email Input */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import {
+  FiUser,
   FiBookOpen,
   FiNavigation,
   FiCalendar,
@@ -15,6 +16,7 @@ const OnboardingScreen = () => {
   const [error, setError] = useState(null);
 
   const [formData, setFormData] = useState({
+    fullName: "",
     college: "",
     department: "",
     year: "",
@@ -44,14 +46,9 @@ const OnboardingScreen = () => {
       if (authError || !user) {
         throw new Error("No authenticated user found. Please sign in again.");
       }
-
-      // 2. Get name from user metadata (temporary storage)
-      const fullName =
-        user.user_metadata?.full_name ||
-        user.user_metadata?.name ||
-        user.email?.split("@")[0] ||
-        "Scholar";
       
+      const fullName = formData.fullName || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Scholar";
+
       // get avatar url
       let avatarUrl =
         user.user_metadata?.avatar_url || user.user_metadata?.picture || null;
@@ -94,6 +91,30 @@ const OnboardingScreen = () => {
     }
   };
 
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      const nameFromGoogle =
+        user.user_metadata?.full_name || user.user_metadata?.name || "";
+
+      setFormData((prev) => ({
+        ...prev,
+        fullName: nameFromGoogle,
+      }));
+    };
+
+    loadUser();
+  }, []);
+
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
       <div className="w-full max-w-sm animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -118,6 +139,24 @@ const OnboardingScreen = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5 mt-6">
+          {/* Full Name Input */}
+          <span className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-4 mb-1 block">
+            Your Name
+          </span>
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <FiUser className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
+            </div>
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Akintola Emmanuel"
+              value={formData.fullName}
+              onChange={handleChange}
+              className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-medium placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600/20 focus:border-blue-600 transition-all shadow-sm"
+              required
+            />
+          </div>
           {/* College with Autocomplete Logic */}
           <div className="relative group">
             <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-4 mb-1 block">
