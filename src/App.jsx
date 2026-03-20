@@ -120,6 +120,7 @@ function App() {
           year: profileData?.year?.toString() || "1",
           isPremium: profileData?.is_premium === true,
           avatar_url: profileData?.avatar_url || null,
+          avatar_public_id: profileData?.avatar_public_id || null,
         };
 
         setUserProfile(profile);

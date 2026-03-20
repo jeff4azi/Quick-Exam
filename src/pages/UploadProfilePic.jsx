@@ -91,6 +91,7 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
       formData.append("public_id", uniquePublicId);
 
       // If user already has an avatar, delete the old one first
+      console.log("Deleting Cloudinary image:", userProfile.avatar_public_id);
       if (userProfile.avatar_public_id) {
         await deleteImage(userProfile.avatar_public_id);
       }
@@ -185,6 +186,7 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
       } = await supabase.auth.getUser();
       if (userError || !user) throw new Error("Could not get user.");
 
+      console.log("Deleting Cloudinary image:", userProfile.avatar_public_id);
       if (userProfile.avatar_public_id) {
         await deleteImage(userProfile.avatar_public_id);
       }
