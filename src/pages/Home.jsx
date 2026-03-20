@@ -397,11 +397,20 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
               Courses screen.
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <div className="grid gap-4 w-[min(100%,_600px)]">
-                {favouriteCourses.map((course) => (
+            <Swiper
+              spaceBetween={16}
+              slidesPerView={"auto"}
+              freeMode={{
+                enabled: true,
+                momentum: true,
+                momentumVelocityRatio: 0.8,
+              }}
+              modules={[FreeMode]}
+              className="pb-2 pr-6"
+            >
+              {favouriteCourses.map((course) => (
+                <SwiperSlide key={course.id} className="!w-64">
                   <button
-                    key={course.id}
                     type="button"
                     onClick={() =>
                       navigate(`/choose-course?course=${course.id}`)
@@ -422,9 +431,9 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                       </div>
                     </div>
                   </button>
-                ))}
-              </div>
-            </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           )}
         </div>
       </div>
