@@ -36,7 +36,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
-  const [favouriteIds, setFavouriteIds] = useState(() =>
+  const [favouriteIds, _] = useState(() =>
     loadFavouriteCourseIds(),
   );
   const [recentCourses, setRecentCourses] = useState([]);
@@ -271,17 +271,17 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
           ].map((stat, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-slate-800 p-3 rounded-[1.6rem] border border-gray-100 dark:border-slate-700 flex flex-col items-center text-center"
+              className="bg-white dark:bg-slate-800/50 p-3 rounded-[1.6rem] border border-gray-200/40 dark:border-slate-700 flex flex-col items-center text-center"
             >
               <div
                 className={`size-8 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center mb-2`}
               >
                 {stat.icon}
               </div>
-              <span className="text-lg font-black text-slate-900 dark:text-white leading-none">
+              <span className="text-base font-semibold text-slate-700 dark:text-slate-300 leading-none">
                 {stat.value}
               </span>
-              <span className="text-[10px] font-bold text-slate-400 uppercase mt-1">
+              <span className="text-[10px] font-medium text-slate-400 uppercase mt-1">
                 {stat.label}
               </span>
             </div>
@@ -316,20 +316,20 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
         {/* Recently done (carousel) */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
-            <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1">
               Recently done
             </h3>
             <button
               type="button"
               onClick={() => navigate("/history")}
-              className="text-[11px] font-black text-blue-600 dark:text-blue-400"
+              className="text-[11px] font-semibold text-blue-500 dark:text-blue-400"
             >
               View all
             </button>
           </div>
 
           {recentCourses.length === 0 ? (
-            <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
+            <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-200/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
               No recent attempts yet. Complete an exam to see it here.
             </div>
           ) : (
@@ -349,7 +349,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                   <button
                     type="button"
                     onClick={() => navigate("/history")}
-                    className="w-full min-h-[120px] bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 text-left shadow-sm active:scale-[0.98] transition-transform"
+                    className="w-full min-h-[120px] bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-200 dark:border-slate-700 text-left shadow-md active:scale-[0.98] transition-transform"
                   >
                     <div className="flex items-center justify-between gap-3">
                       <div className="min-w-0">
@@ -360,12 +360,12 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                           {item?.course || "Course"}
                         </p>
                       </div>
-                      <div className="size-10 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black">
+                      <div className="size-10 rounded-2xl bg-slate-100 dark:bg-slate-700/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-semibold">
                         {item?.score ?? 0}/{item?.total ?? 0}
                       </div>
                     </div>
 
-                    <div className="mt-3 flex items-center gap-2 text-[11px] font-bold text-slate-400 dark:text-slate-500">
+                    <div className="mt-3 flex items-center gap-2 text-[11px] font-medium text-slate-400 dark:text-slate-500">
                       <span>
                         Best:{" "}
                         {item?.score != null && item?.total
@@ -389,12 +389,12 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
 
         {/* Favourite courses */}
         <div className="space-y-3">
-          <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 ml-1">
+          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1">
             Favourite courses
           </h3>
 
           {favouriteCourses.length === 0 ? (
-            <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
+            <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-200/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
               You haven’t favourited any courses yet. Tap the heart on the
               Courses screen.
             </div>
@@ -405,7 +405,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                   key={course.id}
                   type="button"
                   onClick={() => navigate(`/choose-course?course=${course.id}`)}
-                  className="w-full text-left p-5 rounded-[2rem] border-2 bg-white dark:bg-slate-800 border-white dark:border-slate-800 hover:border-blue-100 shadow-sm active:scale-[0.98] transition-transform"
+                  className="w-full text-left p-5 rounded-[2rem] border bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:border-blue-100 shadow-sm active:scale-[0.98] transition-transform"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="min-w-0">
@@ -416,7 +416,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                         {course.title}
                       </p>
                     </div>
-                    <div className="shrink-0 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-900/20 text-[10px] font-black tracking-wider text-blue-600 dark:text-blue-400">
+                    <div className="shrink-0 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/40 text-[10px] font-semibold tracking-wider text-blue-600 dark:text-blue-400">
                       {course.questionCount || 0} Qs
                     </div>
                   </div>
