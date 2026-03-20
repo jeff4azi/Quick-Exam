@@ -8,6 +8,10 @@ import { withTimeout } from "../utils/withTimeout";
 import Avatar from "../components/Avatar";
 import NavBar from "../components/NavBar";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import { FreeMode } from "swiper/modules";
+
 import { FaCrown, FaTrophy, FaFire } from "react-icons/fa";
 import { FiStar, FiZap } from "react-icons/fi";
 import { loadFavouriteCourseIds } from "../utils/favouriteCourses";
@@ -329,45 +333,57 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
               No recent attempts yet. Complete an exam to see it here.
             </div>
           ) : (
-            <div className="flex gap-4 overflow-x-auto pb-2 snap-x snap-mandatory">
+            <Swiper
+              spaceBetween={16}
+              slidesPerView={"auto"}
+              freeMode={{
+                enabled: true,
+                momentum: true,
+                momentumVelocityRatio: 0.8,
+              }}
+              modules={[FreeMode]}
+              className="pb-2 pr-6"
+            >
               {recentCourses.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => navigate("/history")}
-                  className="snap-start shrink-0 w-64 bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 text-left shadow-sm active:scale-[0.98] transition-transform"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="min-w-0">
-                      <p className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 truncate">
-                        {item?.date || "—"}
-                      </p>
-                      <p className="mt-1 text-lg font-black text-slate-900 dark:text-white truncate">
-                        {item?.course || "Course"}
-                      </p>
+                <SwiperSlide key={`${item.id}-${item.date}`} className="!w-64">
+                  <button
+                    type="button"
+                    onClick={() => navigate("/history")}
+                    className="w-full min-h-[120px] bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 text-left shadow-sm active:scale-[0.98] transition-transform"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 truncate">
+                          {item?.date || "—"}
+                        </p>
+                        <p className="mt-1 text-lg font-black text-slate-900 dark:text-white truncate">
+                          {item?.course || "Course"}
+                        </p>
+                      </div>
+                      <div className="size-10 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black">
+                        {item?.score ?? 0}/{item?.total ?? 0}
+                      </div>
                     </div>
-                    <div className="size-10 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 flex items-center justify-center font-black">
-                      {item?.score ?? 0}/{item?.total ?? 0}
+
+                    <div className="mt-3 flex items-center gap-2 text-[11px] font-bold text-slate-400 dark:text-slate-500">
+                      <span>
+                        Best:{" "}
+                        {item?.score != null && item?.total
+                          ? `${Math.round((item.score / item.total) * 100)}%`
+                          : "—"}
+                      </span>
+                      <span>•</span>
+                      <span>
+                        Time:{" "}
+                        {item?.timeTaken != null
+                          ? `${Math.floor(item.timeTaken / 60)}m ${item.timeTaken % 60}s`
+                          : "—"}
+                      </span>
                     </div>
-                  </div>
-                  <div className="mt-3 flex items-center gap-2 text-[11px] font-bold text-slate-400 dark:text-slate-500">
-                    <span>
-                      Best:{" "}
-                      {item?.score != null && item?.total
-                        ? `${Math.round((item.score / item.total) * 100)}%`
-                        : "—"}
-                    </span>
-                    <span>•</span>
-                    <span>
-                      Time:{" "}
-                      {item?.timeTaken != null
-                        ? `${Math.floor(item.timeTaken / 60)}m ${item.timeTaken % 60}s`
-                        : "—"}
-                    </span>
-                  </div>
-                </button>
+                  </button>
+                </SwiperSlide>
               ))}
-            </div>
+            </Swiper>
           )}
         </div>
 
