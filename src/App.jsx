@@ -366,35 +366,28 @@ function App() {
   };
 
   const deleteImage = async (publicId) => {
-    const timestamp = Math.floor(Date.now() / 1000);
-    const stringToSign = `public_id=${publicId}&timestamp=${timestamp}${CLOUDINARY_API_SECRET}`;
+    try {
+      const res = await fetch(
+        "https://quizbolt-ashy.vercel.app/api/cloudinary/delete-image",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ public_id: publicId }),
+        },
+      );
 
-    const sha1 = crypto.subtle.digest(
-      "SHA-1",
-      new TextEncoder().encode(stringToSign),
-    );
-    const signature = await sha1.then((buf) =>
-      Array.from(new Uint8Array(buf))
-        .map((b) => b.toString(16).padStart(2, "0"))
-        .join(""),
-    );
+      const data = await res.json();
+      console.log("Delete response:", data);
 
-    const formData = new FormData();
-    formData.append("public_id", publicId);
-    formData.append("api_key", CLOUDINARY_API_KEY);
-    formData.append("timestamp", timestamp);
-    formData.append("signature", signature);
+      if (!res.ok) {
+        throw new Error(data.error || "Failed to delete image");
+      }
 
-    const res = await fetch(
-      `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/destroy`,
-      {
-        method: "POST",
-        body: formData,
-      },
-    );
-
-    const data = await res.json();
-    console.log("Delete response:", data);
+      return data;
+    } catch (error) {
+      console.error("Error deleting image:", error);
+      throw error;
+    }
   };
 
   const props = {
