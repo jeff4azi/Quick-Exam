@@ -56,15 +56,20 @@ const Avatar = ({
 
   return (
     <div className={`rounded-full overflow-hidden ${className}`}>
-    <img
-      src={transformedUrl}
-      alt={alt}
-      loading={lazy ? "lazy" : "eager"}
-      onError={handleError}
-      className={`object-cover ${
-        size === "lg" ? "w-24 h-24" : size === "md" ? "w-14 h-14" : "w-10 h-10"
-      } ${className}`}
-  />
+      <img
+        src={transformedUrl}
+        alt={alt}
+        loading={lazy ? "lazy" : "eager"}
+        onError={handleError}
+        className={`object-cover ${
+          size === "lg"
+            ? "w-24 h-24"
+            : size === "md"
+              ? "w-14 h-14"
+              : "w-10 h-10"
+        } ${className}`}
+        crossOrigin="anonymous"
+      />
     </div>
   );
 };

@@ -7,6 +7,7 @@ import ConfirmOverlay from "../components/ConfirmOverlay";
 import { FaCrown } from "react-icons/fa";
 import Avatar from "../components/Avatar";
 import NavBar from "../components/NavBar";
+import Logo from "../images/Logo"
 
 import { toPng } from "html-to-image";
 
@@ -49,6 +50,7 @@ const ResultScreen = ({
         cacheBust: true,
         pixelRatio: 2, // 🔥 makes image sharp
         backgroundColor: "#ffffff", // 🔥 prevents dark/transparent issues
+        useCORS: true,
       });
 
       const blob = await (await fetch(dataUrl)).blob();
@@ -126,7 +128,7 @@ const ResultScreen = ({
   const feedback = getFeedback();
 
   return (
-    <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 pb-32 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300">
+    <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 pb-32 lg:pb-32 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300">
       {/* Header Section */}
       <header className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-2 bg-white dark:bg-gray-900 py-2 px-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
@@ -324,35 +326,135 @@ const ResultScreen = ({
         onLockedClick={() => setPremiumOverlayOpen(true)}
       />
 
+      {/* shareable result image */}
       <div className="fixed top-0 left-0 opacity-0 pointer-events-none">
         <div
           ref={shareRef}
-          className="w-[350px] h-[500px] bg-white rounded-3xl p-6 flex flex-col justify-between"
+          className="w-[350px] h-[500px] bg-slate-50 p-7 flex flex-col justify-between shadow-2xl overflow-hidden relative"
+          style={{ fontFamily: "Inter, sans-serif" }}
         >
-          <div className="flex items-center justify-between">
-            <h1 className="text-lg font-black text-gray-800">QuizBolt ⚡</h1>
-
-            <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded-full font-bold">
-              RESULT
-            </span>
-          </div>
-
-          <div className="flex flex-col items-center justify-center text-center">
-            <p className="text-xs text-gray-400 uppercase tracking-widest">
-              {selectedCourse.name}
-            </p>
-
-            <div className="text-7xl font-black text-blue-600 mt-3">
-              {scorePercentage}%
+          {/* Header Section */}
+          <div className="flex justify-between items-start">
+            <div className="flex items-center gap-3 bg-white p-2 pr-4 rounded-2xl shadow-sm border border-slate-100">
+              <div className="relative">
+                <Avatar
+                  avatarUrl={userProfile?.avatar_url}
+                  size="sm"
+                  className="ring-2 ring-blue-50"
+                />
+                {isPremium && (
+                  <div className="absolute -top-1 -right-1 bg-amber-400 rounded-full p-0.5 border-2 border-white shadow-sm">
+                    <FaCrown className="text-[6px] text-white" />
+                  </div>
+                )}
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[12px] font-bold text-slate-800 leading-none truncate max-w-[120px]">
+                  {userData.full_name}
+                </span>
+                <span className="text-[9px] font-medium text-slate-400 mt-1 uppercase tracking-tight truncate max-w-[120px]">
+                  {userData.college}
+                </span>
+              </div>
             </div>
 
-            <p className="text-gray-500 text-sm mt-3 px-4">{feedback.msg}</p>
+            {/* Date & Logo Combo */}
+            <div className="flex flex-col items-end gap-1">
+              <div className="bg-blue-50 p-2 rounded-xl">
+                <Logo className="w-8 h-8 text-blue-600 brightness-70"
+                />
+              </div>
+              <span className="text-[9px] font-bold text-slate-300 uppercase tracking-tighter text-center mr-1.5">
+                {new Date().toLocaleDateString()}
+              </span>
+            </div>
           </div>
 
-          <div className="text-center">
-            <p className="text-xs text-gray-400 mb-2">Can you beat my score?</p>
+          {/* Center Score Section */}
+          <div className="flex flex-col items-center justify-center py-2">
+            <div className="bg-blue-100/50 px-3 py-1 rounded-full mb-4">
+              <p className="text-[10px] font-bold text-blue-600 uppercase tracking-widest">
+                {selectedCourse.name}
+              </p>
+            </div>
 
-            <div className="text-[10px] text-gray-300">quizbolt.site</div>
+            <div className="relative flex items-center justify-center">
+              <div className="absolute size-32 bg-blue-200 blur-[40px] opacity-30 rounded-full" />
+              <svg className="size-40 -rotate-90 drop-shadow-sm">
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="70"
+                  stroke="#E2E8F0"
+                  strokeWidth="10"
+                  fill="transparent"
+                />
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="70"
+                  stroke="#2563EB"
+                  strokeWidth="10"
+                  fill="transparent"
+                  strokeDasharray={2 * Math.PI * 70}
+                  strokeDashoffset={
+                    2 * Math.PI * 70 -
+                    (scorePercentage / 100) * (2 * Math.PI * 70)
+                  }
+                  strokeLinecap="round"
+                />
+              </svg>
+              <div className="absolute flex flex-col items-center">
+                <span className="text-5xl font-black text-slate-800 tracking-tighter">
+                  {scorePercentage}
+                  <span className="text-xl">%</span>
+                </span>
+                <span className="text-[9px] font-black text-slate-400 uppercase tracking-[0.2em]">
+                  Accuracy
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats Grid */}
+          <div className="flex gap-3 px-2">
+            <div className="bg-white p-4 rounded-[2rem] flex-1 flex flex-col items-center shadow-sm border border-slate-100">
+              <span className="text-[9px] font-bold text-slate-400 uppercase mb-1">
+                Questions
+              </span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-xl font-black text-slate-800">
+                  {formatNum(questions.length)}
+                </span>
+                <span className="text-[9px] font-bold text-blue-500 uppercase">
+                  obj
+                </span>
+              </div>
+            </div>
+            <div className="bg-slate-900 p-4 rounded-[2rem] flex-1 flex flex-col items-center shadow-lg">
+              <span className="text-[9px] font-bold text-slate-500 uppercase mb-1">
+                Duration
+              </span>
+              <div className="flex items-baseline gap-1">
+                <span className="text-xl font-black text-white">
+                  {minutes}:{seconds}
+                </span>
+                <span className="text-[9px] font-bold text-slate-400 uppercase">
+                  Min
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Footer CTA */}
+          <div className="text-center pt-2">
+            <p className="text-[14px] font-extrabold text-slate-800 tracking-tight italic">
+              "Think you can beat this?"
+            </p>
+            <p className="text-[10px] text-slate-400 font-medium mt-1">
+              Challenge yourself at{" "}
+              <span className="text-blue-600 font-bold">quizbolt.site</span>
+            </p>
           </div>
         </div>
       </div>
