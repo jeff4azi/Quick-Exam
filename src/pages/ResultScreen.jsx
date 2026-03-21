@@ -1,12 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import WhatsAppCard from "../components/WhatsAppCard";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import ReactGA from "react-ga4";
 import BannerAd from "../components/BannerAd";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { FaCrown } from "react-icons/fa";
 import Avatar from "../components/Avatar";
 import NavBar from "../components/NavBar";
+
+import { toPng } from "html-to-image";
 
 const ResultScreen = ({
   questions,
@@ -21,11 +23,14 @@ const ResultScreen = ({
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(true);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+  const [sharing, setSharing] = useState(false);
 
   const userData = userProfile || { full_name: "Scholar", college: "" }; // use App.jsx profile
 
   const formatNum = (num) => String(num).padStart(2, "0");
   const answeredCount = answers.filter((a) => a !== undefined).length;
+
+  const shareRef = useRef(null);
 
   useEffect(() => {
     ReactGA.event({
@@ -34,6 +39,42 @@ const ResultScreen = ({
       label: selectedCourse.id,
     });
   }, [selectedCourse.id]);
+
+  const handleShareImage = async () => {
+    setSharing(true);
+    if (!shareRef.current) return;
+
+    try {
+      const dataUrl = await toPng(shareRef.current, {
+        cacheBust: true,
+        pixelRatio: 2, // 🔥 makes image sharp
+        backgroundColor: "#ffffff", // 🔥 prevents dark/transparent issues
+      });
+
+      const blob = await (await fetch(dataUrl)).blob();
+
+      const file = new File([blob], "quizbolt-result.png", {
+        type: "image/png",
+      });
+
+      if (navigator.canShare && navigator.canShare({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: "My QuizBolt Result",
+          text: `I scored ${scorePercentage}% in ${selectedCourse.name}`,
+        });
+      } else {
+        // fallback
+        const link = document.createElement("a");
+        link.download = "quizbolt-result.png";
+        link.href = dataUrl;
+        link.click();
+      }
+    } catch (err) {
+      console.error("Share failed:", err);
+    }
+    setSharing(false);
+  };
 
   const getLatestResult = () => {
     const history = JSON.parse(localStorage.getItem("examHistory")) || [];
@@ -249,19 +290,9 @@ const ResultScreen = ({
           }
         />
         <ActionButton
-          label="Share"
+          label={sharing ? "Sharing..." : "Share"}
           color="bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
-          onClick={() => {
-            const shareData = {
-              title: "My Exam Score",
-              text: `I scored ${scorePercentage}% on ${selectedCourse.name} using QuizBolt! Can you beat my score?`,
-              url: window.location.href,
-            };
-            if (navigator.share) {
-              navigator.share(shareData);
-            }
-          }}
-
+          onClick={handleShareImage}
           icon={
             <path
               stroke-linecap="round"
@@ -292,6 +323,39 @@ const ResultScreen = ({
         isPremium={isPremium}
         onLockedClick={() => setPremiumOverlayOpen(true)}
       />
+
+      <div className="fixed top-0 left-0 opacity-0 pointer-events-none">
+        <div
+          ref={shareRef}
+          className="w-[350px] h-[500px] bg-white rounded-3xl p-6 flex flex-col justify-between"
+        >
+          <div className="flex items-center justify-between">
+            <h1 className="text-lg font-black text-gray-800">QuizBolt ⚡</h1>
+
+            <span className="text-[10px] bg-blue-100 text-blue-600 px-2 py-1 rounded-full font-bold">
+              RESULT
+            </span>
+          </div>
+
+          <div className="flex flex-col items-center justify-center text-center">
+            <p className="text-xs text-gray-400 uppercase tracking-widest">
+              {selectedCourse.name}
+            </p>
+
+            <div className="text-7xl font-black text-blue-600 mt-3">
+              {scorePercentage}%
+            </div>
+
+            <p className="text-gray-500 text-sm mt-3 px-4">{feedback.msg}</p>
+          </div>
+
+          <div className="text-center">
+            <p className="text-xs text-gray-400 mb-2">Can you beat my score?</p>
+
+            <div className="text-[10px] text-gray-300">quizbolt.site</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
