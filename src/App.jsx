@@ -20,6 +20,7 @@ import BookMark from "./pages/BookMark";
 import ReactGA from "react-ga4";
 import ProtectedRoute from "./components/ProtectedRoutes";
 import PremiumPage from "./pages/PremiumPage";
+import LandingPage from "./pages/LandingPage";
 import Profile from "./pages/Profile";
 import { AuthProvider } from "./context/AuthContext";
 import "katex/dist/katex.min.css";
@@ -440,7 +441,8 @@ function App() {
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<SignUp />} />
-            <Route path="/about-page" element={<AboutPage />} />
+            <Route path="/landing" element={<LandingPage />} />
+            <Route path="/about" element={<AboutPage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/confirm-email" element={<ConfirmEmailScreen />} />
             <Route path="/onboarding" element={<OnboardingScreen />} />

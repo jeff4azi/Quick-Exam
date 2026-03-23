@@ -366,7 +366,7 @@ const Profile = ({
             </h3>
             <button
               type="button"
-              onClick={() => navigate("/about-page")}
+              onClick={() => navigate("/about")}
               className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-700/60 transition-all"
             >
               <div className="flex items-center gap-3">
