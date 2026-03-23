@@ -234,28 +234,71 @@ const ExamScreen = ({
 
   const saveResultToSupabase = async (finalTime) => {
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
+      // 🔥 STEP 1: ALWAYS get fresh session
+      let {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
 
-      // Calculate score
+      if (sessionError) throw sessionError;
+
+      // 🔥 STEP 2: If session is missing/expired → refresh it
+      if (!session) {
+        console.warn("Session missing. Attempting refresh...");
+        const { data, error } = await supabase.auth.refreshSession();
+
+        if (error) throw error;
+        session = data.session;
+      }
+
+      const user = session?.user;
+      if (!user) throw new Error("User not authenticated");
+
+      // 🔥 STEP 3: Calculate score
       const correctCount = shuffledQuestions.reduce(
         (acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc),
         0,
       );
 
-      // Insert into Supabase
-      await supabase.from("exam_attempts").insert({
-        user_id: userData.user.id,
+      // 🔥 STEP 4: Insert with retry logic
+      let { error } = await supabase.from("exam_attempts").insert({
+        user_id: user.id,
         course_id: selectedCourse.id,
         score: correctCount,
         total_questions: totalQuestions,
         time_taken: finalTime,
-        is_retake: hasRetaken, // Track if this attempt is a retake
+        is_retake: hasRetaken,
       });
+
+      // 🔥 STEP 5: If JWT expired during insert → retry ONCE
+      if (error?.message?.toLowerCase().includes("jwt")) {
+        console.warn("JWT expired during insert. Retrying...");
+
+        const { data: refreshData, error: refreshError } =
+          await supabase.auth.refreshSession();
+
+        if (refreshError) throw refreshError;
+
+        const retryUser = refreshData.session?.user;
+        if (!retryUser) throw new Error("Retry failed: no user");
+
+        const retry = await supabase.from("exam_attempts").insert({
+          user_id: retryUser.id,
+          course_id: selectedCourse.id,
+          score: correctCount,
+          total_questions: totalQuestions,
+          time_taken: finalTime,
+          is_retake: hasRetaken,
+        });
+
+        if (retry.error) throw retry.error;
+      } else if (error) {
+        throw error;
+      }
 
       console.log("Saved to Supabase ✅");
     } catch (error) {
-      console.error("Error saving attempt:", error.message);
+      console.error("SAVE RESULT FAILED:", error.message);
     }
   };
 

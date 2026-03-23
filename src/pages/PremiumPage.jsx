@@ -20,18 +20,31 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
     setStatus({ type: "", message: "" });
 
     try {
-      // 1️⃣ Get logged-in user
-      const {
-        data: { user },
+      // 🔥 STEP 1: Always get fresh session
+      let {
+        data: { session },
+        error: sessionError,
       } = await withTimeout(
-        supabase.auth.getUser(),
+        supabase.auth.getSession(),
         15000,
         "Session check took too long. Please try again.",
       );
 
+      if (sessionError) throw sessionError;
+
+      // 🔥 STEP 2: If session missing/expired → refresh
+      if (!session) {
+        console.warn("Session missing. Attempting refresh...");
+        const { data: refreshData, error: refreshError } =
+          await supabase.auth.refreshSession();
+        if (refreshError) throw refreshError;
+        session = refreshData.session;
+      }
+
+      const user = session?.user;
       if (!user) throw new Error("Please log in again.");
 
-      // 2️⃣ Call your backend endpoint
+      // 🔥 STEP 3: Call backend
       const response = await fetch(
         "https://quizbolt-ashy.vercel.app/api/premium/redeem",
         {
@@ -46,7 +59,7 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
 
       const result = await response.json();
 
-      // 3️⃣ Update UI based on result
+      // 🔥 STEP 4: Handle backend result
       if (result.success) {
         setStatus({ type: "success", message: result.message });
         onActivatePremium?.();

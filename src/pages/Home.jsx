@@ -12,7 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { FreeMode } from "swiper/modules";
 
-import { FaCrown, FaTrophy, FaFire } from "react-icons/fa";
+import { FaCrown, FaFire } from "react-icons/fa";
 import { FiStar, FiZap } from "react-icons/fi";
 import { loadFavouriteCourseIds } from "../utils/favouriteCourses";
 
