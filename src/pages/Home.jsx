@@ -13,8 +13,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { FreeMode } from "swiper/modules";
 
-import { FaCrown, FaFire } from "react-icons/fa";
-import { FiStar, FiZap } from "react-icons/fi";
+import { FaCrown, FaFire, FaTrophy } from "react-icons/fa";
+import { MdStar } from "react-icons/md";
 import { loadFavouriteCourseIds } from "../utils/favouriteCourses";
 
 const getCurrentWeekStartIso = () => {
@@ -252,14 +252,14 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
             {
               label: "Best Score",
               value: stats.bestScore,
-              icon: <FiStar />,
+              icon: <MdStar />,
               color: "text-amber-500",
               bg: "bg-amber-50 dark:bg-amber-900/20",
             },
             {
               label: "Position",
               value: stats.position || "--",
-              icon: <FiZap />,
+              icon: <FaTrophy />,
               color: "text-blue-500",
               bg: "bg-blue-50 dark:bg-blue-900/20",
             },
