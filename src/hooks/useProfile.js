@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
+import { useVisibilityRefresh } from "./useVisibilityRefresh";
 
 export const useProfile = () => {
   const [profile, setProfile] = useState(null);
@@ -45,6 +46,9 @@ export const useProfile = () => {
   useEffect(() => {
     loadProfile();
   }, []);
+
+  // Re-fetch profile whenever the tab regains focus (handles idle/tab-switch)
+  useVisibilityRefresh(loadProfile);
 
   return { profile, loading, error, reloadProfile: loadProfile };
 };

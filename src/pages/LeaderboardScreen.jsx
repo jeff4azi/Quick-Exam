@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
@@ -7,6 +7,7 @@ import Avatar from "../components/Avatar";
 import {useNavigate} from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import NavBar from "../components/NavBar";
+import { useVisibilityRefresh } from "../hooks/useVisibilityRefresh";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -39,108 +40,101 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchLeaderboardData = async () => {
-      setLoading(true);
-      setError(null);
+  const fetchLeaderboardData = useCallback(async () => {
+    setLoading(true);
+    setError(null);
 
-      try {
-        const weekStartIso = getCurrentWeekStartIso();
+    try {
+      const weekStartIso = getCurrentWeekStartIso();
 
-        // 1. Fetch all non‑retake attempts for the current week
-        const { data: attemptsData, error: attemptsError } = await withTimeout(
-          supabase
-            .from("exam_attempts")
-            .select(
-              `
-              id,
-              user_id,
-              course_id,
-              score,
-              total_questions,
-              time_taken,
-              date_taken,
-              is_retake
-            `,
-            )
-            .eq("is_retake", false)
-            .gte("date_taken", weekStartIso),
-          15000,
-          "Loading leaderboard took too long. Please try again.",
-        );
+      const { data: attemptsData, error: attemptsError } = await withTimeout(
+        supabase
+          .from("exam_attempts")
+          .select(
+            `
+            id,
+            user_id,
+            course_id,
+            score,
+            total_questions,
+            time_taken,
+            date_taken,
+            is_retake
+          `,
+          )
+          .eq("is_retake", false)
+          .gte("date_taken", weekStartIso),
+        15000,
+        "Loading leaderboard took too long. Please try again.",
+      );
 
-        if (attemptsError) {
-          console.error(
-            "Failed to fetch leaderboard attempts:",
-            attemptsError.message,
-            attemptsError.details,
-          );
-          // Gracefully fall back to empty leaderboard instead of hard error
-          setAttempts([]);
-          setProfiles({});
-          setLoading(false);
-          return;
-        }
-
-        const safeAttempts = attemptsData || [];
-
-        setAttempts(safeAttempts);
-
-        // Fetch profile data (full_name + year + premium) for all users in these attempts
-        const userIds = Array.from(
-          new Set(safeAttempts.map((a) => a.user_id).filter(Boolean)),
-        );
-
-        if (userIds.length > 0) {
-          const { data: profilesData, error: profilesError } =
-            await withTimeout(
-              supabase
-                .from("profiles")
-                .select("id, full_name, user_name, year, college, is_premium, avatar_url, department")
-                .in("id", userIds),
-              15000,
-              "Loading leaderboard profiles took too long.",
-            );
-
-          if (profilesError) {
-            console.error(
-              "Failed to fetch leaderboard profiles:",
-              profilesError.message,
-              profilesError.details,
-            );
-            setProfiles({});
-          } else {
-            const profileMap = {};
-            (profilesData || []).forEach((p) => {
-              profileMap[p.id] = {
-                full_name: p.full_name,
-                user_name: p.user_name,
-                year: p.year,
-                college: p.college,
-                avatar_url: p.avatar_url,
-                isPremium: p.is_premium === true,
-                department: p.department || "General Studies",
-              };
-            });
-            setProfiles(profileMap);
-          }
-        } else {
-          setProfiles({});
-        }
-      } catch (err) {
-        console.error("Leaderboard fetch error:", err.message);
-        setError(
-          "We couldn’t load the leaderboard right now. Please try again shortly.",
+      if (attemptsError) {
+        console.error(
+          "Failed to fetch leaderboard attempts:",
+          attemptsError.message,
+          attemptsError.details,
         );
         setAttempts([]);
         setProfiles({});
-      } finally {
         setLoading(false);
+        return;
       }
-    };
 
-    fetchLeaderboardData();
+      const safeAttempts = attemptsData || [];
+      setAttempts(safeAttempts);
+
+      const userIds = Array.from(
+        new Set(safeAttempts.map((a) => a.user_id).filter(Boolean)),
+      );
+
+      if (userIds.length > 0) {
+        const { data: profilesData, error: profilesError } =
+          await withTimeout(
+            supabase
+              .from("profiles")
+              .select("id, full_name, user_name, year, college, is_premium, avatar_url, department")
+              .in("id", userIds),
+            15000,
+            "Loading leaderboard profiles took too long.",
+          );
+
+        if (profilesError) {
+          console.error("Failed to fetch leaderboard profiles:", profilesError.message);
+          setProfiles({});
+        } else {
+          const profileMap = {};
+          (profilesData || []).forEach((p) => {
+            profileMap[p.id] = {
+              full_name: p.full_name,
+              user_name: p.user_name,
+              year: p.year,
+              college: p.college,
+              avatar_url: p.avatar_url,
+              isPremium: p.is_premium === true,
+              department: p.department || "General Studies",
+            };
+          });
+          setProfiles(profileMap);
+        }
+      } else {
+        setProfiles({});
+      }
+    } catch (err) {
+      console.error("Leaderboard fetch error:", err.message);
+      setError("We couldn't load the leaderboard right now. Please try again shortly.");
+      setAttempts([]);
+      setProfiles({});
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchLeaderboardData();
+  }, [fetchLeaderboardData]);
+
+  // Re-fetch leaderboard whenever the tab regains focus after being idle/hidden
+  useVisibilityRefresh(fetchLeaderboardData);
 
   const courseOptions = useMemo(() => {
     if (!Array.isArray(courses) || courses.length === 0) {

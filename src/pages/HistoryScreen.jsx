@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { FaHistory, FaChevronRight, FaTrashAlt, FaTrophy, FaChartLine, FaLayerGroup, FaRedoAlt } from "react-icons/fa";
 import { FiTrash2, FiClock, FiRefreshCw } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import ConfirmOverlay from "../components/ConfirmOverlay";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import NavBar from "../components/NavBar";
+import { useVisibilityRefresh } from "../hooks/useVisibilityRefresh";
 
 const formatTime = (seconds) => {
   if (!seconds) return null;
@@ -24,52 +25,55 @@ const HistoryScreen = ({ isPremium }) => {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      setLoading(true); // start loading
-      const { data: { user }, error: userError } = await withTimeout(
-        supabase.auth.getUser(),
-        15000,
-        "Session check took too long while loading history."
-      );
+  const fetchHistory = useCallback(async () => {
+    setLoading(true);
+    const { data: { user }, error: userError } = await withTimeout(
+      supabase.auth.getUser(),
+      15000,
+      "Session check took too long while loading history."
+    );
 
-      if (userError || !user) {
-        console.error("No user session");
-        setHistoryData([]);
-        setLoading(false);
-        return;
-      }
+    if (userError || !user) {
+      console.error("No user session");
+      setHistoryData([]);
+      setLoading(false);
+      return;
+    }
 
-      const { data, error } = await withTimeout(
-        supabase
-          .from("exam_attempts")
-          .select(`
-        id,
-        course_id,
-        score,
-        total_questions,
-        date_taken,
-        time_taken,
-        is_retake
-      `)
-          .eq("user_id", user.id)
-          .order("date_taken", { ascending: false }),
-        15000,
-        "Loading your history took too long. Please try again."
-      );
+    const { data, error } = await withTimeout(
+      supabase
+        .from("exam_attempts")
+        .select(`
+      id,
+      course_id,
+      score,
+      total_questions,
+      date_taken,
+      time_taken,
+      is_retake
+    `)
+        .eq("user_id", user.id)
+        .order("date_taken", { ascending: false }),
+      15000,
+      "Loading your history took too long. Please try again."
+    );
 
-      if (error) {
-        console.error("Failed to fetch history:", error.message, error.details);
-        setHistoryData([]);
-      } else {
-        setHistoryData(data || []);
-      }
+    if (error) {
+      console.error("Failed to fetch history:", error.message, error.details);
+      setHistoryData([]);
+    } else {
+      setHistoryData(data || []);
+    }
 
-      setLoading(false); // stop loading
-    };
-
-    fetchHistory();
+    setLoading(false);
   }, []);
+
+  useEffect(() => {
+    fetchHistory();
+  }, [fetchHistory]);
+
+  // Re-fetch history whenever the tab regains focus after being idle/hidden
+  useVisibilityRefresh(fetchHistory);
 
 
   // Scroll shadow effect

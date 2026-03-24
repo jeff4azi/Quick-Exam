@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import BannerAd from "../components/BannerAd";
@@ -7,6 +7,7 @@ import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import Avatar from "../components/Avatar";
 import NavBar from "../components/NavBar";
+import { useVisibilityRefresh } from "../hooks/useVisibilityRefresh";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -55,83 +56,86 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   }, [isPremium]);
 
   // Fetch best score and leaderboard position from Supabase
-  useEffect(() => {
-    const fetchSupabaseStats = async () => {
-      try {
-        const {
-          data: { user },
-          error: userError,
-        } = await withTimeout(
-          supabase.auth.getUser(),
-          15000,
-          "Checking your session took too long.",
-        );
+  const fetchSupabaseStats = useCallback(async () => {
+    try {
+      const {
+        data: { user },
+        error: userError,
+      } = await withTimeout(
+        supabase.auth.getUser(),
+        15000,
+        "Checking your session took too long.",
+      );
 
-        if (userError || !user) {
-          return;
-        }
-
-        const weekStartIso = getCurrentWeekStartIso();
-
-        const { data: attemptsData, error: attemptsError } = await withTimeout(
-          supabase
-            .from("exam_attempts")
-            .select(
-              "user_id, score, total_questions, time_taken, date_taken, is_retake",
-            )
-            .eq("is_retake", false)
-            .gte("date_taken", weekStartIso),
-          15000,
-          "Loading your stats took too long.",
-        );
-
-        if (attemptsError || !attemptsData) {
-          console.error("Failed to load attempts for stats:", attemptsError);
-          return;
-        }
-
-        const attempts = attemptsData || [];
-
-        // Best score for this user (weekly)
-        const myAttempts = attempts.filter(
-          (a) => a.user_id === user.id && a.total_questions,
-        );
-        let best = null;
-        myAttempts.forEach((a) => {
-          const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
-          if (!Number.isFinite(pct)) return;
-          if (best === null || pct > best) best = pct;
-        });
-
-        // Leaderboard-like aggregation to get position
-        const byUser = new Map();
-        attempts.forEach((a) => {
-          if (!a.user_id || !a.total_questions) return;
-          const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
-          if (!Number.isFinite(pct)) return;
-          const existing = byUser.get(a.user_id);
-          if (!existing || pct > existing.bestPercent) {
-            byUser.set(a.user_id, { bestPercent: pct });
-          }
-        });
-
-        const sorted = Array.from(byUser.entries()).sort(
-          (a, b) => b[1].bestPercent - a[1].bestPercent,
-        );
-        const idx = sorted.findIndex(([id]) => id === user.id);
-
-        setStats((prev) => ({
-          ...prev,
-          bestScore: best !== null ? `${Math.round(best)}%` : "--",
-          position: idx !== -1 ? `#${idx + 1}` : "--",
-        }));
-      } catch (err) {
-        console.error("Failed to load Supabase stats:", err);
+      if (userError || !user) {
+        return;
       }
-    };
 
-    fetchSupabaseStats();
+      const weekStartIso = getCurrentWeekStartIso();
+
+      const { data: attemptsData, error: attemptsError } = await withTimeout(
+        supabase
+          .from("exam_attempts")
+          .select(
+            "user_id, score, total_questions, time_taken, date_taken, is_retake",
+          )
+          .eq("is_retake", false)
+          .gte("date_taken", weekStartIso),
+        15000,
+        "Loading your stats took too long.",
+      );
+
+      if (attemptsError || !attemptsData) {
+        console.error("Failed to load attempts for stats:", attemptsError);
+        return;
+      }
+
+      const attempts = attemptsData || [];
+
+      // Best score for this user (weekly)
+      const myAttempts = attempts.filter(
+        (a) => a.user_id === user.id && a.total_questions,
+      );
+      let best = null;
+      myAttempts.forEach((a) => {
+        const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
+        if (!Number.isFinite(pct)) return;
+        if (best === null || pct > best) best = pct;
+      });
+
+      // Leaderboard-like aggregation to get position
+      const byUser = new Map();
+      attempts.forEach((a) => {
+        if (!a.user_id || !a.total_questions) return;
+        const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
+        if (!Number.isFinite(pct)) return;
+        const existing = byUser.get(a.user_id);
+        if (!existing || pct > existing.bestPercent) {
+          byUser.set(a.user_id, { bestPercent: pct });
+        }
+      });
+
+      const sorted = Array.from(byUser.entries()).sort(
+        (a, b) => b[1].bestPercent - a[1].bestPercent,
+      );
+      const idx = sorted.findIndex(([id]) => id === user.id);
+
+      setStats((prev) => ({
+        ...prev,
+        bestScore: best !== null ? `${Math.round(best)}%` : "--",
+        position: idx !== -1 ? `#${idx + 1}` : "--",
+      }));
+    } catch (err) {
+      console.error("Failed to load Supabase stats:", err);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchSupabaseStats();
+  }, [fetchSupabaseStats]);
+
+  // Re-fetch stats whenever the tab regains focus after being idle/hidden
+  useVisibilityRefresh(fetchSupabaseStats);
 
   // Handle streak entirely via localStorage examHistory
   useEffect(() => {

@@ -8,6 +8,9 @@ export const supabase = createClient(
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
+      // Explicit localStorage binding ensures session survives tab switches and idle periods
+      storage: window.localStorage,
+      storageKey: "quizbolt-auth-token",
     },
   }
 );

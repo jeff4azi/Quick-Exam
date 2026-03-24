@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import RouteChangeTracker from "./components/RouteChangeTracker";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Home from "./pages/Home.jsx";
 import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
@@ -89,6 +89,9 @@ function App() {
 
   useEffect(() => {
     let isInitialLoad = true;
+    // Track whether the initial session load has finished, so the
+    // visibility handler doesn't fire on the very first paint.
+    const initialLoadDone = { current: false };
 
     const getProfile = async (user) => {
       if (!user) {
@@ -114,8 +117,8 @@ function App() {
             profileData?.name ||
             user.user_metadata?.full_name ||
             user.user_metadata?.name ||
-            "Scholar", // Get from metadata
-          user_name: profileData?.user_name || null, // Get slugified username from profiles
+            "Scholar",
+          user_name: profileData?.user_name || null,
           college: profileData?.college || "TASUED",
           department: profileData?.department || "General Studies",
           year: profileData?.year?.toString() || "1",
@@ -167,6 +170,7 @@ function App() {
         if (isInitialLoad) {
           setLoading(false);
           isInitialLoad = false;
+          initialLoadDone.current = true;
         }
       }
     };
@@ -176,15 +180,39 @@ function App() {
       getProfile(data.session?.user);
     });
 
-    // Auth listener (DO NOT control global loading here)
+    // Auth listener — fires on SIGNED_IN, TOKEN_REFRESHED, SIGNED_OUT, etc.
+    // This is the primary way the profile stays in sync after a session refresh.
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         getProfile(session?.user);
       },
     );
 
+    // When the tab becomes visible again after being hidden (idle / tab switch /
+    // minimised), force a session refresh. Supabase will emit TOKEN_REFRESHED
+    // via onAuthStateChange, which calls getProfile automatically above.
+    // If the session truly expired the user is signed out gracefully.
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState !== "visible" || !initialLoadDone.current) {
+        return;
+      }
+      try {
+        const { error } = await supabase.auth.refreshSession();
+        if (error) {
+          console.warn("[App] Session refresh failed on tab focus:", error.message);
+          // onAuthStateChange SIGNED_OUT will clear the profile automatically
+          await supabase.auth.signOut();
+        }
+      } catch (err) {
+        console.error("[App] Visibility refresh error:", err);
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
     return () => {
       listener.subscription.unsubscribe();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
