@@ -164,7 +164,10 @@ const LandingPage = () => {
             </span>
           </div>
           <div className="hidden md:flex items-center gap-8 text-sm font-bold uppercase tracking-wider text-slate-500 dark:text-gray-400">
-            <a onClick={() => navigate("/about")} className="hover:text-blue-600 cursor-pointer">
+            <a
+              onClick={() => navigate("/about")}
+              className="hover:text-blue-600 cursor-pointer"
+            >
               About
             </a>
             <a href="#features" className="hover:text-blue-600">
@@ -478,6 +481,78 @@ const LandingPage = () => {
           >
             Sign Up Now
           </button>
+        </div>
+      </section>
+
+      {/* --- PWA DOWNLOAD SECTION --- */}
+      <section
+        id="pwa-download"
+        className="py-24 px-6 bg-white dark:bg-gray-900/30"
+      >
+        <div className="max-w-7xl mx-auto">
+          <div className="relative overflow-hidden bg-slate-50 dark:bg-gray-900 border border-slate-100 dark:border-gray-800 rounded-[3rem] p-8 md:p-16 flex flex-col lg:flex-row items-center gap-12">
+            {/* Left Side: Content */}
+            <div className="w-full lg:w-1/2 space-y-8 text-center lg:text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 rounded-lg text-[10px] font-black uppercase tracking-widest">
+                Optimized for Android
+              </div>
+              <h2 className="text-4xl md:text-5xl font-black tracking-tight leading-tight">
+                QuizBolt is better <br />
+                <span className="text-blue-600">on your Home Screen.</span>
+              </h2>
+              <p className="text-slate-500 dark:text-gray-400 font-medium text-lg leading-relaxed max-w-lg mx-auto lg:mx-0">
+                Install our official PWA to get a full-screen experience, faster
+                loading times, and instant access to your academic
+                dashboard—anytime, anywhere.
+              </p>
+
+              <div className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start">
+                <a
+                  href="https://ujuvxzbywmsmprtvmvtk.supabase.co/storage/v1/object/public/PWA/quiz-bolt-v1.0.2.apk" // Replace this with the link you provide
+                  download="QuizBolt.apk"
+                  className="group flex items-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-2xl font-black text-sm hover:scale-[1.02] transition-all active:scale-95 shadow-xl shadow-slate-200 dark:shadow-none"
+                >
+                  <FaBolt className="group-hover:text-blue-500 transition-colors" />
+                  Download Android PWA
+                </a>
+                <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
+                  V1.0.2 • Fast & Lightweight
+                </p>
+              </div>
+            </div>
+
+            {/* Right Side: Phone Mockup / Visual */}
+            <div className="w-full lg:w-1/2 relative flex justify-center">
+              <div className="absolute inset-0 bg-blue-500/10 blur-[120px] rounded-full" />
+              <div className="relative w-64 h-[500px] bg-slate-900 rounded-[3rem] border-[8px] border-slate-800 dark:border-gray-700 shadow-2xl overflow-hidden">
+                {/* Internal Screen Mockup */}
+                <div className="absolute top-0 inset-x-0 h-6 bg-slate-800 flex justify-center items-end pb-1">
+                  <div className="w-16 h-1 bg-slate-700 rounded-full" />
+                </div>
+                <div className="p-4 pt-10 space-y-4">
+                  <div className="size-10 bg-blue-600 rounded-xl flex items-center justify-center text-white text-xs">
+                    <FaBolt />
+                  </div>
+                  <div className="h-4 w-3/4 bg-slate-800 rounded-full animate-pulse" />
+                  <div className="h-4 w-1/2 bg-slate-800 rounded-full animate-pulse" />
+                  <div className="mt-8 space-y-3">
+                    <div className="h-24 w-full bg-slate-800/50 rounded-2xl border border-slate-700/50" />
+                    <div className="h-24 w-full bg-slate-800/50 rounded-2xl border border-slate-700/50" />
+                  </div>
+                </div>
+              </div>
+
+              {/* Floating Badge */}
+              <div className="absolute -bottom-4 right-10 md:right-20 bg-white dark:bg-gray-800 p-4 rounded-2xl shadow-xl border border-slate-100 dark:border-gray-700 rotate-6">
+                <div className="flex items-center gap-3">
+                  <div className="size-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600">
+                    <FaUserCheck size={14} />
+                  </div>
+                  <p className="text-xs font-black">Verified APK</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
