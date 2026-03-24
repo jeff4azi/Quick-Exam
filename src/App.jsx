@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import RouteChangeTracker from "./components/RouteChangeTracker";
 import { useState, useEffect } from "react";
@@ -324,17 +324,21 @@ function App() {
       setAnswers([]);
       setResults({ correct: 0, wrong: 0, answered: 0 });
 
-      // Clear all localStorage data except bookmarked questions
+      // Clear all localStorage data except bookmarked questions and visited status
       try {
-        // Save bookmarked questions temporarily
+        // Save certain items temporarily
         const bookmarkedQuestions = localStorage.getItem("bookmarkedQuestions");
+        const visited = localStorage.getItem("visited");
 
         // Clear all localStorage
         localStorage.clear();
 
-        // Restore bookmarked questions if they existed
+        // Restore saved items
         if (bookmarkedQuestions) {
           localStorage.setItem("bookmarkedQuestions", bookmarkedQuestions);
+        }
+        if (visited) {
+          localStorage.setItem("visited", visited);
         }
       } catch (err) {
         console.error("Failed to clear localStorage on logout:", err);
@@ -485,9 +489,13 @@ function App() {
             <Route
               path="/"
               element={
-                <ProtectedRoute>
-                  <Home {...props} />
-                </ProtectedRoute>
+                localStorage.getItem("visited") === "true" ? (
+                  <ProtectedRoute>
+                    <Home {...props} />
+                  </ProtectedRoute>
+                ) : (
+                  <Navigate to="/landing" replace />
+                )
               }
             />
             <Route

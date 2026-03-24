@@ -130,6 +130,10 @@ const LandingPage = () => {
    fetchGlobalLeaderboard();
  }, [fetchGlobalLeaderboard]);
 
+ useEffect(() => {
+   localStorage.setItem("visited", "true");
+ }, []);
+
   const testimonials = [
     {
       name: "Jane D.",
