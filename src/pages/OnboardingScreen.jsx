@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import {
   FiUser,
@@ -7,11 +7,14 @@ import {
   FiNavigation,
   FiCalendar,
   FiCheckCircle,
+  FiLoader,
 } from "react-icons/fi";
 import { supabase } from "../supabaseClient"; // Import your supabase client
+import { useAuth } from "../context/AuthContext";
 
 const OnboardingScreen = () => {
   const navigate = useNavigate();
+  const { user, loading: authLoading, profileValid } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -31,6 +34,45 @@ const OnboardingScreen = () => {
     "COAHM",
   ];
   const [showSuggestions, setShowSuggestions] = useState(false);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) return;
+
+      const nameFromGoogle =
+        user.user_metadata?.full_name || user.user_metadata?.name || "";
+
+      setFormData((prev) => ({
+        ...prev,
+        fullName: nameFromGoogle,
+      }));
+    };
+
+    loadUser();
+  }, []);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
+        <div className="flex items-center gap-3 rounded-2xl bg-white px-5 py-4 text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-200">
+          <FiLoader className="animate-spin text-blue-600 dark:text-blue-400" />
+          <span className="text-sm font-semibold">Checking your profile...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+
+  if (profileValid) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -95,25 +137,7 @@ const OnboardingScreen = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  useEffect(() => {
-    const loadUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (!user) return;
-
-      const nameFromGoogle =
-        user.user_metadata?.full_name || user.user_metadata?.name || "";
-
-      setFormData((prev) => ({
-        ...prev,
-        fullName: nameFromGoogle,
-      }));
-    };
-
-    loadUser();
-  }, []);
+  
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
