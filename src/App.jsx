@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import RouteChangeTracker from "./components/RouteChangeTracker";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import Home from "./pages/Home.jsx";
 import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
