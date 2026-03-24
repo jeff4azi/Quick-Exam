@@ -318,7 +318,7 @@ const ResultScreen = ({
 
             <div className="flex flex-col items-end gap-1">
               <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-xl">
-                <Logo className="w-8 h-8 text-blue-600 dark:text-blue-400 brightness-70" />
+                <Logo className="w-8 h-8" />
               </div>
               <span className="text-[9px] font-bold text-slate-300 dark:text-slate-600 uppercase tracking-tighter text-center mr-1.5">
                 {new Date().toLocaleDateString()}
