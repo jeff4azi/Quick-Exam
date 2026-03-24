@@ -202,7 +202,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
       {/* Top Navigation Bar */}
       <div className="px-6 pt-4 pb-7 flex items-center justify-between z-50">
         <div className="flex items-center gap-2">
-          <Logo className="w-12 lg:w-24 h-auto text-slate-800 dark:text-slate-100" />
+          <Logo className="w-14 lg:w-16 h-auto text-slate-800 dark:text-slate-100" />
           <p className="text-sm font-bold tracking-[0.2em] uppercase mt-2 text-slate-400">
             Quiz Bolt
           </p>
@@ -212,7 +212,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
         <button
           type="button"
           onClick={() => navigate("/profile")}
-          className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl lg:scale-150"
+          className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl lg:scale-120"
         >
           {loadingProfile ? (
             <div className="size-10 rounded-2xl bg-blue-600 flex items-center justify-center text-sm text-white font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all duration-300">
