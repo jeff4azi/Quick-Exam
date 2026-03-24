@@ -223,12 +223,14 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6 flex flex-col items-center">
       {/* Header */}
       <div className="w-full max-w-xl flex items-center justify-between mb-10 mt-4">
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-transform"
-        >
-          <FiArrowLeft className="size-6 text-slate-700 dark:text-slate-200" />
-        </button>
+        {previewUrl ? (
+          <button
+            onClick={() => navigate(-1)}
+            className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-transform"
+          >
+            <FiArrowLeft className="size-6 text-slate-700 dark:text-slate-200" />
+          </button>) : (<div className="size-12" />)
+        }
         <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
           Profile Picture
         </h1>
