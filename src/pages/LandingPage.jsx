@@ -534,8 +534,8 @@ const LandingPage = () => {
                   <div className="w-16 h-1 bg-slate-700 rounded-full" />
                 </div>
                 <div className="p-4 pt-10 space-y-4">
-                  <div className="size-10 bg-blue-600 rounded-xl flex items-center justify-center text-white text-xs">
-                    <FaBolt />
+                  <div className="size-10 bg-white rounded-xl flex items-center justify-center text-white text-xs">
+                    <Logo className="w-8 h-8 brightness-75" />
                   </div>
                   <div className="h-4 w-3/4 bg-slate-800 rounded-full animate-pulse" />
                   <div className="h-4 w-1/2 bg-slate-800 rounded-full animate-pulse" />
