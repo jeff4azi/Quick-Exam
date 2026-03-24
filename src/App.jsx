@@ -19,6 +19,7 @@ import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
 import ReactGA from "react-ga4";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import OnboardingRoute from "./components/OnboardingRoute";
 import PremiumPage from "./pages/PremiumPage";
 import LandingPage from "./pages/LandingPage";
 import Profile from "./pages/Profile";
@@ -473,7 +474,14 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/confirm-email" element={<ConfirmEmailScreen />} />
-            <Route path="/onboarding" element={<OnboardingScreen />} />
+            <Route
+              path="/onboarding"
+              element={
+                <OnboardingRoute>
+                  <OnboardingScreen />
+                </OnboardingRoute>
+              }
+            />
             <Route
               path="/"
               element={

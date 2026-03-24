@@ -14,6 +14,7 @@ import { useAuth } from "../context/AuthContext";
 
 const OnboardingScreen = () => {
   const navigate = useNavigate();
+  const [checking, setChecking] = useState(true);
   const { user, loading: authLoading, profileValid } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -36,24 +37,47 @@ const OnboardingScreen = () => {
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
-    const loadUser = async () => {
+    const init = async () => {
       const {
         data: { user },
       } = await supabase.auth.getUser();
+      if (!user) {
+        setChecking(false);
+        return;
+      }
 
-      if (!user) return;
+      const { data } = await supabase
+        .from("profiles")
+        .select("onboarding_complete")
+        .eq("id", user.id)
+        .single();
 
+      if (data?.onboarding_complete === true) {
+        navigate("/", { replace: true });
+        return; // don't setChecking — page is navigating away anyway
+      }
+
+      // Not onboarded yet — prefill name and show the form
       const nameFromGoogle =
         user.user_metadata?.full_name || user.user_metadata?.name || "";
-
-      setFormData((prev) => ({
-        ...prev,
-        fullName: nameFromGoogle,
-      }));
+      setFormData((prev) => ({ ...prev, fullName: nameFromGoogle }));
+      setChecking(false);
     };
 
-    loadUser();
-  }, []);
+    init();
+  }, [navigate]);
+
+  if (checking) {
+    return (
+      <div className="min-h-[100dvh] flex items-center justify-center bg-gray-50 dark:bg-slate-900">
+        <div className="flex gap-1.5">
+          <div className="h-8 w-1.5 animate-[loading_1s_ease-in-out_infinite] rounded-full bg-blue-600" />
+          <div className="h-8 w-1.5 animate-[loading_1s_ease-in-out_0.1s_infinite] rounded-full bg-blue-500" />
+          <div className="h-8 w-1.5 animate-[loading_1s_ease-in-out_0.2s_infinite] rounded-full bg-blue-400" />
+        </div>
+      </div>
+    );
+  }
 
   if (authLoading) {
     return (
