@@ -14,6 +14,7 @@ import "swiper/css";
 import { FreeMode } from "swiper/modules";
 
 import { FaCrown, FaFire, FaTrophy } from "react-icons/fa";
+import { FiZap } from "react-icons/fi";
 import { MdStar } from "react-icons/md";
 import { loadFavouriteCourseIds } from "../utils/favouriteCourses";
 
