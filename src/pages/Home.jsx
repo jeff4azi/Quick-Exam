@@ -273,7 +273,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
           ].map((stat, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-slate-800/50 p-3 rounded-[1.6rem] border border-gray-200/40 dark:border-slate-700 flex flex-col items-center text-center"
+              className="bg-white dark:bg-slate-800/50 p-3 rounded-[1.6rem] border border-gray-500/40 dark:border-slate-700 flex flex-col items-center text-center"
             >
               <div
                 className={`size-8 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center mb-2`}
@@ -331,7 +331,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
           </div>
 
           {recentCourses.length === 0 ? (
-            <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-200/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
+            <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-500/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
               No recent attempts yet. Complete an exam to see it here.
             </div>
           ) : (
@@ -396,7 +396,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
           </h3>
 
           {favouriteCourses.length === 0 ? (
-            <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-200/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
+            <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-500/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
               You haven’t favourited any courses yet. Tap the heart on the
               Courses screen.
             </div>

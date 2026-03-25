@@ -194,7 +194,7 @@ const Profile = ({
           </div>
 
           {/* Full Name Field (Non-Editable) */}
-          <div className="bg-gray-100/50 dark:bg-slate-800/40 p-5 rounded-[2rem] border border-dashed border-gray-200 dark:border-slate-700 flex items-center justify-between">
+          <div className="bg-gray-100/50 dark:bg-slate-800/40 p-5 rounded-[2rem] border border-dashed border-gray-400 dark:border-slate-700 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="size-10 rounded-xl bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
                 <FiUser size={20} />
@@ -241,7 +241,7 @@ const Profile = ({
           </div>
 
           {/* Non-Editable College Info */}
-          <div className="bg-gray-100/50 dark:bg-slate-800/40 p-5 rounded-[2rem] border border-dashed border-gray-200 dark:border-slate-700 flex items-center justify-between">
+          <div className="bg-gray-100/50 dark:bg-slate-800/40 p-5 rounded-[2rem] border border-dashed border-gray-400 dark:border-slate-700 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="size-10 rounded-xl bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
                 <FiShield size={20} />
@@ -258,7 +258,7 @@ const Profile = ({
           </div>
 
           {/* Level Info (Non-Editable) */}
-          <div className="bg-gray-100/50 dark:bg-slate-800/40 p-5 rounded-[2rem] border border-dashed border-gray-200 dark:border-slate-700 flex items-center justify-between">
+          <div className="bg-gray-100/50 dark:bg-slate-800/40 p-5 rounded-[2rem] border border-dashed border-gray-400 dark:border-slate-700 flex items-center justify-between">
             <div className="flex items-center gap-4">
               <div className="size-10 rounded-xl bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
                 <FiZap size={20} />

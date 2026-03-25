@@ -79,7 +79,7 @@ const NavBar = ({ isPremium, onLockedClick }) => {
 
   return (
     <div className="mx-auto max-w-2xl fixed bottom-0 inset-x-0 z-40 bg-gradient-to-t from-gray-50 via-gray-50/90 to-transparent dark:from-slate-900 dark:via-slate-900/90">
-      <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-gray-100 dark:border-slate-700 px-4 pt-3 pb-4 flex items-center justify-between mx-4 mb-4 rounded-2xl">
+      <div className="bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-gray-300 dark:border-slate-700 px-4 pt-3 pb-4 flex items-center justify-between mx-4 mb-4 rounded-2xl">
         {(() => {
           const homeActive = isActivePath(pathname, "/");
           const coursesActive = isActivePath(pathname, "/choose-course");
