@@ -328,6 +328,7 @@ function App() {
       try {
         // Save certain items temporarily
         const bookmarkedQuestions = localStorage.getItem("bookmarkedQuestions");
+        const visitedStatus = localStorage.getItem("visited");
 
         // Clear all localStorage
         localStorage.clear();
@@ -335,6 +336,9 @@ function App() {
         // Restore saved items
         if (bookmarkedQuestions) {
           localStorage.setItem("bookmarkedQuestions", bookmarkedQuestions);
+        }
+        if (visitedStatus) {
+          localStorage.setItem("visited", visitedStatus);
         }
       } catch (err) {
         console.error("Failed to clear localStorage on logout:", err);
