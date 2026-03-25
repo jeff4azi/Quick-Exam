@@ -4,7 +4,6 @@ import ReactGA from "react-ga4";
 import {
   FiBookOpen,
   FiLayers,
-  FiCheckCircle,
   FiX,
 } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
@@ -145,9 +144,9 @@ const ChooseCourseScreen = ({
       {/* MAIN CONTENT AREA */}
       <main className="max-w-2xl mx-auto px-6 mt-4 space-y-10">
         {loadingProfile || coursesLoading ? (
-            <div className="flex justify-center py-20 text-slate-400 font-bold uppercase tracking-widest text-[10px] animate-pulse">
-                Fetching Courses...
-            </div>
+          <div className="flex justify-center py-20 text-slate-400 font-bold uppercase tracking-widest text-[10px] animate-pulse">
+            Fetching Courses...
+          </div>
         ) : filteredCourses.length === 0 ? (
           /* EMPTY STATE - RESTORED STYLING */
           <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in zoom-in-95 duration-700">
@@ -158,9 +157,12 @@ const ChooseCourseScreen = ({
                 <FiX className="absolute -top-1 -right-1 size-6 text-red-500 bg-white dark:bg-slate-800 rounded-full p-1 shadow-sm" />
               </div>
             </div>
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white">No Courses Available</h2>
+            <h2 className="text-2xl font-black text-slate-900 dark:text-white">
+              Nothing here yet
+            </h2>
             <p className="mt-3 text-slate-500 dark:text-slate-400 max-w-[280px] leading-relaxed font-medium">
-              We couldn't find any course for your profile. This might be because you haven't set up your profile or there are no courses available for your faculty yet. Please check back later or contact support for assistance.
+              We don’t have courses for your faculty at the moment. We’re
+              actively adding more courses stay tuned.
             </p>
             <button
               onClick={() => navigate("/")}
@@ -171,9 +173,12 @@ const ChooseCourseScreen = ({
           </div>
         ) : (
           /* COURSE LIST - FULL ORIGINAL STYLING */
-          groupOrder.map(group =>
+          groupOrder.map((group) =>
             groupedCourses[group]?.length > 0 ? (
-              <section key={group} className="animate-in fade-in slide-in-from-bottom-4 duration-700">
+              <section
+                key={group}
+                className="animate-in fade-in slide-in-from-bottom-4 duration-700"
+              >
                 <div className="flex items-center gap-3 mb-4 px-1">
                   <FiLayers className="text-blue-600 dark:text-blue-400" />
                   <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 dark:text-slate-500">
@@ -182,7 +187,7 @@ const ChooseCourseScreen = ({
                 </div>
 
                 <div className="grid gap-4">
-                  {groupedCourses[group].map(course => {
+                  {groupedCourses[group].map((course) => {
                     const isSelected = selectedCourse?.id === course.id;
                     const isFavourite = favouriteIds.includes(course.id);
                     return (
@@ -205,19 +210,25 @@ const ChooseCourseScreen = ({
                       >
                         <div className="flex justify-between">
                           <div className="max-w-[80%]">
-                            <h2 className={`text-xl font-black ${isSelected ? "text-white" : "text-slate-900 dark:text-white"}`}>
+                            <h2
+                              className={`text-xl font-black ${isSelected ? "text-white" : "text-slate-900 dark:text-white"}`}
+                            >
                               {course.name}
                             </h2>
-                            <p className={`text-sm mt-1 leading-snug ${isSelected ? "text-blue-100" : "text-slate-500 dark:text-slate-400"}`}>
+                            <p
+                              className={`text-sm mt-1 leading-snug ${isSelected ? "text-blue-100" : "text-slate-500 dark:text-slate-400"}`}
+                            >
                               {course.title}
                             </p>
 
                             {/* RE-ADDED THE BADGE STYLING */}
-                            <div className={`inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                              isSelected
-                                ? "bg-white/20 text-white"
-                                : "bg-blue-50 dark:bg-blue-900/30 text-blue-600"
-                            }`}>
+                            <div
+                              className={`inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                                isSelected
+                                  ? "bg-white/20 text-white"
+                                  : "bg-blue-50 dark:bg-blue-900/30 text-blue-600"
+                              }`}
+                            >
                               <FiBookOpen />
                               {course.questionCount || 0} Questions
                             </div>
@@ -237,12 +248,19 @@ const ChooseCourseScreen = ({
                                   : "bg-gray-50 dark:bg-slate-700 text-slate-400 dark:text-slate-300"
                               }`}
                               title={
-                                isFavourite ? "Remove from favourites" : "Add to favourites"
+                                isFavourite
+                                  ? "Remove from favourites"
+                                  : "Add to favourites"
                               }
                               aria-pressed={isFavourite}
                             >
                               {isFavourite ? (
-                                <IoHeart className={isSelected ? "text-white" : "text-rose-500"} size={22} />
+                                <IoHeart
+                                  className={
+                                    isSelected ? "text-white" : "text-rose-500"
+                                  }
+                                  size={22}
+                                />
                               ) : (
                                 <IoHeartOutline size={22} />
                               )}
@@ -254,7 +272,7 @@ const ChooseCourseScreen = ({
                   })}
                 </div>
               </section>
-            ) : null
+            ) : null,
           )
         )}
       </main>
@@ -262,47 +280,65 @@ const ChooseCourseScreen = ({
       {/* QUESTION COUNT MODAL - ORIGINAL STYLING */}
       {selectedCourse && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in" onClick={() => setSelectedCourse(null)} />
+          <div
+            className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in"
+            onClick={() => setSelectedCourse(null)}
+          />
           <div className="relative bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl w-full max-w-sm p-8 animate-in zoom-in-95">
-            <button onClick={() => setSelectedCourse(null)} className="absolute top-6 right-6 p-2 rounded-full text-gray-400 hover:bg-gray-100"><FiX /></button>
+            <button
+              onClick={() => setSelectedCourse(null)}
+              className="absolute top-6 right-6 p-2 rounded-full text-gray-400 hover:bg-gray-100"
+            >
+              <FiX />
+            </button>
             <div className="text-center">
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white">{selectedCourse.name}</h3>
-              <p className="text-slate-500 text-sm mt-1 font-medium italic">{selectedCourse.title}</p>
+              <h3 className="text-2xl font-black text-slate-900 dark:text-white">
+                {selectedCourse.name}
+              </h3>
+              <p className="text-slate-500 text-sm mt-1 font-medium italic">
+                {selectedCourse.title}
+              </p>
               <div className="grid grid-cols-2 gap-3 mt-8">
-              {getAvailableQuestionOptions(selectedCourse.questionCount).map(num => {
-                  const isLocked =
-                    !isPremium &&
-                    num !== 30; // Only 30 questions allowed for free users
+                {getAvailableQuestionOptions(selectedCourse.questionCount).map(
+                  (num) => {
+                    const isLocked = !isPremium && num !== 30; // Only 30 questions allowed for free users
 
-                  return (
-                    <button
-                      key={num}
-                      onClick={() => {
-                        if (isLocked) {
-                          setPremiumOverlayOpen(true);
-                          return;
-                        }
-                        setSelectedQuestionCount(num);
-                      }}
-                      className={`relative py-4 rounded-2xl font-black transition-all ${selectedQuestionCount === num
-                          ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
-                          : "bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200"
+                    return (
+                      <button
+                        key={num}
+                        onClick={() => {
+                          if (isLocked) {
+                            setPremiumOverlayOpen(true);
+                            return;
+                          }
+                          setSelectedQuestionCount(num);
+                        }}
+                        className={`relative py-4 rounded-2xl font-black transition-all ${
+                          selectedQuestionCount === num
+                            ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
+                            : "bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200"
                         } ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`}
-                    >
-                      {num === "All" ? "Full Exam" : `${num} Qs`}
+                      >
+                        {num === "All" ? "Full Exam" : `${num} Qs`}
 
-                      {/* PREMIUM OVERLAY ICON */}
-                      {isLocked && (
-                        <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-                                      <FaCrown className="text-[8px] text-white" />
-                                    </div>
-                      )}
-                    </button>
-                  );
-                })}
-
+                        {/* PREMIUM OVERLAY ICON */}
+                        {isLocked && (
+                          <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                            <FaCrown className="text-[8px] text-white" />
+                          </div>
+                        )}
+                      </button>
+                    );
+                  },
+                )}
               </div>
-              <button onClick={handleStartExam} disabled={!selectedQuestionCount} className="w-full mt-6 py-4 rounded-2xl font-black bg-blue-600 text-white disabled:bg-gray-300 shadow-xl shadow-blue-100 dark:shadow-none">Start Exam</button>
+              <button
+                onClick={handleStartExam}
+                disabled={!selectedQuestionCount}
+                className="w-full mt-6 py-4 rounded-2xl font-black bg-blue-600 text-white disabled:bg-gray-300 shadow-xl shadow-blue-100 dark:shadow-none"
+              >
+                Start Exam
+              </button>
             </div>
           </div>
         </div>
