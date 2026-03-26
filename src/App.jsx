@@ -127,34 +127,42 @@ function App() {
 
         setUserProfile(profile);
 
-        // Load available courses from external API for 100-level users
-        if (profile.year === "1" || parseInt(profile.year) === 1) {
-          setCoursesLoading(true);
-          try {
-            const params = new URLSearchParams();
-            params.append("level", "100");
-            if (profile.college) {
-              params.append("college", profile.college);
-            }
+        // --- Load available courses for all users
+        setCoursesLoading(true);
+        try {
+          const params = new URLSearchParams();
 
-            const res = await fetch(
-              `${API_BASE_URL}/courses?${params.toString()}`,
-            );
-            const data = await res.json();
-            if (!res.ok) {
-              console.error("Courses fetch failed:", data?.msg || res.status);
-              setAvailableCourses([]);
-            } else {
-              setAvailableCourses(Array.isArray(data) ? data : []);
-            }
-          } catch (coursesErr) {
-            console.error("Courses fetch error:", coursesErr);
-            setAvailableCourses([]);
-          } finally {
-            setCoursesLoading(false);
+          // Pass level if available
+          if (profile.year) {
+            params.append("level", profile.year);
           }
-        } else {
+
+          // Pass college if available
+          if (profile.college) {
+            params.append("college", profile.college);
+          }
+
+          // Pass university if available
+          if (profile.university) {
+            params.append("university", profile.university);
+          }
+
+          const res = await fetch(
+            `${API_BASE_URL}/courses?${params.toString()}`,
+          );
+          const data = await res.json();
+
+          if (!res.ok) {
+            console.error("Courses fetch failed:", data?.msg || res.status);
+            setAvailableCourses([]);
+          } else {
+            setAvailableCourses(Array.isArray(data) ? data : []);
+          }
+        } catch (coursesErr) {
+          console.error("Courses fetch error:", coursesErr);
           setAvailableCourses([]);
+        } finally {
+          setCoursesLoading(false);
         }
       } catch (err) {
         console.error("Profile fetch error:", err.message);
