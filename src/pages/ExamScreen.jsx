@@ -53,6 +53,7 @@ const ExamScreen = ({
   questionsLoading,
   isPremium,
   autoAdvance,
+  userProfile,
 }) => {
   const isMathCourse = selectedCourse?.id === "MTH101";
   const navigate = useNavigate();
@@ -268,6 +269,7 @@ const ExamScreen = ({
         total_questions: totalQuestions,
         time_taken: finalTime,
         is_retake: hasRetaken,
+        university: userProfile?.university || null,
       });
 
       // 🔥 STEP 5: If JWT expired during insert → retry ONCE
@@ -289,6 +291,7 @@ const ExamScreen = ({
           total_questions: totalQuestions,
           time_taken: finalTime,
           is_retake: hasRetaken,
+          university: userProfile?.university || null,
         });
 
         if (retry.error) throw retry.error;

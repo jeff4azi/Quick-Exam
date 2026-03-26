@@ -51,7 +51,7 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
                   className="rounded-[2rem] shadow-xl shadow-blue-200 dark:shadow-none"
                 />
                 {isPremium && (
-                  <div className="absolute -top-2 -right-2 bg-amber-400 p-1 rounded-2xl border-3 border-gray-50 dark:border-slate-900 shadow-lg">
+                  <div className="absolute -top-2 -right-1 bg-amber-400 p-1 rounded-2xl border-3 border-gray-50 dark:border-slate-900 shadow-lg">
                     <FaCrown className="text-white text-xs" />
                   </div>
                 )}
@@ -73,7 +73,7 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
           </div>
 
           {/* Stats Row */}
-          <div className="grid grid-cols-3 gap-3 mb-8">
+          <div className="grid grid-cols-2 gap-3 mb-8">
             <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
               <FaTrophy className="mx-auto text-blue-500 mb-1" />
               <p className="text-xs font-bold text-slate-400 uppercase">Rank</p>
@@ -87,7 +87,7 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
                 College
               </p>
               <p className="font-black text-slate-900 dark:text-white">
-                {userProfile?.college || "TASUED"}
+                {userProfile?.college || "—"}
               </p>
             </div>
             <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
@@ -95,6 +95,15 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
               <p className="text-xs font-bold text-slate-400 uppercase">Best</p>
               <p className="font-black text-slate-900 dark:text-white">
                 {stats?.bestScore || "0%"}
+              </p>
+            </div>
+            <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
+              <FiShield className="mx-auto text-purple-500 mb-1" />
+              <p className="text-xs font-bold text-slate-400 uppercase">
+                Level
+              </p>
+              <p className="font-black text-slate-900 dark:text-white">
+                {userProfile?.year ? `${userProfile.year}00` : "—"}
               </p>
             </div>
           </div>
@@ -110,6 +119,21 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
               </p>
               <p className="font-bold text-slate-900 dark:text-white truncate">
                 {userProfile?.department}
+              </p>
+            </div>
+          </div>
+
+          {/* University Section */}
+          <div className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-gray-100 dark:border-slate-800 flex items-center gap-4 mt-3">
+            <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center flex-shrink-0">
+              <FiShield className="text-purple-600 dark:text-purple-400 text-xl" />
+            </div>
+            <div className="overflow-hidden">
+              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                University
+              </p>
+              <p className="font-bold text-slate-900 dark:text-white truncate">
+                {userProfile?.university || "—"}
               </p>
             </div>
           </div>

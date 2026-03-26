@@ -61,10 +61,6 @@ function App() {
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(null);
   const [questionsLoading, setQuestionsLoading] = useState(false);
 
-  const CLOUDINARY_API_SECRET = import.meta.env.VITE_CLOUDINARY_API_SECRET;
-  const CLOUDINARY_API_KEY = import.meta.env.VITE_CLOUDINARY_API_KEY;
-  const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
-
   // --- FIX 2: HANDLE SUBMIT LOGIC ---
   const handleExamSubmit = () => {
     // 1. Calculate Score
@@ -120,6 +116,7 @@ function App() {
             user.user_metadata?.name ||
             "Scholar",
           user_name: profileData?.user_name || null,
+          university: profileData?.university || null,
           college: profileData?.college || "TASUED",
           department: profileData?.department || "General Studies",
           year: profileData?.year?.toString() || "1",

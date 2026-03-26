@@ -25,13 +25,18 @@ const getCurrentWeekStartIso = () => {
   return weekStart.toISOString();
 };
 
-const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
+const LeaderboardScreen = ({ courses, isPremium : isUserPremium, userProfile }) => {
   const [attempts, setAttempts] = useState([]);
   const [profiles, setProfiles] = useState({});
   const [selectedCourseId, setSelectedCourseId] = useState("all");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+  const [universityFilter, setUniversityFilter] = useState("mine");
+
+  useEffect(() => {
+    setSelectedCourseId("all");
+  }, [universityFilter]);
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [sheetProfile, setSheetProfile] = useState(null);
@@ -59,7 +64,8 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
             total_questions,
             time_taken,
             date_taken,
-            is_retake
+            is_retake,
+            university
           `,
           )
           .eq("is_retake", false)
@@ -88,18 +94,22 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
       );
 
       if (userIds.length > 0) {
-        const { data: profilesData, error: profilesError } =
-          await withTimeout(
-            supabase
-              .from("profiles")
-              .select("id, full_name, user_name, year, college, is_premium, avatar_url, department")
-              .in("id", userIds),
-            15000,
-            "Loading leaderboard profiles took too long.",
-          );
+        const { data: profilesData, error: profilesError } = await withTimeout(
+          supabase
+            .from("profiles")
+            .select(
+              "id, full_name, user_name, year, college, is_premium, avatar_url, department",
+            )
+            .in("id", userIds),
+          15000,
+          "Loading leaderboard profiles took too long.",
+        );
 
         if (profilesError) {
-          console.error("Failed to fetch leaderboard profiles:", profilesError.message);
+          console.error(
+            "Failed to fetch leaderboard profiles:",
+            profilesError.message,
+          );
           setProfiles({});
         } else {
           const profileMap = {};
@@ -121,7 +131,9 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
       }
     } catch (err) {
       console.error("Leaderboard fetch error:", err.message);
-      setError("We couldn't load the leaderboard right now. Please try again shortly.");
+      setError(
+        "We couldn't load the leaderboard right now. Please try again shortly.",
+      );
       setAttempts([]);
       setProfiles({});
     } finally {
@@ -160,11 +172,17 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
   const leaderboardEntries = useMemo(() => {
     if (!attempts.length) return [];
 
-    // Apply course filter
+    // 1. University filter
+    const universityFiltered =
+      universityFilter === "mine"
+        ? attempts.filter((a) => a.university === userProfile?.university)
+        : attempts;
+
+    // 2. Course filter on top of that
     const filteredAttempts =
       selectedCourseId === "all"
-        ? attempts
-        : attempts.filter((a) => a.course_id === selectedCourseId);
+        ? universityFiltered
+        : universityFiltered.filter((a) => a.course_id === selectedCourseId);
 
     const byUser = new Map();
 
@@ -183,6 +201,7 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
           bestPercent: percent,
           attemptsCount: 1,
           totalTime: Number(attempt.time_taken) || 0,
+          university: attempt.university ?? null,
         });
       } else {
         existing.bestPercent = Math.max(existing.bestPercent, percent);
@@ -209,6 +228,7 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
         fullName, // primary display name
         userName, // handle/slug (not used as display fallback)
         year,
+        university: entry.university,
         avatarUrl: profile.avatar_url || null,
         isPremium: profile.isPremium === true,
         department: profile.department,
@@ -224,7 +244,7 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
     });
 
     return entries;
-  }, [attempts, profiles, selectedCourseId]);
+  }, [attempts, profiles, selectedCourseId, universityFilter, userProfile]);
 
   const formatTime = (seconds) => {
     if (!seconds) return "—";
@@ -259,6 +279,33 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
       </header>
 
       <main className="max-w-2xl mx-auto px-6 pt-4 pb-32">
+        <section className="mb-4">
+          <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
+            Leaderboard Scope
+          </label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setUniversityFilter("mine")}
+              className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
+                universityFilter === "mine"
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
+                  : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+              }`}
+            >
+              🏫 My University
+            </button>
+            <button
+              onClick={() => setUniversityFilter("all")}
+              className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
+                universityFilter === "all"
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
+                  : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+              }`}
+            >
+              🌍 Global
+            </button>
+          </div>
+        </section>
         {/* Course filter */}
         <section className="mb-4">
           <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
@@ -323,6 +370,7 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
                   bestPercent={entry.bestPercent}
                   attempts={entry.attemptsCount}
                   avgTime={formatTime(entry.avgTimeSeconds)}
+                  university={entry.university}
                   onClick={() => {
                     const profile = profiles[entry.userId] || {};
                     setSheetProfile({
@@ -331,6 +379,8 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium }) => {
                       college: profile.college || "TASUED",
                       avatar_url: entry.avatarUrl,
                       department: entry.department,
+                      university: entry.university,
+                      year: entry.year,
                     });
                     setSheetStats({
                       rank: `#${index + 1}`,
@@ -376,7 +426,7 @@ const LeaderboardRow = ({
   rank,
   fullName,
   userName,
-  year,
+  university,
   avatarUrl,
   isPremium,
   bestPercent,
@@ -435,7 +485,7 @@ const LeaderboardRow = ({
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
             {userName ? `@${userName} • ` : ""}
-            {year}00 Level
+            {university}
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
             Best: {bestPercent}% • Attempts: {attempts}

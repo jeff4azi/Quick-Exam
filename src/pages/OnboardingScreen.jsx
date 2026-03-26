@@ -8,6 +8,7 @@ import {
   FiCalendar,
   FiCheckCircle,
   FiLoader,
+  FiGrid,
 } from "react-icons/fi";
 import { supabase } from "../supabaseClient"; // Import your supabase client
 import { useAuth } from "../context/AuthContext";
@@ -21,6 +22,7 @@ const OnboardingScreen = () => {
 
   const [formData, setFormData] = useState({
     fullName: "",
+    university: "",
     college: "",
     department: "",
     year: "",
@@ -34,6 +36,13 @@ const OnboardingScreen = () => {
     "COSMAS",
     "COAHM",
   ];
+
+  const universities = [
+    { id: "TASUED", name: "TaiSolarin University of Education" },
+    { id: "LASU", name: "Lagos State University" },
+    { id: "LASUED", name: "Lagos State University of Education" },    
+  ];
+
   const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
@@ -134,6 +143,7 @@ const OnboardingScreen = () => {
         id: user.id,
         full_name: fullName,
         user_name: userName, // Store slugified name
+        university: formData.university,
         college: formData.college,
         department: formData.department,
         year: parseInt(formData.year, 10) || null,
@@ -149,7 +159,7 @@ const OnboardingScreen = () => {
       await supabase.auth.getSession();
 
       // 4. Exit onboarding permanently
-      navigate("/login", { replace: true });
+      navigate("/", { replace: true });
     } catch (err) {
       setError(err.message);
     } finally {
@@ -205,6 +215,36 @@ const OnboardingScreen = () => {
               required
             />
           </div>
+
+          {/* University */}
+          <div className="group">
+            <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-4 mb-1 block">
+              University
+            </label>
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <FiNavigation className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+              </div>
+              <select
+                value={formData.university}
+                onChange={(e) =>
+                  setFormData({ ...formData, university: e.target.value })
+                }
+                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all shadow-sm appearance-none"
+                required
+              >
+                <option value="" disabled>
+                  Select your university
+                </option>
+                {universities.map((u) => (
+                  <option key={u.id} value={u.id}>
+                    {u.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
           {/* College with Autocomplete Logic */}
           <div className="relative group">
             <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-4 mb-1 block">
@@ -212,7 +252,7 @@ const OnboardingScreen = () => {
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <FiNavigation className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors" />
+                <FiGrid className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors" />
               </div>
               <input
                 type="text"
