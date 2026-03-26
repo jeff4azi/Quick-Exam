@@ -79,9 +79,14 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
   const handleGetCode = () => {
     const phoneNumber = "2347015585397"; // Your WhatsApp number here
     const message = encodeURIComponent(
-      "Hello! I'd like to purchase a Premium Code for the app.",
+      "Hello, I just paid ₦2000 for QuizBolt Premium.\n\nName/Email:\n\nHere is my receipt:",
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
+  };
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text);
+    setStatus({ type: "success", message: "Account number copied!" });
   };
 
   // --- PREMIUM ACTIVE UI ---
@@ -141,7 +146,8 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
             Go Premium — Unlock Full Access
           </h1>
           <p className="text-slate-500 dark:text-slate-400 font-medium text-sm px-4">
-            Unlock the full experience and power your progress.
+            Get full access to all courses and practice questions for this
+            semester.
           </p>
         </div>
 
@@ -185,19 +191,50 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
             <p className="text-slate-400 dark:text-slate-500 text-[10px] font-bold uppercase tracking-widest mb-3">
               Don't have a code?
             </p>
+            <div className="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 text-center mb-3">
+              <p className="text-sm font-black text-slate-800 dark:text-white mb-2">
+                Full Semester Access — ₦2,000
+              </p>
+
+              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+                Pay to the account below and send your receipt
+              </p>
+
+              <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 space-y-1">
+                <p>Bank: Palmpay</p>
+                <div className="flex items-center justify-center gap-2">
+                  <p>Account No: 8911504030</p>
+                  <button
+                    type="button"
+                    onClick={() => handleCopy("8911504030")}
+                    className="text-[10px] bg-slate-200 dark:bg-slate-700 px-2 py-1 rounded-md font-bold active:scale-95"
+                  >
+                    Copy
+                  </button>
+                </div>
+                <p>Name: Jeffrey Austin</p>
+              </div>
+
+              <p className="text-[10px] text-slate-400 mt-3">
+                Payments are confirmed within a few minutes
+              </p>
+            </div>
             <button
               type="button"
               onClick={handleGetCode}
               className="flex items-center gap-2 text-blue-600 dark:text-blue-400 font-black text-sm hover:underline active:scale-95 transition-all"
             >
-              Get Premium Code via WhatsApp
+              I’ve Made Payment — Send Receipt
             </button>
           </div>
         </form>
 
         <div className="mt-12 pt-10 border-t border-gray-100 dark:border-slate-800">
-          <p className="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-widest text-center mb-6">
+          <p className="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-widest text-center mb-2">
             What You Get
+          </p>
+          <p className="text-center text-xs text-slate-400 mb-6">
+            Trusted by students preparing for exams this semester
           </p>
           <div className="space-y-4 px-2 pb-8">
             {[
