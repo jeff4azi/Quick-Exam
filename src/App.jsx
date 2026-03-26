@@ -1,9 +1,4 @@
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Navigate,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import RouteChangeTracker from "./components/RouteChangeTracker";
 import { useState, useEffect } from "react";
@@ -144,12 +139,12 @@ function App() {
 
           // Pass college if available
           if (profile.college) {
-            params.append("college", profile.college);
+            params.append("college", profile.college.trim());
           }
 
           // Pass university if available
           if (profile.university) {
-            params.append("university", profile.university);
+            params.append("university", profile.university.trim());
           }
 
           const res = await fetch(
@@ -210,10 +205,7 @@ function App() {
       try {
         const { error } = await supabase.auth.refreshSession();
         if (error) {
-          console.warn(
-            "[App] Session refresh failed on tab focus:",
-            error.message,
-          );
+          console.warn("[App] Session refresh failed on tab focus:", error.message);
           // onAuthStateChange SIGNED_OUT will clear the profile automatically
           await supabase.auth.signOut();
         }
