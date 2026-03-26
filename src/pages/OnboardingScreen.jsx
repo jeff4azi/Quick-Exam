@@ -28,22 +28,17 @@ const OnboardingScreen = () => {
     year: "",
   });
 
-  const collegeSuggestions = [
-    "COSIT",
-    "COVTED",
-    "COSPED",
-    "COHUM",
-    "COSMAS",
-    "COAHM",
-  ];
+  const collegesByUniversity = {
+    TASUED: ["COSIT", "COVTED", "COSPED", "COHUM", "COSMAS", "COAHM"],
+    LASU: [],
+    LASUED: [],
+  };
 
   const universities = [
     { id: "TASUED", name: "TaiSolarin University of Education" },
     { id: "LASU", name: "Lagos State University" },
     { id: "LASUED", name: "Lagos State University of Education" },    
   ];
-
-  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     const init = async () => {
@@ -228,7 +223,11 @@ const OnboardingScreen = () => {
               <select
                 value={formData.university}
                 onChange={(e) =>
-                  setFormData({ ...formData, university: e.target.value })
+                  setFormData({
+                    ...formData,
+                    university: e.target.value,
+                    college: "",
+                  })
                 }
                 className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all shadow-sm appearance-none"
                 required
@@ -245,8 +244,8 @@ const OnboardingScreen = () => {
             </div>
           </div>
 
-          {/* College with Autocomplete Logic */}
-          <div className="relative group">
+          {/* College */}
+          <div className="group">
             <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-4 mb-1 block">
               College
             </label>
@@ -254,37 +253,32 @@ const OnboardingScreen = () => {
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <FiGrid className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors" />
               </div>
-              <input
-                type="text"
-                placeholder="Search your college..."
+              <select
                 value={formData.college}
-                onChange={(e) => {
-                  setFormData({ ...formData, college: e.target.value });
-                  setShowSuggestions(true);
-                }}
-                onFocus={() => setShowSuggestions(true)}
-                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all shadow-sm"
+                onChange={(e) =>
+                  setFormData({ ...formData, college: e.target.value })
+                }
+                disabled={
+                  !formData.university ||
+                  collegesByUniversity[formData.university]?.length === 0
+                }
+                className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all shadow-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                 required
-              />
-            </div>
-
-            {showSuggestions && formData.college.length > 1 && (
-              <div className="absolute z-10 w-full mt-2 bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-xl shadow-xl overflow-hidden">
-                {collegeSuggestions.map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => {
-                      setFormData({ ...formData, college: item });
-                      setShowSuggestions(false);
-                    }}
-                    className="w-full text-left px-5 py-3 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors"
-                  >
-                    {item}
-                  </button>
+              >
+                <option value="" disabled>
+                  {!formData.university
+                    ? "Select university first"
+                    : collegesByUniversity[formData.university]?.length === 0
+                      ? "No colleges available yet"
+                      : "Select your college"}
+                </option>
+                {(collegesByUniversity[formData.university] || []).map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
                 ))}
-              </div>
-            )}
+              </select>
+            </div>
           </div>
 
           {/* Department / Course */}

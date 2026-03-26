@@ -54,6 +54,10 @@ const LandingPage = () => {
           label: "Course Modules",
           value: formatValue(coursesRes.count || 0),
         },
+        {
+          label: "Universities",
+          value: formatValue(300), // Static value for now, can be made dynamic later
+        },
       ]);
     } catch (err) {
       console.error("Error fetching landing stats:", err);

@@ -4,7 +4,7 @@ import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import ProfileSheet from "../components/ProfileSheet";
 import Avatar from "../components/Avatar";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import NavBar from "../components/NavBar";
 import { useVisibilityRefresh } from "../hooks/useVisibilityRefresh";
@@ -25,7 +25,11 @@ const getCurrentWeekStartIso = () => {
   return weekStart.toISOString();
 };
 
-const LeaderboardScreen = ({ courses, isPremium : isUserPremium, userProfile }) => {
+const LeaderboardScreen = ({
+  courses,
+  isPremium: isUserPremium,
+  userProfile,
+}) => {
   const [attempts, setAttempts] = useState([]);
   const [profiles, setProfiles] = useState({});
   const [selectedCourseId, setSelectedCourseId] = useState("all");
@@ -33,9 +37,11 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium, userProfile }) 
   const [error, setError] = useState(null);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [universityFilter, setUniversityFilter] = useState("mine");
+  const [questionCountFilter, setQuestionCountFilter] = useState("all");
 
   useEffect(() => {
     setSelectedCourseId("all");
+    setQuestionCountFilter("all");
   }, [universityFilter]);
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
@@ -178,11 +184,19 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium, userProfile }) 
         ? attempts.filter((a) => a.university === userProfile?.university)
         : attempts;
 
-    // 2. Course filter on top of that
-    const filteredAttempts =
+    // 2. Course filter
+    const courseFiltered =
       selectedCourseId === "all"
         ? universityFiltered
         : universityFiltered.filter((a) => a.course_id === selectedCourseId);
+
+    // 3. Question count filter
+    const filteredAttempts =
+      questionCountFilter === "all"
+        ? courseFiltered
+        : courseFiltered.filter(
+            (a) => Number(a.total_questions) === questionCountFilter,
+          );
 
     const byUser = new Map();
 
@@ -244,7 +258,14 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium, userProfile }) 
     });
 
     return entries;
-  }, [attempts, profiles, selectedCourseId, universityFilter, userProfile]);
+  }, [
+    attempts,
+    profiles,
+    selectedCourseId,
+    universityFilter,
+    userProfile,
+    questionCountFilter,
+  ]);
 
   const formatTime = (seconds) => {
     if (!seconds) return "—";
@@ -304,6 +325,27 @@ const LeaderboardScreen = ({ courses, isPremium : isUserPremium, userProfile }) 
             >
               🌍 Global
             </button>
+          </div>
+        </section>
+        {/* Question count filter */}
+        <section className="mb-4">
+          <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
+            Questions
+          </label>
+          <div className="flex gap-2">
+            {["all", 30, 50, 70, 100].map((count) => (
+              <button
+                key={count}
+                onClick={() => setQuestionCountFilter(count)}
+                className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
+                  questionCountFilter === count
+                    ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
+                    : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                }`}
+              >
+                {count === "all" ? "All" : count}
+              </button>
+            ))}
           </div>
         </section>
         {/* Course filter */}
