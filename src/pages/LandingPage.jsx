@@ -94,18 +94,19 @@ const LandingPage = () => {
      const topUserIds = Array.from(userBestMap.keys());
      const { data: profilesData } = await supabase
        .from("profiles")
-       .select("id, full_name, user_name")
+       .select("id, full_name, user_name, university")
        .in("id", topUserIds);
 
      const profileMap = {};
      profilesData?.forEach(
-       (p) => (profileMap[p.id] = p.user_name || p.full_name),
+       (p) => (profileMap[p.id] = { name: p.user_name || p.full_name, university: p.university || "—"}),
      );
 
      // 4. Sort and Format to match your Landing Page Table
      const formattedPlayers = Array.from(userBestMap.entries())
        .map(([userId, data]) => ({
-         name: profileMap[userId] || "Scholar",
+         name: profileMap[userId]?.name || "Scholar",
+         university: profileMap[userId]?.university || "—",
          score: data.score,
          // Format date to "Mar 22" style
          date: new Date(data.date).toLocaleDateString("en-US", {
@@ -402,6 +403,9 @@ const LandingPage = () => {
                   <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
                     Date
                   </th>
+                  <th className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400">
+                    University
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50 dark:divide-gray-800">
@@ -423,6 +427,9 @@ const LandingPage = () => {
                     </td>
                     <td className="px-6 py-4 text-sm text-slate-400 font-medium">
                       {player.date}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-slate-400 font-medium">
+                      {player.university}
                     </td>
                   </tr>
                 ))}
