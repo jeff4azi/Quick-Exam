@@ -6,7 +6,7 @@ import {
   FiLayers,
   FiX,
 } from "react-icons/fi";
-import { FaCrown } from "react-icons/fa";
+import { FaCrown, FaWhatsapp } from "react-icons/fa";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import NavBar from "../components/NavBar";
@@ -138,6 +138,15 @@ const ChooseCourseScreen = ({
               </p>
             )}
           </div>
+          <a
+            href="https://wa.me/2348134497640?text=Hello%20I%20want%20to%20request%20a%20course.%0A%0ASchool:%20%0ACourse%20Name:%20%0ADo%20you%20have%20materials%3F%20(Yes%2FNo)%0A%0AI%20understand%20I%20need%20to%20send%20PDFs%20or%20notes."
+            target="_blank"
+            rel="noopener noreferrer"
+            className="ml-auto px-4 py-2 text-xs font-black rounded-xl bg-green-500 text-white shadow-md active:scale-95 flex items-center gap-1 transition-all"
+          >
+            <FaWhatsapp className="inline-block size-4 mr-1" />
+            Request Course
+          </a>
         </div>
       </header>
 
