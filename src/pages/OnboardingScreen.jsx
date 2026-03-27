@@ -35,7 +35,7 @@ const OnboardingScreen = () => {
 
   const universities = [
     { id: "TASUED", name: "TaiSolarin University of Education" },
-    { id: "LASU", name: "Lagos State University" },    
+    { id: "LASU", name: "Lagos State University" },
   ];
 
   useEffect(() => {
@@ -86,7 +86,9 @@ const OnboardingScreen = () => {
       <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
         <div className="flex items-center gap-3 rounded-2xl bg-white px-5 py-4 text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-200">
           <FiLoader className="animate-spin text-blue-600 dark:text-blue-400" />
-          <span className="text-sm font-semibold">Checking your profile...</span>
+          <span className="text-sm font-semibold">
+            Checking your profile...
+          </span>
         </div>
       </div>
     );
@@ -105,6 +107,12 @@ const OnboardingScreen = () => {
     setLoading(true);
     setError(null);
 
+    if (!formData.college || formData.college === "OTHER") {
+      setError("Please select a valid faculty/college.");
+      setLoading(false);
+      return;
+    }
+
     try {
       // 1. Ensure user exists
       const {
@@ -114,8 +122,13 @@ const OnboardingScreen = () => {
       if (authError || !user) {
         throw new Error("No authenticated user found. Please sign in again.");
       }
-      
-      const fullName = formData.fullName || user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "Scholar";
+
+      const fullName =
+        formData.fullName ||
+        user.user_metadata?.full_name ||
+        user.user_metadata?.name ||
+        user.email?.split("@")[0] ||
+        "Scholar";
 
       // get avatar url
       let avatarUrl =
@@ -163,8 +176,6 @@ const OnboardingScreen = () => {
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
-  
 
   return (
     <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6">
@@ -253,9 +264,32 @@ const OnboardingScreen = () => {
               </div>
               <select
                 value={formData.college}
-                onChange={(e) =>
-                  setFormData({ ...formData, college: e.target.value })
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  if (value === "OTHER") {
+                    const message = `Hello, I can't find my faculty/college.
+
+University: ${formData.university}
+Faculty/College: 
+Department: 
+
+I understand I need to provide correct details.`;
+
+                    const encodedMessage = encodeURIComponent(message);
+
+                    window.open(
+                      `https://wa.me/2347015585397?text=${encodedMessage}`,
+                      "_blank",
+                    );
+
+                    setFormData((prev) => ({ ...prev, college: "" })); // 👈 add this
+
+                    return;
+                  }
+
+                  setFormData((prev) => ({ ...prev, college: value }));
+                }}
                 disabled={
                   !formData.university ||
                   collegesByUniversity[formData.university]?.length === 0
@@ -275,6 +309,10 @@ const OnboardingScreen = () => {
                     {c}
                   </option>
                 ))}
+                <option value="OTHER">
+                  Can't find your{" "}
+                  {formData.university === "LASU" ? "Faculty" : "College"}?
+                </option>
               </select>
             </div>
           </div>
@@ -343,6 +381,9 @@ const OnboardingScreen = () => {
             {!loading && <FiCheckCircle className="text-xl" />}
           </button>
         </form>
+        <p className="text-xs text-slate-400 mt-2 ml-2 text-center">
+          Can’t find yours? Select the last option — we’ll add it fast.
+        </p>
       </div>
     </div>
   );
