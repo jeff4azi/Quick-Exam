@@ -30,14 +30,12 @@ const OnboardingScreen = () => {
 
   const collegesByUniversity = {
     TASUED: ["COSIT", "COVTED", "COSPED", "COHUM", "COSMAS", "COAHM"],
-    LASU: [],
-    LASUED: [],
+    LASU: ["FASA", "MASSA", "SOSSA"],
   };
 
   const universities = [
     { id: "TASUED", name: "TaiSolarin University of Education" },
-    { id: "LASU", name: "Lagos State University" },
-    { id: "LASUED", name: "Lagos State University of Education" },    
+    { id: "LASU", name: "Lagos State University" },    
   ];
 
   useEffect(() => {
@@ -247,7 +245,7 @@ const OnboardingScreen = () => {
           {/* College */}
           <div className="group">
             <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-4 mb-1 block">
-              College
+              {formData.university === "LASU" ? "Faculty" : "College"}
             </label>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -269,8 +267,8 @@ const OnboardingScreen = () => {
                   {!formData.university
                     ? "Select university first"
                     : collegesByUniversity[formData.university]?.length === 0
-                      ? "No colleges available yet"
-                      : "Select your college"}
+                      ? `No ${formData.university === "LASU" ? "Faculty" : "College"} available yet`
+                      : `Select your ${formData.university === "LASU" ? "Faculty" : "College"}`}
                 </option>
                 {(collegesByUniversity[formData.university] || []).map((c) => (
                   <option key={c} value={c}>
