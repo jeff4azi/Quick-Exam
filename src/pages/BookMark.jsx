@@ -7,7 +7,7 @@ import ConfirmOverlay from "../components/ConfirmOverlay"; // Added this import
 import { API_BASE_URL } from "../apiConfig";
 import NavBar from "../components/NavBar";
 
-const BookMark = ({ bookmarks, setBookmarks, isPremium }) => {
+const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false); // New state for overlay
@@ -35,7 +35,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ids: bookmarks }),
+          body: JSON.stringify({ ids: bookmarks, university: userProfile?.university || "TASUED" }),
         });
 
         const data = await res.json();
