@@ -20,10 +20,23 @@ import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import { FaCrown } from "react-icons/fa";
 
-const calculateTotalTime = (questionCount, isMath) => {
+const calculateTotalTime = (questionCount, isMath, isTheory) => {
+  if (isTheory) return questionCount * 4.5 * 60; // 4m30s per theory question
   const timePer10 = isMath ? 6 * 60 : 3.33 * 60;
   return Math.ceil((questionCount / 10) * timePer10);
 };
+
+// Theory grading: count how many keyword groups have at least one match
+const gradeTheoryAnswer = (userAnswer, keywords) => {
+  if (!Array.isArray(keywords) || !userAnswer) return 0;
+  const lower = userAnswer.toLowerCase();
+  return keywords.reduce((score, group) => {
+    const hit = Array.isArray(group) && group.some((kw) => lower.includes(kw.toLowerCase()));
+    return score + (hit ? 1 : 0);
+  }, 0);
+};
+
+const isTheoryQuestion = (q) => q?.type === "theory" || Array.isArray(q?.keywords);
 
 const shuffleArray = (array) => {
   const arr = [...array];
@@ -54,8 +67,10 @@ const ExamScreen = ({
   isPremium,
   autoAdvance,
   userProfile,
+  questionType,
 }) => {
   const isMathCourse = selectedCourse?.id === "MTH101";
+  const isTheoryExam = questionType === "theory";
   const navigate = useNavigate();
 
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
@@ -64,8 +79,8 @@ const ExamScreen = ({
   // but fall back to the raw questions length.
   const totalQuestions = shuffledQuestions.length || questions.length;
   const totalTime = useMemo(
-    () => calculateTotalTime(totalQuestions, isMathCourse),
-    [totalQuestions, isMathCourse],
+    () => calculateTotalTime(totalQuestions, isMathCourse, isTheoryExam),
+    [totalQuestions, isMathCourse, isTheoryExam],
   );
 
   const savedSession = useMemo(() => loadExamSession(), []);
@@ -143,7 +158,7 @@ const ExamScreen = ({
     if (questions.length > 0 && shuffledQuestions.length === 0) {
       const shuffled = questions.map((q) => ({
         ...q,
-        options: shuffleArray([...q.options]),
+        options: Array.isArray(q.options) ? shuffleArray([...q.options]) : undefined,
       }));
       setShuffledQuestions(shuffled);
     }
@@ -337,10 +352,13 @@ const ExamScreen = ({
 
   const saveResultToHistory = (finalTime) => {
     if (hasSaved) return;
-    const correctCount = shuffledQuestions.reduce(
-      (acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc),
-      0,
-    );
+    const correctCount = shuffledQuestions.reduce((acc, q, idx) => {
+      if (isTheoryQuestion(q)) {
+        const matched = gradeTheoryAnswer(answers[idx], q.keywords);
+        return acc + (matched > 0 ? 1 : 0);
+      }
+      return acc + (answers[idx] === q.correct ? 1 : 0);
+    }, 0);
     const newResult = {
       id: Date.now(),
       course: selectedCourse.name,
@@ -528,40 +546,57 @@ const ExamScreen = ({
             </div>
 
             <div className="space-y-4">
-              {currentQuestion?.options.map((option, index) => {
-                const isSelected = selectedOption === option;
-                const label = String.fromCharCode(65 + index);
+              {isTheoryQuestion(currentQuestion) ? (
+                <textarea
+                  value={selectedOption ?? ""}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    setAnswers((prev) => {
+                      const next = Array.isArray(prev) ? [...prev] : [];
+                      next[currentIndex] = val;
+                      return next;
+                    });
+                  }}
+                  placeholder="Type your answer here..."
+                  rows={6}
+                  className="w-full rounded-2xl border-2 border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-medium p-4 text-sm resize-none focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition-colors"
+                />
+              ) : (
+                currentQuestion?.options.map((option, index) => {
+                  const isSelected = selectedOption === option;
+                  const label = String.fromCharCode(65 + index);
 
-                return (
-                  <button
-                    key={index}
-                    onClick={() => onOptionClick(option)}
-                    className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
-                      isSelected
-                        ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
-                        : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                    }`}
-                  >
-                    <div
-                      className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => onOptionClick(option)}
+                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
                         isSelected
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                          ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
+                          : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
                       }`}
                     >
-                      {label}
-                    </div>
-                    <div
-                      className={`text-left font-semibold ${isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
-                    >
-                      <RenderMathText
-                        text={option}
-                        courseId={selectedCourse?.id}
-                      />
-                    </div>
-                  </button>
-                );
-              })}
+                      <div
+                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                          isSelected
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                        }`}
+                      >
+                        {label}
+                      </div>
+                      <div
+                        className={`text-left font-semibold ${isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
+                      >
+                        <RenderMathText
+                          text={option}
+                          courseId={selectedCourse?.id}
+                        />
+                      </div>
+                    </button>
+                  );
+                })
+              )}
             </div>
           </div>
         </div>

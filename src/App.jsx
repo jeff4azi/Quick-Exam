@@ -62,21 +62,25 @@ function App() {
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const [questionType, setQuestionType] = useState("objective");
 
-  // --- FIX 2: HANDLE SUBMIT LOGIC ---
   const handleExamSubmit = () => {
-    // 1. Calculate Score
     let correctCount = 0;
     questions.forEach((q, index) => {
-      if (q.correct === answers[index]) {
+      if (Array.isArray(q?.keywords)) {
+        // Theory: count as correct if at least one keyword group matched
+        const matched = q.keywords.reduce((score, group) => {
+          const lower = (answers[index] || "").toLowerCase();
+          return score + (Array.isArray(group) && group.some((kw) => lower.includes(kw.toLowerCase())) ? 1 : 0);
+        }, 0);
+        if (matched > 0) correctCount++;
+      } else if (q.correct === answers[index]) {
         correctCount++;
       }
     });
 
-    // 2. Update Result State (Unlocks the ProtectedRoute)
     setResults({
       correct: correctCount,
       wrong: questions.length - correctCount,
-      answered: questions.length, // This allows navigation to /results
+      answered: questions.length,
     });
   };
 

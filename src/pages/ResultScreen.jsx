@@ -19,6 +19,7 @@ const ResultScreen = ({
   selectedCourse,
   userProfile,
   isPremium,
+  questionType,
 }) => {
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(true);
@@ -382,7 +383,7 @@ const ResultScreen = ({
                   {formatNum(questions.length)}
                 </span>
                 <span className="text-[9px] font-bold text-blue-500 uppercase">
-                  obj
+                  {questionType === "theory" ? "thy" : "obj"}
                 </span>
               </div>
             </div>

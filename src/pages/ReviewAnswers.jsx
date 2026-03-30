@@ -89,8 +89,45 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
       <div className="space-y-6 px-5 mt-5">
         {questions.map((question, index) => {
           const userAnswer = answers[index];
-          const correctAnswer = question.correct;
+          const isTheory = Array.isArray(question.keywords) || question.type === "theory";
 
+          if (isTheory) {
+            const matchedGroups = Array.isArray(question.keywords)
+              ? question.keywords.filter((group) =>
+                  Array.isArray(group) &&
+                  group.some((kw) => (userAnswer || "").toLowerCase().includes(kw.toLowerCase()))
+                ).length
+              : 0;
+            const totalGroups = Array.isArray(question.keywords) ? question.keywords.length : 0;
+
+            return (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700"
+              >
+                <div className="font-semibold text-gray-800 dark:text-gray-200 text-lg mb-4">
+                  {index + 1}. <RenderMathText text={question.question} courseId={selectedCourse.id} />
+                </div>
+                <div className="mb-3">
+                  <span className="font-medium text-gray-700 dark:text-gray-200">Your answer:</span>
+                  <p className="mt-1 text-sm text-slate-600 dark:text-slate-300 bg-gray-50 dark:bg-gray-700 rounded-xl p-3 whitespace-pre-wrap">
+                    {userAnswer || <span className="italic text-gray-400">Not answered</span>}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 text-sm font-bold text-blue-600 dark:text-blue-400">
+                  Concepts matched: {matchedGroups} / {totalGroups}
+                </div>
+                {question.model_answer && (
+                  <div className="mt-3 bg-gray-50 dark:bg-gray-700 border-l-4 border-green-500 p-4 rounded-lg">
+                    <div className="text-sm font-semibold text-gray-700 dark:text-gray-200 mb-1">Model Answer</div>
+                    <div className="text-sm text-gray-600 dark:text-gray-300">{question.model_answer}</div>
+                  </div>
+                )}
+              </div>
+            );
+          }
+
+          const correctAnswer = question.correct;
           const isCorrect = userAnswer === correctAnswer;
           const isAnswered = userAnswer !== undefined;
 

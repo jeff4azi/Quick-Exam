@@ -33,6 +33,7 @@ const ChooseCourseScreen = ({
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+  const [theoryOverlayOpen, setTheoryOverlayOpen] = useState(false);
   const [favouriteIds, setFavouriteIds] = useState(() =>
     loadFavouriteCourseIds(),
   );
@@ -166,20 +167,34 @@ const ChooseCourseScreen = ({
             {[
               { key: "objective", label: "Objective" },
               { key: "theory", label: "Theory" },
-            ].map(({ key, label }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setQuestionType(key)}
-                className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
-                  questionType === key
-                    ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
-                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                }`}
-              >
-                {label}
-              </button>
-            ))}
+            ].map(({ key, label }) => {
+              const isLocked = key === "theory" && !isPremium;
+              return (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => {
+                    if (isLocked) {
+                      setTheoryOverlayOpen(true);
+                      return;
+                    }
+                    setQuestionType(key);
+                  }}
+                  className={`relative px-5 py-2 rounded-xl text-xs font-black transition-all ${
+                    questionType === key
+                      ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                  }`}
+                >
+                  {label}
+                  {isLocked && (
+                    <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-100 dark:border-slate-800 shadow-sm flex items-center justify-center">
+                      <FaCrown className="text-[7px] text-white" />
+                    </div>
+                  )}
+                </button>
+              );
+            })}
           </div>
         </div>
       </header>
@@ -393,6 +408,16 @@ const ChooseCourseScreen = ({
         onConfirm={() => navigate("/premium")}
         title="Unlock Full Exam Access"
         message="Upgrade to Premium to unlock longer exams and full-question modes for all your courses."
+        confirmText="Get Premium"
+        cancelText="Maybe later"
+      />
+
+      <ConfirmOverlay
+        isOpen={theoryOverlayOpen}
+        onClose={() => setTheoryOverlayOpen(false)}
+        onConfirm={() => navigate("/premium")}
+        title="Theory Mode is Premium"
+        message="Upgrade to Premium to access theory questions and test your written knowledge across all courses."
         confirmText="Get Premium"
         cancelText="Maybe later"
       />
