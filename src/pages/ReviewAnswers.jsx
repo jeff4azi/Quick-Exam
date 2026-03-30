@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { RenderMathText } from "../utils/RenderMathText"
-import { FiLock } from "react-icons/fi";
+import { FiLock, FiAlertTriangle } from "react-icons/fi";
 
 const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
   const navigate = useNavigate();
@@ -123,6 +123,17 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
                     <div className="text-sm text-gray-600 dark:text-gray-300">{question.model_answer}</div>
                   </div>
                 )}
+                <div className="mt-3 flex justify-end">
+                  <a
+                    href={`https://wa.me/2347015585397?text=${encodeURIComponent(`*Question Report*\n\n*ID:* ${question.id}\n\n*Question:* ${question.question}\n\n*User's Answer:* ${userAnswer || "Not answered"}\n\n*Model Answer:* ${question.model_answer || "N/A"}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-bold border border-amber-100 dark:border-amber-500/20 active:scale-95 transition-all"
+                  >
+                    <FiAlertTriangle size={12} />
+                    Report Question
+                  </a>
+                </div>
               </div>
             );
           }
