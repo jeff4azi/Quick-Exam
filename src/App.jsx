@@ -544,6 +544,7 @@ function App() {
                   <LeaderboardScreen
                     courses={availableCourses}
                     isPremium={isPremium}
+                    userProfile={userProfile}
                   />
                 </ProtectedRoute>
               }

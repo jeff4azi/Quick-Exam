@@ -190,7 +190,10 @@ const LeaderboardScreen = ({
     // 1. University filter
     const universityFiltered =
       universityFilter === "mine"
-        ? attempts.filter((a) => a.university.trim() === userProfile?.university.trim())
+        ? attempts.filter((a) =>
+            (a.university ?? "").trim().toLowerCase() ===
+            (userProfile?.university ?? "").trim().toLowerCase()
+          )
         : attempts;
 
     // 2. Course filter
