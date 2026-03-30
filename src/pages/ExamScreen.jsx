@@ -26,13 +26,17 @@ const calculateTotalTime = (questionCount, isMath, isTheory) => {
   return Math.ceil((questionCount / 10) * timePer10);
 };
 
-// Theory grading: count how many keyword groups have at least one match
+// Theory grading
 const gradeTheoryAnswer = (userAnswer, keywords) => {
   if (!Array.isArray(keywords) || !userAnswer) return 0;
   const lower = userAnswer.toLowerCase();
+  const totalGroups = keywords.length;
+
   return keywords.reduce((score, group) => {
-    const hit = Array.isArray(group) && group.some((kw) => lower.includes(kw.toLowerCase()));
-    return score + (hit ? 1 : 0);
+    if (!Array.isArray(group)) return score;
+    const matchedInGroup = group.filter((kw) => lower.includes(kw.toLowerCase())).length;
+    const groupScore = (matchedInGroup / group.length) * (1 / totalGroups);
+    return score + groupScore;
   }, 0);
 };
 
@@ -356,8 +360,7 @@ const ExamScreen = ({
     if (hasSaved) return;
     const correctCount = shuffledQuestions.reduce((acc, q, idx) => {
       if (isTheoryQuestion(q)) {
-        const matched = gradeTheoryAnswer(answers[idx], q.keywords);
-        return acc + (matched > 0 ? 1 : 0);
+        return acc + gradeTheoryAnswer(answers[idx], q.keywords); // ← now adds fractional score directly
       }
       return acc + (answers[idx] === q.correct ? 1 : 0);
     }, 0);
@@ -572,18 +575,16 @@ const ExamScreen = ({
                     <button
                       key={index}
                       onClick={() => onOptionClick(option)}
-                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
-                        isSelected
+                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${isSelected
                           ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
                           : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                      }`}
+                        }`}
                     >
                       <div
-                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
-                          isSelected
+                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isSelected
                             ? "bg-blue-600 text-white"
                             : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
-                        }`}
+                          }`}
                       >
                         {label}
                       </div>
