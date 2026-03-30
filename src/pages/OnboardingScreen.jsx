@@ -55,6 +55,7 @@ const OnboardingScreen = () => {
         .single();
 
       if (data?.onboarding_complete === true) {
+        await refreshProfile();
         navigate("/", { replace: true });
         return; // don't setChecking — page is navigating away anyway
       }
