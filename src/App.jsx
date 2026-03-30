@@ -121,7 +121,7 @@ function App() {
             user.user_metadata?.name ||
             "Scholar",
           user_name: profileData?.user_name || null,
-          university: profileData?.university || null,
+          university: profileData?.university.trim() || null,
           college: profileData?.college || "TASUED",
           department: profileData?.department || "General Studies",
           year: profileData?.year?.toString() || "1",

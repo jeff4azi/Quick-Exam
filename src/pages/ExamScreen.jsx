@@ -285,6 +285,7 @@ const ExamScreen = ({
         time_taken: finalTime,
         is_retake: hasRetaken,
         university: userProfile?.university || null,
+        type: isTheoryExam ? "THY" : "OBJ",
       });
 
       // 🔥 STEP 5: If JWT expired during insert → retry ONCE
@@ -307,6 +308,7 @@ const ExamScreen = ({
           time_taken: finalTime,
           is_retake: hasRetaken,
           university: userProfile?.university || null,
+          type: isTheoryExam ? "THY" : "OBJ",
         });
 
         if (retry.error) throw retry.error;

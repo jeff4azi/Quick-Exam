@@ -38,11 +38,18 @@ const LeaderboardScreen = ({
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [universityFilter, setUniversityFilter] = useState("mine");
   const [questionCountFilter, setQuestionCountFilter] = useState("all");
+  const [examType, setExamType] = useState("OBJ");
+
+  const questionCountOptions = examType === "THY" ? ["all", 3, 5, 7, 10] : ["all", 30, 50, 70, 100];
 
   useEffect(() => {
     setSelectedCourseId("all");
     setQuestionCountFilter("all");
   }, [universityFilter]);
+
+  useEffect(() => {
+    setQuestionCountFilter("all");
+  }, [examType]);
 
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [sheetProfile, setSheetProfile] = useState(null);
@@ -75,6 +82,7 @@ const LeaderboardScreen = ({
           `,
           )
           .eq("is_retake", false)
+          .eq("type", examType)
           .gte("date_taken", weekStartIso),
         15000,
         "Loading leaderboard took too long. Please try again.",
@@ -128,6 +136,7 @@ const LeaderboardScreen = ({
               avatar_url: p.avatar_url,
               isPremium: p.is_premium === true,
               department: p.department || "General Studies",
+              university: p.university?.trim(),
             };
           });
           setProfiles(profileMap);
@@ -145,7 +154,7 @@ const LeaderboardScreen = ({
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [examType]);
 
   useEffect(() => {
     fetchLeaderboardData();
@@ -181,7 +190,7 @@ const LeaderboardScreen = ({
     // 1. University filter
     const universityFiltered =
       universityFilter === "mine"
-        ? attempts.filter((a) => a.university === userProfile?.university)
+        ? attempts.filter((a) => a.university.trim() === userProfile?.university.trim())
         : attempts;
 
     // 2. Course filter
@@ -215,7 +224,7 @@ const LeaderboardScreen = ({
           bestPercent: percent,
           attemptsCount: 1,
           totalTime: Number(attempt.time_taken) || 0,
-          university: attempt.university ?? null,
+          university: attempt.university?.trim() ?? null,
         });
       } else {
         existing.bestPercent = Math.max(existing.bestPercent, percent);
@@ -300,6 +309,29 @@ const LeaderboardScreen = ({
       </header>
 
       <main className="max-w-2xl mx-auto px-6 pt-4 pb-32">
+        {/* Exam type toggle */}
+        <section className="mb-4">
+          <div className="inline-flex bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
+            {[
+              { key: "OBJ", label: "Objective" },
+              { key: "THY", label: "Theory" },
+            ].map(({ key, label }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setExamType(key)}
+                className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
+                  examType === key
+                    ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </section>
+
         <section className="mb-4">
           <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
             Leaderboard Scope
@@ -333,7 +365,7 @@ const LeaderboardScreen = ({
             Questions
           </label>
           <div className="flex gap-2">
-            {["all", 30, 50, 70, 100].map((count) => (
+            {questionCountOptions.map((count) => (
               <button
                 key={count}
                 onClick={() => setQuestionCountFilter(count)}
