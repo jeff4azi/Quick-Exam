@@ -39,6 +39,7 @@ const LeaderboardScreen = ({
   const [universityFilter, setUniversityFilter] = useState("mine");
   const [questionCountFilter, setQuestionCountFilter] = useState("all");
   const [examType, setExamType] = useState("OBJ");
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   const questionCountOptions = examType === "THY" ? ["all", 3, 5, 7, 10] : ["all", 30, 50, 70, 100];
 
@@ -191,9 +192,9 @@ const LeaderboardScreen = ({
     const universityFiltered =
       universityFilter === "mine"
         ? attempts.filter((a) =>
-            (a.university ?? "").trim().toLowerCase() ===
-            (userProfile?.university ?? "").trim().toLowerCase()
-          )
+          (a.university ?? "").trim().toLowerCase() ===
+          (userProfile?.university ?? "").trim().toLowerCase()
+        )
         : attempts;
 
     // 2. Course filter
@@ -207,8 +208,8 @@ const LeaderboardScreen = ({
       questionCountFilter === "all"
         ? courseFiltered
         : courseFiltered.filter(
-            (a) => Number(a.total_questions) === questionCountFilter,
-          );
+          (a) => Number(a.total_questions) === questionCountFilter,
+        );
 
     const byUser = new Map();
 
@@ -323,11 +324,10 @@ const LeaderboardScreen = ({
                 key={key}
                 type="button"
                 onClick={() => setExamType(key)}
-                className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
-                  examType === key
-                    ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
-                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                }`}
+                className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${examType === key
+                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                  }`}
               >
                 {label}
               </button>
@@ -335,75 +335,91 @@ const LeaderboardScreen = ({
           </div>
         </section>
 
+        {/* Collapsible filters */}
         <section className="mb-4">
-          <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
-            Leaderboard Scope
-          </label>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setUniversityFilter("mine")}
-              className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
-                universityFilter === "mine"
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
-                  : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-              }`}
-            >
-              🏫 My University
-            </button>
-            <button
-              onClick={() => setUniversityFilter("all")}
-              className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
-                universityFilter === "all"
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
-                  : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-              }`}
-            >
-              🌍 Global
-            </button>
-          </div>
-        </section>
-        {/* Question count filter */}
-        <section className="mb-4">
-          <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
-            Questions
-          </label>
-          <div className="flex gap-2">
-            {questionCountOptions.map((count) => (
-              <button
-                key={count}
-                onClick={() => setQuestionCountFilter(count)}
-                className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
-                  questionCountFilter === count
-                    ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
-                    : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-                }`}
-              >
-                {count === "all" ? "All" : count}
-              </button>
-            ))}
-          </div>
-        </section>
-        {/* Course filter */}
-        <section className="mb-4">
-          <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
-            Filter by course
-          </label>
-          <div className="relative">
-            <select
-              value={selectedCourseId}
-              onChange={(e) => setSelectedCourseId(e.target.value)}
-              className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            >
-              {courseOptions.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.label}
-                </option>
-              ))}
-            </select>
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
-              <span className="text-xs">▼</span>
+          <button
+            type="button"
+            onClick={() => setFiltersOpen((prev) => !prev)}
+            className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2"
+          >
+            <span>Filters</span>
+            <span className="text-[10px]">{filtersOpen ? "▲" : "▼"}</span>
+          </button>
+
+          {filtersOpen && (
+            <div className="flex flex-col gap-4">
+              {/* Leaderboard Scope */}
+              <div>
+                <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
+                  Leaderboard Scope
+                </label>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setUniversityFilter("mine")}
+                    className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${universityFilter === "mine"
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
+                      : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                      }`}
+                  >
+                    🏫 My University
+                  </button>
+                  <button
+                    onClick={() => setUniversityFilter("all")}
+                    className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${universityFilter === "all"
+                      ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
+                      : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                      }`}
+                  >
+                    🌍 Global
+                  </button>
+                </div>
+              </div>
+
+              {/* Question count filter */}
+              <div>
+                <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
+                  Questions
+                </label>
+                <div className="flex gap-2">
+                  {questionCountOptions.map((count) => (
+                    <button
+                      key={count}
+                      onClick={() => setQuestionCountFilter(count)}
+                      className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${questionCountFilter === count
+                        ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
+                        : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                        }`}
+                    >
+                      {count === "all" ? "All" : count}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Course filter */}
+              <div>
+                <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
+                  Filter by course
+                </label>
+                <div className="relative">
+                  <select
+                    value={selectedCourseId}
+                    onChange={(e) => setSelectedCourseId(e.target.value)}
+                    className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {courseOptions.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.label}
+                      </option>
+                    ))}
+                  </select>
+                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
+                    <span className="text-xs">▼</span>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </section>
 
         {/* Content */}
