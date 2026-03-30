@@ -34,6 +34,7 @@ const ChooseCourseScreen = ({
   const [favouriteIds, setFavouriteIds] = useState(() =>
     loadFavouriteCourseIds(),
   );
+  const [questionType, setQuestionType] = useState("objective");
 
   const userCollege = userProfile?.college;
 
@@ -49,11 +50,14 @@ const ChooseCourseScreen = ({
     return courses.filter((course) => {
       if (!course) return false;
       if (!Array.isArray(course.colleges)) return false;
-      if (course.colleges.includes("ALL")) return true;
-      if (!userCollege) return false;
-      return course.colleges.includes(userCollege);
+      const collegeMatch =
+        course.colleges.includes("ALL") ||
+        (userCollege && course.colleges.includes(userCollege));
+      if (!collegeMatch) return false;
+      if (questionType === "theory") return (course.theoryQuestionCount || 0) > 0;
+      return true;
     });
-  }, [courses, userCollege]);
+  }, [courses, userCollege, questionType]);
 
   // If Home deep-links to a course, preselect it
   useEffect(() => {
@@ -148,6 +152,29 @@ const ChooseCourseScreen = ({
             Request Course
           </a>
         </div>
+
+        {/* TABS */}
+        <div className="max-w-2xl mx-auto mt-3">
+          <div className="inline-flex bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
+            {[
+              { key: "objective", label: "Objective" },
+              { key: "theory", label: "Theory" },
+            ].map(({ key, label }) => (
+              <button
+                key={key}
+                type="button"
+                onClick={() => setQuestionType(key)}
+                className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${
+                  questionType === key
+                    ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                }`}
+              >
+                {label}
+              </button>
+            ))}
+          </div>
+        </div>
       </header>
 
       {/* MAIN CONTENT AREA */}
@@ -239,7 +266,7 @@ const ChooseCourseScreen = ({
                               }`}
                             >
                               <FiBookOpen />
-                              {course.questionCount || 0} Questions
+                              {(questionType === "theory" ? course.theoryQuestionCount : course.questionCount) || 0} Questions
                             </div>
                           </div>
 
