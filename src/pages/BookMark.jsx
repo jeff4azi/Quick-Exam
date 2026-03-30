@@ -35,7 +35,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ids: bookmarks, university: userProfile?.university || "TASUED" }),
+          body: JSON.stringify({ ids: bookmarks, university: userProfile?.university.trim() || "TASUED" }),
         });
 
         const data = await res.json();
@@ -175,58 +175,91 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
             </h3>
 
             <div className="space-y-5">
-              {bookmarkedQuestions.map((question, index) => (
-                <div
-                  key={question.id || index}
-                  className="group bg-white dark:bg-slate-800/50 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-slate-200/40 dark:hover:shadow-none transition-all duration-300 relative"
-                >
-                  <div className="flex justify-between items-center mb-4">
-                    <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-[10px] font-black tracking-wider text-slate-500 dark:text-slate-400">
-                      {getCourseFromId(question.id)}
-                    </span>
-                    
-                    <button
-                      onClick={() => handleDeleteBookmark(question.id)}
-                      className="p-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
-                      title="Remove Bookmark"
-                    >
-                      <FaTrashAlt size={14} />
-                    </button>
-                  </div>
-
-                  <div className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-snug mb-4">
-                    <div className="flex gap-2">
-                      <span className="text-blue-500 shrink-0">{index + 1}.</span>
-                      <div className="flex-1 break-words whitespace-normal">
-                        <RenderMathText text={question.question} courseId={question.id} />
+              {bookmarkedQuestions.map((question, index) => {
+                const isTheory = Array.isArray(question.keywords) || question.type === "theory";
+                return (
+                  <div
+                    key={question.id || index}
+                    className="group bg-white dark:bg-slate-800/50 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-slate-200/40 dark:hover:shadow-none transition-all duration-300 relative"
+                  >
+                    {/* Header row */}
+                    <div className="flex justify-between items-center mb-4">
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700 text-[10px] font-black tracking-wider text-slate-500 dark:text-slate-400">
+                          {getCourseFromId(question.id)}
+                        </span>
+                        {isTheory && (
+                          <span className="px-2.5 py-1 rounded-full bg-purple-100 dark:bg-purple-500/10 text-[10px] font-black tracking-wider text-purple-600 dark:text-purple-400">
+                            THEORY
+                          </span>
+                        )}
                       </div>
+                      <button
+                        onClick={() => handleDeleteBookmark(question.id)}
+                        className="p-2.5 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300 opacity-100 lg:opacity-0 lg:group-hover:opacity-100"
+                        title="Remove Bookmark"
+                      >
+                        <FaTrashAlt size={14} />
+                      </button>
                     </div>
-                  </div>
 
-                  <div className="flex items-center gap-3 bg-emerald-50/50 dark:bg-emerald-500/5 p-4 rounded-2xl border border-emerald-100/50 dark:border-emerald-500/10">
-                    <div className="size-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white shrink-0 shadow-sm shadow-emerald-200">
-                      <span className="text-[10px] font-black">ANS</span>
-                    </div>
-                    <div className="text-emerald-700 dark:text-emerald-400 font-black">
-                      <RenderMathText text={question.correct} courseId={question.id} />
-                    </div>
-                  </div>
-
-                  {question.reason && (
-                    <div className="mt-4 flex gap-3 p-4 rounded-2xl bg-blue-50/30 dark:bg-blue-500/5 border-l-4 border-blue-500">
-                      <FaLightbulb className="text-blue-500 shrink-0 mt-0.5" size={16} />
-                      <div className="space-y-1">
-                        <p className="text-[11px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                          Explanation
-                        </p>
-                        <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                          <RenderMathText text={question.reason} courseId={question.id} />
+                    {/* Question text */}
+                    <div className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-snug mb-4">
+                      <div className="flex gap-2">
+                        <span className="text-blue-500 shrink-0">{index + 1}.</span>
+                        <div className="flex-1 break-words whitespace-normal">
+                          <RenderMathText text={question.question} courseId={question.id} />
                         </div>
                       </div>
                     </div>
-                  )}
-                </div>
-              ))}
+
+                    {isTheory ? (
+                      <>
+                        {/* Model answer */}
+                        {question.model_answer && (
+                          <div className="mt-3 flex gap-3 p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-100/50 dark:border-emerald-500/10">
+                            <FaLightbulb className="text-emerald-500 shrink-0 mt-0.5" size={16} />
+                            <div className="space-y-1">
+                              <p className="text-[11px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
+                                Model Answer
+                              </p>
+                              <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                                {question.model_answer}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      <>
+                        {/* Objective answer */}
+                        <div className="flex items-center gap-3 bg-emerald-50/50 dark:bg-emerald-500/5 p-4 rounded-2xl border border-emerald-100/50 dark:border-emerald-500/10">
+                          <div className="size-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white shrink-0 shadow-sm shadow-emerald-200">
+                            <span className="text-[10px] font-black">ANS</span>
+                          </div>
+                          <div className="text-emerald-700 dark:text-emerald-400 font-black">
+                            <RenderMathText text={question.correct} courseId={question.id} />
+                          </div>
+                        </div>
+
+                        {question.reason && (
+                          <div className="mt-4 flex gap-3 p-4 rounded-2xl bg-blue-50/30 dark:bg-blue-500/5 border-l-4 border-blue-500">
+                            <FaLightbulb className="text-blue-500 shrink-0 mt-0.5" size={16} />
+                            <div className="space-y-1">
+                              <p className="text-[11px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                                Explanation
+                              </p>
+                              <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                                <RenderMathText text={question.reason} courseId={question.id} />
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
