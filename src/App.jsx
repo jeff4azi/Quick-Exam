@@ -60,6 +60,7 @@ function App() {
   const [results, setResults] = useState({ correct: 0, wrong: 0, answered: 0 });
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(null);
   const [questionsLoading, setQuestionsLoading] = useState(false);
+  const [questionType, setQuestionType] = useState("objective");
 
   // --- FIX 2: HANDLE SUBMIT LOGIC ---
   const handleExamSubmit = () => {
@@ -283,7 +284,10 @@ function App() {
           selectedCourse.questionsEndpoint ||
           `/courses/${selectedCourse.id}/questions`;
 
-        const res = await fetch(`${API_BASE_URL}${endpoint}`);
+        const url = new URL(`${API_BASE_URL}${endpoint}`);
+        if (questionType === "theory") url.searchParams.set("type", "theory");
+
+        const res = await fetch(url.toString());
         const data = await res.json();
 
         if (!res.ok) {
@@ -313,7 +317,7 @@ function App() {
     };
 
     loadQuestionsForSelectedCourse();
-  }, [selectedCourse, selectedQuestionCount]);
+  }, [selectedCourse, selectedQuestionCount, questionType]);
 
   useEffect(() => {
     const saved = localStorage.getItem("bookmarkedQuestions");
@@ -458,6 +462,8 @@ function App() {
     setHasRetaken,
     questionsLoading,
     deleteImage,
+    questionType,
+    setQuestionType,
   };
 
   return (

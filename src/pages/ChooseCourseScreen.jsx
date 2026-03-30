@@ -26,6 +26,8 @@ const ChooseCourseScreen = ({
   loadingProfile,
   isPremium,
   coursesLoading,
+  questionType,
+  setQuestionType,
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -34,7 +36,6 @@ const ChooseCourseScreen = ({
   const [favouriteIds, setFavouriteIds] = useState(() =>
     loadFavouriteCourseIds(),
   );
-  const [questionType, setQuestionType] = useState("objective");
 
   const userCollege = userProfile?.college;
 
@@ -99,9 +100,15 @@ const ChooseCourseScreen = ({
   const groupOrder = ["general", "departmental", "vocational"];
 
   /* ----------------------------- HELPERS ------------------------------------ */
-  const getAvailableQuestionOptions = questionCount => {
+  const getAvailableQuestionOptions = (course) => {
+    if (questionType === "theory") {
+      const theoryOptions = [3, 5, 7, 10];
+      const count = course?.theoryQuestionCount || 0;
+      const filtered = theoryOptions.filter(opt => count >= opt);
+      return [...filtered, "All"];
+    }
     const options = [30, 50, 70, 100];
-    const filtered = options.filter(opt => (questionCount || 0) >= opt);
+    const filtered = options.filter(opt => (course?.questionCount || 0) >= opt);
     return [...filtered, "All"];
   };
 
@@ -335,7 +342,7 @@ const ChooseCourseScreen = ({
                 {selectedCourse.title}
               </p>
               <div className="grid grid-cols-2 gap-3 mt-8">
-                {getAvailableQuestionOptions(selectedCourse.questionCount).map(
+                {getAvailableQuestionOptions(selectedCourse).map(
                   (num) => {
                     const isLocked = !isPremium && num !== 30; // Only 30 questions allowed for free users
 
