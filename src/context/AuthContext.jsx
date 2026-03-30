@@ -45,6 +45,20 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   };
 
+  const refreshProfile = async () => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.user) return;
+
+    const { data } = await supabase
+      .from("profiles")
+      .select("onboarding_complete, avatar_url")
+      .eq("id", session.user.id)
+      .single();
+
+    setProfileValid(!!data?.onboarding_complete);
+    setHasAvatar(!!data?.avatar_url);
+  };
+
   useEffect(() => {
     // 1. Restore session on app load
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -98,6 +112,7 @@ export const AuthProvider = ({ children }) => {
         profileValid,
         hasAvatar,
         resetPassword,
+        refreshProfile,
       }}
     >
       {children}
