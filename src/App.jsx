@@ -62,24 +62,6 @@ function App() {
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const [questionType, setQuestionType] = useState("objective");
 
-  // AFTER
-  const gradeTheoryAnswer = (userAnswer, rawKeywords) => {
-    if (!userAnswer) return 0;
-    let keywords = rawKeywords;
-    if (typeof keywords === "string") {
-      try { keywords = JSON.parse(keywords); } catch { return 0; }
-    }
-    if (!Array.isArray(keywords) || keywords.length === 0) return 0;
-    const lower = userAnswer.toLowerCase();
-    const totalGroups = keywords.length;
-
-    return keywords.reduce((score, group) => {
-      if (!Array.isArray(group) || group.length === 0) return score;
-      const matchedInGroup = group.filter((kw) => lower.includes(kw.toLowerCase())).length;
-      return score + (matchedInGroup / group.length) * (1 / totalGroups);
-    }, 0);
-  };
-
   const handleExamSubmit = (correctCount, totalCount) => {
     const total = totalCount ?? questions.length;
 

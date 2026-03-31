@@ -138,17 +138,35 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   // Re-fetch stats whenever the tab regains focus after being idle/hidden
   useVisibilityRefresh(fetchSupabaseStats);
 
-  // Handle streak entirely via localStorage examHistory
-  useEffect(() => {
+  // Handle streak from Supabase exam_attempts
+  const fetchStreak = useCallback(async () => {
     try {
-      const history =
-        JSON.parse(localStorage.getItem("examHistory") || "[]") || [];
-      if (!Array.isArray(history) || history.length === 0) {
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) return;
+
+      const { data, error } = await withTimeout(
+        supabase
+          .from("exam_attempts")
+          .select("date_taken")
+          .eq("user_id", user.id)
+          .order("date_taken", { ascending: false }),
+        15000,
+        "Loading streak took too long.",
+      );
+
+      if (error || !data) {
         setStats((prev) => ({ ...prev, streak: 0 }));
         return;
       }
 
-      const dateSet = new Set(history.map((h) => h?.date).filter(Boolean));
+      // Build a set of unique local date strings (YYYY-MM-DD)
+      const dateSet = new Set(
+        data.map((r) => new Date(r.date_taken).toLocaleDateString("en-CA")),
+      );
 
       let streak = 0;
       const today = new Date();
@@ -156,11 +174,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
       for (let offset = 0; ; offset++) {
         const d = new Date(today);
         d.setDate(today.getDate() - offset);
-        const key = d.toLocaleDateString("en-US", {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
+        const key = d.toLocaleDateString("en-CA"); // YYYY-MM-DD
         if (dateSet.has(key)) {
           streak += 1;
         } else {
@@ -170,10 +184,16 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
 
       setStats((prev) => ({ ...prev, streak }));
     } catch (err) {
-      console.error("Failed to compute streak from history:", err);
+      console.error("Failed to compute streak:", err);
       setStats((prev) => ({ ...prev, streak: 0 }));
     }
   }, []);
+
+  useEffect(() => {
+    fetchStreak();
+  }, [fetchStreak]);
+
+  useVisibilityRefresh(fetchStreak);
 
   // Recently done courses carousel (last 5 attempts)
   useEffect(() => {
