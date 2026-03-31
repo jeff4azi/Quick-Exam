@@ -14,6 +14,7 @@ import {
   loadFavouriteCourseIds,
   toggleFavouriteCourseId,
 } from "../utils/favouriteCourses";
+import { clearExamSession } from "../utils/examSessionStorage";
 
 const ChooseCourseScreen = ({
   selectedQuestionCount,
@@ -22,7 +23,7 @@ const ChooseCourseScreen = ({
   selectedCourse,
   setSelectedCourse,
   setAnswers,
-  userProfile, 
+  userProfile,
   loadingProfile,
   isPremium,
   coursesLoading,
@@ -125,6 +126,7 @@ const ChooseCourseScreen = ({
 
   const handleStartExam = () => {
     if (!selectedCourse || !selectedQuestionCount) return;
+    clearExamSession();
     setAnswers([]);
     navigate("/exam");
   };
@@ -133,11 +135,10 @@ const ChooseCourseScreen = ({
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-500 pb-32">
       {/* HEADER */}
       <header
-        className={`sticky top-0 z-50 px-6 py-4 transition-all duration-300 ${
-          isScrolled
+        className={`sticky top-0 z-50 px-6 py-4 transition-all duration-300 ${isScrolled
             ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg shadow-sm border-b border-gray-100 dark:border-slate-800"
             : "bg-transparent"
-        }`}
+          }`}
       >
         <div className="max-w-2xl mx-auto flex items-center gap-4">
           <div>
@@ -179,12 +180,13 @@ const ChooseCourseScreen = ({
                       return;
                     }
                     setQuestionType(key);
+                    setSelectedCourse(null);
+                    setSelectedQuestionCount(null);
                   }}
-                  className={`relative px-5 py-2 rounded-xl text-xs font-black transition-all ${
-                    questionType === key
+                  className={`relative px-5 py-2 rounded-xl text-xs font-black transition-all ${questionType === key
                       ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
                       : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                  }`}
+                    }`}
                 >
                   {label}
                   {isLocked && (
@@ -260,11 +262,10 @@ const ChooseCourseScreen = ({
                             handleSelectCourse(course);
                           }
                         }}
-                        className={`group w-full text-left p-5 rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${
-                          isSelected
+                        className={`group w-full text-left p-5 rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${isSelected
                             ? "bg-blue-600 border-blue-600 shadow-xl shadow-blue-200"
                             : "bg-white dark:bg-slate-800 border-white dark:border-slate-800 hover:border-blue-100 shadow-sm"
-                        }`}
+                          }`}
                       >
                         <div className="flex justify-between">
                           <div className="max-w-[80%]">
@@ -281,11 +282,10 @@ const ChooseCourseScreen = ({
 
                             {/* RE-ADDED THE BADGE STYLING */}
                             <div
-                              className={`inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-full text-[10px] font-bold ${
-                                isSelected
+                              className={`inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-full text-[10px] font-bold ${isSelected
                                   ? "bg-white/20 text-white"
                                   : "bg-blue-50 dark:bg-blue-900/30 text-blue-600"
-                              }`}
+                                }`}
                             >
                               <FiBookOpen />
                               {(questionType === "theory" ? course.theoryQuestionCount : course.questionCount) || 0} Questions
@@ -300,11 +300,10 @@ const ChooseCourseScreen = ({
                                 const next = toggleFavouriteCourseId(course.id);
                                 setFavouriteIds(next);
                               }}
-                              className={`size-10 shrink-0 rounded-2xl flex items-center justify-center transition-all active:scale-90 ${
-                                isSelected
+                              className={`size-10 shrink-0 rounded-2xl flex items-center justify-center transition-all active:scale-90 ${isSelected
                                   ? "bg-white/20 text-white"
                                   : "bg-gray-50 dark:bg-slate-700 text-slate-400 dark:text-slate-300"
-                              }`}
+                                }`}
                               title={
                                 isFavourite
                                   ? "Remove from favourites"
@@ -371,11 +370,10 @@ const ChooseCourseScreen = ({
                           }
                           setSelectedQuestionCount(num);
                         }}
-                        className={`relative py-4 rounded-2xl font-black transition-all ${
-                          selectedQuestionCount === num
+                        className={`relative py-4 rounded-2xl font-black transition-all ${selectedQuestionCount === num
                             ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
                             : "bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200"
-                        } ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`}
+                          } ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`}
                       >
                         {num === "All" ? "Full Exam" : `${num} Qs`}
 
