@@ -27,17 +27,27 @@ const calculateTotalTime = (questionCount, isMath, isTheory) => {
 };
 
 // Theory grading
-const gradeTheoryAnswer = (userAnswer, keywords) => {
-  if (!Array.isArray(keywords) || !userAnswer) return 0;
+const parseKeywords = (keywords) => {
+  if (Array.isArray(keywords)) return keywords;
+  if (typeof keywords === "string") {
+    try { return JSON.parse(keywords); } catch { return []; }
+  }
+  return [];
+};
+
+const gradeTheoryAnswer = (userAnswer, rawKeywords) => {
+  if (!userAnswer) return 0;
+  const keywords = parseKeywords(rawKeywords);
+  if (!Array.isArray(keywords) || keywords.length === 0) return 0;
   const lower = userAnswer.toLowerCase();
   const totalGroups = keywords.length;
 
-  return keywords.reduce((score, group) => {
-    if (!Array.isArray(group)) return score;
-    const matchedInGroup = group.filter((kw) => lower.includes(kw.toLowerCase())).length;
-    const groupScore = (matchedInGroup / group.length) * (1 / totalGroups);
-    return score + groupScore;
-  }, 0);
+  const matchedGroups = keywords.filter((group) => {
+    if (!Array.isArray(group) || group.length === 0) return false;
+    return group.some((kw) => lower.includes(kw.toLowerCase()));
+  }).length;
+
+  return matchedGroups / totalGroups; // 0 to 1
 };
 
 const isTheoryQuestion = (q) => q?.type === "theory" || Array.isArray(q?.keywords);
@@ -252,7 +262,7 @@ const ExamScreen = ({
     };
   }, [endsAtMs, persistExamSessionThrottled, totalQuestions]);
 
-  const saveResultToSupabase = async (finalTime) => {
+  const saveResultToSupabase = async (finalTime, correctCount) => {
     try {
       // 🔥 STEP 1: ALWAYS get fresh session
       let {
@@ -273,12 +283,6 @@ const ExamScreen = ({
 
       const user = session?.user;
       if (!user) throw new Error("User not authenticated");
-
-      // 🔥 STEP 3: Calculate score
-      const correctCount = shuffledQuestions.reduce(
-        (acc, q, idx) => (answers[idx] === q.correct ? acc + 1 : acc),
-        0,
-      );
 
       // 🔥 STEP 4: Insert with retry logic
       let { error } = await supabase.from("exam_attempts").insert({
@@ -356,14 +360,9 @@ const ExamScreen = ({
     }
   };
 
-  const saveResultToHistory = (finalTime) => {
+  const saveResultToHistory = (finalTime, correctCount) => {
     if (hasSaved) return;
-    const correctCount = shuffledQuestions.reduce((acc, q, idx) => {
-      if (isTheoryQuestion(q)) {
-        return acc + gradeTheoryAnswer(answers[idx], q.keywords); // ← now adds fractional score directly
-      }
-      return acc + (answers[idx] === q.correct ? 1 : 0);
-    }, 0);
+
     const newResult = {
       id: Date.now(),
       course: selectedCourse.name,
@@ -396,12 +395,18 @@ const ExamScreen = ({
 
     const finalTime = totalTime - timeLeft;
 
-    saveResultToHistory(finalTime);
+    const correctCount = shuffledQuestions.reduce((acc, q, idx) => {
+      if (isTheoryQuestion(q)) {
+        return acc + gradeTheoryAnswer(answers[idx], q.keywords); // fractional 0–1
+      }
+      return acc + (answers[idx] === q.correct ? 1 : 0);
+    }, 0);
+
+    saveResultToHistory(finalTime, correctCount);
 
     try {
-      // Wait for Supabase to finish saving, but don't block forever
       await withTimeout(
-        saveResultToSupabase(finalTime),
+        saveResultToSupabase(finalTime, correctCount),
         15000,
         "Saving results took too long. They may not have been stored online.",
       );
@@ -409,7 +414,7 @@ const ExamScreen = ({
       console.error("Error while saving to Supabase:", err);
     }
 
-    if (onSubmit) onSubmit();
+    if (onSubmit) onSubmit(correctCount, shuffledQuestions.length);
     clearExamSession();
     navigate("/results");
   };
@@ -420,16 +425,22 @@ const ExamScreen = ({
     setIsSubmitting(true);
     const finalTime = totalTime - timeLeft;
 
-    saveResultToHistory(finalTime);
+    const correctCount = shuffledQuestions.reduce((acc, q, idx) => {
+      if (isTheoryQuestion(q)) {
+        return acc + gradeTheoryAnswer(answers[idx], q.keywords); // fractional 0–1
+      }
+      return acc + (answers[idx] === q.correct ? 1 : 0);
+    }, 0);
 
-    // Wait for Supabase save attempt to complete before navigating
+    saveResultToHistory(finalTime, correctCount);
+
     try {
-      await saveResultToSupabase(finalTime);
+      await saveResultToSupabase(finalTime, correctCount);
     } catch (err) {
       console.error("Error while saving to Supabase on timeout:", err);
     }
 
-    if (onSubmit) onSubmit();
+    if (onSubmit) onSubmit(correctCount, shuffledQuestions.length);
     clearExamSession();
     navigate("/results");
   };
@@ -576,14 +587,14 @@ const ExamScreen = ({
                       key={index}
                       onClick={() => onOptionClick(option)}
                       className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${isSelected
-                          ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
-                          : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
+                        ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
+                        : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
                         }`}
                     >
                       <div
                         className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isSelected
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
                           }`}
                       >
                         {label}

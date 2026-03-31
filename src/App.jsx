@@ -62,25 +62,31 @@ function App() {
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const [questionType, setQuestionType] = useState("objective");
 
-  const handleExamSubmit = () => {
-    let correctCount = 0;
-    questions.forEach((q, index) => {
-      if (Array.isArray(q?.keywords)) {
-        // Theory: count as correct if at least one keyword group matched
-        const matched = q.keywords.reduce((score, group) => {
-          const lower = (answers[index] || "").toLowerCase();
-          return score + (Array.isArray(group) && group.some((kw) => lower.includes(kw.toLowerCase())) ? 1 : 0);
-        }, 0);
-        if (matched > 0) correctCount++;
-      } else if (q.correct === answers[index]) {
-        correctCount++;
-      }
-    });
+  // AFTER
+  const gradeTheoryAnswer = (userAnswer, rawKeywords) => {
+    if (!userAnswer) return 0;
+    let keywords = rawKeywords;
+    if (typeof keywords === "string") {
+      try { keywords = JSON.parse(keywords); } catch { return 0; }
+    }
+    if (!Array.isArray(keywords) || keywords.length === 0) return 0;
+    const lower = userAnswer.toLowerCase();
+    const totalGroups = keywords.length;
+
+    return keywords.reduce((score, group) => {
+      if (!Array.isArray(group) || group.length === 0) return score;
+      const matchedInGroup = group.filter((kw) => lower.includes(kw.toLowerCase())).length;
+      return score + (matchedInGroup / group.length) * (1 / totalGroups);
+    }, 0);
+  };
+
+  const handleExamSubmit = (correctCount, totalCount) => {
+    const total = totalCount ?? questions.length;
 
     setResults({
-      correct: correctCount,
-      wrong: questions.length - correctCount,
-      answered: questions.length,
+      correct: parseFloat(correctCount.toFixed(2)),
+      wrong: parseFloat((total - correctCount).toFixed(2)),
+      answered: total,
     });
   };
 

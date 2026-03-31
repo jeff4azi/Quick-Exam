@@ -101,7 +101,7 @@ const ResultScreen = ({
   const minutes = String(Math.floor(timeTaken / 60)).padStart(2, "0");
   const seconds = String(timeTaken % 60).padStart(2, "0");
   const scorePercentage = Math.round(
-    (results.correct / questions.length) * 100,
+    (results.correct / (results.answered || questions.length)) * 100,
   );
   const strokeDasharray = 2 * Math.PI * 90;
   const strokeDashoffset =
