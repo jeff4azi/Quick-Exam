@@ -338,7 +338,7 @@ const StatCard = ({ label, value, icon, color, className = "" }) => {
 const HistoryItem = ({ exam, onDelete }) => {
   const navigate = useNavigate();
   // Ensure values are treated as numbers to avoid calculation errors
-  const score = Number(exam.score) || 0;
+  const score = parseFloat((Number(exam.score) || 0).toFixed(2));
   const total = Number(exam.total) || 1;
   const percent = Math.round((score / total) * 100);
   const isPassed = percent >= 50;

@@ -364,7 +364,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                         </p>
                       </div>
                       <div className="size-10 rounded-2xl bg-slate-100 dark:bg-slate-700/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-semibold">
-                        {Math.round(item?.score ?? 0)}/{item?.total ?? 0}
+                        {parseFloat((Number(item?.score) || 0).toFixed(2))}/{item?.total ?? 0}
                       </div>
                     </div>
 
