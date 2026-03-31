@@ -50,7 +50,8 @@ const HistoryScreen = ({ isPremium }) => {
       total_questions,
       date_taken,
       time_taken,
-      is_retake
+      is_retake,
+      type
     `)
         .eq("user_id", user.id)
         .order("date_taken", { ascending: false }),
