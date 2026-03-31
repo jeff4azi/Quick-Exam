@@ -464,6 +464,7 @@ function App() {
     selectedQuestionCount,
     setSelectedQuestionCount,
     userProfile,
+    setUserProfile,
     loadingProfile: loading,
     coursesLoading,
     isPremium,
