@@ -337,14 +337,17 @@ const ResultScreen = ({
             <div className="relative flex items-center justify-center">
               <div className="absolute size-32 bg-blue-200 dark:bg-blue-500 blur-[40px] opacity-30 dark:opacity-20 rounded-full" />
               <svg className="size-40 -rotate-90 drop-shadow-sm">
+                {/* Background Circle (The "grayed out" part) */}
                 <circle
                   cx="80"
                   cy="80"
                   r="70"
-                  className="stroke-slate-200 dark:stroke-slate-800"
+                  /* CHANGE THIS: Replace className with stroke attribute */
+                  stroke={isDarkMode ? "#1f2937" : "#e2e8f0"} // gray-800 for dark, slate-200 for light
                   strokeWidth="10"
                   fill="transparent"
                 />
+                {/* Progress Circle (The blue part) */}
                 <circle
                   cx="80"
                   cy="80"
