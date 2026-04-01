@@ -30,7 +30,11 @@ const calculateTotalTime = (questionCount, isMath, isTheory) => {
 const parseKeywords = (keywords) => {
   if (Array.isArray(keywords)) return keywords;
   if (typeof keywords === "string") {
-    try { return JSON.parse(keywords); } catch { return []; }
+    try {
+      return JSON.parse(keywords);
+    } catch {
+      return [];
+    }
   }
   return [];
 };
@@ -50,7 +54,8 @@ const gradeTheoryAnswer = (userAnswer, rawKeywords) => {
   return matchedGroups / totalGroups; // 0 to 1
 };
 
-const isTheoryQuestion = (q) => q?.type === "theory" || Array.isArray(q?.keywords);
+const isTheoryQuestion = (q) =>
+  q?.type === "theory" || Array.isArray(q?.keywords);
 
 const shuffleArray = (array) => {
   const arr = [...array];
@@ -140,43 +145,69 @@ const ExamScreen = ({
 
   useEffect(() => {
     // 1. Try to restore an in-progress exam from localStorage
-    if (Array.isArray(savedSession?.questions) && savedSession.questions.length) {
-      setShuffledQuestions(savedSession.questions);
-      setCurrentIndex(
-        typeof savedSession.currentIndex === "number" && savedSession.currentIndex >= 0
-          ? savedSession.currentIndex
-          : 0,
-      );
+    if (
+      Array.isArray(savedSession?.questions) &&
+      savedSession.questions.length
+    ) {
+      // ✅ VALIDATE: Only restore if course AND question type match
+      const savedCourseId = savedSession?.selectedCourse?.id;
+      const currentCourseId = selectedCourse?.id;
+      const savedType = savedSession?.questions?.[0]?.type ?? "objective";
+      const currentType = questionType === "theory" ? "theory" : "objective";
+      const sessionMatches =
+        savedCourseId === currentCourseId && savedType === currentType;
 
-      if (Array.isArray(savedSession.answers)) {
-        setAnswers(savedSession.answers);
-      }
+      if (sessionMatches) {
+        setShuffledQuestions(savedSession.questions);
+        setCurrentIndex(
+          typeof savedSession.currentIndex === "number" &&
+            savedSession.currentIndex >= 0
+            ? savedSession.currentIndex
+            : 0,
+        );
 
-      // If we only have timeLeft (legacy) but no endsAtMs, convert it once.
-      if (!Number.isFinite(savedSession.endsAtMs)) {
-        const legacyTimeLeft =
-          typeof savedSession.timeLeft === "number" && savedSession.timeLeft > 0
-            ? savedSession.timeLeft
-            : null;
-        if (legacyTimeLeft != null) {
-          const nextEndsAt = Date.now() + legacyTimeLeft * 1000;
-          setEndsAtMs(nextEndsAt);
-          setTimeLeft(legacyTimeLeft);
+        if (Array.isArray(savedSession.answers)) {
+          setAnswers(savedSession.answers);
         }
+
+        if (!Number.isFinite(savedSession.endsAtMs)) {
+          const legacyTimeLeft =
+            typeof savedSession.timeLeft === "number" &&
+            savedSession.timeLeft > 0
+              ? savedSession.timeLeft
+              : null;
+          if (legacyTimeLeft != null) {
+            const nextEndsAt = Date.now() + legacyTimeLeft * 1000;
+            setEndsAtMs(nextEndsAt);
+            setTimeLeft(legacyTimeLeft);
+          }
+        }
+
+        return; // session is valid, skip fresh exam setup
       }
 
-      return;
+      // ❌ Session is stale (different course or type) — discard it
+      clearExamSession();
     }
 
     // 2. Fresh exam – shuffle options and start a new session
     if (questions.length > 0 && shuffledQuestions.length === 0) {
       const shuffled = questions.map((q) => ({
         ...q,
-        options: Array.isArray(q.options) ? shuffleArray([...q.options]) : undefined,
+        options: Array.isArray(q.options)
+          ? shuffleArray([...q.options])
+          : undefined,
       }));
       setShuffledQuestions(shuffled);
     }
-  }, [questions, savedSession, setAnswers, shuffledQuestions.length]);
+  }, [
+    questions,
+    savedSession,
+    setAnswers,
+    shuffledQuestions.length,
+    selectedCourse?.id,
+    questionType,
+  ]);
 
   // Ensure we always have an endsAtMs when exam starts/resumes.
   useEffect(() => {
@@ -586,16 +617,18 @@ const ExamScreen = ({
                     <button
                       key={index}
                       onClick={() => onOptionClick(option)}
-                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${isSelected
-                        ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
-                        : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                        }`}
+                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
+                        isSelected
+                          ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
+                          : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
+                      }`}
                     >
                       <div
-                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isSelected
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
-                          }`}
+                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                          isSelected
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                        }`}
                       >
                         {label}
                       </div>
@@ -640,7 +673,9 @@ const ExamScreen = ({
           ) : (
             <button
               onClick={() => {
-                setCurrentIndex((prev) => Math.min(totalQuestions - 1, prev + 1));
+                setCurrentIndex((prev) =>
+                  Math.min(totalQuestions - 1, prev + 1),
+                );
               }}
               className="flex-1 bg-blue-600 hover:bg-blue-700 text-white h-14 rounded-[1.8rem] font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
             >
