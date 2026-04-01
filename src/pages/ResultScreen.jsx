@@ -158,7 +158,7 @@ const ResultScreen = ({
           >
             <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
             {isPremium && (
-              <div className="absolute -top-1 -right-1 bg-amber-400 rounded-full p-1 border-2 border-white dark:border-gray-950 shadow-md">
+              <div className="absolute -top-2 -right-2 bg-amber-400 rounded-full p-1 border-2 border-white dark:border-gray-950 shadow-md">
                 <FaCrown className="text-[8px] text-white" />
               </div>
             )}
