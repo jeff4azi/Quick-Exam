@@ -28,6 +28,7 @@ import "katex/dist/katex.min.css";
 import LeaderboardScreen from "./pages/LeaderboardScreen";
 import { API_BASE_URL } from "./apiConfig";
 import UploadProfilePic from "./pages/UploadProfilePic";
+import UpdatePassword from "./pages/UpdatePassword";
 import { loadExamSession } from "./utils/examSessionStorage";
 
 function App() {
@@ -481,6 +482,7 @@ function App() {
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/update-password" element={<UpdatePassword />} />
             <Route path="/confirm-email" element={<ConfirmEmailScreen />} />
             <Route
               path="/onboarding"

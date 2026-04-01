@@ -17,7 +17,7 @@ export const AuthProvider = ({ children }) => {
       throw new Error("Please provide a valid email address.");
     }
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/login`,
+      redirectTo: `${window.location.origin}/update-password`,
     });
     if (error) {
       throw new Error(error.message || "Failed to send reset link. Please try again.");
