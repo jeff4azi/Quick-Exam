@@ -43,15 +43,18 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
 
       const user = session?.user;
       if (!user) throw new Error("Please log in again.");
+      const token = session.access_token;
 
       // 🔥 STEP 3: Call backend
       const response = await fetch(
         "https://quizbolt-ashy.vercel.app/api/premium/redeem",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
           body: JSON.stringify({
-            userId: user.id,
             code: premiumCode.trim(),
           }),
         },
