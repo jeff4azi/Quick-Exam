@@ -152,10 +152,9 @@ const ExamScreen = ({
       // ✅ VALIDATE: Only restore if course AND question type match
       const savedCourseId = savedSession?.selectedCourse?.id;
       const currentCourseId = selectedCourse?.id;
-      const savedType = savedSession?.questions?.[0]?.type ?? "objective";
-      const currentType = questionType === "theory" ? "theory" : "objective";
+      const savedQuestionType = savedSession?.questionType ?? "objective";
       const sessionMatches =
-        savedCourseId === currentCourseId && savedType === currentType;
+        savedCourseId === currentCourseId && savedQuestionType === questionType;
 
       if (sessionMatches) {
         setShuffledQuestions(savedSession.questions);
@@ -231,6 +230,7 @@ const ExamScreen = ({
     return {
       version: 2,
       selectedCourse,
+      questionType,
       questions: shuffledQuestions.length ? shuffledQuestions : questions,
       answers,
       currentIndex,
@@ -242,6 +242,7 @@ const ExamScreen = ({
     currentIndex,
     endsAtMs,
     questions,
+    questionType,
     selectedCourse,
     shuffledQuestions,
   ]);
