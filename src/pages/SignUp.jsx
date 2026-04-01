@@ -144,13 +144,52 @@ const SignUpScreen = () => {
             </button>
           </div>
 
-          {/* Confirm Password Input - Added Section */}
+          {/* Password strength indicator */}
+          {formData.password.length > 0 && (
+            <div className="space-y-2 px-1 animate-in fade-in duration-300">
+              {/* Strength bar */}
+              <div className="flex gap-1">
+                {[0, 1, 2, 3].map((i) => {
+                  const level = [
+                    formData.password.length >= 8,
+                    /[A-Z]/.test(formData.password),
+                    /[0-9]/.test(formData.password),
+                    /[^A-Za-z0-9]/.test(formData.password),
+                  ].filter(Boolean).length;
+                  const colors = ["bg-red-400", "bg-orange-400", "bg-yellow-400", "bg-green-400"];
+                  return (
+                    <div
+                      key={i}
+                      className={`h-1 flex-1 rounded-full transition-all duration-300 ${
+                        i < level ? colors[level - 1] : "bg-gray-200 dark:bg-slate-700"
+                      }`}
+                    />
+                  );
+                })}
+              </div>
+              {/* Rule checklist */}
+              <div className="grid grid-cols-2 gap-x-3 gap-y-1">
+                {[
+                  { label: "8+ characters", pass: formData.password.length >= 8 },
+                  { label: "Uppercase letter", pass: /[A-Z]/.test(formData.password) },
+                  { label: "Number", pass: /[0-9]/.test(formData.password) },
+                  { label: "Special character", pass: /[^A-Za-z0-9]/.test(formData.password) },
+                ].map(({ label, pass }) => (
+                  <p key={label} className={`text-xs font-semibold flex items-center gap-1 transition-colors duration-200 ${pass ? "text-green-500" : "text-slate-400 dark:text-slate-500"}`}>
+                    <span>{pass ? "✓" : "·"}</span> {label}
+                  </p>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Confirm Password Input */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
               <FiLock className="text-xl text-slate-400 group-focus-within:text-blue-600 transition-colors duration-300" />
             </div>
             <input
-              type={showPassword ? "text" : "password"} // Syncs with the showPassword toggle
+              type={showPassword ? "text" : "password"}
               name="confirmPassword"
               placeholder="Confirm Password"
               value={formData.confirmPassword}
@@ -159,6 +198,15 @@ const SignUpScreen = () => {
               required
             />
           </div>
+
+          {/* Match indicator */}
+          {formData.confirmPassword.length > 0 && (
+            <p className={`text-xs font-semibold px-1 animate-in fade-in duration-300 ${
+              formData.password === formData.confirmPassword ? "text-green-500" : "text-red-400"
+            }`}>
+              {formData.password === formData.confirmPassword ? "✓ Passwords match" : "· Passwords do not match"}
+            </p>
+          )}
 
           <p className="text-[11px] text-slate-500 dark:text-slate-400 px-2 leading-relaxed">
             By signing up, you agree to our{" "}
