@@ -87,6 +87,7 @@ const ExamScreen = ({
   autoAdvance,
   userProfile,
   questionType,
+  questionsContext,
 }) => {
   const isMathCourse = selectedCourse?.id === "MTH101";
   const isTheoryExam = questionType === "theory";
@@ -137,6 +138,10 @@ const ExamScreen = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isSubmittingRef = useRef(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+
+  const hasMatchingQuestions =
+    questionsContext?.courseId === selectedCourse?.id &&
+    questionsContext?.questionType === questionType;
 
   const currentQuestion = shuffledQuestions[currentIndex];
   const selectedOption = answers[currentIndex];
@@ -190,7 +195,11 @@ const ExamScreen = ({
     }
 
     // 2. Fresh exam – shuffle options and start a new session
-    if (questions.length > 0 && shuffledQuestions.length === 0) {
+    if (
+      hasMatchingQuestions &&
+      questions.length > 0 &&
+      shuffledQuestions.length === 0
+    ) {
       const shuffled = questions.map((q) => ({
         ...q,
         options: Array.isArray(q.options)
@@ -206,6 +215,7 @@ const ExamScreen = ({
     shuffledQuestions.length,
     selectedCourse?.id,
     questionType,
+    hasMatchingQuestions,
   ]);
 
   // Ensure we always have an endsAtMs when exam starts/resumes.
@@ -480,7 +490,12 @@ const ExamScreen = ({
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
   // Show a loading screen while questions are being fetched or prepared
-  if (questionsLoading || shuffledQuestions.length === 0 || !currentQuestion) {
+  if (
+    questionsLoading ||
+    !hasMatchingQuestions ||
+    shuffledQuestions.length === 0 ||
+    !currentQuestion
+  ) {
     return (
       <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex items-center justify-center">
         <div className="flex flex-col items-center gap-4">

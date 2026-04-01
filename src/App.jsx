@@ -62,6 +62,7 @@ function App() {
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(null);
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const [questionType, setQuestionType] = useState("objective");
+  const [questionsContext, setQuestionsContext] = useState(null);
 
   const handleExamSubmit = (correctCount, totalCount) => {
     const total = totalCount ?? questions.length;
@@ -232,12 +233,20 @@ function App() {
       const parsed = loadExamSession();
       if (!parsed) return;
 
+      if (parsed?.questionType === "theory") {
+        setQuestionType("theory");
+      }
+
       if (parsed?.selectedCourse) {
         setSelectedCourse(parsed.selectedCourse);
       }
 
       if (Array.isArray(parsed?.questions) && parsed.questions.length > 0) {
         setQuestions(parsed.questions);
+        setQuestionsContext({
+          courseId: parsed?.selectedCourse?.id ?? null,
+          questionType: parsed?.questionType ?? "objective",
+        });
       }
 
       if (Array.isArray(parsed?.answers)) {
@@ -269,16 +278,26 @@ function App() {
 
   useEffect(() => {
     const loadQuestionsForSelectedCourse = async () => {
-      if (!selectedCourse || !selectedQuestionCount) return;
+      if (!selectedCourse || !selectedQuestionCount) {
+        setQuestionsContext(null);
+        return;
+      }
 
       setQuestionsLoading(true);
+      setQuestionsContext(null);
+
+      const requestCourseId = selectedCourse.id;
+      const requestQuestionType = questionType;
+
       try {
         const endpoint =
           selectedCourse.questionsEndpoint ||
-          `/courses/${selectedCourse.id}/questions`;
+          `/courses/${requestCourseId}/questions`;
 
         const url = new URL(`${API_BASE_URL}${endpoint}`);
-        if (questionType === "theory") url.searchParams.set("type", "theory");
+        if (requestQuestionType === "theory") {
+          url.searchParams.set("type", "theory");
+        }
 
         const res = await fetch(url.toString());
         const data = await res.json();
@@ -289,6 +308,7 @@ function App() {
             data?.msg || res.status,
           );
           setQuestions([]);
+          setQuestionsContext(null);
           return;
         }
 
@@ -301,9 +321,14 @@ function App() {
         const shuffled = [...allQuestions].sort(() => 0.5 - Math.random());
         setQuestions(shuffled.slice(0, count));
         setAnswers([]);
+        setQuestionsContext({
+          courseId: requestCourseId,
+          questionType: requestQuestionType,
+        });
       } catch (err) {
         console.error("Error fetching course questions:", err);
         setQuestions([]);
+        setQuestionsContext(null);
       } finally {
         setQuestionsLoading(false);
       }
@@ -458,6 +483,7 @@ function App() {
     deleteImage,
     questionType,
     setQuestionType,
+    questionsContext,
   };
 
   return (
@@ -561,7 +587,17 @@ function App() {
               path="/exam"
               element={
                 <ProtectedRoute
-                  stateCheck={questions.length > 0 && selectedCourse}
+                  stateCheck={
+                    Boolean(selectedCourse) &&
+                    (
+                      questionsLoading ||
+                      (
+                        questions.length > 0 &&
+                        questionsContext?.courseId === selectedCourse?.id &&
+                        questionsContext?.questionType === questionType
+                      )
+                    )
+                  }
                 >
                   <ExamScreen {...props} />
                 </ProtectedRoute>
