@@ -5,6 +5,7 @@ import { FaCrown } from "react-icons/fa"; // Added FaCrown
 import Logo from "../images/Logo";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
+import { API_BASE_URL } from "../apiConfig";
 
 const PremiumPage = ({ onActivatePremium, isPremium }) => {
   const navigate = useNavigate();
@@ -47,7 +48,7 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
 
       // 🔥 STEP 3: Call backend
       const response = await fetch(
-        "https://quizbolt-ashy.vercel.app/api/premium/redeem",
+        `${API_BASE_URL}/api/premium/redeem`,
         {
           method: "POST",
           headers: {

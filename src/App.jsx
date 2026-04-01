@@ -404,7 +404,7 @@ function App() {
   const deleteImage = async (publicId) => {
     try {
       const res = await fetch(
-        "https://quizbolt-ashy.vercel.app/api/cloudinary/delete-image",
+        `${API_BASE_URL}/api/cloudinary/delete-image`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

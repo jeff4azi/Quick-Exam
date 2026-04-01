@@ -13,6 +13,7 @@ import {
   FiAlertTriangle,
   FiZap,
 } from "react-icons/fi";
+import { API_BASE_URL } from "../apiConfig";
 import { FaCrown, FaFacebookF, FaWhatsapp } from "react-icons/fa";
 import { SiTiktok } from "react-icons/si";
 import { HiOutlineMoon } from "react-icons/hi";
@@ -88,7 +89,7 @@ const Profile = ({
       }
 
       const res = await fetch(
-        "https://quizbolt-ashy.vercel.app/api/users/delete-account",
+        `${API_BASE_URL}/api/users/delete-account`,
         {
           method: "POST",
           headers: {
