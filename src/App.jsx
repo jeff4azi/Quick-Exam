@@ -363,17 +363,17 @@ function App() {
       );
       if (userError) throw userError;
 
-      const { full_name, department } = updates || {};
+      const { user_name, department } = updates || {};
 
       // Determine next values, falling back to existing profile data
-      const nextFullName = full_name ?? userProfile?.full_name ?? "";
+      const nextUserName = user_name ?? userProfile?.user_name ?? "";
       const nextDepartment = department ?? userProfile?.department ?? "";
 
       // Upsert profile fields in profiles table (include other known fields for safety)
       const { error: upsertError } = await withTimeout(
         supabase.from("profiles").upsert({
           id: user.id,
-          full_name: nextFullName || null,
+          user_name: nextUserName || null,
           department: nextDepartment || null,
           college: userProfile?.college ?? null,
           year: userProfile?.year ? Number(userProfile.year) : null,
@@ -382,7 +382,7 @@ function App() {
           onboarding_complete: true,
           // Ensure NOT NULL updated_at is always set
           updated_at: new Date().toISOString(),
-        }),
+        }, { onConflict: "id"}),
         15000,
         "Saving your profile took too long. Please try again.",
       );
@@ -392,7 +392,7 @@ function App() {
       // Update local React state so UI reflects changes immediately
       setUserProfile((prev) => ({
         ...prev,
-        full_name: nextFullName,
+        user_name: nextUserName,
         department: nextDepartment,
       }));
     } catch (err) {
