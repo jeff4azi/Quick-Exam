@@ -95,14 +95,6 @@ const ExamScreen = ({
 
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
 
-  // Prefer the shuffled list length (restored from localStorage on refresh),
-  // but fall back to the raw questions length.
-  const totalQuestions = shuffledQuestions.length || questions.length;
-  const totalTime = useMemo(
-    () => calculateTotalTime(totalQuestions, isMathCourse, isTheoryExam),
-    [totalQuestions, isMathCourse, isTheoryExam],
-  );
-
   const savedSession = useMemo(() => loadExamSession(), []);
 
   const [currentIndex, setCurrentIndex] = useState(() => {
@@ -125,7 +117,7 @@ const ExamScreen = ({
       return savedTimeLeft;
     }
 
-    return totalTime;
+    return 0;
   });
   const timeLeftRef = useRef(timeLeft);
   useEffect(() => {
@@ -143,12 +135,29 @@ const ExamScreen = ({
     questionsContext?.courseId === selectedCourse?.id &&
     questionsContext?.questionType === questionType;
 
+  // Ignore stale question arrays while a different course/type is loading.
+  const totalQuestions = hasMatchingQuestions
+    ? shuffledQuestions.length || questions.length
+    : 0;
+  const totalTime = useMemo(
+    () => calculateTotalTime(totalQuestions, isMathCourse, isTheoryExam),
+    [totalQuestions, isMathCourse, isTheoryExam],
+  );
+
   const currentQuestion = shuffledQuestions[currentIndex];
   const selectedOption = answers[currentIndex];
   const isBookmarked = bookmarks.includes(currentQuestion?.id);
   const isBookmarkLocked = !isPremium;
 
   useEffect(() => {
+    if (!hasMatchingQuestions) {
+      setShuffledQuestions([]);
+      setCurrentIndex(0);
+      setEndsAtMs(null);
+      setTimeLeft(0);
+      return;
+    }
+
     // 1. Try to restore an in-progress exam from localStorage
     if (
       Array.isArray(savedSession?.questions) &&

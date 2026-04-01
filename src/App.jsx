@@ -279,10 +279,14 @@ function App() {
   useEffect(() => {
     const loadQuestionsForSelectedCourse = async () => {
       if (!selectedCourse || !selectedQuestionCount) {
+        setQuestions([]);
+        setAnswers([]);
         setQuestionsContext(null);
         return;
       }
 
+      setQuestions([]);
+      setAnswers([]);
       setQuestionsLoading(true);
       setQuestionsContext(null);
 
