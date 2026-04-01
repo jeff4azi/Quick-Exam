@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import RouteChangeTracker from "./components/RouteChangeTracker";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Home from "./pages/Home.jsx";
 import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
@@ -63,6 +63,7 @@ function App() {
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const [questionType, setQuestionType] = useState("objective");
   const [questionsContext, setQuestionsContext] = useState(null);
+  const sessionRestoredRef = useRef(false);
 
   const handleExamSubmit = (correctCount, totalCount) => {
     const total = totalCount ?? questions.length;
@@ -233,6 +234,10 @@ function App() {
       const parsed = loadExamSession();
       if (!parsed) return;
 
+      // Set the flag FIRST before any state updates so the fetch effect
+      // sees it when it re-runs due to selectedCourse/questionType changing
+      sessionRestoredRef.current = true;
+
       if (parsed?.questionType === "theory") {
         setQuestionType("theory");
       }
@@ -278,12 +283,18 @@ function App() {
 
   useEffect(() => {
     const loadQuestionsForSelectedCourse = async () => {
+      // Don't wipe a just-restored session — wait until the user picks a new exam
       if (!selectedCourse || !selectedQuestionCount) {
-        setQuestions([]);
-        setAnswers([]);
-        setQuestionsContext(null);
+        if (!sessionRestoredRef.current) {
+          setQuestions([]);
+          setAnswers([]);
+          setQuestionsContext(null);
+        }
         return;
       }
+
+      // Once the user actively picks a course/count, the restored session is no longer relevant
+      sessionRestoredRef.current = false;
 
       setQuestions([]);
       setAnswers([]);
