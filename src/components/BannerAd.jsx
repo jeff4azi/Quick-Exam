@@ -8,18 +8,32 @@ const AD_DATABASE = [
     url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770389975/Advertise_Here_20260206_152335_0000_lg0smh.png",
     duration: 5,
     whatsapp: "2347015585397",
+    message:
+      "Hi, I’d like to advertise on Quiz Bolt. Can you share pricing and details?",
   },
   {
     type: "image",
     url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1773144280/Advertise_Here_20260206_152922_0000_bns87b.png",
     duration: 5,
     whatsapp: "2347015585397",
+    message:
+      "Hi, I’d like to advertise on Quiz Bolt. Can you share pricing and details?",
   },
   {
     type: "image",
     url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770557375/BackgroundEraser_20260208_141707632_sk6ng9.jpg",
     duration: 5,
     whatsapp: "2348159767554",
+    message:
+      "Hi, I saw your flyer and wanted to connect. Can you tell me more about what you do?",
+  },
+  {
+    type: "image",
+    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1775054933/2347015585397_whb6dw.png",
+    duration: 5,
+    whatsapp: "2347015585397",
+    message:
+      "Hi, I’m interested in getting a website built. Can you share your pricing and examples of your work?",
   },
 ];
 
@@ -100,7 +114,7 @@ const BannerAd = ({ onAdClose }) => {
       <div className="relative w-full max-w-md aspect-[1/1.414] bg-white dark:bg-slate-900 rounded-[2.5rem] overflow-hidden shadow-2xl border border-white/20 dark:border-slate-800 animate-in zoom-in-95 duration-500">
         {/* 3. Clickable WhatsApp Area */}
         <a
-          href={`https://wa.me/${currentAd.whatsapp}`}
+          href={`https://wa.me/${currentAd.whatsapp}?text=${encodeURIComponent(currentAd.message)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="block w-full h-full bg-slate-100 dark:bg-slate-950 relative overflow-hidden cursor-pointer"
