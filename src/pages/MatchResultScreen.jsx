@@ -2,15 +2,16 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "../supabaseClient";
 import { FiChevronLeft, FiClock, FiRefreshCw, FiZap } from "react-icons/fi";
-import { FaTrophy } from "react-icons/fa";
+import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
+import Avatar from "../components/Avatar";
 
 const formatTime = (ms) => `${(ms / 1000).toFixed(2)}s`;
 
-const getMedal = (rank) => {
-  if (rank === 1) return "🥇";
-  if (rank === 2) return "🥈";
-  if (rank === 3) return "🥉";
-  return null;
+const rankBadge = (rank) => {
+  if (rank === 1) return { bg: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300", icon: <FaCrown className="text-amber-400" /> };
+  if (rank === 2) return { bg: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200", icon: <FaMedal className="text-slate-400" /> };
+  if (rank === 3) return { bg: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300", icon: <FaMedal className="text-orange-400" /> };
+  return { bg: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300", icon: <span className="text-xs font-black">#{rank}</span> };
 };
 
 const MatchResultScreen = () => {
@@ -44,11 +45,11 @@ const MatchResultScreen = () => {
 
         const { data, error } = await supabase
           .from("match_attempts")
-          .select("user_id, time_ms, created_at, profiles(full_name, avatar_url)")
+          .select("user_id, time_ms, created_at, profiles(full_name, avatar_url, is_premium, user_name)")
           .eq("course_id", courseId)
           .gte("created_at", todayStart.toISOString())
           .order("time_ms", { ascending: true })
-          .limit(20);
+          .limit(50);
 
         if (error) throw error;
 
@@ -180,28 +181,46 @@ const MatchResultScreen = () => {
                 {leaderboard.map((row, i) => {
                   const isMe = row.user_id === myUserId;
                   const rank = i + 1;
-                  const medal = getMedal(rank);
-                  const name = row.profiles?.full_name?.split(" ")[0] || "Player";
+                  const { bg, icon } = rankBadge(rank);
+                  const name = row.profiles?.full_name || "Player";
+                  const userName = row.profiles?.user_name;
+                  const isPremium = row.profiles?.is_premium === true;
 
                   return (
                     <div
                       key={row.user_id}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-2xl border transition-all ${
+                      className={`flex items-center gap-3 p-4 rounded-[1.8rem] border transition-all ${
                         isMe
                           ? "bg-emerald-50 dark:bg-emerald-900/20 border-emerald-200 dark:border-emerald-800"
-                          : "bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700"
+                          : "bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-800"
                       }`}
                     >
-                      <span className="w-7 text-center text-sm font-black text-slate-400 dark:text-slate-500">
-                        {medal || `#${rank}`}
-                      </span>
-                      <div className="size-8 rounded-xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-xs font-black text-slate-500 dark:text-slate-300 shrink-0">
-                        {name[0].toUpperCase()}
+                      {/* Rank badge */}
+                      <div className={`size-10 rounded-2xl flex items-center justify-center font-black text-sm shrink-0 ${bg}`}>
+                        {icon}
                       </div>
-                      <p className={`flex-1 text-sm font-bold truncate ${isMe ? "text-emerald-700 dark:text-emerald-400" : "text-slate-700 dark:text-slate-200"}`}>
-                        {name} {isMe && <span className="text-[10px] font-black text-emerald-500">(you)</span>}
-                      </p>
-                      <span className={`text-sm font-black tabular-nums ${isMe ? "text-emerald-600 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"}`}>
+
+                      {/* Avatar */}
+                      <Avatar avatarUrl={row.profiles?.avatar_url} size="sm" lazy />
+
+                      {/* Name */}
+                      <div className="flex-1 min-w-0">
+                        <p className={`font-black truncate flex items-center gap-1.5 ${isMe ? "text-emerald-700 dark:text-emerald-400" : "text-slate-900 dark:text-white"}`}>
+                          {name}
+                          {isPremium && (
+                            <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-500 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide">
+                              <FaCrown size={8} />PRO
+                            </span>
+                          )}
+                          {isMe && <span className="text-[10px] font-black text-emerald-500">(you)</span>}
+                        </p>
+                        {userName && (
+                          <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate">@{userName}</p>
+                        )}
+                      </div>
+
+                      {/* Time */}
+                      <span className={`text-sm font-black tabular-nums shrink-0 ${isMe ? "text-emerald-600 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"}`}>
                         {formatTime(row.time_ms)}
                       </span>
                     </div>
