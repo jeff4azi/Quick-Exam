@@ -398,7 +398,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
               description: "Check your understanding",
               bg: "bg-sky-50 dark:bg-sky-900/20",
               icon: "📝",
-              onClick: () => navigate("/choose-course"),
+              onClick: () => navigate("/"),
             },
             {
               title: "Match",
