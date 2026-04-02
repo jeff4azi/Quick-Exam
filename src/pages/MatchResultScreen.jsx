@@ -23,6 +23,7 @@ const MatchResultScreen = () => {
   const [loadingLB, setLoadingLB] = useState(true);
   const [myRank, setMyRank] = useState(null);
   const [myUserId, setMyUserId] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   // Redirect if arrived without state
   useEffect(() => {
@@ -108,7 +109,7 @@ const MatchResultScreen = () => {
           <div className="bg-emerald-600 rounded-[2rem] p-6 text-white shadow-xl shadow-emerald-200 dark:shadow-none">
             <div className="flex items-center gap-3 mb-4">
               <div className="size-12 rounded-2xl bg-white/20 flex items-center justify-center">
-                <FiZap className="size-6 text-yellow-300" />
+                <span className="text-2xl">🧩</span>
               </div>
               <div>
                 <p className="text-emerald-100 text-xs font-bold uppercase tracking-widest">All matched!</p>
@@ -201,7 +202,13 @@ const MatchResultScreen = () => {
                       </div>
 
                       {/* Avatar */}
-                      <Avatar avatarUrl={row.profiles?.avatar_url} size="sm" lazy />
+                      <button
+                        type="button"
+                        onClick={() => setPreviewUrl(row.profiles?.avatar_url || null)}
+                        className="shrink-0 rounded-full active:scale-90 transition-transform"
+                      >
+                        <Avatar avatarUrl={row.profiles?.avatar_url} size="sm" lazy />
+                      </button>
 
                       {/* Name */}
                       <div className="flex-1 min-w-0">
@@ -231,6 +238,23 @@ const MatchResultScreen = () => {
           </div>
         </div>
       </div>
+
+      {/* Avatar preview overlay */}
+      {previewUrl && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-md animate-in fade-in duration-200"
+          onClick={() => setPreviewUrl(null)}
+        >
+          <div className="size-64 rounded-full overflow-hidden shadow-2xl ring-4 ring-white/20 animate-in zoom-in-95 duration-200">
+            <img
+              src={previewUrl}
+              alt="Avatar"
+              className="w-full h-full object-cover"
+              crossOrigin="anonymous"
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };
