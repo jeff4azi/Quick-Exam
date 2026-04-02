@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { SidebarNavItem, isActivePath } from "./NavBar";
 import {
@@ -17,6 +17,7 @@ import { FiUser } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
 import Logo from "../images/Logo";
 import Avatar from "./Avatar";
+import ConfirmOverlay from "./ConfirmOverlay";
 
 /**
  * DesktopLayout wraps protected pages.
@@ -28,17 +29,17 @@ import Avatar from "./Avatar";
  * The `desktop-content-wrapper` class on the main area triggers CSS overrides
  * in index.css that expand pages beyond their mobile max-w-2xl.
  */
-const DesktopLayout = ({ children, isPremium, onLockedClick, userProfile }) => {
+const DesktopLayout = ({ children, isPremium, userProfile }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location?.pathname || "/";
+  const [premiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
 
   const go = (path) => navigate(path);
 
   const handleSavedClick = () => {
     if (isPremium) { go("/bookmarks"); return; }
-    if (onLockedClick) { onLockedClick(); return; }
-    go("/premium");
+    setPremiumOverlayOpen(true);
   };
 
   const isExamActive = pathname === "/exam";
@@ -135,7 +136,7 @@ const DesktopLayout = ({ children, isPremium, onLockedClick, userProfile }) => {
               <div className="relative shrink-0">
                 <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
                 {isPremium && (
-                  <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-white dark:border-slate-900 shadow-sm flex items-center justify-center">
+                  <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-white dark:border-slate-900 shadow-sm flex items-center justify-center">
                     <FaCrown className="text-[8px] text-white" />
                   </div>
                 )}
@@ -153,6 +154,16 @@ const DesktopLayout = ({ children, isPremium, onLockedClick, userProfile }) => {
       <div className="lg:ml-64 lg:flex-1 desktop-content-wrapper">
         {children}
       </div>
+
+      <ConfirmOverlay
+        isOpen={premiumOverlayOpen}
+        onClose={() => setPremiumOverlayOpen(false)}
+        onConfirm={() => { setPremiumOverlayOpen(false); navigate("/premium"); }}
+        title="Unlock Premium Features"
+        message="Get Premium to save questions for revision, bookmark during exams, and enjoy an ad-free experience."
+        confirmText="Get Premium"
+        cancelText="Maybe later"
+      />
     </div>
   );
 };

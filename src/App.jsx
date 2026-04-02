@@ -505,11 +505,9 @@ function App() {
     questionsContext,
   };
 
-  // Wrap a protected page in DesktopLayout for the sidebar on large screens
-  const withDesktop = (element, lockedClickHandler) => (
+  const withDesktop = (element) => (
     <DesktopLayout
       isPremium={isPremium}
-      onLockedClick={lockedClickHandler}
       userProfile={userProfile}
     >
       {element}
