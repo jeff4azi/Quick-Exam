@@ -5,6 +5,7 @@ import {
   FiBookOpen,
   FiLayers,
   FiX,
+  FiSearch,
 } from "react-icons/fi";
 import { FaCrown, FaWhatsapp } from "react-icons/fa";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
@@ -36,6 +37,7 @@ const ChooseCourseScreen = ({
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [theoryOverlayOpen, setTheoryOverlayOpen] = useState(false);
   const [favouriteIds, setFavouriteIds] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     loadFavouriteCourseIds().then(setFavouriteIds);
@@ -60,9 +62,16 @@ const ChooseCourseScreen = ({
         (userCollege && course.colleges.includes(userCollege));
       if (!collegeMatch) return false;
       if (questionType === "theory") return (course.theoryQuestionCount || 0) > 0;
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase();
+        return (
+          course.name?.toLowerCase().includes(q) ||
+          course.title?.toLowerCase().includes(q)
+        );
+      }
       return true;
     });
-  }, [courses, userCollege, questionType]);
+  }, [courses, userCollege, questionType, searchQuery]);
 
   // If Home deep-links to a course, preselect it
   useEffect(() => {
@@ -200,6 +209,18 @@ const ChooseCourseScreen = ({
               );
             })}
           </div>
+        </div>
+
+        {/* SEARCH */}
+        <div className="max-w-2xl mx-auto mt-3 relative">
+          <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 size-4 pointer-events-none" />
+          <input
+            type="text"
+            placeholder="Search courses..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 transition-colors shadow-sm"
+          />
         </div>
       </header>
 

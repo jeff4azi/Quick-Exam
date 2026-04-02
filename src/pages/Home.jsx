@@ -391,7 +391,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
               description: "Review and memorize",
               bg: "bg-violet-50 dark:bg-violet-900/20",
               icon: "🃏",
-              onClick: () => navigate("/choose-course"),
+              onClick: () => navigate("/flashcards"),
             },
             {
               title: "Test",

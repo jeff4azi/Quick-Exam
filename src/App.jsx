@@ -31,6 +31,7 @@ import { API_BASE_URL } from "./apiConfig";
 import UploadProfilePic from "./pages/UploadProfilePic";
 import UpdatePassword from "./pages/UpdatePassword";
 import { loadExamSession } from "./utils/examSessionStorage";
+import FlashcardsScreen from "./pages/FlashcardsScreen";
 
 function App() {
   const [userProfile, setUserProfile] = useState(null);
@@ -670,6 +671,20 @@ function App() {
               element={
                 <ProtectedRoute>
                   {withDesktop(<UploadProfilePic {...props} />)}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/flashcards"
+              element={
+                <ProtectedRoute>
+                  {withDesktop(
+                    <FlashcardsScreen
+                      courses={availableCourses}
+                      coursesLoading={coursesLoading}
+                      isPremium={isPremium}
+                    />
+                  )}
                 </ProtectedRoute>
               }
             />
