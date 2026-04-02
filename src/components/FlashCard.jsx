@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { RenderMathText } from "../utils/RenderMathText";
 
 /**
@@ -10,7 +9,7 @@ const FlashCard = ({ question, courseId, isFlipped, onFlip }) => {
   const isTheory = question?.type === "theory" || Array.isArray(question?.keywords);
 
   const answer = isTheory
-    ? (question?.modal_answer || question?.correct || "No answer provided")
+    ? (question?.model_answer || question?.correct || "No answer provided")
     : question?.correct || "No answer provided";
 
   return (

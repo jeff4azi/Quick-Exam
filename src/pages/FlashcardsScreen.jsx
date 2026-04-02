@@ -47,15 +47,33 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
   const [stats, setStats] = useState({}); // { [questionId]: { seen, correct, wrong } }
 
   // ── fetch questions when a course is selected ──
+  // Fetches both objective and theory questions and merges them.
   const fetchQuestions = useCallback(async (course) => {
     setLoadingQ(true);
     setErrorQ(null);
     try {
       const endpoint = course.questionsEndpoint || `/courses/${course.id}/questions`;
-      const res = await fetch(`${API_BASE_URL}${endpoint}`);
-      const data = await res.json();
-      if (!res.ok) throw new Error(data?.msg || "Failed to load questions");
-      const all = Array.isArray(data) ? data : [];
+      const baseUrl = `${API_BASE_URL}${endpoint}`;
+
+      const [objRes, thyRes] = await Promise.all([
+        fetch(baseUrl),
+        fetch(`${baseUrl}?type=theory`),
+      ]);
+
+      const [objData, thyData] = await Promise.all([
+        objRes.json(),
+        thyRes.json(),
+      ]);
+
+      const objective = objRes.ok && Array.isArray(objData) ? objData : [];
+      // tag theory questions so FlashCard knows to use modal_answer
+      const theory = thyRes.ok && Array.isArray(thyData)
+        ? thyData.map((q) => ({ ...q, type: "theory" }))
+        : [];
+
+      const all = [...objective, ...theory];
+      if (all.length === 0) throw new Error("No questions found for this course.");
+
       setQuestions(all);
       setStats({});
       setCurrentIndex(0);
