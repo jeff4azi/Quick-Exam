@@ -275,7 +275,7 @@ const MatchScreen = ({ courses, coursesLoading, isPremium }) => {
 
       {/* ── Header ── */}
       <div className="sticky top-0 z-20 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-5 pb-3 border-b border-gray-100 dark:border-slate-800">
-        <div className="max-w-3xl mx-auto flex items-center justify-between gap-3">
+        <div className="max-w-3xl mx-auto flex items-center justify-between gap-3 relative">
           <button
             onClick={() => { stopTimer(); setPhase("pick"); }}
             className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm active:scale-90 transition-all"
@@ -283,7 +283,7 @@ const MatchScreen = ({ courses, coursesLoading, isPremium }) => {
             <FiChevronLeft className="size-5 text-slate-600 dark:text-slate-300" />
           </button>
 
-          <div className="text-center">
+          <div className="text-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
             <p className="text-xs font-black uppercase tracking-widest text-emerald-500">
               {selectedCourse?.name}
             </p>
