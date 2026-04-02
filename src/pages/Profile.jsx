@@ -136,7 +136,8 @@ const Profile = ({
         <div className="w-12"></div> {/* Spacer for symmetry */}
       </div>
 
-      <div className="flex-1 px-6 overflow-y-auto no-scrollbar pb-32">
+      {/* Main content */}
+      <div className="flex-1 px-6 lg:px-16 overflow-y-auto no-scrollbar pb-32">
         {/* Avatar Section */}
         <div className="flex flex-col items-center mt-4 mb-8">
           <button
@@ -447,14 +448,12 @@ const Profile = ({
               <button
                 type="button"
                 onClick={toggleDarkMode}
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
-                  isDarkMode ? "bg-blue-600" : "bg-gray-300"
-                }`}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${isDarkMode ? "bg-blue-600" : "bg-gray-300"
+                  }`}
               >
                 <div
-                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
-                    isDarkMode ? "translate-x-6" : ""
-                  }`}
+                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${isDarkMode ? "translate-x-6" : ""
+                    }`}
                 />
               </button>
             </div>
@@ -483,14 +482,12 @@ const Profile = ({
                     ? toggleAutoAdvance
                     : () => setPremiumOverlayOpen(true)
                 }
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
-                  autoAdvance && isPremium ? "bg-blue-600" : "bg-gray-300"
-                } ${!isPremium ? "opacity-60 cursor-not-allowed" : ""}`}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${autoAdvance && isPremium ? "bg-blue-600" : "bg-gray-300"
+                  } ${!isPremium ? "opacity-60 cursor-not-allowed" : ""}`}
               >
                 <div
-                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
-                    autoAdvance && isPremium ? "translate-x-6" : ""
-                  }`}
+                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${autoAdvance && isPremium ? "translate-x-6" : ""
+                    }`}
                 />
               </button>
 
@@ -513,13 +510,12 @@ const Profile = ({
         className="absolute bottom-8 right-6"
       >
         <div
-          className={`size-14 rounded-full flex items-center justify-center shadow-xl shadow-blue-200 dark:shadow-none transition-all ${
-            isSaving
+          className={`size-14 rounded-full flex items-center justify-center shadow-xl shadow-blue-200 dark:shadow-none transition-all ${isSaving
               ? "bg-green-600/80 cursor-wait"
               : isEditing
                 ? "bg-green-600 hover:bg-green-700 active:scale-95"
                 : "bg-blue-600 hover:bg-blue-700 active:scale-95"
-          }`}
+            }`}
         >
           {isSaving ? (
             <FiLoader className="text-white text-xl animate-spin" />

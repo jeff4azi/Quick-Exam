@@ -121,7 +121,7 @@ const ResultScreen = ({
 
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 pb-32 lg:pb-32 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300">
-      <header className="flex justify-between items-center mb-8">
+      <header className="flex justify-between items-center mb-8 lg:px-16">
         <div className="flex items-center gap-2 bg-white dark:bg-gray-900 py-2 px-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <span className="text-gray-400 dark:text-gray-500 text-xs uppercase tracking-wider font-bold">
             Time
@@ -154,7 +154,7 @@ const ResultScreen = ({
         </div>
       </header>
 
-      <main className="flex-grow flex flex-col items-center justify-center space-y-8">
+      <main className="flex-grow flex flex-col items-center justify-center space-y-8 lg:px-16">
         <div
           onClick={() => navigate("/history")}
           className="relative flex items-center justify-center cursor-pointer group"
@@ -231,7 +231,7 @@ const ResultScreen = ({
         </div>
       </main>
 
-      <footer className="mt-10 flex justify-around items-center bg-white dark:bg-gray-900 p-4 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
+      <footer className="mt-10 flex justify-around items-center bg-white dark:bg-gray-900 p-4 lg:mx-64 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
         <ActionButton
           label="Retake"
           disabled={!isPremium}

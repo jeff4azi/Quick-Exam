@@ -16,7 +16,7 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
       />
 
       {/* Sheet Content */}
-      <div className="relative w-full max-w-2xl mx-auto bg-gray-50 dark:bg-slate-900 rounded-t-[3rem] shadow-2xl animate-in slide-in-from-bottom-full duration-500 overflow-hidden">
+      <div className="relative w-full max-w-2xl mx-auto bg-gray-50 dark:bg-slate-900 rounded-t-[3rem] shadow-2xl animate-in slide-in-from-bottom-full duration-500 overflow-hidden lg:translate-x-30">
         {/* Grabber Handle */}
         <div className="flex justify-center pt-4 pb-2">
           <div className="w-12 h-1.5 bg-gray-300 dark:bg-slate-700 rounded-full" />

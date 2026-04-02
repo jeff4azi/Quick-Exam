@@ -9,6 +9,7 @@ import {
 } from "react-icons/fi";
 import imageCompression from "browser-image-compression";
 import { supabase } from "../supabaseClient";
+import NavBar from "../components/NavBar";
 
 const CLOUDINARY_CLOUD_NAME =
   import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
@@ -24,7 +25,7 @@ const validateCloudinaryConfig = () => {
   }
 };
 
-const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
+const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage, isPremium }) => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
@@ -328,6 +329,8 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
           </button>
         </div>
       )}
+
+      {!file && <NavBar isPremium={isPremium} />}
     </div>
   );
 };

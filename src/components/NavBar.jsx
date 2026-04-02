@@ -61,7 +61,7 @@ const SidebarNavItem = ({ label, icon, active, onClick, locked, showCrown }) => 
     <div className="relative shrink-0 size-9 flex items-center justify-center w-[40px]">
       {icon}
       {showCrown && (
-        <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-white dark:border-slate-800 shadow-sm flex items-center justify-center">
+        <div className="absolute -top-3 -right-5 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-white dark:border-slate-800 shadow-sm flex items-center justify-center">
           <FaCrown className="text-[8px] text-white" />
         </div>
       )}

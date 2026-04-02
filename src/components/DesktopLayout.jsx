@@ -14,6 +14,7 @@ import {
   IoTrophyOutline,
 } from "react-icons/io5";
 import { FiUser } from "react-icons/fi";
+import { FaCrown } from "react-icons/fa";
 import Logo from "../images/Logo";
 import Avatar from "./Avatar";
 
@@ -39,6 +40,8 @@ const DesktopLayout = ({ children, isPremium, onLockedClick, userProfile }) => {
     if (onLockedClick) { onLockedClick(); return; }
     go("/premium");
   };
+
+  const isExamActive = pathname === "/exam";
 
   const homeActive = isActivePath(pathname, "/");
   const coursesActive = isActivePath(pathname, "/choose-course");
@@ -101,21 +104,42 @@ const DesktopLayout = ({ children, isPremium, onLockedClick, userProfile }) => {
           </p>
         </div>
 
-        {/* Nav items */}
-        <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
+        {/* Nav items — pointer-events disabled during exam */}
+        <nav className={`flex-1 px-3 py-4 space-y-1 overflow-y-auto relative ${isExamActive ? "pointer-events-none select-none" : ""}`}>
           {navItems.map((item) => (
-            <SidebarNavItem key={item.label} {...item} />
+            <SidebarNavItem
+              key={item.label}
+              {...item}
+              // override active/hover visuals when exam is active
+              active={isExamActive ? false : item.active}
+              locked={isExamActive ? true : item.locked}
+            />
           ))}
+          {/* Frosted overlay shown during exam */}
+          {isExamActive && (
+            <div className="absolute inset-0 rounded-xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2">
+              <span className="text-xs font-bold text-slate-400 dark:text-slate-500 text-center px-4">
+                Navigation locked during exam
+              </span>
+            </div>
+          )}
         </nav>
 
-        {/* Profile shortcut at bottom */}
-        <div className="px-3 py-4 border-t border-gray-100 dark:border-slate-800">
+        {/* Profile shortcut — also locked during exam */}
+        <div className={`px-3 py-4 border-t border-gray-100 dark:border-slate-800 ${isExamActive ? "pointer-events-none select-none opacity-40" : ""}`}>
           <SidebarNavItem
             label={userProfile?.user_name || userProfile?.full_name || "Profile"}
-            active={profileActive}
+            active={isExamActive ? false : profileActive}
             onClick={() => go("/profile")}
             icon={
-              <Avatar avatarUrl={userProfile.avatar_url} size="sm" className="w-[50px]" />
+              <div className="relative shrink-0">
+                <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
+                {isPremium && (
+                  <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-white dark:border-slate-900 shadow-sm flex items-center justify-center">
+                    <FaCrown className="text-[8px] text-white" />
+                  </div>
+                )}
+              </div>
             }
           />
         </div>
