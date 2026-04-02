@@ -265,7 +265,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   return (
     <div className="max-w-2xl mx-auto relative min-h-[100dvh] flex flex-col bg-gray-50 dark:bg-slate-900 transition-colors duration-500 overflow-hidden">
       {/* Top Navigation Bar */}
-      <div className="px-6 pt-4 pb-7 flex items-center justify-between z-50">
+      <div className="px-6 pt-4 pb-7 flex items-center justify-between z-50 lg:hidden">
         <div className="flex items-center gap-2">
           <Logo className="w-14 lg:w-16 h-auto text-slate-800 dark:text-slate-100" />
           <p className="text-sm font-bold tracking-[0.2em] uppercase mt-2 text-slate-400">
@@ -297,7 +297,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 px-6 pb-32 pt-2 flex flex-col gap-6 overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex-1 px-6 pb-32 pt-2 lg:pt-6 flex flex-col gap-6 overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
         {/* Greeting */}
         <div>
           <h1 className="mt-1 text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
@@ -382,7 +382,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
 
         {/* Recently done (carousel) */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between max-w-7xl">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1">
               Recently done
             </h3>

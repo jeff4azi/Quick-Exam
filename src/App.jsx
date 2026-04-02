@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import RouteChangeTracker from "./components/RouteChangeTracker";
+import DesktopLayout from "./components/DesktopLayout";
 import { useState, useEffect, useRef } from "react";
 import Home from "./pages/Home.jsx";
 import ExamScreen from "./pages/ExamScreen";
@@ -504,6 +505,17 @@ function App() {
     questionsContext,
   };
 
+  // Wrap a protected page in DesktopLayout for the sidebar on large screens
+  const withDesktop = (element, lockedClickHandler) => (
+    <DesktopLayout
+      isPremium={isPremium}
+      onLockedClick={lockedClickHandler}
+      userProfile={userProfile}
+    >
+      {element}
+    </DesktopLayout>
+  );
+
   return (
     <Router>
       <RouteChangeTracker />
@@ -541,7 +553,7 @@ function App() {
               element={
                 localStorage.getItem("visited") === "true" ? (
                   <ProtectedRoute>
-                    <Home {...props} />
+                    {withDesktop(<Home {...props} />)}
                   </ProtectedRoute>
                 ) : (
                   <Navigate to="/landing" replace />
@@ -552,7 +564,7 @@ function App() {
               path="/choose-course"
               element={
                 <ProtectedRoute>
-                  <ChooseCourseScreen {...props} />
+                  {withDesktop(<ChooseCourseScreen {...props} />)}
                 </ProtectedRoute>
               }
             />
@@ -560,7 +572,7 @@ function App() {
               path="/bookmarks"
               element={
                 <ProtectedRoute>
-                  <BookMark {...props} />
+                  {withDesktop(<BookMark {...props} />)}
                 </ProtectedRoute>
               }
             />
@@ -568,7 +580,7 @@ function App() {
               path="/history"
               element={
                 <ProtectedRoute>
-                  <HistoryScreen {...props} />
+                  {withDesktop(<HistoryScreen {...props} />)}
                 </ProtectedRoute>
               }
             />
@@ -576,11 +588,13 @@ function App() {
               path="/leaderboard"
               element={
                 <ProtectedRoute>
-                  <LeaderboardScreen
-                    courses={availableCourses}
-                    isPremium={isPremium}
-                    userProfile={userProfile}
-                  />
+                  {withDesktop(
+                    <LeaderboardScreen
+                      courses={availableCourses}
+                      isPremium={isPremium}
+                      userProfile={userProfile}
+                    />
+                  )}
                 </ProtectedRoute>
               }
             />
@@ -588,16 +602,19 @@ function App() {
               path="/profile"
               element={
                 <ProtectedRoute>
-                  <Profile
-                    userProfile={userProfile}
-                    isPremium={isPremium}
-                    onUpdateProfile={handleUpdateProfile}
-                    onLogout={handleLogout}
-                    isDarkMode={isDarkMode}
-                    toggleDarkMode={() => setIsDarkMode((prev) => !prev)}
-                    autoAdvance={autoAdvance}
-                    toggleAutoAdvance={() => setAutoAdvance((prev) => !prev)}
-                  />
+                  {withDesktop(
+                    <Profile
+                      userProfile={userProfile}
+                      isPremium={isPremium}
+                      onUpdateProfile={handleUpdateProfile}
+                      onLogout={handleLogout}
+                      isDarkMode={isDarkMode}
+                      toggleDarkMode={() => setIsDarkMode((prev) => !prev)}
+                      autoAdvance={autoAdvance}
+                      toggleAutoAdvance={() => setAutoAdvance((prev) => !prev)}
+                      deleteImage={deleteImage}
+                    />
+                  )}
                 </ProtectedRoute>
               }
             />
@@ -617,7 +634,7 @@ function App() {
                     )
                   }
                 >
-                  <ExamScreen {...props} />
+                  {withDesktop(<ExamScreen {...props} />)}
                 </ProtectedRoute>
               }
             />
@@ -627,7 +644,7 @@ function App() {
               path="/results"
               element={
                 <ProtectedRoute stateCheck={results.answered > 0}>
-                  <ResultScreen {...props} />
+                  {withDesktop(<ResultScreen {...props} />)}
                 </ProtectedRoute>
               }
             />
@@ -637,7 +654,7 @@ function App() {
                 <ProtectedRoute
                   stateCheck={answers.length > 0 && questions.length > 0}
                 >
-                  <ReviewAnswers {...props} />
+                  {withDesktop(<ReviewAnswers {...props} />)}
                 </ProtectedRoute>
               }
             />
@@ -647,10 +664,12 @@ function App() {
                 <ProtectedRoute
                   stateCheck={answers.length > 0 && questions.length > 0}
                 >
-                  <PremiumPage
-                    {...props}
-                    onActivatePremium={handlePremiumActivation}
-                  />
+                  {withDesktop(
+                    <PremiumPage
+                      {...props}
+                      onActivatePremium={handlePremiumActivation}
+                    />
+                  )}
                 </ProtectedRoute>
               }
             />
@@ -658,7 +677,7 @@ function App() {
               path="/upload-profile-pic"
               element={
                 <ProtectedRoute>
-                  <UploadProfilePic {...props} />
+                  {withDesktop(<UploadProfilePic {...props} />)}
                 </ProtectedRoute>
               }
             />

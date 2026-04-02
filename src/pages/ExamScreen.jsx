@@ -643,7 +643,7 @@ const ExamScreen = ({
       </div>
 
       {/* BOTTOM NAVIGATION BAR */}
-      <div className="fixed bottom-0 inset-x-0 px-6 py-2 z-40">
+      <div className="fixed bottom-0 inset-x-0 px-6 lg:pl-64 py-2 z-40">
         <div className="max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-3">
           <button
             onClick={() => {

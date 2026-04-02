@@ -37,3 +37,33 @@ body {
     0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
     50% { transform: scaleY(1.2); opacity: 1; }
   }
+
+/* ── Desktop layout overrides ─────────────────────────────────────────────── */
+/*
+  On desktop (lg+), pages are rendered inside .desktop-content-wrapper.
+  We override the mobile max-w-2xl constraint and bottom padding so content
+  fills the available space. Mobile styles are completely untouched.
+*/
+@media (min-width: 1024px) {
+  /* Let page root containers expand to fill the desktop content area */
+  .desktop-content-wrapper > * {
+    max-width: 100% !important;
+    height: 100dvh;
+  }
+
+  /* Remove the bottom padding reserved for the mobile NavBar */
+  .desktop-content-wrapper .pb-32 {
+    padding-bottom: 2rem !important;
+  }
+  .desktop-content-wrapper .pb-28 {
+    padding-bottom: 2rem !important;
+  }
+  .desktop-content-wrapper .pb-24 {
+    padding-bottom: 2rem !important;
+  }
+
+  /* Ensure full-height pages fill the viewport */
+  .desktop-content-wrapper .h-\[100dvh\] {
+    height: 100dvh;
+  }
+}
