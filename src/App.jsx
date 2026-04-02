@@ -33,6 +33,7 @@ import UpdatePassword from "./pages/UpdatePassword";
 import { loadExamSession } from "./utils/examSessionStorage";
 import FlashcardsScreen from "./pages/FlashcardsScreen";
 import MatchScreen from "./pages/MatchScreen";
+import MatchResultScreen from "./pages/MatchResultScreen";
 
 function App() {
   const [userProfile, setUserProfile] = useState(null);
@@ -700,6 +701,14 @@ function App() {
                       isPremium={isPremium}
                     />
                   )}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/match-result"
+              element={
+                <ProtectedRoute>
+                  {withDesktop(<MatchResultScreen />)}
                 </ProtectedRoute>
               }
             />

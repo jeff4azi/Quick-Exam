@@ -1,9 +1,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../apiConfig";
+import { supabase } from "../supabaseClient";
 import CoursePicker from "../components/CoursePicker";
 import MatchBox from "../components/MatchBox";
-import { FiChevronLeft, FiRefreshCw, FiClock, FiZap } from "react-icons/fi";
+import { FiChevronLeft, FiRefreshCw, FiClock } from "react-icons/fi";
 
 // ─── constants ───────────────────────────────────────────────────────────────
 const MATCH_COUNT = 6;
@@ -49,7 +50,7 @@ const buildGame = (questions) => {
 };
 
 // ─── component ───────────────────────────────────────────────────────────────
-const MatchScreen = ({ courses, coursesLoading, isPremium }) => {
+const MatchScreen = ({ courses, coursesLoading }) => {
   const navigate = useNavigate();
 
   // ── phase: "pick" | "play" | "done" ──
@@ -142,12 +143,39 @@ const MatchScreen = ({ courses, coursesLoading, isPremium }) => {
     }
   }, [allQuestions, phase, startGame]);
 
-  // ── check for completion ──
+  // ── check for completion: save attempt and navigate to results ──
   useEffect(() => {
-    if (correctCount === MATCH_COUNT && phase === "play") {
-      stopTimer();
-      setPhase("done");
-    }
+    if (correctCount !== MATCH_COUNT || phase !== "play") return;
+    stopTimer();
+    setPhase("done");
+
+    const finalTime = elapsed;
+
+    // Save to Supabase in background
+    (async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase.from("match_attempts").insert({
+            user_id: user.id,
+            course_id: selectedCourse?.id,
+            time_ms: finalTime,
+          });
+        }
+      } catch (err) {
+        console.error("Failed to save match attempt:", err);
+      }
+    })();
+
+    navigate("/match-result", {
+      state: {
+        timeMs: finalTime,
+        attempts,
+        courseId: selectedCourse?.id,
+        courseName: selectedCourse?.name,
+      },
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correctCount, phase]);
 
   // ── clear wrong highlight after 800ms ──
@@ -357,53 +385,6 @@ const MatchScreen = ({ courses, coursesLoading, isPremium }) => {
         </p>
       </div>
 
-      {/* ── Completion modal ── */}
-      {phase === "done" && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
-          <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm" />
-          <div className="relative bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl w-full max-w-sm p-8 text-center animate-in zoom-in-95 duration-300">
-            <div className="size-16 mx-auto rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4">
-              <FiZap className="size-8 text-emerald-500" />
-            </div>
-            <h2 className="text-2xl font-black text-slate-900 dark:text-white">
-              All matched!
-            </h2>
-            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
-              {selectedCourse?.name}
-            </p>
-
-            <div className="mt-6 grid grid-cols-2 gap-3">
-              <div className="bg-gray-50 dark:bg-slate-700/50 rounded-2xl p-4">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Time</p>
-                <p className="text-2xl font-black text-slate-900 dark:text-white tabular-nums">
-                  {formatTime(elapsed)}
-                </p>
-              </div>
-              <div className="bg-gray-50 dark:bg-slate-700/50 rounded-2xl p-4">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Attempts</p>
-                <p className="text-2xl font-black text-slate-900 dark:text-white tabular-nums">
-                  {attempts}
-                </p>
-              </div>
-            </div>
-
-            <div className="mt-6 flex flex-col gap-3">
-              <button
-                onClick={() => startGame(allQuestions)}
-                className="w-full py-4 rounded-2xl bg-emerald-600 text-white font-black shadow-lg shadow-emerald-200 dark:shadow-none active:scale-95 transition-all"
-              >
-                Play Again
-              </button>
-              <button
-                onClick={() => { setPhase("pick"); }}
-                className="w-full py-3 rounded-2xl bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold text-sm active:scale-95 transition-all"
-              >
-                Change Course
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
