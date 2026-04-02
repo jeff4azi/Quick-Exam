@@ -195,18 +195,49 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
 
   useVisibilityRefresh(fetchStreak);
 
-  // Recently done courses carousel (last 5 attempts)
-  useEffect(() => {
+  // Recently done courses carousel (last 5 attempts from Supabase)
+  const fetchRecentCourses = useCallback(async () => {
     try {
-      const history =
-        JSON.parse(localStorage.getItem("examHistory") || "[]") || [];
-      const safe = Array.isArray(history) ? history : [];
-      const last5 = safe.slice(-5).reverse();
-      setRecentCourses(last5);
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      if (userError || !user) return;
+
+      const { data, error } = await withTimeout(
+        supabase
+          .from("exam_attempts")
+          .select("id, course_id, score, total_questions, time_taken, date_taken")
+          .eq("user_id", user.id)
+          .order("date_taken", { ascending: false })
+          .limit(5),
+        15000,
+        "Loading recent courses took too long."
+      );
+
+      if (error || !data) return;
+
+      setRecentCourses(
+        data.map((r) => ({
+          id: r.id,
+          course: r.course_id,
+          date: new Date(r.date_taken).toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          }),
+          score: r.score,
+          total: r.total_questions,
+          timeTaken: r.time_taken,
+        }))
+      );
     } catch {
       setRecentCourses([]);
     }
   }, []);
+
+  useEffect(() => {
+    fetchRecentCourses();
+  }, [fetchRecentCourses]);
+
+  useVisibilityRefresh(fetchRecentCourses);
 
   const favouriteCourses = useMemo(() => {
     const list = Array.isArray(courses) ? courses : [];

@@ -59,13 +59,14 @@ function App() {
 
   // FIX: Initialize results logic
   const [results, setResults] = useState({ correct: 0, wrong: 0, answered: 0 });
+  const [lastTimeTaken, setLastTimeTaken] = useState(0);
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(null);
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const [questionType, setQuestionType] = useState("objective");
   const [questionsContext, setQuestionsContext] = useState(null);
   const sessionRestoredRef = useRef(false);
 
-  const handleExamSubmit = (correctCount, totalCount) => {
+  const handleExamSubmit = (correctCount, totalCount, timeTaken) => {
     const total = totalCount ?? questions.length;
 
     setResults({
@@ -73,6 +74,7 @@ function App() {
       wrong: parseFloat((total - correctCount).toFixed(2)),
       answered: total,
     });
+    setLastTimeTaken(timeTaken ?? 0);
   };
 
   // In App.js
@@ -475,6 +477,7 @@ function App() {
     // FIX: Pass the actual submit handler
     onSubmit: handleExamSubmit,
     results,
+    timeTaken: lastTimeTaken,
     courses: availableCourses,
     selectedCourse,
     setSelectedCourse,

@@ -124,7 +124,6 @@ const ExamScreen = ({
     timeLeftRef.current = timeLeft;
   }, [timeLeft]);
 
-  const [hasSaved, setHasSaved] = useState(false);
   const [isSubmitOverlayOpen, setSubmitOverlayOpen] = useState(false);
   const [isExitOverlayOpen, setExitOverlayOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -411,32 +410,7 @@ const ExamScreen = ({
     }
   };
 
-  const saveResultToHistory = (finalTime, correctCount) => {
-    if (hasSaved) return;
 
-    const newResult = {
-      id: Date.now(),
-      course: selectedCourse.name,
-      date: new Date().toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-      }),
-      score: correctCount,
-      total: totalQuestions,
-      timeTaken: finalTime,
-    };
-    const existingHistory =
-      JSON.parse(localStorage.getItem("examHistory")) || [];
-    localStorage.setItem(
-      "examHistory",
-      JSON.stringify([...existingHistory, newResult]),
-    );
-    setHasSaved(true);
-
-    // Exam is complete – clear any persisted in‑progress state
-    clearExamSession();
-  };
 
   const handleSubmit = async () => {
     if (isSubmittingRef.current) return;
@@ -453,8 +427,6 @@ const ExamScreen = ({
       return acc + (answers[idx] === q.correct ? 1 : 0);
     }, 0);
 
-    saveResultToHistory(finalTime, correctCount);
-
     try {
       await withTimeout(
         saveResultToSupabase(finalTime, correctCount),
@@ -465,10 +437,9 @@ const ExamScreen = ({
       console.error("Error while saving to Supabase:", err);
     }
 
-    if (onSubmit) onSubmit(correctCount, shuffledQuestions.length);
+    if (onSubmit) onSubmit(correctCount, shuffledQuestions.length, finalTime);
     clearExamSession();
-    navigate("/results");
-  };
+    navigate("/results");  };
 
   const handleTimeUp = async () => {
     if (isSubmittingRef.current) return;
@@ -483,18 +454,15 @@ const ExamScreen = ({
       return acc + (answers[idx] === q.correct ? 1 : 0);
     }, 0);
 
-    saveResultToHistory(finalTime, correctCount);
-
     try {
       await saveResultToSupabase(finalTime, correctCount);
     } catch (err) {
       console.error("Error while saving to Supabase on timeout:", err);
     }
 
-    if (onSubmit) onSubmit(correctCount, shuffledQuestions.length);
+    if (onSubmit) onSubmit(correctCount, shuffledQuestions.length, finalTime);
     clearExamSession();
-    navigate("/results");
-  };
+    navigate("/results");  };
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 

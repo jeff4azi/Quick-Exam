@@ -20,6 +20,7 @@ const ResultScreen = ({
   userProfile,
   isPremium,
   questionType,
+  timeTaken,
 }) => {
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(true);
@@ -84,22 +85,9 @@ const ResultScreen = ({
     setSharing(false);
   };
 
-  const getLatestResult = () => {
-    const history = JSON.parse(localStorage.getItem("examHistory")) || [];
-    const courseResults = history.filter(
-      (r) => r.course === selectedCourse.name,
-    );
-    return courseResults.length > 0
-      ? courseResults[courseResults.length - 1]
-      : null;
-  };
-
-  const latestResult = getLatestResult();
-  if (!latestResult) return null;
-
-  const timeTaken = latestResult?.timeTaken ?? 0;
-  const minutes = String(Math.floor(timeTaken / 60)).padStart(2, "0");
-  const seconds = String(timeTaken % 60).padStart(2, "0");
+  const timeTakenSafe = timeTaken ?? 0;
+  const minutes = String(Math.floor(timeTakenSafe / 60)).padStart(2, "0");
+  const seconds = String(timeTakenSafe % 60).padStart(2, "0");
   const scorePercentage = Math.round(
     (results.correct / (results.answered || questions.length)) * 100,
   );
