@@ -1,7 +1,7 @@
 import { FiSearch, FiChevronLeft } from "react-icons/fi";
 import { useState } from "react";
 
-const CoursePicker = ({ courses, loading, onSelect, onBack }) => {
+const CoursePicker = ({ courses, loading, onSelect, onBack, title = "Study", subtitle = "Pick a course to study" }) => {
   const [query, setQuery] = useState("");
 
   const filtered = (courses || []).filter(
@@ -23,8 +23,8 @@ const CoursePicker = ({ courses, loading, onSelect, onBack }) => {
               <FiChevronLeft className="size-5 text-slate-600 dark:text-slate-300" />
             </button>
             <div>
-              <h1 className="text-xl font-black text-slate-900 dark:text-white">Flashcards</h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Pick a course to study</p>
+              <h1 className="text-xl font-black text-slate-900 dark:text-white">{title}</h1>
+              <p className="text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>
             </div>
           </div>
 

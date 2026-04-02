@@ -32,6 +32,7 @@ import UploadProfilePic from "./pages/UploadProfilePic";
 import UpdatePassword from "./pages/UpdatePassword";
 import { loadExamSession } from "./utils/examSessionStorage";
 import FlashcardsScreen from "./pages/FlashcardsScreen";
+import MatchScreen from "./pages/MatchScreen";
 
 function App() {
   const [userProfile, setUserProfile] = useState(null);
@@ -680,6 +681,20 @@ function App() {
                 <ProtectedRoute>
                   {withDesktop(
                     <FlashcardsScreen
+                      courses={availableCourses}
+                      coursesLoading={coursesLoading}
+                      isPremium={isPremium}
+                    />
+                  )}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/match"
+              element={
+                <ProtectedRoute>
+                  {withDesktop(
+                    <MatchScreen
                       courses={availableCourses}
                       coursesLoading={coursesLoading}
                       isPremium={isPremium}

@@ -161,6 +161,8 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
         loading={coursesLoading}
         onSelect={handleSelectCourse}
         onBack={() => navigate("/")}
+        title="Flashcards"
+        subtitle="Pick a course to study"
       />
     );
   }

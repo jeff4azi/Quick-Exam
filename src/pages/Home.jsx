@@ -401,11 +401,11 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
               onClick: () => navigate("/choose-course"),
             },
             {
-              title: "Blocks",
+              title: "Match",
               description: "Click fast and score high",
               bg: "bg-emerald-50 dark:bg-emerald-900/20",
               icon: "🧩",
-              onClick: () => navigate("/choose-course"),
+              onClick: () => navigate("/match"),
             },
           ].map((mode) => (
             <button
