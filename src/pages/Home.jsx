@@ -40,6 +40,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [favouriteIds, _] = useState(() => loadFavouriteCourseIds());
   const [recentCourses, setRecentCourses] = useState([]);
+  const [recentCoursesLoading, setRecentCoursesLoading] = useState(true);
   const [stats, setStats] = useState({
     bestScore: "--",
     position: "--",
@@ -197,6 +198,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
 
   // Recently done courses carousel (last 5 attempts from Supabase)
   const fetchRecentCourses = useCallback(async () => {
+    setRecentCoursesLoading(true);
     try {
       const { data: { user }, error: userError } = await supabase.auth.getUser();
       if (userError || !user) return;
@@ -230,6 +232,8 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
       );
     } catch {
       setRecentCourses([]);
+    } finally {
+      setRecentCoursesLoading(false);
     }
   }, []);
 
@@ -382,7 +386,25 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
             </button>
           </div>
 
-          {recentCourses.length === 0 ? (
+          {recentCoursesLoading ? (
+            <div className="flex gap-4 overflow-hidden">
+              {[...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className="min-w-64 min-h-[120px] bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-200 dark:border-slate-700 animate-pulse"
+                >
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex flex-col gap-2 flex-1">
+                      <div className="h-2.5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                      <div className="h-4 w-28 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                    </div>
+                    <div className="size-10 rounded-2xl bg-slate-200 dark:bg-slate-700" />
+                  </div>
+                  <div className="mt-4 h-2.5 w-36 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                </div>
+              ))}
+            </div>
+          ) : recentCourses.length === 0 ? (
             <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-500/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
               No recent attempts yet. Complete an exam to see it here.
             </div>
