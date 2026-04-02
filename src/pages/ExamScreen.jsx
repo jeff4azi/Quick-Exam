@@ -380,13 +380,28 @@ const ExamScreen = ({
     }
   };
 
-  const handleBookmarkClick = () => {
+  const handleBookmarkClick = async () => {
     if (!currentQuestion?.id) return;
     setBookmarks((prev) => {
       const updated = prev.includes(currentQuestion.id)
         ? prev.filter((id) => id !== currentQuestion.id)
         : [...prev, currentQuestion.id];
-      localStorage.setItem("bookmarkedQuestions", JSON.stringify(updated));
+
+      // Persist to Supabase in the background
+      (async () => {
+        try {
+          const { data: { user } } = await supabase.auth.getUser();
+          if (user) {
+            await supabase
+              .from("profiles")
+              .update({ bookmarks: updated })
+              .eq("id", user.id);
+          }
+        } catch (err) {
+          console.error("Failed to sync bookmark:", err);
+        }
+      })();
+
       return updated;
     });
   };

@@ -126,7 +126,8 @@ function App() {
 
         setUserProfile(profile);
 
-        // --- Load available courses for all users
+        // Load bookmarks from profile
+        setBookmarks(Array.isArray(profileData?.bookmarks) ? profileData.bookmarks : []);
         setCoursesLoading(true);
         try {
           const params = new URLSearchParams();
@@ -355,10 +356,7 @@ function App() {
     loadQuestionsForSelectedCourse();
   }, [selectedCourse, selectedQuestionCount, questionType]);
 
-  useEffect(() => {
-    const saved = localStorage.getItem("bookmarkedQuestions");
-    if (saved) setBookmarks(JSON.parse(saved));
-  }, []);
+  // Bookmarks are now loaded from Supabase via getProfile below
 
   const handleLogout = async () => {
     try {
@@ -372,16 +370,12 @@ function App() {
       // Clear all localStorage data except bookmarked questions and visited status
       try {
         // Save certain items temporarily
-        const bookmarkedQuestions = localStorage.getItem("bookmarkedQuestions");
         const visitedStatus = localStorage.getItem("visited");
 
         // Clear all localStorage
         localStorage.clear();
 
         // Restore saved items
-        if (bookmarkedQuestions) {
-          localStorage.setItem("bookmarkedQuestions", bookmarkedQuestions);
-        }
         if (visitedStatus) {
           localStorage.setItem("visited", visitedStatus);
         }

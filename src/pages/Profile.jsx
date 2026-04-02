@@ -107,7 +107,6 @@ const Profile = ({
 
       // Clear local stuff
       localStorage.removeItem("examHistory");
-      localStorage.removeItem("bookmarkedQuestions");
       clearExamSession();
 
       // Logout

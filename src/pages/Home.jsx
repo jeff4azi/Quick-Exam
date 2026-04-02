@@ -217,7 +217,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
           .select("id, course_id, score, total_questions, time_taken, date_taken, type")
           .eq("user_id", user.id)
           .order("date_taken", { ascending: false })
-          .limit(5),
+          .limit(7),
         15000,
         "Loading recent courses took too long."
       );
@@ -380,9 +380,54 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
           </div>
         )}
 
+        {/* Study Modes */}
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1">
+          Study Modes
+        </h3>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+          {[
+            {
+              title: "Flashcards",
+              description: "Review and memorize",
+              bg: "bg-violet-50 dark:bg-violet-900/20",
+              icon: "🃏",
+              onClick: () => navigate("/choose-course"),
+            },
+            {
+              title: "Test",
+              description: "Check your understanding",
+              bg: "bg-sky-50 dark:bg-sky-900/20",
+              icon: "📝",
+              onClick: () => navigate("/choose-course"),
+            },
+            {
+              title: "Blocks",
+              description: "Click fast and score high",
+              bg: "bg-emerald-50 dark:bg-emerald-900/20",
+              icon: "🧩",
+              onClick: () => navigate("/choose-course"),
+            },
+          ].map((mode) => (
+            <button
+              key={mode.title}
+              type="button"
+              onClick={mode.onClick}
+              className={`${mode.bg} p-6 rounded-2xl text-left cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]`}
+            >
+              <span className="text-2xl">{mode.icon}</span>
+              <p className="mt-3 font-black text-slate-800 dark:text-slate-100 text-base">
+                {mode.title}
+              </p>
+              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                {mode.description}
+              </p>
+            </button>
+          ))}
+        </div>
+
         {/* Recently done (carousel) */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between max-w-[1350px]">
+          <div className="flex items-center justify-between">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1">
               Recently done
             </h3>
@@ -427,7 +472,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                 momentumVelocityRatio: 0.8,
               }}
               modules={[FreeMode]}
-              className="pb-2 pr-6"
+              className="pb-2 pr-6 lg:w-[80vw]"
             >
               {recentCourses.map((item) => (
                 <SwiperSlide key={`${item.id}-${item.date}`} className="!w-64">
@@ -445,11 +490,10 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                           {item?.course || "Course"}
                         </p>
                         {item?.type && (
-                          <span className={`mt-1 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
-                            item.type === "THY"
+                          <span className={`mt-1 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${item.type === "THY"
                               ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
                               : "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
-                          }`}>
+                            }`}>
                             {item.type === "THY" ? "Theory" : "Obj"}
                           </span>
                         )}

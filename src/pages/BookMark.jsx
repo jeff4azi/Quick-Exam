@@ -6,13 +6,14 @@ import { RenderMathText } from "../utils/RenderMathText";
 import ConfirmOverlay from "../components/ConfirmOverlay"; // Added this import
 import { API_BASE_URL } from "../apiConfig";
 import NavBar from "../components/NavBar";
+import { supabase } from "../supabaseClient";
 
 const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false); // New state for overlay
   const [bookmarkedQuestions, setBookmarkedQuestions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -25,6 +26,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
     const loadBookmarkedQuestions = async () => {
       if (!Array.isArray(bookmarks) || bookmarks.length === 0) {
         setBookmarkedQuestions([]);
+        setLoading(false);
         return;
       }
 
@@ -73,16 +75,30 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
     return `${code.toUpperCase()} ${number}`;
   };
 
-  const handleDeleteBookmark = (id) => {
+  const handleDeleteBookmark = async (id) => {
     const updated = bookmarks.filter((b) => b !== id);
     setBookmarks(updated);
-    localStorage.setItem("bookmarkedQuestions", JSON.stringify(updated));
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from("profiles").update({ bookmarks: updated }).eq("id", user.id);
+      }
+    } catch (err) {
+      console.error("Failed to remove bookmark:", err);
+    }
   };
 
   // --- UPDATED: CLEAR ALL LOGIC USING OVERLAY ---
-  const handleClearAll = () => {
+  const handleClearAll = async () => {
     setBookmarks([]);
-    localStorage.setItem("bookmarkedQuestions", JSON.stringify([]));
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        await supabase.from("profiles").update({ bookmarks: [] }).eq("id", user.id);
+      }
+    } catch (err) {
+      console.error("Failed to clear bookmarks:", err);
+    }
     setOverlayOpen(false);
   };
 
