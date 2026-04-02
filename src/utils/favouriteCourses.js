@@ -1,34 +1,46 @@
-const FAVOURITE_COURSES_KEY = "favouriteCourses";
+import { supabase } from "../supabaseClient";
 
-export function loadFavouriteCourseIds() {
+export async function loadFavouriteCourseIds() {
   try {
-    const raw = localStorage.getItem(FAVOURITE_COURSES_KEY);
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    if (!Array.isArray(parsed)) return [];
-    return parsed.filter((id) => typeof id === "string" && id.length > 0);
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return [];
+
+    const { data, error } = await supabase
+      .from("profiles")
+      .select("favourite_courses")
+      .eq("id", user.id)
+      .single();
+
+    if (error || !data) return [];
+    return Array.isArray(data.favourite_courses) ? data.favourite_courses : [];
   } catch {
     return [];
   }
 }
 
-export function saveFavouriteCourseIds(ids) {
+export async function saveFavouriteCourseIds(ids) {
   try {
     const unique = Array.from(
-      new Set((ids || []).filter((id) => typeof id === "string" && id.length > 0)),
+      new Set((ids || []).filter((id) => typeof id === "string" && id.length > 0))
     );
-    localStorage.setItem(FAVOURITE_COURSES_KEY, JSON.stringify(unique));
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return unique;
+
+    await supabase
+      .from("profiles")
+      .update({ favourite_courses: unique })
+      .eq("id", user.id);
+
     return unique;
   } catch {
     return Array.isArray(ids) ? ids : [];
   }
 }
 
-export function toggleFavouriteCourseId(courseId) {
-  const current = loadFavouriteCourseIds();
-  const next = current.includes(courseId)
-    ? current.filter((id) => id !== courseId)
-    : [...current, courseId];
+export async function toggleFavouriteCourseId(courseId, currentIds) {
+  const next = currentIds.includes(courseId)
+    ? currentIds.filter((id) => id !== courseId)
+    : [...currentIds, courseId];
   return saveFavouriteCourseIds(next);
 }
-

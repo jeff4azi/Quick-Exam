@@ -38,7 +38,15 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
-  const [favouriteIds, _] = useState(() => loadFavouriteCourseIds());
+  const [favouriteIds, setFavouriteIds] = useState([]);
+  const [favouritesLoading, setFavouritesLoading] = useState(true);
+
+  useEffect(() => {
+    loadFavouriteCourseIds().then((ids) => {
+      setFavouriteIds(ids);
+      setFavouritesLoading(false);
+    });
+  }, []);
   const [recentCourses, setRecentCourses] = useState([]);
   const [recentCoursesLoading, setRecentCoursesLoading] = useState(true);
   const [stats, setStats] = useState({
@@ -206,7 +214,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
       const { data, error } = await withTimeout(
         supabase
           .from("exam_attempts")
-          .select("id, course_id, score, total_questions, time_taken, date_taken")
+          .select("id, course_id, score, total_questions, time_taken, date_taken, type")
           .eq("user_id", user.id)
           .order("date_taken", { ascending: false })
           .limit(5),
@@ -228,6 +236,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
           score: r.score,
           total: r.total_questions,
           timeTaken: r.time_taken,
+          type: r.type,
         }))
       );
     } catch {
@@ -435,6 +444,15 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                         <p className="mt-1 text-lg font-black text-slate-900 dark:text-white truncate">
                           {item?.course || "Course"}
                         </p>
+                        {item?.type && (
+                          <span className={`mt-1 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
+                            item.type === "THY"
+                              ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                              : "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                          }`}>
+                            {item.type === "THY" ? "Theory" : "Obj"}
+                          </span>
+                        )}
                       </div>
                       <div className="size-10 rounded-2xl bg-slate-100 dark:bg-slate-700/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-semibold">
                         {parseFloat((Number(item?.score) || 0).toFixed(2))}/{item?.total ?? 0}
@@ -469,7 +487,24 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
             Favourite courses
           </h3>
 
-          {favouriteCourses.length === 0 ? (
+          {favouritesLoading ? (
+            <div className="flex gap-4 overflow-hidden">
+              {[...Array(3)].map((_, i) => (
+                <div
+                  key={i}
+                  className="min-w-64 bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-200 dark:border-slate-700 animate-pulse"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex flex-col gap-2 flex-1">
+                      <div className="h-4 w-20 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                      <div className="h-3 w-32 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                    </div>
+                    <div className="h-6 w-12 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : favouriteCourses.length === 0 ? (
             <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-500/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
               You haven’t favourited any courses yet. Tap the heart on the
               Courses screen.

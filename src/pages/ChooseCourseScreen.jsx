@@ -35,9 +35,11 @@ const ChooseCourseScreen = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [theoryOverlayOpen, setTheoryOverlayOpen] = useState(false);
-  const [favouriteIds, setFavouriteIds] = useState(() =>
-    loadFavouriteCourseIds(),
-  );
+  const [favouriteIds, setFavouriteIds] = useState([]);
+
+  useEffect(() => {
+    loadFavouriteCourseIds().then(setFavouriteIds);
+  }, []);
 
   const userCollege = userProfile?.college;
 
@@ -297,8 +299,7 @@ const ChooseCourseScreen = ({
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                const next = toggleFavouriteCourseId(course.id);
-                                setFavouriteIds(next);
+                                toggleFavouriteCourseId(course.id, favouriteIds).then(setFavouriteIds);
                               }}
                               className={`size-10 shrink-0 rounded-2xl flex items-center justify-center transition-all active:scale-90 ${isSelected
                                   ? "bg-white/20 text-white"
