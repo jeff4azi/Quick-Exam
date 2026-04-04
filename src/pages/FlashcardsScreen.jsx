@@ -55,23 +55,27 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
       const endpoint = course.questionsEndpoint || `/courses/${course.id}/questions`;
       const baseUrl = `${API_BASE_URL}${endpoint}`;
 
-      const [objRes, thyRes] = await Promise.all([
+      const [objRes, thyRes, fibRes] = await Promise.all([
         fetch(baseUrl),
         fetch(`${baseUrl}?type=theory`),
+        fetch(`${baseUrl}?type=fib`),
       ]);
 
-      const [objData, thyData] = await Promise.all([
+      const [objData, thyData, fibData] = await Promise.all([
         objRes.json(),
         thyRes.json(),
+        fibRes.json(),
       ]);
 
       const objective = objRes.ok && Array.isArray(objData) ? objData : [];
-      // tag theory questions so FlashCard knows to use modal_answer
       const theory = thyRes.ok && Array.isArray(thyData)
         ? thyData.map((q) => ({ ...q, type: "theory" }))
         : [];
+      const fib = fibRes.ok && Array.isArray(fibData)
+        ? fibData.map((q) => ({ ...q, type: "fib" }))
+        : [];
 
-      const all = [...objective, ...theory];
+      const all = [...objective, ...theory, ...fib];
       if (all.length === 0) throw new Error("No questions found for this course.");
 
       setQuestions(all);
