@@ -41,7 +41,11 @@ const LeaderboardScreen = ({
   const [examType, setExamType] = useState("OBJ");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
-  const questionCountOptions = examType === "THY" ? ["all", 3, 5, 7, 10] : ["all", 30, 50, 70, 100];
+  const questionCountOptions = examType === "THY"
+    ? ["all", 3, 5, 7, 10]
+    : examType === "FIB"
+      ? ["all", 10, 15, 20, 30]
+      : ["all", 30, 50, 70, 100];
 
   useEffect(() => {
     setSelectedCourseId("all");
@@ -62,6 +66,7 @@ const LeaderboardScreen = ({
   const fetchLeaderboardData = useCallback(async () => {
     setLoading(true);
     setError(null);
+    setAttempts([]); // clear stale data immediately so old type doesn't show
 
     try {
       const weekStartIso = getCurrentWeekStartIso();
@@ -79,7 +84,8 @@ const LeaderboardScreen = ({
             time_taken,
             date_taken,
             is_retake,
-            university
+            university,
+            type
           `,
           )
           .eq("is_retake", false)
@@ -101,7 +107,9 @@ const LeaderboardScreen = ({
         return;
       }
 
-      const safeAttempts = attemptsData || [];
+      const safeAttempts = (attemptsData || []).filter(
+        (a) => (a.type ?? "OBJ") === examType
+      );
       setAttempts(safeAttempts);
 
       const userIds = Array.from(
@@ -191,10 +199,13 @@ const LeaderboardScreen = ({
     // 1. University filter
     const universityFiltered =
       universityFilter === "mine"
-        ? attempts.filter((a) =>
-          (a.university ?? "").trim().toLowerCase() ===
-          (userProfile?.university ?? "").trim().toLowerCase()
-        )
+        ? attempts.filter((a) => {
+          const attemptUni = (a.university ?? "").trim().toLowerCase();
+          const userUni = (userProfile?.university ?? "").trim().toLowerCase();
+          if (!userUni) return true; // no university set — show all
+          if (!attemptUni) return false; // attempt has no university — exclude
+          return attemptUni === userUni;
+        })
         : attempts;
 
     // 2. Course filter
@@ -319,6 +330,7 @@ const LeaderboardScreen = ({
             {[
               { key: "OBJ", label: "Objective" },
               { key: "THY", label: "Theory" },
+              { key: "FIB", label: "Fill in Blank" },
             ].map(({ key, label }) => (
               <button
                 key={key}

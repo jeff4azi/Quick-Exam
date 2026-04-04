@@ -62,6 +62,7 @@ const ChooseCourseScreen = ({
         (userCollege && course.colleges.includes(userCollege));
       if (!collegeMatch) return false;
       if (questionType === "theory") return (course.theoryQuestionCount || 0) > 0;
+      if (questionType === "fib") return (course.fibQuestionCount || 0) > 0;
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         return (
@@ -118,6 +119,12 @@ const ChooseCourseScreen = ({
       const theoryOptions = [3, 5, 7, 10];
       const count = course?.theoryQuestionCount || 0;
       const filtered = theoryOptions.filter(opt => count >= opt);
+      return [...filtered, "All"];
+    }
+    if (questionType === "fib") {
+      const fibOptions = [10, 15, 20, 30];
+      const count = course?.fibQuestionCount || 0;
+      const filtered = fibOptions.filter(opt => count >= opt);
       return [...filtered, "All"];
     }
     const options = [30, 50, 70, 100];
@@ -179,6 +186,7 @@ const ChooseCourseScreen = ({
             {[
               { key: "objective", label: "Objective" },
               { key: "theory", label: "Theory" },
+              { key: "fib", label: "Fill in Blank" },
             ].map(({ key, label }) => {
               const isLocked = key === "theory" && !isPremium;
               return (
@@ -311,7 +319,7 @@ const ChooseCourseScreen = ({
                                 }`}
                             >
                               <FiBookOpen />
-                              {(questionType === "theory" ? course.theoryQuestionCount : course.questionCount) || 0} Questions
+                              {(questionType === "theory" ? course.theoryQuestionCount : questionType === "fib" ? course.fibQuestionCount : course.questionCount) || 0} Questions
                             </div>
                           </div>
 
@@ -380,7 +388,11 @@ const ChooseCourseScreen = ({
               <div className="grid grid-cols-2 gap-3 mt-8">
                 {getAvailableQuestionOptions(selectedCourse).map(
                   (num) => {
-                    const isLocked = !isPremium && num !== 30; // Only 30 questions allowed for free users
+                    const isLocked = !isPremium && (
+                      questionType === "fib" ? num !== 10 :
+                      questionType === "theory" ? num !== 3 :
+                      num !== 30
+                    );
 
                     return (
                       <button

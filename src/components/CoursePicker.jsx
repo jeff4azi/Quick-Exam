@@ -72,7 +72,7 @@ const CoursePicker = ({ courses, loading, onSelect, onBack, title = "Study", sub
                     </p>
                   </div>
                   <span className="shrink-0 px-3 py-1 rounded-full bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 text-[10px] font-bold tracking-wider">
-                    {(course.questionCount || 0) + (course.theoryQuestionCount || 0)} Qs
+                    {(course.questionCount || 0) + (course.theoryQuestionCount || 0) + (course.fibQuestionCount || 0)} Qs
                   </span>
                 </div>
               </button>

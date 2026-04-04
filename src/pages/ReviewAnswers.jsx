@@ -79,6 +79,7 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
           const userAnswer = answers[index];
           const isTheory =
             Array.isArray(question.keywords) || question.type === "theory";
+          const isFib = Array.isArray(question.answers) || question.type === "fib";
 
           if (isTheory) {
             const matchedGroups = Array.isArray(question.keywords)
@@ -149,6 +150,67 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
           const correctAnswer = question.correct;
           const isCorrect = userAnswer === correctAnswer;
           const isAnswered = userAnswer !== undefined;
+
+          if (isFib) {
+            const userBlanks = Array.isArray(userAnswer) ? userAnswer : [];
+            const answerGroups = Array.isArray(question.answers) ? question.answers : [];
+            const parts = question.question.split(/_{2,}/g);
+
+            return (
+              <div
+                key={index}
+                className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow duration-300"
+              >
+                <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-[10px] font-black uppercase tracking-widest mb-3">
+                  Fill in the Blank
+                </div>
+                <div className="font-semibold text-gray-800 dark:text-gray-200 text-lg mb-4 leading-loose">
+                  {index + 1}.{" "}
+                  {parts.map((part, i) => {
+                    const typed = (userBlanks[i] || "").trim().toLowerCase();
+                    const group = answerGroups[i];
+                    const accepted = Array.isArray(group) ? group.map(v => v.toLowerCase()) : [];
+                    const isCorrectBlank = accepted.includes(typed);
+                    const correctLabel = Array.isArray(group) ? group[0] : "";
+                    return (
+                      <span key={i}>
+                        {part}
+                        {i < parts.length - 1 && (
+                          <span className="inline-flex flex-col items-center mx-1 align-bottom">
+                            <span className={`font-bold border-b-2 px-2 min-w-[3rem] text-center ${
+                              userBlanks[i]
+                                ? isCorrectBlank
+                                  ? "text-green-600 border-green-500"
+                                  : "text-red-500 border-red-400"
+                                : "text-gray-400 border-gray-300 italic"
+                            }`}>
+                              {userBlanks[i] || "—"}
+                            </span>
+                            {!isCorrectBlank && userBlanks[i] && (
+                              <span className="text-[10px] text-green-600 font-bold mt-0.5">
+                                ✓ {correctLabel}
+                              </span>
+                            )}
+                          </span>
+                        )}
+                      </span>
+                    );
+                  })}
+                </div>
+                <div className="mt-3 flex justify-end">
+                  <a
+                    href={`https://wa.me/2347015585397?text=${encodeURIComponent(`*Question Report*\n\n*ID:* ${question.id}\n\n*Question:* ${question.question}\n\n*User's Answers:* ${userBlanks.join(", ") || "Not answered"}\n\n*Correct Answers:* ${answerGroups.map(g => g[0]).join(", ")}`)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-bold border border-amber-100 dark:border-amber-500/20 active:scale-95 transition-all"
+                  >
+                    <FiAlertTriangle size={12} />
+                    Report Question
+                  </a>
+                </div>
+              </div>
+            );
+          }
 
           return (
             <div

@@ -20,8 +20,9 @@ import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import { FaCrown } from "react-icons/fa";
 
-const calculateTotalTime = (questionCount, isMath, isTheory) => {
+const calculateTotalTime = (questionCount, isMath, isTheory, isFib) => {
   if (isTheory) return questionCount * 4.5 * 60; // 4m30s per theory question
+  if (isFib) return Math.ceil((questionCount / 10) * 3.5 * 60); // 4min per 10 fib questions
   const timePer10 = isMath ? 6 * 60 : 3.33 * 60;
   return Math.ceil((questionCount / 10) * timePer10);
 };
@@ -57,6 +58,27 @@ const gradeTheoryAnswer = (userAnswer, rawKeywords) => {
 const isTheoryQuestion = (q) =>
   q?.type === "theory" || Array.isArray(q?.keywords);
 
+const isFibQuestion = (q) => q?.type === "fib" || Array.isArray(q?.answers);
+
+// Grade a FIB question — answers is array of accepted-value groups per blank
+// userBlanks is an array of strings typed by the user
+const gradeFibAnswer = (userBlanks, answerGroups) => {
+  if (!Array.isArray(answerGroups) || answerGroups.length === 0) return 0;
+  if (!Array.isArray(userBlanks)) return 0;
+  let correct = 0;
+  for (let i = 0; i < answerGroups.length; i++) {
+    const group = answerGroups[i]; // e.g. ["Niger"] or ["third","3rd"]
+    const typed = (userBlanks[i] || "").trim().toLowerCase();
+    if (Array.isArray(group) && group.some((v) => v.toLowerCase() === typed)) {
+      correct++;
+    }
+  }
+  return correct / answerGroups.length; // fractional 0–1
+};
+
+// Split question text on _____ sequences, return array of parts
+const splitFibQuestion = (text) => text.split(/_{2,}/g);
+
 const shuffleArray = (array) => {
   const arr = [...array];
   for (let i = arr.length - 1; i > 0; i--) {
@@ -91,6 +113,7 @@ const ExamScreen = ({
 }) => {
   const isMathCourse = selectedCourse?.id === "MTH101";
   const isTheoryExam = questionType === "theory";
+  const isFibExam = questionType === "fib";
   const navigate = useNavigate();
 
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
@@ -139,8 +162,8 @@ const ExamScreen = ({
     ? shuffledQuestions.length || questions.length
     : 0;
   const totalTime = useMemo(
-    () => calculateTotalTime(totalQuestions, isMathCourse, isTheoryExam),
-    [totalQuestions, isMathCourse, isTheoryExam],
+    () => calculateTotalTime(totalQuestions, isMathCourse, isTheoryExam, isFibExam),
+    [totalQuestions, isMathCourse, isTheoryExam, isFibExam],
   );
 
   const currentQuestion = shuffledQuestions[currentIndex];
@@ -343,7 +366,7 @@ const ExamScreen = ({
         time_taken: finalTime,
         is_retake: hasRetaken,
         university: userProfile?.university || null,
-        type: isTheoryExam ? "THY" : "OBJ",
+        type: isTheoryExam ? "THY" : isFibExam ? "FIB" : "OBJ",
       });
 
       // 🔥 STEP 5: If JWT expired during insert → retry ONCE
@@ -366,7 +389,7 @@ const ExamScreen = ({
           time_taken: finalTime,
           is_retake: hasRetaken,
           university: userProfile?.university || null,
-          type: isTheoryExam ? "THY" : "OBJ",
+          type: isTheoryExam ? "THY" : isFibExam ? "FIB" : "OBJ",
         });
 
         if (retry.error) throw retry.error;
@@ -439,6 +462,9 @@ const ExamScreen = ({
       if (isTheoryQuestion(q)) {
         return acc + gradeTheoryAnswer(answers[idx], q.keywords); // fractional 0–1
       }
+      if (isFibQuestion(q)) {
+        return acc + gradeFibAnswer(answers[idx], q.answers); // fractional 0–1
+      }
       return acc + (answers[idx] === q.correct ? 1 : 0);
     }, 0);
 
@@ -465,6 +491,9 @@ const ExamScreen = ({
     const correctCount = shuffledQuestions.reduce((acc, q, idx) => {
       if (isTheoryQuestion(q)) {
         return acc + gradeTheoryAnswer(answers[idx], q.keywords); // fractional 0–1
+      }
+      if (isFibQuestion(q)) {
+        return acc + gradeFibAnswer(answers[idx], q.answers); // fractional 0–1
       }
       return acc + (answers[idx] === q.correct ? 1 : 0);
     }, 0);
@@ -572,7 +601,7 @@ const ExamScreen = ({
           <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-gray-50 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex justify-between items-center mb-4">
               <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">
-                {selectedCourse.name}
+                {selectedCourse.name} {isFibExam ? "· FIB" : isTheoryExam ? "· Theory" : ""}
               </div>
               <button
                 onClick={
@@ -594,10 +623,41 @@ const ExamScreen = ({
             </div>
 
             <div className="lg:text-xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-5">
-              <RenderMathText
-                text={currentQuestion?.question ?? ""}
-                courseId={selectedCourse?.id}
-              />
+              {isFibQuestion(currentQuestion) ? (
+                <span className="leading-[2.4]">
+                  {splitFibQuestion(currentQuestion.question).map((part, i, arr) => {
+                    const blanks = Array.isArray(selectedOption) ? selectedOption : [];
+                    return (
+                      <span key={i}>
+                        {part}
+                        {i < arr.length - 1 && (
+                          <input
+                            type="text"
+                            value={blanks[i] ?? ""}
+                            size={Math.max(6, (blanks[i] ?? "").length + 2)}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setAnswers((prev) => {
+                                const next = Array.isArray(prev) ? [...prev] : [];
+                                const cur = Array.isArray(next[currentIndex]) ? [...next[currentIndex]] : [];
+                                cur[i] = val;
+                                next[currentIndex] = cur;
+                                return next;
+                              });
+                            }}
+                            className="inline mx-1 bg-transparent border-b-2 border-blue-500 dark:border-blue-400 text-blue-700 dark:text-blue-300 font-bold text-base focus:outline-none focus:border-blue-700 dark:focus:border-blue-300 transition-colors text-center"
+                          />
+                        )}
+                      </span>
+                    );
+                  })}
+                </span>
+              ) : (
+                <RenderMathText
+                  text={currentQuestion?.question ?? ""}
+                  courseId={selectedCourse?.id}
+                />
+              )}
             </div>
 
             <div className="space-y-4">
@@ -616,8 +676,8 @@ const ExamScreen = ({
                   rows={6}
                   className="w-full rounded-2xl border-2 border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-medium p-4 text-sm resize-none focus:outline-none focus:border-blue-500 dark:focus:border-blue-400 transition-colors"
                 />
-              ) : (
-                currentQuestion?.options.map((option, index) => {
+              ) : isFibQuestion(currentQuestion) ? null : (
+                (currentQuestion?.options ?? []).map((option, index) => {
                   const isSelected = selectedOption === option;
                   const label = String.fromCharCode(65 + index);
 

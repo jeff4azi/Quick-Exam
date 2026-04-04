@@ -249,6 +249,10 @@ function App() {
         setQuestionType("theory");
       }
 
+      if (parsed?.questionType === "fib") {
+        setQuestionType("fib");
+      }
+
       if (parsed?.selectedCourse) {
         setSelectedCourse(parsed.selectedCourse);
       }
@@ -319,6 +323,8 @@ function App() {
         const url = new URL(`${API_BASE_URL}${endpoint}`);
         if (requestQuestionType === "theory") {
           url.searchParams.set("type", "theory");
+        } else if (requestQuestionType === "fib") {
+          url.searchParams.set("type", "fib");
         }
 
         const res = await fetch(url.toString());

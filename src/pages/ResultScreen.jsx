@@ -374,7 +374,7 @@ const ResultScreen = ({
                   {formatNum(questions.length)}
                 </span>
                 <span className="text-[9px] font-bold text-blue-500 uppercase">
-                  {questionType === "theory" ? "thy" : "obj"}
+                  {questionType === "theory" ? "thy" : questionType === "fib" ? "fib" : "obj"}
                 </span>
               </div>
             </div>
