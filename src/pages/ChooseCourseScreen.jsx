@@ -185,8 +185,8 @@ const ChooseCourseScreen = ({
           <div className="inline-flex bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
             {[
               { key: "objective", label: "Objective" },
-              { key: "theory", label: "Theory" },
               { key: "fib", label: "Fill in Blank" },
+              { key: "theory", label: "Theory" },
             ].map(({ key, label }) => {
               const isLocked = key === "theory" && !isPremium;
               return (

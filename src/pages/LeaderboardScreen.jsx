@@ -329,8 +329,8 @@ const LeaderboardScreen = ({
           <div className="inline-flex bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
             {[
               { key: "OBJ", label: "Objective" },
-              { key: "THY", label: "Theory" },
               { key: "FIB", label: "Fill in Blank" },
+              { key: "THY", label: "Theory" },
             ].map(({ key, label }) => (
               <button
                 key={key}
