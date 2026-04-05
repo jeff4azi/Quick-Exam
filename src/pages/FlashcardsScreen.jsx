@@ -8,7 +8,45 @@ import {
   FiChevronRight,
   FiShuffle,
   FiRotateCcw,
+  FiX,
 } from "react-icons/fi";
+import { FaCrown } from "react-icons/fa";
+
+const FREE_CARD_LIMIT = 20;
+
+// ─── Premium gate overlay ────────────────────────────────────────────────────
+const PremiumGateOverlay = ({ onUpgrade, onDismiss }) => (
+  <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4">
+    <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm animate-in fade-in duration-300" />
+    <div className="relative bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl w-full max-w-sm p-8 animate-in zoom-in-95 slide-in-from-bottom-8 duration-300 ease-out">
+      <div className="flex flex-col items-center text-center">
+        <div className="mb-5 size-20 rounded-3xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
+          <FaCrown className="text-amber-500" size={36} />
+        </div>
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
+          Free limit reached
+        </h2>
+        <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-8 px-2">
+          You&apos;ve studied {FREE_CARD_LIMIT} cards. Upgrade to Premium to access all flashcards and shuffle.
+        </p>
+        <div className="flex flex-col w-full gap-3">
+          <button
+            onClick={onUpgrade}
+            className="w-full py-4 rounded-2xl font-bold text-white bg-amber-500 hover:bg-amber-600 shadow-lg shadow-amber-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
+          >
+            <FaCrown size={14} /> Go Premium
+          </button>
+          <button
+            onClick={onDismiss}
+            className="w-full py-4 rounded-2xl font-bold text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
+          >
+            <FiX size={14} /> Maybe later
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -45,6 +83,7 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [stats, setStats] = useState({}); // { [questionId]: { seen, correct, wrong } }
+  const [showPremiumGate, setShowPremiumGate] = useState(false);
 
   // ── fetch questions when a course is selected ──
   // Fetches both objective and theory questions and merges them.
@@ -78,7 +117,7 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
       const all = [...objective, ...theory, ...fib];
       if (all.length === 0) throw new Error("No questions found for this course.");
 
-      setQuestions(all);
+      setQuestions(isPremium ? all : all.slice(0, FREE_CARD_LIMIT));
       setStats({});
       setCurrentIndex(0);
       setIsFlipped(false);
@@ -104,7 +143,13 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
   };
 
   const handlePrev = () => goTo(Math.max(0, currentIndex - 1));
-  const handleNext = () => goTo(Math.min(questions.length - 1, currentIndex + 1));
+  const handleNext = () => {
+    if (!isPremium && currentIndex === questions.length - 1) {
+      setShowPremiumGate(true);
+      return;
+    }
+    goTo(Math.min(questions.length - 1, currentIndex + 1));
+  };
 
   const handleShuffle = () => {
     setQuestions((prev) => shuffle(prev));
@@ -136,6 +181,8 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
     // auto-advance after rating
     if (currentIndex < questions.length - 1) {
       goTo(currentIndex + 1);
+    } else if (!isPremium) {
+      setShowPremiumGate(true);
     }
   };
 
@@ -213,6 +260,14 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col transition-colors duration-500">
 
+      {/* Premium gate overlay */}
+      {showPremiumGate && (
+        <PremiumGateOverlay
+          onUpgrade={() => navigate("/premium")}
+          onDismiss={() => setShowPremiumGate(false)}
+        />
+      )}
+
       {/* ── Header ── */}
       <div className="sticky top-0 z-20 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-5 pb-3 border-b border-gray-100 dark:border-slate-800">
         <div className="max-w-2xl mx-auto">
@@ -236,11 +291,17 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
 
             <div className="flex gap-2">
               <button
-                onClick={handleShuffle}
-                title="Shuffle"
-                className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm active:scale-90 transition-all text-slate-500 dark:text-slate-400"
+                onClick={isPremium ? handleShuffle : undefined}
+                disabled={!isPremium}
+                title={isPremium ? "Shuffle" : "Premium only"}
+                className={`relative p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm transition-all ${
+                  isPremium
+                    ? "active:scale-90 text-slate-500 dark:text-slate-400"
+                    : "opacity-40 cursor-not-allowed text-slate-400 dark:text-slate-500"
+                }`}
               >
                 <FiShuffle className="size-4" />
+                {!isPremium && <FaCrown className="size-2.5 text-amber-400 absolute -top-0.5 -right-0.5" />}
               </button>
               <button
                 onClick={handleRestart}
