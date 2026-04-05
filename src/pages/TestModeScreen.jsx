@@ -6,10 +6,46 @@ import CoursePicker from "../components/CoursePicker";
 import { RenderMathText } from "../utils/RenderMathText";
 import ProgressBar from "../components/ProgressBar";
 import {
-  FiChevronLeft, FiChevronRight, FiSend, FiLoader, FiCheckCircle, FiXCircle,
+  FiChevronLeft, FiChevronRight, FiSend, FiLoader, FiCheckCircle, FiXCircle, FiX,
 } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
 import { withTimeout } from "../utils/withTimeout";
+
+const FREE_QUESTION_LIMIT = 5;
+
+// ─── Premium gate overlay ─────────────────────────────────────────────────────
+const PremiumGateOverlay = ({ onUpgrade, onQuit }) => (
+  <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4">
+    <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm animate-in fade-in duration-300" />
+    <div className="relative bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl w-full max-w-sm p-8 animate-in zoom-in-95 slide-in-from-bottom-8 duration-300 ease-out">
+      <div className="flex flex-col items-center text-center">
+        <div className="mb-5 size-20 rounded-3xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
+          <FaCrown className="text-amber-500" size={36} />
+        </div>
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
+          Free limit reached
+        </h2>
+        <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-8 px-2">
+          You&apos;ve answered {FREE_QUESTION_LIMIT} questions. Upgrade to Premium for unlimited tests and full access.
+        </p>
+        <div className="flex flex-col w-full gap-3">
+          <button
+            onClick={onUpgrade}
+            className="w-full py-4 rounded-2xl font-bold text-white bg-amber-500 hover:bg-amber-600 shadow-lg shadow-amber-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
+          >
+            <FaCrown size={14} /> Go Premium
+          </button>
+          <button
+            onClick={onQuit}
+            className="w-full py-4 rounded-2xl font-bold text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
+          >
+            <FiX size={14} /> Quit Test
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 const shuffle = (arr) => {
@@ -137,6 +173,7 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
   const [currentInput, setCurrentInput] = useState(undefined);
 
   const isSubmittingRef = useRef(false);
+  const [showPremiumGate, setShowPremiumGate] = useState(false);
 
   // ── fetch questions ──
   const fetchQuestions = useCallback(async (course, count) => {
@@ -189,7 +226,15 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
     if (answered[currentIndex]) return;
     const ans = currentInput;
     setAnswers((prev) => { const n = [...prev]; n[currentIndex] = ans; return n; });
-    setAnswered((prev) => { const n = [...prev]; n[currentIndex] = true; return n; });
+    setAnswered((prev) => {
+      const n = [...prev]; n[currentIndex] = true;
+      // trigger premium gate for free users after FREE_QUESTION_LIMIT answers
+      if (!isPremium) {
+        const newCount = n.filter(Boolean).length;
+        if (newCount >= FREE_QUESTION_LIMIT) setShowPremiumGate(true);
+      }
+      return n;
+    });
   };
 
   // When navigating to a question, restore its input
@@ -337,6 +382,13 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
 
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col transition-colors duration-500">
+      {/* Premium gate overlay */}
+      {showPremiumGate && (
+        <PremiumGateOverlay
+          onUpgrade={() => navigate("/premium")}
+          onQuit={() => { setShowPremiumGate(false); setPhase("pick"); }}
+        />
+      )}
       {/* Header */}
       <div className="sticky top-0 z-30 bg-gray-50/80 dark:bg-slate-900/80 backdrop-blur-md px-5 pt-6 pb-2">
         <div className="max-w-2xl mx-auto flex justify-between items-center mb-4">
