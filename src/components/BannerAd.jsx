@@ -29,7 +29,7 @@ const AD_DATABASE = [
   },
   {
     type: "image",
-    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1775054933/2347015585397_whb6dw.png",
+    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1775405359/flyer_fcbjfw.png",
     duration: 5,
     whatsapp: "2347015585397",
     message:
