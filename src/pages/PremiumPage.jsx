@@ -242,11 +242,15 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
           </p>
           <div className="space-y-4 px-2 pb-8">
             {[
-              "More Questions to Answer",
+              "Unlimited Questions in Every Exam",
+              "Full Flashcard Decks + Shuffle",
+              "Theory Exam Mode",
               "No Ads",
               "Bookmark Questions",
               "Retake Exams",
               "Review Answers & See Failures",
+              "More Question Count Options (30, 50+)",
+              "Auto-Advance Questions",
             ].map((benefit, index) => (
               <div key={index} className="flex items-start gap-3">
                 <div className="size-5 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">
