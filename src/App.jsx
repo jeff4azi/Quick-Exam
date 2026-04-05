@@ -34,6 +34,8 @@ import { loadExamSession } from "./utils/examSessionStorage";
 import FlashcardsScreen from "./pages/FlashcardsScreen";
 import MatchScreen from "./pages/MatchScreen";
 import MatchResultScreen from "./pages/MatchResultScreen";
+import TestModeScreen from "./pages/TestModeScreen";
+import TestResultScreen from "./pages/TestResultScreen";
 
 function App() {
   const [userProfile, setUserProfile] = useState(null);
@@ -715,6 +717,29 @@ function App() {
               element={
                 <ProtectedRoute>
                   {withDesktop(<MatchResultScreen />)}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/test"
+              element={
+                <ProtectedRoute>
+                  {withDesktop(
+                    <TestModeScreen
+                      courses={availableCourses}
+                      coursesLoading={coursesLoading}
+                      isPremium={isPremium}
+                      userProfile={userProfile}
+                    />
+                  )}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/test-result"
+              element={
+                <ProtectedRoute>
+                  {withDesktop(<TestResultScreen />)}
                 </ProtectedRoute>
               }
             />

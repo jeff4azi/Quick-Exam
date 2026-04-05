@@ -381,7 +381,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
         )}
 
         {/* Study Modes */}
-        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1">
+        <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1 -mb-3">
           Study Modes
         </h3>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
@@ -398,7 +398,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
               description: "Check your understanding",
               bg: "bg-sky-50 dark:bg-sky-900/20",
               icon: "📝",
-              onClick: () => navigate("/"),
+              onClick: () => navigate("/test"),
             },
             {
               title: "Match",
