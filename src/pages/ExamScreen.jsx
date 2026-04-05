@@ -15,10 +15,47 @@ import {
   FiSend,
   FiChevronRight,
   FiLoader,
+  FiX,
 } from "react-icons/fi";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import { FaCrown } from "react-icons/fa";
+
+const FREE_FIB_LIMIT = 8;
+
+// ─── Premium gate overlay (FIB) ──────────────────────────────────────────────
+const FibPremiumGateOverlay = ({ onUpgrade, onQuit }) => (
+  <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-4">
+    <div className="absolute inset-0 bg-slate-900/70 backdrop-blur-sm animate-in fade-in duration-300" />
+    <div className="relative bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl w-full max-w-sm p-8 animate-in zoom-in-95 slide-in-from-bottom-8 duration-300 ease-out">
+      <div className="flex flex-col items-center text-center">
+        <div className="mb-5 size-20 rounded-3xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center">
+          <FaCrown className="text-amber-500" size={36} />
+        </div>
+        <h2 className="text-2xl font-black text-slate-900 dark:text-white mb-2 tracking-tight">
+          Free limit reached
+        </h2>
+        <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-8 px-2">
+          You&apos;ve answered {FREE_FIB_LIMIT} fill-in-the-blank questions. Upgrade to Premium for unlimited access.
+        </p>
+        <div className="flex flex-col w-full gap-3">
+          <button
+            onClick={onUpgrade}
+            className="w-full py-4 rounded-2xl font-bold text-white bg-amber-500 hover:bg-amber-600 shadow-lg shadow-amber-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
+          >
+            <FaCrown size={14} /> Go Premium
+          </button>
+          <button
+            onClick={onQuit}
+            className="w-full py-4 rounded-2xl font-bold text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors flex items-center justify-center gap-2"
+          >
+            <FiX size={14} /> Quit Exam
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
 const calculateTotalTime = (questionCount, isMath, isTheory, isFib) => {
   if (isTheory) return questionCount * 4.5 * 60; // 4m30s per theory question
@@ -152,6 +189,7 @@ const ExamScreen = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const isSubmittingRef = useRef(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+  const [isFibGateOpen, setFibGateOpen] = useState(false);
 
   const hasMatchingQuestions =
     questionsContext?.courseId === selectedCourse?.id &&
@@ -741,6 +779,10 @@ const ExamScreen = ({
           ) : (
             <button
               onClick={() => {
+                if (isFibExam && !isPremium && currentIndex >= FREE_FIB_LIMIT - 1) {
+                  setFibGateOpen(true);
+                  return;
+                }
                 setCurrentIndex((prev) =>
                   Math.min(totalQuestions - 1, prev + 1),
                 );
@@ -787,6 +829,13 @@ const ExamScreen = ({
         confirmText="Upgrade to Premium"
         cancelText="Not now"
       />
+
+      {isFibGateOpen && (
+        <FibPremiumGateOverlay
+          onUpgrade={() => navigate("/premium")}
+          onQuit={() => { setFibGateOpen(false); clearExamSession(); navigate("/"); }}
+        />
+      )}
     </div>
   );
 };
