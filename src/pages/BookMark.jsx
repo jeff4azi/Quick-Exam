@@ -193,6 +193,9 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
             <div className="space-y-5">
               {bookmarkedQuestions.map((question, index) => {
                 const isTheory = Array.isArray(question.keywords) || question.type === "theory";
+                const isFib = question.type === "fib" || Array.isArray(question.answers);
+                const fibParts = isFib ? question.question.split(/_{2,}/g) : [];
+
                 return (
                   <div
                     key={question.id || index}
@@ -207,6 +210,11 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                         {isTheory && (
                           <span className="px-2.5 py-1 rounded-full bg-purple-100 dark:bg-purple-500/10 text-[10px] font-black tracking-wider text-purple-600 dark:text-purple-400">
                             THEORY
+                          </span>
+                        )}
+                        {isFib && (
+                          <span className="px-2.5 py-1 rounded-full bg-amber-100 dark:bg-amber-500/10 text-[10px] font-black tracking-wider text-amber-600 dark:text-amber-400">
+                            FILL IN BLANK
                           </span>
                         )}
                       </div>
@@ -224,14 +232,32 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                       <div className="flex gap-2">
                         <span className="text-blue-500 shrink-0">{index + 1}.</span>
                         <div className="flex-1 break-words whitespace-normal">
-                          <RenderMathText text={question.question} courseId={question.id} />
+                          {isFib ? (
+                            <span>
+                              {fibParts.map((part, i) => (
+                                <span key={i}>
+                                  <RenderMathText text={part} courseId={question.id} />
+                                  {i < fibParts.length - 1 && (
+                                    <span className="inline-flex items-center mx-1">
+                                      <span className="px-2.5 py-0.5 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-black text-sm border border-emerald-200 dark:border-emerald-500/30">
+                                        {Array.isArray(question.answers?.[i])
+                                          ? question.answers[i][0]
+                                          : "?"}
+                                      </span>
+                                    </span>
+                                  )}
+                                </span>
+                              ))}
+                            </span>
+                          ) : (
+                            <RenderMathText text={question.question} courseId={question.id} />
+                          )}
                         </div>
                       </div>
                     </div>
 
                     {isTheory ? (
                       <>
-                        {/* Model answer */}
                         {question.model_answer && (
                           <div className="mt-3 flex gap-3 p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-100/50 dark:border-emerald-500/10">
                             <FaLightbulb className="text-emerald-500 shrink-0 mt-0.5" size={16} />
@@ -242,6 +268,40 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                               <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
                                 {question.model_answer}
                               </p>
+                            </div>
+                          </div>
+                        )}
+                      </>
+                    ) : isFib ? (
+                      <>
+                        {/* FIB answers list */}
+                        {Array.isArray(question.answers) && question.answers.length > 0 && (
+                          <div className="mt-3 p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-100/50 dark:border-emerald-500/10 space-y-2">
+                            <p className="text-[11px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-2">
+                              Answers
+                            </p>
+                            {question.answers.map((group, i) => (
+                              <div key={i} className="flex items-center gap-2">
+                                <span className="size-5 rounded-md bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black shrink-0">
+                                  {i + 1}
+                                </span>
+                                <span className="text-sm font-black text-emerald-700 dark:text-emerald-300">
+                                  {Array.isArray(group) ? group.join(" / ") : group}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                        {question.reason && (
+                          <div className="mt-3 flex gap-3 p-4 rounded-2xl bg-blue-50/30 dark:bg-blue-500/5 border-l-4 border-blue-500">
+                            <FaLightbulb className="text-blue-500 shrink-0 mt-0.5" size={16} />
+                            <div className="space-y-1">
+                              <p className="text-[11px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                                Explanation
+                              </p>
+                              <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+                                <RenderMathText text={question.reason} courseId={question.id} />
+                              </div>
                             </div>
                           </div>
                         )}
