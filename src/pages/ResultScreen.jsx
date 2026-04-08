@@ -198,6 +198,9 @@ const ResultScreen = ({
           <h1 className="text-2xl font-black text-gray-800 dark:text-white tracking-tight">
             {selectedCourse.name}
           </h1>
+          <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-1">
+            {questionType === "theory" ? "Theory" : questionType === "fib" ? "Fill in the Blanks" : "Objectives"}
+          </p>
           <p className={`text-sm mt-2 font-bold ${feedback.color}`}>
             {feedback.msg}
           </p>
