@@ -363,10 +363,12 @@ const HistoryItem = ({ exam, onDelete }) => {
               className={`text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
                 exam.type === "THY"
                   ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                  : exam.type === "FIB"
+                  ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
                   : "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
               }`}
             >
-              {exam.type === "THY" ? "Theory" : "Obj"}
+              {exam.type === "THY" ? "Theory" : exam.type === "FIB" ? "Fill in Blanks" : "Obj"}
             </span>
           )}
 
