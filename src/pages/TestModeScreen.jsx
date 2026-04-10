@@ -522,7 +522,11 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
                 <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">Correct Answer</p>
                 {isThyQ ? (
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                    {parseKeywords(currentQuestion.keywords).flat().slice(0, 8).join(", ")}
+                    {currentQuestion.model_answer
+                      || currentQuestion.explanation
+                      || `Key points: ${parseKeywords(currentQuestion.keywords)
+                        .map((group) => (Array.isArray(group) ? group[0] : group))
+                        .join(", ")}`}
                   </p>
                 ) : (
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
