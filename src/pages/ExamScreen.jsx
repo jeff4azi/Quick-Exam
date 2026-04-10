@@ -191,6 +191,23 @@ const ExamScreen = ({
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [isFibGateOpen, setFibGateOpen] = useState(false);
 
+  const [kbHeight, setKbHeight] = useState(0);
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const handler = () => {
+      const height = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      setKbHeight(height);
+    };
+    vv.addEventListener("resize", handler);
+    vv.addEventListener("scroll", handler);
+    return () => {
+      vv.removeEventListener("resize", handler);
+      vv.removeEventListener("scroll", handler);
+    };
+  }, []);
+
   const hasMatchingQuestions =
     questionsContext?.courseId === selectedCourse?.id &&
     questionsContext?.questionType === questionType;
@@ -246,7 +263,7 @@ const ExamScreen = ({
         if (!Number.isFinite(savedSession.endsAtMs)) {
           const legacyTimeLeft =
             typeof savedSession.timeLeft === "number" &&
-            savedSession.timeLeft > 0
+              savedSession.timeLeft > 0
               ? savedSession.timeLeft
               : null;
           if (legacyTimeLeft != null) {
@@ -518,7 +535,8 @@ const ExamScreen = ({
 
     if (onSubmit) onSubmit(correctCount, shuffledQuestions.length, finalTime);
     clearExamSession();
-    navigate("/results");  };
+    navigate("/results");
+  };
 
   const handleTimeUp = async () => {
     if (isSubmittingRef.current) return;
@@ -544,7 +562,8 @@ const ExamScreen = ({
 
     if (onSubmit) onSubmit(correctCount, shuffledQuestions.length, finalTime);
     clearExamSession();
-    navigate("/results");  };
+    navigate("/results");
+  };
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
@@ -723,18 +742,16 @@ const ExamScreen = ({
                     <button
                       key={index}
                       onClick={() => onOptionClick(option)}
-                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
-                        isSelected
-                          ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
-                          : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                      }`}
+                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${isSelected
+                        ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
+                        : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
+                        }`}
                     >
                       <div
-                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
-                          isSelected
-                            ? "bg-blue-600 text-white"
-                            : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
-                        }`}
+                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isSelected
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                          }`}
                       >
                         {label}
                       </div>
@@ -756,7 +773,10 @@ const ExamScreen = ({
       </div>
 
       {/* BOTTOM NAVIGATION BAR */}
-      <div className="fixed bottom-0 inset-x-0 px-6 lg:pl-64 py-2 z-40">
+      <div
+        className="fixed bottom-0 inset-x-0 px-6 lg:pl-64 py-2 z-40 transition-all duration-200"
+        style={{ bottom: kbHeight }}
+      >
         <div className="max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-3">
           <button
             onClick={() => {
