@@ -130,11 +130,10 @@ const QuestionCountPicker = ({ isPremium, onSelect, onBack, courseName }) => (
             <button
               key={count}
               onClick={() => locked ? null : onSelect(count)}
-              className={`w-full flex items-center justify-between px-6 py-5 rounded-[1.8rem] border-2 transition-all active:scale-[0.98] ${
-                locked
-                  ? "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 opacity-60 cursor-not-allowed"
-                  : "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 shadow-sm"
-              }`}
+              className={`w-full flex items-center justify-between px-6 py-5 rounded-[1.8rem] border-2 transition-all active:scale-[0.98] ${locked
+                ? "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 opacity-60 cursor-not-allowed"
+                : "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 shadow-sm"
+                }`}
             >
               <span className="text-lg font-black text-slate-900 dark:text-white">{count} Questions</span>
               {locked ? (
@@ -174,6 +173,22 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
 
   const isSubmittingRef = useRef(false);
   const [showPremiumGate, setShowPremiumGate] = useState(false);
+  const [kbHeight, setKbHeight] = useState(0);
+
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const handler = () => {
+      const height = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+      setKbHeight(height);
+    };
+    vv.addEventListener("resize", handler);
+    vv.addEventListener("scroll", handler);
+    return () => {
+      vv.removeEventListener("resize", handler);
+      vv.removeEventListener("scroll", handler);
+    };
+  }, []);
 
   // ── fetch questions ──
   const fetchQuestions = useCallback(async (course, count) => {
@@ -244,7 +259,7 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
     } else {
       setCurrentInput(undefined);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentIndex]);
 
   const currentQuestion = questions[currentIndex];
@@ -479,19 +494,17 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
                       key={idx}
                       disabled={isAnswered}
                       onClick={() => !isAnswered && setCurrentInput(option)}
-                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${
-                        isRight
-                          ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                          : isWrong
-                            ? "border-red-400 bg-red-50 dark:bg-red-900/20"
-                            : isSelected
-                              ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
-                              : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                      }`}
+                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${isRight
+                        ? "border-green-500 bg-green-50 dark:bg-green-900/20"
+                        : isWrong
+                          ? "border-red-400 bg-red-50 dark:bg-red-900/20"
+                          : isSelected
+                            ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
+                            : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
+                        }`}
                     >
-                      <div className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
-                        isRight ? "bg-green-500 text-white" : isWrong ? "bg-red-400 text-white" : isSelected ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-slate-700 text-slate-500"
-                      }`}>
+                      <div className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isRight ? "bg-green-500 text-white" : isWrong ? "bg-red-400 text-white" : isSelected ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-slate-700 text-slate-500"
+                        }`}>
                         {label}
                       </div>
                       <div className={`text-left font-semibold ${isRight ? "text-green-700 dark:text-green-400" : isWrong ? "text-red-600 dark:text-red-400" : isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}>
@@ -523,7 +536,10 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
       </div>
 
       {/* Bottom nav */}
-      <div className="fixed bottom-0 inset-x-0 px-6 lg:pl-64 py-2 z-40">
+      <div
+        className="fixed bottom-0 inset-x-0 px-6 lg:pl-64 py-2 z-40 transition-all duration-200"
+        style={{ bottom: kbHeight }}
+      >
         <div className="max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-3">
           <button
             onClick={() => { setCurrentIndex((p) => Math.max(0, p - 1)); }}
