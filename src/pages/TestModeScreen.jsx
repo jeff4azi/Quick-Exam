@@ -92,21 +92,33 @@ const gradeQuestion = (q, answer) => {
   return answer === q.correct ? 1 : 0;
 };
 
-const isCorrect = (q, answer) => gradeQuestion(q, answer) >= 0.5;
+const getResult = (q, answer) => {
+  const grade = gradeQuestion(q, answer);
+  if (grade >= 1) return "correct";
+  if (grade > 0) return "partial";
+  return "wrong";
+};
 
 const QUESTION_COUNTS = [10, 20, 30, 50];
 
 // ─── FeedbackBadge shown after answering ─────────────────────────────────────
-const FeedbackBadge = ({ correct }) =>
-  correct ? (
+const FeedbackBadge = ({ result }) => {
+  if (result === "correct") return (
     <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-black text-sm animate-in fade-in zoom-in-95 duration-300">
       <FiCheckCircle className="size-4" /> Correct!
     </div>
-  ) : (
+  );
+  if (result === "partial") return (
+    <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-black text-sm animate-in fade-in zoom-in-95 duration-300">
+      <FiCheckCircle className="size-4" /> Partial
+    </div>
+  );
+  return (
     <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-black text-sm animate-in fade-in zoom-in-95 duration-300">
       <FiXCircle className="size-4" /> Wrong
     </div>
   );
+};
 
 // ─── QuestionCountPicker ──────────────────────────────────────────────────────
 const QuestionCountPicker = ({ isPremium, onSelect, onBack, courseName }) => (
@@ -381,7 +393,7 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
   const isObjQ = !isTheory(currentQuestion) && !isFib(currentQuestion);
   const isThyQ = isTheory(currentQuestion);
   const isFibQ = isFib(currentQuestion);
-  const wasCorrect = isAnswered ? isCorrect(currentQuestion, answers[currentIndex]) : null;
+  const result = isAnswered ? getResult(currentQuestion, answers[currentIndex]) : null;
 
   // For FIB, currentInput is an array
   const fibBlanks = isFibQ ? (Array.isArray(currentInput) ? currentInput : []) : [];
@@ -436,7 +448,7 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
               <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">
                 {selectedCourse?.name}{isThyQ ? " · Theory" : isFibQ ? " · FIB" : ""}
               </div>
-              {isAnswered && <FeedbackBadge correct={wasCorrect} />}
+              {isAnswered && <FeedbackBadge result={result} />}
             </div>
 
             {/* Question text */}
@@ -518,7 +530,7 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
 
             {/* Theory/FIB correct answer reveal */}
             {isAnswered && (isThyQ || isFibQ) && (
-              <div className={`mt-4 p-4 rounded-2xl border-2 ${wasCorrect ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20" : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"}`}>
+              <div className={`mt-4 p-4 rounded-2xl border-2 ${result === "correct" ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20" : result === "partial" ? "border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20" : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"}`}>
                 <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">Correct Answer</p>
                 {isThyQ ? (
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
