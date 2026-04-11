@@ -1,7 +1,13 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import RouteChangeTracker from "./components/RouteChangeTracker";
 import DesktopLayout from "./components/DesktopLayout";
+import ConfirmOverlay from "./components/ConfirmOverlay";
 import { useState, useEffect, useRef } from "react";
 import Home from "./pages/Home.jsx";
 import ExamScreen from "./pages/ExamScreen";
@@ -72,6 +78,34 @@ function App() {
   const [questionsContext, setQuestionsContext] = useState(null);
   const sessionRestoredRef = useRef(false);
 
+  // PWA install prompt
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [showInstallOverlay, setShowInstallOverlay] = useState(false);
+
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandaloneMode =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  useEffect(() => {
+    if (isInStandaloneMode) return; // already installed
+
+    const handler = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+      setShowInstallOverlay(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", handler);
+
+    // iOS doesn't fire beforeinstallprompt — show manual instructions instead
+    if (isIOS) {
+      setShowInstallOverlay(true);
+    }
+
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
   const handleExamSubmit = (correctCount, totalCount, timeTaken) => {
     const total = totalCount ?? questions.length;
 
@@ -81,6 +115,18 @@ function App() {
       answered: total,
     });
     setLastTimeTaken(timeTaken ?? 0);
+  };
+
+  const handleInstallConfirm = async () => {
+    if (installPrompt) {
+      await installPrompt.prompt();
+      installPrompt.userChoice.then(() => setInstallPrompt(null));
+    }
+    setShowInstallOverlay(false);
+  };
+
+  const handleInstallDismiss = () => {
+    setShowInstallOverlay(false);
   };
 
   // In App.js
@@ -132,7 +178,9 @@ function App() {
         setUserProfile(profile);
 
         // Load bookmarks from profile
-        setBookmarks(Array.isArray(profileData?.bookmarks) ? profileData.bookmarks : []);
+        setBookmarks(
+          Array.isArray(profileData?.bookmarks) ? profileData.bookmarks : [],
+        );
         setCoursesLoading(true);
         try {
           const params = new URLSearchParams();
@@ -210,7 +258,10 @@ function App() {
       try {
         const { error } = await supabase.auth.refreshSession();
         if (error) {
-          console.warn("[App] Session refresh failed on tab focus:", error.message);
+          console.warn(
+            "[App] Session refresh failed on tab focus:",
+            error.message,
+          );
           // onAuthStateChange SIGNED_OUT will clear the profile automatically
           await supabase.auth.signOut();
         }
@@ -420,18 +471,21 @@ function App() {
 
       // Upsert profile fields in profiles table (include other known fields for safety)
       const { error: upsertError } = await withTimeout(
-        supabase.from("profiles").upsert({
-          id: user.id,
-          user_name: nextUserName || null,
-          department: nextDepartment || null,
-          college: userProfile?.college ?? null,
-          year: userProfile?.year ? Number(userProfile.year) : null,
-          is_premium: userProfile?.isPremium ?? null,
-          // Ensure NOT NULL onboarding_complete is always set
-          onboarding_complete: true,
-          // Ensure NOT NULL updated_at is always set
-          updated_at: new Date().toISOString(),
-        }, { onConflict: "id"}),
+        supabase.from("profiles").upsert(
+          {
+            id: user.id,
+            user_name: nextUserName || null,
+            department: nextDepartment || null,
+            college: userProfile?.college ?? null,
+            year: userProfile?.year ? Number(userProfile.year) : null,
+            is_premium: userProfile?.isPremium ?? null,
+            // Ensure NOT NULL onboarding_complete is always set
+            onboarding_complete: true,
+            // Ensure NOT NULL updated_at is always set
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "id" },
+        ),
         15000,
         "Saving your profile took too long. Please try again.",
       );
@@ -452,14 +506,11 @@ function App() {
 
   const deleteImage = async (publicId) => {
     try {
-      const res = await fetch(
-        `${API_BASE_URL}/api/cloudinary/delete-image`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ public_id: publicId }),
-        },
-      );
+      const res = await fetch(`${API_BASE_URL}/api/cloudinary/delete-image`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ public_id: publicId }),
+      });
 
       const data = await res.json();
       console.log("Delete response:", data);
@@ -511,10 +562,7 @@ function App() {
   };
 
   const withDesktop = (element) => (
-    <DesktopLayout
-      isPremium={isPremium}
-      userProfile={userProfile}
-    >
+    <DesktopLayout isPremium={isPremium} userProfile={userProfile}>
       {element}
     </DesktopLayout>
   );
@@ -596,7 +644,7 @@ function App() {
                       courses={availableCourses}
                       isPremium={isPremium}
                       userProfile={userProfile}
-                    />
+                    />,
                   )}
                 </ProtectedRoute>
               }
@@ -616,7 +664,7 @@ function App() {
                       autoAdvance={autoAdvance}
                       toggleAutoAdvance={() => setAutoAdvance((prev) => !prev)}
                       deleteImage={deleteImage}
-                    />
+                    />,
                   )}
                 </ProtectedRoute>
               }
@@ -627,14 +675,10 @@ function App() {
                 <ProtectedRoute
                   stateCheck={
                     Boolean(selectedCourse) &&
-                    (
-                      questionsLoading ||
-                      (
-                        questions.length > 0 &&
+                    (questionsLoading ||
+                      (questions.length > 0 &&
                         questionsContext?.courseId === selectedCourse?.id &&
-                        questionsContext?.questionType === questionType
-                      )
-                    )
+                        questionsContext?.questionType === questionType))
                   }
                 >
                   {withDesktop(<ExamScreen {...props} />)}
@@ -671,7 +715,7 @@ function App() {
                     <PremiumPage
                       {...props}
                       onActivatePremium={handlePremiumActivation}
-                    />
+                    />,
                   )}
                 </ProtectedRoute>
               }
@@ -693,7 +737,7 @@ function App() {
                       courses={availableCourses}
                       coursesLoading={coursesLoading}
                       isPremium={isPremium}
-                    />
+                    />,
                   )}
                 </ProtectedRoute>
               }
@@ -707,7 +751,7 @@ function App() {
                       courses={availableCourses}
                       coursesLoading={coursesLoading}
                       isPremium={isPremium}
-                    />
+                    />,
                   )}
                 </ProtectedRoute>
               }
@@ -730,7 +774,7 @@ function App() {
                       coursesLoading={coursesLoading}
                       isPremium={isPremium}
                       userProfile={userProfile}
-                    />
+                    />,
                   )}
                 </ProtectedRoute>
               }
@@ -747,6 +791,19 @@ function App() {
         </AuthProvider>
       )}
       <SpeedInsights />
+      <ConfirmOverlay
+        isOpen={showInstallOverlay}
+        onClose={handleInstallDismiss}
+        onConfirm={handleInstallConfirm}
+        title="Install Quiz Bolt"
+        message={
+          isIOS
+            ? "Tap the Share button in Safari, then select 'Add to Home Screen' to install Quiz Bolt on your device."
+            : "Add Quiz Bolt to your home screen for a faster, app-like experience — no app store needed."
+        }
+        confirmText={isIOS ? "Got it" : "Install"}
+        cancelText="Not now"
+      />
     </Router>
   );
 }
