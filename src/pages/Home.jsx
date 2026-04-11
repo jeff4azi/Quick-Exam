@@ -34,12 +34,58 @@ const getCurrentWeekStartIso = () => {
   return weekStart.toISOString();
 };
 
+const IOS_TUTORIAL_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // TODO: replace with your tutorial link
+
 const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [favouriteIds, setFavouriteIds] = useState([]);
   const [favouritesLoading, setFavouritesLoading] = useState(true);
+
+  // PWA install prompt — only shown on home screen
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const [showInstallOverlay, setShowInstallOverlay] = useState(false);
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandaloneMode =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  useEffect(() => {
+    if (isInStandaloneMode) return;
+    if (localStorage.getItem("pwaInstalled")) return;
+
+    const handler = (e) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+      setShowInstallOverlay(true);
+    };
+
+    window.addEventListener("beforeinstallprompt", handler);
+
+    if (isIOS) setShowInstallOverlay(true);
+
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleInstallConfirm = async () => {
+    if (isIOS) {
+      window.open(IOS_TUTORIAL_URL, "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (installPrompt) {
+      await installPrompt.prompt();
+      const { outcome } = await installPrompt.userChoice;
+      if (outcome === "accepted") {
+        localStorage.setItem("pwaInstalled", "true");
+        setShowInstallOverlay(false);
+      }
+      setInstallPrompt(null);
+    }
+  };
+
+  const handleInstallDismiss = () => setShowInstallOverlay(false);
 
   useEffect(() => {
     loadFavouriteCourseIds().then((ids) => {
@@ -208,18 +254,23 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   const fetchRecentCourses = useCallback(async () => {
     setRecentCoursesLoading(true);
     try {
-      const { data: { user }, error: userError } = await supabase.auth.getUser();
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
       if (userError || !user) return;
 
       const { data, error } = await withTimeout(
         supabase
           .from("exam_attempts")
-          .select("id, course_id, score, total_questions, time_taken, date_taken, type")
+          .select(
+            "id, course_id, score, total_questions, time_taken, date_taken, type",
+          )
           .eq("user_id", user.id)
           .order("date_taken", { ascending: false })
           .limit(7),
         15000,
-        "Loading recent courses took too long."
+        "Loading recent courses took too long.",
       );
 
       if (error || !data) return;
@@ -237,7 +288,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
           total: r.total_questions,
           timeTaken: r.time_taken,
           type: r.type,
-        }))
+        })),
       );
     } catch {
       setRecentCourses([]);
@@ -490,18 +541,26 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                           {item?.course || "Course"}
                         </p>
                         {item?.type && (
-                          <span className={`mt-1 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${item.type === "THY"
-                              ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                          <span
+                            className={`mt-1 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
+                              item.type === "THY"
+                                ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                                : item.type === "FIB"
+                                  ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                  : "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                            }`}
+                          >
+                            {item.type === "THY"
+                              ? "Theory"
                               : item.type === "FIB"
-                              ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
-                              : "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
-                            }`}>
-                            {item.type === "THY" ? "Theory" : item.type === "FIB" ? "Fill in Blanks" : "Obj"}
+                                ? "Fill in Blanks"
+                                : "Obj"}
                           </span>
                         )}
                       </div>
                       <div className="size-10 rounded-2xl bg-slate-100 dark:bg-slate-700/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-semibold">
-                        {parseFloat((Number(item?.score) || 0).toFixed(2))}/{item?.total ?? 0}
+                        {parseFloat((Number(item?.score) || 0).toFixed(2))}/
+                        {item?.total ?? 0}
                       </div>
                     </div>
 
@@ -612,6 +671,20 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
         message="Get Premium to save questions for revision, bookmark during exams, and enjoy an ad-free experience."
         confirmText="Get Premium"
         cancelText="Maybe later"
+      />
+
+      <ConfirmOverlay
+        isOpen={showInstallOverlay}
+        onClose={handleInstallDismiss}
+        onConfirm={handleInstallConfirm}
+        title="Install Quiz Bolt"
+        message={
+          isIOS
+            ? "Add Quiz Bolt to your home screen for quick access. Tap 'See How' for a step-by-step guide."
+            : "Add Quiz Bolt to your home screen for a faster, app-like experience — no app store needed."
+        }
+        confirmText={isIOS ? "See How" : "Install"}
+        cancelText="Not now"
       />
     </div>
   );

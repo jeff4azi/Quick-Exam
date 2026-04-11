@@ -7,7 +7,6 @@ import {
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import RouteChangeTracker from "./components/RouteChangeTracker";
 import DesktopLayout from "./components/DesktopLayout";
-import ConfirmOverlay from "./components/ConfirmOverlay";
 import { useState, useEffect, useRef } from "react";
 import Home from "./pages/Home.jsx";
 import ExamScreen from "./pages/ExamScreen";
@@ -78,34 +77,6 @@ function App() {
   const [questionsContext, setQuestionsContext] = useState(null);
   const sessionRestoredRef = useRef(false);
 
-  // PWA install prompt
-  const [installPrompt, setInstallPrompt] = useState(null);
-  const [showInstallOverlay, setShowInstallOverlay] = useState(false);
-
-  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-  const isInStandaloneMode =
-    window.matchMedia("(display-mode: standalone)").matches ||
-    window.navigator.standalone === true;
-
-  useEffect(() => {
-    if (isInStandaloneMode) return; // already installed
-
-    const handler = (e) => {
-      e.preventDefault();
-      setInstallPrompt(e);
-      setShowInstallOverlay(true);
-    };
-
-    window.addEventListener("beforeinstallprompt", handler);
-
-    // iOS doesn't fire beforeinstallprompt — show manual instructions instead
-    if (isIOS) {
-      setShowInstallOverlay(true);
-    }
-
-    return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
-
   const handleExamSubmit = (correctCount, totalCount, timeTaken) => {
     const total = totalCount ?? questions.length;
 
@@ -115,18 +86,6 @@ function App() {
       answered: total,
     });
     setLastTimeTaken(timeTaken ?? 0);
-  };
-
-  const handleInstallConfirm = async () => {
-    if (installPrompt) {
-      await installPrompt.prompt();
-      installPrompt.userChoice.then(() => setInstallPrompt(null));
-    }
-    setShowInstallOverlay(false);
-  };
-
-  const handleInstallDismiss = () => {
-    setShowInstallOverlay(false);
   };
 
   // In App.js
@@ -791,19 +750,6 @@ function App() {
         </AuthProvider>
       )}
       <SpeedInsights />
-      <ConfirmOverlay
-        isOpen={showInstallOverlay}
-        onClose={handleInstallDismiss}
-        onConfirm={handleInstallConfirm}
-        title="Install Quiz Bolt"
-        message={
-          isIOS
-            ? "Tap the Share button in Safari, then select 'Add to Home Screen' to install Quiz Bolt on your device."
-            : "Add Quiz Bolt to your home screen for a faster, app-like experience — no app store needed."
-        }
-        confirmText={isIOS ? "Got it" : "Install"}
-        cancelText="Not now"
-      />
     </Router>
   );
 }
