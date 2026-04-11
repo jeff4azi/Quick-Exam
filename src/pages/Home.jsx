@@ -327,22 +327,6 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
         </div>
 
         <div className="flex items-center gap-3">
-          {/* FeedBolt CTA — mobile top bar */}
-          <a
-            href="https://feedbolt-beige.vercel.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Visit FeedBolt"
-            className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-white text-xs font-bold transition-transform active:scale-95"
-            style={{ background: "linear-gradient(135deg, #7C3AED, #6D28D9)" }}
-          >
-            <span className="text-sm">⚡</span>
-            <span>FeedBolt</span>
-            <span className="absolute -top-1.5 -right-1.5 text-[8px] font-black uppercase tracking-wider bg-amber-400 text-white px-1 py-0.5 rounded-md leading-none">
-              NEW
-            </span>
-          </a>
-
           {/* User Avatar with Premium Crown - navigates to Profile */}
           <button
             type="button"
