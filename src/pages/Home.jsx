@@ -17,6 +17,7 @@ import { FaCrown, FaFire, FaTrophy } from "react-icons/fa";
 import { FiZap } from "react-icons/fi";
 import { MdStar } from "react-icons/md";
 import { loadFavouriteCourseIds } from "../utils/favouriteCourses";
+import { FeedBoltBanner } from "../components/FeedBoltBanner";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -325,21 +326,39 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
           </p>
         </div>
 
-        {/* User Avatar with Premium Crown - navigates to Profile */}
-        <button
-          type="button"
-          onClick={() => navigate("/profile")}
-          className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl lg:scale-120"
-        >
-          <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
+        <div className="flex items-center gap-3">
+          {/* FeedBolt CTA — mobile top bar */}
+          <a
+            href="https://feedbolt-beige.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Visit FeedBolt"
+            className="relative flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-white text-xs font-bold transition-transform active:scale-95"
+            style={{ background: "linear-gradient(135deg, #7C3AED, #6D28D9)" }}
+          >
+            <span className="text-sm">⚡</span>
+            <span>FeedBolt</span>
+            <span className="absolute -top-1.5 -right-1.5 text-[8px] font-black uppercase tracking-wider bg-amber-400 text-white px-1 py-0.5 rounded-md leading-none">
+              NEW
+            </span>
+          </a>
 
-          {/* Premium Badge */}
-          {isPremium && (
-            <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-              <FaCrown className="text-[8px] text-white" />
-            </div>
-          )}
-        </button>
+          {/* User Avatar with Premium Crown - navigates to Profile */}
+          <button
+            type="button"
+            onClick={() => navigate("/profile")}
+            className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl lg:scale-120"
+          >
+            <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
+
+            {/* Premium Badge */}
+            {isPremium && (
+              <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                <FaCrown className="text-[8px] text-white" />
+              </div>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Main Content */}
@@ -470,6 +489,9 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
             </button>
           ))}
         </div>
+
+        {/* FeedBolt CTA */}
+        <FeedBoltBanner />
 
         {/* Recently done (carousel) */}
         <div className="space-y-3">

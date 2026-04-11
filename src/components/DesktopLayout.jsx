@@ -19,6 +19,8 @@ import Logo from "../images/Logo";
 import Avatar from "./Avatar";
 import ConfirmOverlay from "./ConfirmOverlay";
 
+import { FeedBoltSidebarLink } from "./FeedBoltBanner";
+
 /**
  * DesktopLayout wraps protected pages.
  *
@@ -38,7 +40,10 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
   const go = (path) => navigate(path);
 
   const handleSavedClick = () => {
-    if (isPremium) { go("/bookmarks"); return; }
+    if (isPremium) {
+      go("/bookmarks");
+      return;
+    }
     setPremiumOverlayOpen(true);
   };
 
@@ -62,7 +67,11 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
       label: "Courses",
       active: coursesActive,
       onClick: () => go("/choose-course"),
-      icon: coursesActive ? <IoLibrary size={20} /> : <IoLibraryOutline size={20} />,
+      icon: coursesActive ? (
+        <IoLibrary size={20} />
+      ) : (
+        <IoLibraryOutline size={20} />
+      ),
     },
     {
       label: "History",
@@ -76,13 +85,21 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
       onClick: handleSavedClick,
       locked: !isPremium,
       showCrown: !isPremium,
-      icon: savedActive ? <IoBookmark size={20} /> : <IoBookmarkOutline size={20} />,
+      icon: savedActive ? (
+        <IoBookmark size={20} />
+      ) : (
+        <IoBookmarkOutline size={20} />
+      ),
     },
     {
       label: "Leaderboard",
       active: leadersActive,
       onClick: () => go("/leaderboard"),
-      icon: leadersActive ? <IoTrophy size={20} /> : <IoTrophyOutline size={20} />,
+      icon: leadersActive ? (
+        <IoTrophy size={20} />
+      ) : (
+        <IoTrophyOutline size={20} />
+      ),
     },
   ];
 
@@ -93,10 +110,8 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
       - On desktop: flex row with sidebar + content
     */
     <div className="lg:flex lg:min-h-screen lg:bg-gray-100 lg:dark:bg-slate-950">
-
       {/* ── Desktop sidebar (hidden on mobile) ──────────────────────────────── */}
       <aside className="hidden lg:flex lg:flex-col fixed top-0 left-0 h-screen w-64 bg-white dark:bg-slate-900 border-r border-gray-200 dark:border-slate-800 z-40 shadow-sm">
-
         {/* Logo */}
         <div className="px-6 py-6 border-b border-gray-100 dark:border-slate-800 flex gap-2">
           <Logo className="h-8 w-auto" />
@@ -106,7 +121,9 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
         </div>
 
         {/* Nav items — pointer-events disabled during exam */}
-        <nav className={`flex-1 px-3 py-4 space-y-1 overflow-y-auto relative ${isExamActive ? "pointer-events-none select-none" : ""}`}>
+        <nav
+          className={`flex-1 px-3 py-4 space-y-1 overflow-y-auto relative ${isExamActive ? "pointer-events-none select-none" : ""}`}
+        >
           {navItems.map((item) => (
             <SidebarNavItem
               key={item.label}
@@ -124,12 +141,22 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
               </span>
             </div>
           )}
+          {/* FeedBolt sidebar link */}
+          {!isExamActive && (
+            <div className="mt-2 pt-2 border-t border-gray-100 dark:border-slate-800">
+              <FeedBoltSidebarLink />
+            </div>
+          )}
         </nav>
 
         {/* Profile shortcut — also locked during exam */}
-        <div className={`px-3 py-4 border-t border-gray-100 dark:border-slate-800 ${isExamActive ? "pointer-events-none select-none opacity-40" : ""}`}>
+        <div
+          className={`px-3 py-4 border-t border-gray-100 dark:border-slate-800 ${isExamActive ? "pointer-events-none select-none opacity-40" : ""}`}
+        >
           <SidebarNavItem
-            label={userProfile?.user_name || userProfile?.full_name || "Profile"}
+            label={
+              userProfile?.user_name || userProfile?.full_name || "Profile"
+            }
             active={isExamActive ? false : profileActive}
             onClick={() => go("/profile")}
             icon={
@@ -158,7 +185,10 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
       <ConfirmOverlay
         isOpen={premiumOverlayOpen}
         onClose={() => setPremiumOverlayOpen(false)}
-        onConfirm={() => { setPremiumOverlayOpen(false); navigate("/premium"); }}
+        onConfirm={() => {
+          setPremiumOverlayOpen(false);
+          navigate("/premium");
+        }}
         title="Unlock Premium Features"
         message="Get Premium to save questions for revision, bookmark during exams, and enjoy an ad-free experience."
         confirmText="Get Premium"
