@@ -331,13 +331,7 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
           onClick={() => navigate("/profile")}
           className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl lg:scale-120"
         >
-          {loadingProfile ? (
-            <div className="size-10 rounded-2xl bg-blue-600 flex items-center justify-center text-sm text-white font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all duration-300">
-              ...
-            </div>
-          ) : (
-            <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
-          )}
+          <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
 
           {/* Premium Badge */}
           {isPremium && (
