@@ -34,7 +34,8 @@ const getCurrentWeekStartIso = () => {
   return weekStart.toISOString();
 };
 
-const IOS_TUTORIAL_URL = "https://www.youtube.com/watch?v=dQw4w9WgXcQ"; // TODO: replace with your tutorial link
+const IOS_TUTORIAL_URL =
+  "https://youtube.com/shorts/ndcyOO3Xbog?si=Un0wo2qmTGSgxYf9";
 
 const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   const navigate = useNavigate();
