@@ -16,7 +16,12 @@ import { useAuth } from "../context/AuthContext";
 const OnboardingScreen = () => {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
-  const { user, loading: authLoading, profileValid, refreshProfile } = useAuth();
+  const {
+    user,
+    loading: authLoading,
+    profileValid,
+    refreshProfile,
+  } = useAuth();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -31,11 +36,16 @@ const OnboardingScreen = () => {
   const collegesByUniversity = {
     TASUED: ["COSIT", "COVTED", "COSPED", "COHUM", "COSMAS", "COAHM"],
     LASU: ["FASA", "MASSA", "SOSSA"],
+    BOUESTI: ["COE", "COS", "COT"],
   };
 
   const universities = [
     { id: "TASUED", name: "TaiSolarin University of Education" },
     { id: "LASU", name: "Lagos State University" },
+    {
+      id: "BOUESTI",
+      name: "Bamidele Olumilua University of Education, Science and Technology",
+    },
   ];
 
   useEffect(() => {
@@ -68,7 +78,7 @@ const OnboardingScreen = () => {
     };
 
     init();
-  }, [navigate]);
+  }, [navigate, refreshProfile]);
 
   if (checking) {
     return (
@@ -373,10 +383,11 @@ I understand I need to provide correct details.`;
           <button
             type="submit"
             disabled={loading}
-            className={`w-full mt-4 bg-blue-600 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 ${loading
+            className={`w-full mt-4 bg-blue-600 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 ${
+              loading
                 ? "opacity-70 cursor-not-allowed"
                 : "hover:bg-blue-700 hover:-translate-y-1 active:scale-95"
-              }`}
+            }`}
           >
             <span>{loading ? "Saving..." : "Complete Setup"}</span>
             {!loading && <FiCheckCircle className="text-xl" />}
