@@ -3,6 +3,10 @@
 /* This tells Tailwind v4 to enable class-based dark mode */
 @variant dark (&:where(.dark, .dark *));
 
+html {
+  scroll-behavior: smooth;
+}
+
 /* Base body styles */
 body {
   @apply text-[#1F2937] bg-gray-200;
@@ -34,9 +38,16 @@ body {
 }
 
 @keyframes loading {
-    0%, 100% { transform: scaleY(0.5); opacity: 0.5; }
-    50% { transform: scaleY(1.2); opacity: 1; }
+  0%,
+  100% {
+    transform: scaleY(0.5);
+    opacity: 0.5;
   }
+  50% {
+    transform: scaleY(1.2);
+    opacity: 1;
+  }
+}
 
 /* ── Desktop layout overrides ─────────────────────────────────────────────── */
 /*
