@@ -1,6 +1,6 @@
 import ReactGA from "react-ga4";
 
-const GA_ID = "G-93T0BGL64Y";
+const GA_ID = "G-LDLEG48Z7Q";
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 export const initGA = () => {
