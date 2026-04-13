@@ -1,12 +1,14 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
-import ReactGA from "react-ga4";
 import {
-  FiBookOpen,
-  FiLayers,
-  FiX,
-  FiSearch,
-} from "react-icons/fi";
+  trackCourseSelected,
+  trackCourseSearch,
+  trackQuestionTypeSwitch,
+  trackFavouriteToggle,
+  trackExamStart,
+  trackPremiumGateHit,
+} from "../utils/analytics";
+import { FiBookOpen, FiLayers, FiX, FiSearch } from "react-icons/fi";
 import { FaCrown, FaWhatsapp } from "react-icons/fa";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import ConfirmOverlay from "../components/ConfirmOverlay";
@@ -61,7 +63,8 @@ const ChooseCourseScreen = ({
         course.colleges.includes("ALL") ||
         (userCollege && course.colleges.includes(userCollege));
       if (!collegeMatch) return false;
-      if (questionType === "theory") return (course.theoryQuestionCount || 0) > 0;
+      if (questionType === "theory")
+        return (course.theoryQuestionCount || 0) > 0;
       if (questionType === "fib") return (course.fibQuestionCount || 0) > 0;
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
@@ -118,34 +121,33 @@ const ChooseCourseScreen = ({
     if (questionType === "theory") {
       const theoryOptions = [3, 5, 7, 10];
       const count = course?.theoryQuestionCount || 0;
-      const filtered = theoryOptions.filter(opt => count >= opt);
+      const filtered = theoryOptions.filter((opt) => count >= opt);
       return [...filtered, "All"];
     }
     if (questionType === "fib") {
       const fibOptions = [10, 15, 20, 30];
       const count = course?.fibQuestionCount || 0;
-      const filtered = fibOptions.filter(opt => count >= opt);
+      const filtered = fibOptions.filter((opt) => count >= opt);
       return [...filtered, "All"];
     }
     const options = [30, 50, 70, 100];
-    const filtered = options.filter(opt => (course?.questionCount || 0) >= opt);
+    const filtered = options.filter(
+      (opt) => (course?.questionCount || 0) >= opt,
+    );
     return [...filtered, "All"];
   };
 
-  const handleSelectCourse = course => {
+  const handleSelectCourse = (course) => {
     setSelectedCourse(course);
     setSelectedQuestionCount(null);
-    ReactGA.event({
-      category: "Course",
-      action: "Select Course",
-      label: course.id,
-    });
+    trackCourseSelected(course.id, course.name, questionType);
   };
 
   const handleStartExam = () => {
     if (!selectedCourse || !selectedQuestionCount) return;
     clearExamSession();
     setAnswers([]);
+    trackExamStart(selectedCourse.id, selectedQuestionCount, questionType);
     navigate("/exam");
   };
 
@@ -153,10 +155,11 @@ const ChooseCourseScreen = ({
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-500 pb-32">
       {/* HEADER */}
       <header
-        className={`sticky top-0 z-50 px-6 py-4 transition-all duration-300 ${isScrolled
+        className={`sticky top-0 z-50 px-6 py-4 transition-all duration-300 ${
+          isScrolled
             ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg shadow-sm border-b border-gray-100 dark:border-slate-800"
             : "bg-transparent"
-          }`}
+        }`}
       >
         <div className="max-w-2xl mx-auto flex items-center gap-4">
           <div>
@@ -196,16 +199,19 @@ const ChooseCourseScreen = ({
                   onClick={() => {
                     if (isLocked) {
                       setTheoryOverlayOpen(true);
+                      trackPremiumGateHit("theory_mode");
                       return;
                     }
                     setQuestionType(key);
+                    trackQuestionTypeSwitch(key);
                     setSelectedCourse(null);
                     setSelectedQuestionCount(null);
                   }}
-                  className={`relative px-5 py-2 rounded-xl text-xs font-black transition-all ${questionType === key
+                  className={`relative px-5 py-2 rounded-xl text-xs font-black transition-all ${
+                    questionType === key
                       ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
                       : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                    }`}
+                  }`}
                 >
                   {label}
                   {isLocked && (
@@ -293,10 +299,11 @@ const ChooseCourseScreen = ({
                             handleSelectCourse(course);
                           }
                         }}
-                        className={`group w-full text-left p-5 rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${isSelected
+                        className={`group w-full text-left p-5 rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${
+                          isSelected
                             ? "bg-blue-600 border-blue-600 shadow-xl shadow-blue-200"
                             : "bg-white dark:bg-slate-800 border-white dark:border-slate-800 hover:border-blue-100 shadow-sm"
-                          }`}
+                        }`}
                       >
                         <div className="flex justify-between">
                           <div className="max-w-[80%]">
@@ -313,13 +320,19 @@ const ChooseCourseScreen = ({
 
                             {/* RE-ADDED THE BADGE STYLING */}
                             <div
-                              className={`inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-full text-[10px] font-bold ${isSelected
+                              className={`inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                                isSelected
                                   ? "bg-white/20 text-white"
                                   : "bg-blue-50 dark:bg-blue-900/30 text-blue-600"
-                                }`}
+                              }`}
                             >
                               <FiBookOpen />
-                              {(questionType === "theory" ? course.theoryQuestionCount : questionType === "fib" ? course.fibQuestionCount : course.questionCount) || 0} Questions
+                              {(questionType === "theory"
+                                ? course.theoryQuestionCount
+                                : questionType === "fib"
+                                  ? course.fibQuestionCount
+                                  : course.questionCount) || 0}{" "}
+                              Questions
                             </div>
                           </div>
 
@@ -328,12 +341,22 @@ const ChooseCourseScreen = ({
                               type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
-                                toggleFavouriteCourseId(course.id, favouriteIds).then(setFavouriteIds);
+                                toggleFavouriteCourseId(
+                                  course.id,
+                                  favouriteIds,
+                                ).then((updated) => {
+                                  setFavouriteIds(updated);
+                                  trackFavouriteToggle(
+                                    course.id,
+                                    !favouriteIds.includes(course.id),
+                                  );
+                                });
                               }}
-                              className={`size-10 shrink-0 rounded-2xl flex items-center justify-center transition-all active:scale-90 ${isSelected
+                              className={`size-10 shrink-0 rounded-2xl flex items-center justify-center transition-all active:scale-90 ${
+                                isSelected
                                   ? "bg-white/20 text-white"
                                   : "bg-gray-50 dark:bg-slate-700 text-slate-400 dark:text-slate-300"
-                                }`}
+                              }`}
                               title={
                                 isFavourite
                                   ? "Remove from favourites"
@@ -386,41 +409,42 @@ const ChooseCourseScreen = ({
                 {selectedCourse.title}
               </p>
               <div className="grid grid-cols-2 gap-3 mt-8">
-                {getAvailableQuestionOptions(selectedCourse).map(
-                  (num) => {
-                    const isLocked = !isPremium && (
-                      questionType === "fib" ? num !== 10 :
-                      questionType === "theory" ? num !== 3 :
-                      num !== 30
-                    );
+                {getAvailableQuestionOptions(selectedCourse).map((num) => {
+                  const isLocked =
+                    !isPremium &&
+                    (questionType === "fib"
+                      ? num !== 10
+                      : questionType === "theory"
+                        ? num !== 3
+                        : num !== 30);
 
-                    return (
-                      <button
-                        key={num}
-                        onClick={() => {
-                          if (isLocked) {
-                            setPremiumOverlayOpen(true);
-                            return;
-                          }
-                          setSelectedQuestionCount(num);
-                        }}
-                        className={`relative py-4 rounded-2xl font-black transition-all ${selectedQuestionCount === num
-                            ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
-                            : "bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200"
-                          } ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`}
-                      >
-                        {num === "All" ? "Full Exam" : `${num} Qs`}
+                  return (
+                    <button
+                      key={num}
+                      onClick={() => {
+                        if (isLocked) {
+                          setPremiumOverlayOpen(true);
+                          return;
+                        }
+                        setSelectedQuestionCount(num);
+                      }}
+                      className={`relative py-4 rounded-2xl font-black transition-all ${
+                        selectedQuestionCount === num
+                          ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
+                          : "bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200"
+                      } ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`}
+                    >
+                      {num === "All" ? "Full Exam" : `${num} Qs`}
 
-                        {/* PREMIUM OVERLAY ICON */}
-                        {isLocked && (
-                          <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-                            <FaCrown className="text-[8px] text-white" />
-                          </div>
-                        )}
-                      </button>
-                    );
-                  },
-                )}
+                      {/* PREMIUM OVERLAY ICON */}
+                      {isLocked && (
+                        <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                          <FaCrown className="text-[8px] text-white" />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
               </div>
               <button
                 onClick={handleStartExam}

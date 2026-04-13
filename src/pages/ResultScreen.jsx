@@ -2,6 +2,13 @@ import { useNavigate } from "react-router-dom";
 import WhatsAppCard from "../components/WhatsAppCard";
 import { useEffect, useState, useRef } from "react";
 import ReactGA from "react-ga4";
+import {
+  trackResultView,
+  trackResultShare,
+  trackReviewAnswers,
+  trackExamRetake,
+  trackPremiumGateHit,
+} from "../utils/analytics";
 import BannerAd from "../components/BannerAd";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { FaCrown } from "react-icons/fa";
@@ -39,12 +46,9 @@ const ResultScreen = ({
   }, []);
 
   useEffect(() => {
-    ReactGA.event({
-      category: "Exam",
-      action: "View Results",
-      label: selectedCourse.id,
-    });
-  }, [selectedCourse.id]);
+    trackResultView(selectedCourse.id, scorePercentage, questionType);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const userData = userProfile || { full_name: "Scholar", college: "" };
   const formatNum = (num) => String(num).padStart(2, "0");
@@ -73,11 +77,13 @@ const ResultScreen = ({
           title: "My QuizBolt Result",
           text: `I scored ${scorePercentage}% in ${selectedCourse.name}`,
         });
+        trackResultShare(selectedCourse.id, scorePercentage);
       } else {
         const link = document.createElement("a");
         link.download = "quizbolt-result.png";
         link.href = dataUrl;
         link.click();
+        trackResultShare(selectedCourse.id, scorePercentage);
       }
     } catch (err) {
       console.error("Share failed:", err);
@@ -199,7 +205,11 @@ const ResultScreen = ({
             {selectedCourse.name}
           </h1>
           <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-1">
-            {questionType === "theory" ? "Theory" : questionType === "fib" ? "Fill in the Blanks" : "Objectives"}
+            {questionType === "theory"
+              ? "Theory"
+              : questionType === "fib"
+                ? "Fill in the Blanks"
+                : "Objectives"}
           </p>
           <p className={`text-sm mt-2 font-bold ${feedback.color}`}>
             {feedback.msg}
@@ -239,11 +249,15 @@ const ResultScreen = ({
           label="Retake"
           disabled={!isPremium}
           color="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
-          onLockedClick={() => setPremiumOverlayOpen(true)}
+          onLockedClick={() => {
+            setPremiumOverlayOpen(true);
+            trackPremiumGateHit("retake");
+          }}
           onClick={() => {
             setAnswers([]);
             navigate("/exam");
             setHasRetaken(true);
+            trackExamRetake(selectedCourse.id);
           }}
           icon={
             <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
@@ -253,8 +267,14 @@ const ResultScreen = ({
           label="Review"
           disabled={!isPremium}
           color="bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
-          onLockedClick={() => setPremiumOverlayOpen(true)}
-          onClick={() => navigate("/review-answers")}
+          onLockedClick={() => {
+            setPremiumOverlayOpen(true);
+            trackPremiumGateHit("review_answers");
+          }}
+          onClick={() => {
+            trackReviewAnswers(selectedCourse.id);
+            navigate("/review-answers");
+          }}
           icon={
             <>
               <path d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
@@ -377,7 +397,11 @@ const ResultScreen = ({
                   {formatNum(questions.length)}
                 </span>
                 <span className="text-[9px] font-bold text-blue-500 uppercase">
-                  {questionType === "theory" ? "thy" : questionType === "fib" ? "fib" : "obj"}
+                  {questionType === "theory"
+                    ? "thy"
+                    : questionType === "fib"
+                      ? "fib"
+                      : "obj"}
                 </span>
               </div>
             </div>

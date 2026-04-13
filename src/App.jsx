@@ -23,8 +23,8 @@ import { supabase } from "./supabaseClient";
 import { withTimeout } from "./utils/withTimeout";
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
-import ReactGA from "react-ga4";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import { trackLogout } from "./utils/analytics";
 import OnboardingRoute from "./components/OnboardingRoute";
 import PremiumPage from "./pages/PremiumPage";
 import LandingPage from "./pages/LandingPage";
@@ -241,12 +241,6 @@ function App() {
     setHasRetaken(false); // every time new questions are loaded
   }, [questions]);
 
-  const isPremium = userProfile?.isPremium === true; // only pasing what's needed
-
-  useEffect(() => {
-    ReactGA.initialize("G-93T0BGL64Y");
-  }, []);
-
   // Restore any in‑progress exam from localStorage on hard refresh
   useEffect(() => {
     try {
@@ -381,6 +375,7 @@ function App() {
 
   const handleLogout = async () => {
     try {
+      trackLogout();
       await supabase.auth.signOut();
       setUserProfile(null);
       setAvailableCourses([]);

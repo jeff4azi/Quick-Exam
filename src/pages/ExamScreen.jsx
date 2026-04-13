@@ -20,6 +20,13 @@ import {
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import { FaCrown } from "react-icons/fa";
+import {
+  trackExamSubmit,
+  trackExamTimeUp,
+  trackExamExit,
+  trackBookmarkToggle,
+  trackPremiumGateHit,
+} from "../utils/analytics";
 
 const FREE_FIB_LIMIT = 8;
 
@@ -36,7 +43,8 @@ const FibPremiumGateOverlay = ({ onUpgrade, onQuit }) => (
           Free limit reached
         </h2>
         <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-8 px-2">
-          You&apos;ve answered {FREE_FIB_LIMIT} fill-in-the-blank questions. Upgrade to Premium for unlimited access.
+          You&apos;ve answered {FREE_FIB_LIMIT} fill-in-the-blank questions.
+          Upgrade to Premium for unlimited access.
         </p>
         <div className="flex flex-col w-full gap-3">
           <button
@@ -217,7 +225,8 @@ const ExamScreen = ({
     ? shuffledQuestions.length || questions.length
     : 0;
   const totalTime = useMemo(
-    () => calculateTotalTime(totalQuestions, isMathCourse, isTheoryExam, isFibExam),
+    () =>
+      calculateTotalTime(totalQuestions, isMathCourse, isTheoryExam, isFibExam),
     [totalQuestions, isMathCourse, isTheoryExam, isFibExam],
   );
 
@@ -263,7 +272,7 @@ const ExamScreen = ({
         if (!Number.isFinite(savedSession.endsAtMs)) {
           const legacyTimeLeft =
             typeof savedSession.timeLeft === "number" &&
-              savedSession.timeLeft > 0
+            savedSession.timeLeft > 0
               ? savedSession.timeLeft
               : null;
           if (legacyTimeLeft != null) {
@@ -461,14 +470,19 @@ const ExamScreen = ({
   const handleBookmarkClick = async () => {
     if (!currentQuestion?.id) return;
     setBookmarks((prev) => {
-      const updated = prev.includes(currentQuestion.id)
+      const isCurrentlyBookmarked = prev.includes(currentQuestion.id);
+      const updated = isCurrentlyBookmarked
         ? prev.filter((id) => id !== currentQuestion.id)
         : [...prev, currentQuestion.id];
+
+      trackBookmarkToggle(currentQuestion.id, !isCurrentlyBookmarked);
 
       // Persist to Supabase in the background
       (async () => {
         try {
-          const { data: { user } } = await supabase.auth.getUser();
+          const {
+            data: { user },
+          } = await supabase.auth.getUser();
           if (user) {
             await supabase
               .from("profiles")
@@ -503,8 +517,6 @@ const ExamScreen = ({
     }
   };
 
-
-
   const handleSubmit = async () => {
     if (isSubmittingRef.current) return;
     isSubmittingRef.current = true;
@@ -535,6 +547,13 @@ const ExamScreen = ({
 
     if (onSubmit) onSubmit(correctCount, shuffledQuestions.length, finalTime);
     clearExamSession();
+    trackExamSubmit(
+      selectedCourse.id,
+      correctCount,
+      shuffledQuestions.length,
+      finalTime,
+      questionType,
+    );
     navigate("/results");
   };
 
@@ -562,6 +581,11 @@ const ExamScreen = ({
 
     if (onSubmit) onSubmit(correctCount, shuffledQuestions.length, finalTime);
     clearExamSession();
+    trackExamTimeUp(
+      selectedCourse.id,
+      answers.filter(Boolean).length,
+      shuffledQuestions.length,
+    );
     navigate("/results");
   };
 
@@ -619,7 +643,10 @@ const ExamScreen = ({
       <div className="sticky top-0 z-30 bg-gray-50/80 dark:bg-slate-900/80 backdrop-blur-md px-5 pt-6 pb-2">
         <div className="max-w-2xl mx-auto flex justify-between items-center mb-4">
           <button
-            onClick={() => setExitOverlayOpen(true)}
+            onClick={() => {
+              setExitOverlayOpen(true);
+              trackExamExit(selectedCourse.id, currentIndex, totalQuestions);
+            }}
             className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-all"
           >
             <FiChevronLeft className="-translate-x-1/18 size-6 text-slate-600 dark:text-slate-300" />
@@ -658,12 +685,16 @@ const ExamScreen = ({
           <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-gray-50 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex justify-between items-center mb-4">
               <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">
-                {selectedCourse.name} {isFibExam ? "· FIB" : isTheoryExam ? "· Theory" : ""}
+                {selectedCourse.name}{" "}
+                {isFibExam ? "· FIB" : isTheoryExam ? "· Theory" : ""}
               </div>
               <button
                 onClick={
                   isBookmarkLocked
-                    ? () => setPremiumOverlayOpen(true)
+                    ? () => {
+                        setPremiumOverlayOpen(true);
+                        trackPremiumGateHit("bookmark");
+                      }
                     : handleBookmarkClick
                 }
                 className={`relative p-2 rounded-xl transition-all ${isBookmarked ? "bg-yellow-100 text-yellow-600" : "bg-gray-50 dark:bg-slate-700 text-gray-400"} ${isBookmarkLocked ? "opacity-60 cursor-not-allowed" : ""}`}
@@ -682,32 +713,40 @@ const ExamScreen = ({
             <div className="lg:text-xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-5">
               {isFibQuestion(currentQuestion) ? (
                 <span className="leading-[2.4]">
-                  {splitFibQuestion(currentQuestion.question).map((part, i, arr) => {
-                    const blanks = Array.isArray(selectedOption) ? selectedOption : [];
-                    return (
-                      <span key={i}>
-                        {part}
-                        {i < arr.length - 1 && (
-                          <input
-                            type="text"
-                            value={blanks[i] ?? ""}
-                            size={Math.max(6, (blanks[i] ?? "").length + 2)}
-                            onChange={(e) => {
-                              const val = e.target.value;
-                              setAnswers((prev) => {
-                                const next = Array.isArray(prev) ? [...prev] : [];
-                                const cur = Array.isArray(next[currentIndex]) ? [...next[currentIndex]] : [];
-                                cur[i] = val;
-                                next[currentIndex] = cur;
-                                return next;
-                              });
-                            }}
-                            className="inline mx-1 bg-transparent border-b-2 border-blue-500 dark:border-blue-400 text-blue-700 dark:text-blue-300 font-bold text-base focus:outline-none focus:border-blue-700 dark:focus:border-blue-300 transition-colors text-center"
-                          />
-                        )}
-                      </span>
-                    );
-                  })}
+                  {splitFibQuestion(currentQuestion.question).map(
+                    (part, i, arr) => {
+                      const blanks = Array.isArray(selectedOption)
+                        ? selectedOption
+                        : [];
+                      return (
+                        <span key={i}>
+                          {part}
+                          {i < arr.length - 1 && (
+                            <input
+                              type="text"
+                              value={blanks[i] ?? ""}
+                              size={Math.max(6, (blanks[i] ?? "").length + 2)}
+                              onChange={(e) => {
+                                const val = e.target.value;
+                                setAnswers((prev) => {
+                                  const next = Array.isArray(prev)
+                                    ? [...prev]
+                                    : [];
+                                  const cur = Array.isArray(next[currentIndex])
+                                    ? [...next[currentIndex]]
+                                    : [];
+                                  cur[i] = val;
+                                  next[currentIndex] = cur;
+                                  return next;
+                                });
+                              }}
+                              className="inline mx-1 bg-transparent border-b-2 border-blue-500 dark:border-blue-400 text-blue-700 dark:text-blue-300 font-bold text-base focus:outline-none focus:border-blue-700 dark:focus:border-blue-300 transition-colors text-center"
+                            />
+                          )}
+                        </span>
+                      );
+                    },
+                  )}
                 </span>
               ) : (
                 <RenderMathText
@@ -742,16 +781,18 @@ const ExamScreen = ({
                     <button
                       key={index}
                       onClick={() => onOptionClick(option)}
-                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${isSelected
-                        ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
-                        : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                        }`}
+                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] ${
+                        isSelected
+                          ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
+                          : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
+                      }`}
                     >
                       <div
-                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isSelected
-                          ? "bg-blue-600 text-white"
-                          : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
-                          }`}
+                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                          isSelected
+                            ? "bg-blue-600 text-white"
+                            : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                        }`}
                       >
                         {label}
                       </div>
@@ -799,7 +840,11 @@ const ExamScreen = ({
           ) : (
             <button
               onClick={() => {
-                if (isFibExam && !isPremium && currentIndex >= FREE_FIB_LIMIT - 1) {
+                if (
+                  isFibExam &&
+                  !isPremium &&
+                  currentIndex >= FREE_FIB_LIMIT - 1
+                ) {
                   setFibGateOpen(true);
                   return;
                 }
@@ -853,7 +898,11 @@ const ExamScreen = ({
       {isFibGateOpen && (
         <FibPremiumGateOverlay
           onUpgrade={() => navigate("/premium")}
-          onQuit={() => { setFibGateOpen(false); clearExamSession(); navigate("/"); }}
+          onQuit={() => {
+            setFibGateOpen(false);
+            clearExamSession();
+            navigate("/");
+          }}
         />
       )}
     </div>

@@ -1,4 +1,8 @@
 import { useState } from "react";
+import {
+  trackFeedBoltCTAClick,
+  trackFeedBoltCTADismiss,
+} from "../utils/analytics";
 
 const FEEDBOLT_URL = "https://feedbolt-beige.vercel.app/";
 const STORAGE_KEY = "feedbolt_cta_dismissed";
@@ -30,6 +34,7 @@ export const FeedBoltBanner = () => {
     e.stopPropagation();
     set();
     setDismissed(true);
+    trackFeedBoltCTADismiss();
   };
 
   return (
@@ -38,6 +43,7 @@ export const FeedBoltBanner = () => {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Visit FeedBolt — post, connect and interact with fellow scholars"
+      onClick={() => trackFeedBoltCTAClick("home_banner")}
       className="group relative flex items-center justify-between gap-4 rounded-[2rem] p-5 overflow-hidden cursor-pointer active:scale-[0.98] transition-transform"
       style={{ background: "linear-gradient(135deg, #7C3AED, #6D28D9)" }}
     >
@@ -82,6 +88,7 @@ export const FeedBoltSidebarLink = () => (
     target="_blank"
     rel="noopener noreferrer"
     aria-label="Open FeedBolt in a new tab"
+    onClick={() => trackFeedBoltCTAClick("sidebar")}
     className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group"
   >
     <span className="size-8 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-base shrink-0">

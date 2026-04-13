@@ -4,6 +4,7 @@ import Logo from "../images/Logo";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { supabase } from "../supabaseClient";
+import { trackLogin, trackSignUp } from "../utils/analytics";
 
 const LoginScreen = () => {
   const navigate = useNavigate();
@@ -23,18 +24,20 @@ const LoginScreen = () => {
 
     try {
       // 🔑 Supabase login
-      const { data, error: authError } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
-      });
+      const { data, error: authError } = await supabase.auth.signInWithPassword(
+        {
+          email: formData.email,
+          password: formData.password,
+        },
+      );
 
       if (authError) throw authError;
 
       const user = data.user;
       if (!user) throw new Error("Login failed. Please try again.");
 
+      trackLogin("email");
       navigate("/");
-
     } catch (err) {
       setError(err.message);
     } finally {
@@ -47,10 +50,9 @@ const LoginScreen = () => {
     try {
       await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: {
-          redirectTo: window.location.origin,
-        },
+        options: { redirectTo: window.location.origin },
       });
+      trackLogin("google");
     } catch (err) {
       setError(err.message || "Google sign-in failed. Please try again.");
     }
@@ -113,7 +115,11 @@ const LoginScreen = () => {
               onClick={() => setShowPassword(!showPassword)}
               className="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 transition-colors"
             >
-              {showPassword ? <FiEyeOff className="text-xl" /> : <FiEye className="text-xl" />}
+              {showPassword ? (
+                <FiEyeOff className="text-xl" />
+              ) : (
+                <FiEye className="text-xl" />
+              )}
             </button>
           </div>
 
@@ -133,13 +139,15 @@ const LoginScreen = () => {
             type="submit"
             disabled={loading}
             className={`w-full bg-blue-600 dark:bg-blue-700 py-4 rounded-2xl font-bold text-white text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all flex items-center justify-center gap-2 group mt-2 ${
-              loading 
-                ? "opacity-70 cursor-not-allowed" 
+              loading
+                ? "opacity-70 cursor-not-allowed"
                 : "hover:bg-blue-700 hover:-translate-y-1 active:scale-95 active:translate-y-0"
             }`}
           >
             <span>{loading ? "Signing In..." : "Sign In"}</span>
-            {!loading && <FiArrowRight className="group-hover:translate-x-1 transition-transform" />}
+            {!loading && (
+              <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
+            )}
           </button>
 
           {/* Or divider */}

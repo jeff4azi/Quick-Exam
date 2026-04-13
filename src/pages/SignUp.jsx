@@ -1,15 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
-import {
-  FiMail,
-  FiLock,
-  FiEye,
-  FiEyeOff,
-  FiArrowRight,
-} from "react-icons/fi";
+import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { supabase } from "../supabaseClient";
+import { trackSignUp } from "../utils/analytics";
 
 const SignUpScreen = () => {
   const navigate = useNavigate();
@@ -49,10 +44,8 @@ const SignUpScreen = () => {
 
       if (signUpError) throw signUpError;
 
-      
-
       console.log("User signed up:", data);
-      // After sign up, guide user to check email for verification
+      trackSignUp("email");
       navigate("/confirm-email", { state: { email } });
     } catch (err) {
       console.error("Sign up error:", err.message);
@@ -67,10 +60,9 @@ const SignUpScreen = () => {
     try {
       await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: {
-          redirectTo: window.location.origin,
-        },
+        options: { redirectTo: window.location.origin },
       });
+      trackSignUp("google");
     } catch (err) {
       console.error("Google sign up error:", err.message);
       setError(err.message || "Google sign up failed. Please try again.");
@@ -156,12 +148,19 @@ const SignUpScreen = () => {
                     /[0-9]/.test(formData.password),
                     /[^A-Za-z0-9]/.test(formData.password),
                   ].filter(Boolean).length;
-                  const colors = ["bg-red-400", "bg-orange-400", "bg-yellow-400", "bg-green-400"];
+                  const colors = [
+                    "bg-red-400",
+                    "bg-orange-400",
+                    "bg-yellow-400",
+                    "bg-green-400",
+                  ];
                   return (
                     <div
                       key={i}
                       className={`h-1 flex-1 rounded-full transition-all duration-300 ${
-                        i < level ? colors[level - 1] : "bg-gray-200 dark:bg-slate-700"
+                        i < level
+                          ? colors[level - 1]
+                          : "bg-gray-200 dark:bg-slate-700"
                       }`}
                     />
                   );
@@ -170,12 +169,24 @@ const SignUpScreen = () => {
               {/* Rule checklist */}
               <div className="grid grid-cols-2 gap-x-3 gap-y-1">
                 {[
-                  { label: "8+ characters", pass: formData.password.length >= 8 },
-                  { label: "Uppercase letter", pass: /[A-Z]/.test(formData.password) },
+                  {
+                    label: "8+ characters",
+                    pass: formData.password.length >= 8,
+                  },
+                  {
+                    label: "Uppercase letter",
+                    pass: /[A-Z]/.test(formData.password),
+                  },
                   { label: "Number", pass: /[0-9]/.test(formData.password) },
-                  { label: "Special character", pass: /[^A-Za-z0-9]/.test(formData.password) },
+                  {
+                    label: "Special character",
+                    pass: /[^A-Za-z0-9]/.test(formData.password),
+                  },
                 ].map(({ label, pass }) => (
-                  <p key={label} className={`text-xs font-semibold flex items-center gap-1 transition-colors duration-200 ${pass ? "text-green-500" : "text-slate-400 dark:text-slate-500"}`}>
+                  <p
+                    key={label}
+                    className={`text-xs font-semibold flex items-center gap-1 transition-colors duration-200 ${pass ? "text-green-500" : "text-slate-400 dark:text-slate-500"}`}
+                  >
                     <span>{pass ? "✓" : "·"}</span> {label}
                   </p>
                 ))}
@@ -201,10 +212,16 @@ const SignUpScreen = () => {
 
           {/* Match indicator */}
           {formData.confirmPassword.length > 0 && (
-            <p className={`text-xs font-semibold px-1 animate-in fade-in duration-300 ${
-              formData.password === formData.confirmPassword ? "text-green-500" : "text-red-400"
-            }`}>
-              {formData.password === formData.confirmPassword ? "✓ Passwords match" : "· Passwords do not match"}
+            <p
+              className={`text-xs font-semibold px-1 animate-in fade-in duration-300 ${
+                formData.password === formData.confirmPassword
+                  ? "text-green-500"
+                  : "text-red-400"
+              }`}
+            >
+              {formData.password === formData.confirmPassword
+                ? "✓ Passwords match"
+                : "· Passwords do not match"}
             </p>
           )}
 

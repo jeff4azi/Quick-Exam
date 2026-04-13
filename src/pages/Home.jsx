@@ -18,6 +18,12 @@ import { FiZap } from "react-icons/fi";
 import { MdStar } from "react-icons/md";
 import { loadFavouriteCourseIds } from "../utils/favouriteCourses";
 import { FeedBoltBanner } from "../components/FeedBoltBanner";
+import {
+  trackPWAInstallPrompt,
+  trackPWAInstalled,
+  trackPWADismissed,
+  trackStudyModeClick,
+} from "../utils/analytics";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -61,11 +67,15 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
       e.preventDefault();
       setInstallPrompt(e);
       setShowInstallOverlay(true);
+      trackPWAInstallPrompt();
     };
 
     window.addEventListener("beforeinstallprompt", handler);
 
-    if (isIOS) setShowInstallOverlay(true);
+    if (isIOS) {
+      setShowInstallOverlay(true);
+      trackPWAInstallPrompt();
+    }
 
     return () => window.removeEventListener("beforeinstallprompt", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -82,12 +92,16 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
       if (outcome === "accepted") {
         localStorage.setItem("pwaInstalled", "true");
         setShowInstallOverlay(false);
+        trackPWAInstalled();
       }
       setInstallPrompt(null);
     }
   };
 
-  const handleInstallDismiss = () => setShowInstallOverlay(false);
+  const handleInstallDismiss = () => {
+    setShowInstallOverlay(false);
+    trackPWADismissed();
+  };
 
   useEffect(() => {
     loadFavouriteCourseIds().then((ids) => {
@@ -440,21 +454,30 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
               description: "Review and memorize",
               bg: "bg-violet-50 dark:bg-violet-900/20",
               icon: "🃏",
-              onClick: () => navigate("/flashcards"),
+              onClick: () => {
+                trackStudyModeClick("flashcards");
+                navigate("/flashcards");
+              },
             },
             {
               title: "Test",
               description: "Check your understanding",
               bg: "bg-sky-50 dark:bg-sky-900/20",
               icon: "📝",
-              onClick: () => navigate("/test"),
+              onClick: () => {
+                trackStudyModeClick("test");
+                navigate("/test");
+              },
             },
             {
               title: "Match",
               description: "Click fast and score high",
               bg: "bg-emerald-50 dark:bg-emerald-900/20",
               icon: "🧩",
-              onClick: () => navigate("/match"),
+              onClick: () => {
+                trackStudyModeClick("match");
+                navigate("/match");
+              },
             },
           ].map((mode) => (
             <button

@@ -2,6 +2,10 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import { StrictMode } from "react";
+import { initGA } from "./utils/analytics";
+
+// Init GA before anything renders so no events are missed
+initGA();
 
 // Unregister any stale manually-registered service workers from old builds
 if ("serviceWorker" in navigator) {
