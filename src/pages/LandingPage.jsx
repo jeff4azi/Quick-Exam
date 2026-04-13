@@ -22,13 +22,7 @@ import { SiX, SiTiktok } from "react-icons/si";
 import { FcGoogle } from "react-icons/fc";
 import { FiCheckCircle, FiShuffle, FiZap } from "react-icons/fi";
 import { supabase } from "../supabaseClient";
-
-// Universities from onboarding
-const UNIVERSITIES = [
-  "TaiSolarin University of Education (TASUED)",
-  "Lagos State University (LASU)",
-  "Bamidele Olumilua University of Education, Science and Technology (BOUESTI)",
-];
+import { useUniversities } from "../hooks/useUniversities";
 
 const PREMIUM_FEATURES = [
   { icon: <FiZap />, text: "Unlimited Questions in Every Exam" },
@@ -45,12 +39,13 @@ const PREMIUM_FEATURES = [
 const LandingPage = () => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
+  const { universities } = useUniversities();
 
   const [stats, setStats] = useState([
     { label: "Quizzes Taken", value: "..." },
     { label: "Active Scholars", value: "..." },
     { label: "Course Modules", value: "..." },
-    { label: "Universities", value: `${UNIVERSITIES.length}+` },
+    { label: "Universities", value: "..." },
   ]);
 
   const fetchStats = useCallback(async () => {
@@ -66,7 +61,7 @@ const LandingPage = () => {
         { label: "Quizzes Taken", value: fmt(quizzesRes.count || 0) },
         { label: "Active Scholars", value: fmt(usersRes.count || 0) },
         { label: "Course Modules", value: fmt(coursesRes.count || 0) },
-        { label: "Universities", value: `${UNIVERSITIES.length}+` },
+        { label: "Universities", value: `${universities.length}+` },
       ]);
     } catch (err) {
       console.error("Error fetching landing stats:", err);
@@ -254,12 +249,12 @@ const LandingPage = () => {
             </div>
             {/* University badges */}
             <div className="flex flex-wrap gap-2 justify-center lg:justify-start">
-              {UNIVERSITIES.map((u) => (
+              {universities.map((u) => (
                 <span
-                  key={u}
+                  key={u.id}
                   className="text-[10px] font-black uppercase tracking-wider bg-white dark:bg-gray-900 border border-slate-100 dark:border-gray-800 text-slate-500 dark:text-gray-400 px-3 py-1.5 rounded-full"
                 >
-                  {u}
+                  {u.name} ({u.id})
                 </span>
               ))}
             </div>
@@ -772,10 +767,10 @@ const LandingPage = () => {
               Universities
             </h4>
             <ul className="space-y-3 text-sm font-medium text-slate-500 dark:text-gray-400">
-              {UNIVERSITIES.map((u) => (
-                <li key={u} className="flex items-center gap-2">
+              {universities.map((u) => (
+                <li key={u.id} className="flex items-center gap-2">
                   <div className="size-1.5 bg-blue-600 rounded-full shrink-0" />
-                  {u}
+                  {u.name}
                 </li>
               ))}
             </ul>

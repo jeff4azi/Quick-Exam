@@ -12,6 +12,7 @@ import {
 } from "react-icons/fi";
 import { supabase } from "../supabaseClient"; // Import your supabase client
 import { useAuth } from "../context/AuthContext";
+import { useUniversities } from "../hooks/useUniversities";
 
 const OnboardingScreen = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const OnboardingScreen = () => {
     profileValid,
     refreshProfile,
   } = useAuth();
+  const { universities } = useUniversities();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -38,15 +40,6 @@ const OnboardingScreen = () => {
     LASU: ["FASA", "MASSA", "SOSSA"],
     BOUESTI: ["COE", "COS", "COT"],
   };
-
-  const universities = [
-    { id: "TASUED", name: "TaiSolarin University of Education" },
-    { id: "LASU", name: "Lagos State University" },
-    {
-      id: "BOUESTI",
-      name: "Bamidele Olumilua University of Education, Science and Technology",
-    },
-  ];
 
   useEffect(() => {
     const init = async () => {
@@ -160,7 +153,7 @@ const OnboardingScreen = () => {
         id: user.id,
         full_name: fullName,
         user_name: userName, // Store slugified name
-        university: formData.university,
+        university: formData.university.toUpperCase(),
         college: formData.college,
         department: formData.department,
         year: parseInt(formData.year, 10) || null,
@@ -246,7 +239,7 @@ const OnboardingScreen = () => {
                 onChange={(e) =>
                   setFormData({
                     ...formData,
-                    university: e.target.value,
+                    university: e.target.value.toUpperCase(),
                     college: "",
                   })
                 }
@@ -257,7 +250,7 @@ const OnboardingScreen = () => {
                   Select your university
                 </option>
                 {universities.map((u) => (
-                  <option key={u.id} value={u.id}>
+                  <option key={u.id} value={u.id.toUpperCase()}>
                     {u.name}
                   </option>
                 ))}

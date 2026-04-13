@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useUniversities } from "../hooks/useUniversities";
 import {
   FaBolt,
   FaRocket,
@@ -21,16 +22,7 @@ import { SiX, SiTiktok } from "react-icons/si";
 import { FiCheckCircle, FiZap, FiShuffle } from "react-icons/fi";
 import Logo from "../images/Logo";
 
-// Universities from onboarding
-const UNIVERSITIES = [
-  { id: "TASUED", name: "TaiSolarin University of Education", short: "TASUED" },
-  { id: "LASU", name: "Lagos State University", short: "LASU" },
-  {
-    id: "BOUESTI",
-    name: "Bamidele Olumilua University of Education, Science and Technology",
-    short: "BOUESTI",
-  },
-];
+// Universities from onboarding — now fetched from DB via useUniversities hook
 
 const PREMIUM_FEATURES = [
   { icon: <FiZap />, text: "Unlimited Questions in Every Exam" },
@@ -46,6 +38,7 @@ const PREMIUM_FEATURES = [
 
 const AboutPage = () => {
   const navigate = useNavigate();
+  const { universities } = useUniversities();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -143,13 +136,13 @@ const AboutPage = () => {
             university.
           </p>
           <div className="flex flex-wrap justify-center gap-6">
-            {UNIVERSITIES.map((u) => (
+            {universities.map((u) => (
               <div
                 key={u.id}
                 className="bg-slate-50 dark:bg-gray-900 border border-slate-100 dark:border-gray-800 rounded-[2rem] px-10 py-8 flex flex-col items-center gap-3 min-w-[220px]"
               >
                 <div className="size-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-200 dark:shadow-none">
-                  {u.short}
+                  {u.id}
                 </div>
                 <p className="font-black text-slate-800 dark:text-white text-center text-sm">
                   {u.name}
@@ -417,7 +410,7 @@ const AboutPage = () => {
               Universities
             </h4>
             <ul className="space-y-3 text-sm font-medium text-slate-500">
-              {UNIVERSITIES.map((u) => (
+              {universities.map((u) => (
                 <li key={u.id} className="flex items-center gap-2">
                   <div className="size-1.5 bg-blue-600 rounded-full shrink-0" />
                   {u.name}
