@@ -13,6 +13,7 @@ import {
 import { supabase } from "../supabaseClient"; // Import your supabase client
 import { useAuth } from "../context/AuthContext";
 import { useUniversities } from "../hooks/useUniversities";
+import { useColleges } from "../hooks/useColleges";
 
 const OnboardingScreen = () => {
   const navigate = useNavigate();
@@ -35,11 +36,7 @@ const OnboardingScreen = () => {
     year: "",
   });
 
-  const collegesByUniversity = {
-    TASUED: ["COSIT", "COVTED", "COSPED", "COHUM", "COSMAS", "COAHM"],
-    LASU: ["FASA", "MASSA", "SOSSA"],
-    BOUESTI: ["COE", "COS", "COT"],
-  };
+  const colleges = useColleges(formData.university);
 
   useEffect(() => {
     const init = async () => {
@@ -295,23 +292,20 @@ I understand I need to provide correct details.`;
 
                   setFormData((prev) => ({ ...prev, college: value }));
                 }}
-                disabled={
-                  !formData.university ||
-                  collegesByUniversity[formData.university]?.length === 0
-                }
+                disabled={!formData.university || colleges.length === 0}
                 className="w-full pl-12 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all shadow-sm appearance-none disabled:opacity-50 disabled:cursor-not-allowed"
                 required
               >
                 <option value="" disabled>
                   {!formData.university
                     ? "Select university first"
-                    : collegesByUniversity[formData.university]?.length === 0
+                    : colleges.length === 0
                       ? `No ${formData.university === "LASU" ? "Faculty" : "College"} available yet`
                       : `Select your ${formData.university === "LASU" ? "Faculty" : "College"}`}
                 </option>
-                {(collegesByUniversity[formData.university] || []).map((c) => (
-                  <option key={c} value={c}>
-                    {c}
+                {colleges.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
                   </option>
                 ))}
                 <option value="OTHER">
