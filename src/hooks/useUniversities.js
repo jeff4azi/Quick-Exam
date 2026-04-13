@@ -9,7 +9,7 @@ export function useUniversities() {
     supabase
       .from("universities")
       .select("id, name")
-      .order("name")
+      .order("name", { ascending: false })
       .then(({ data }) => {
         if (data) setUniversities(data);
       })
