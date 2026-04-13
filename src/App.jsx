@@ -373,6 +373,8 @@ function App() {
 
   // Bookmarks are now loaded from Supabase via getProfile below
 
+  const isPremium = userProfile?.isPremium === true;
+
   const handleLogout = async () => {
     try {
       trackLogout();
