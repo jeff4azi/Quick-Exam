@@ -240,7 +240,7 @@ const LandingPage = () => {
               </button>
               <button
                 onClick={() =>
-                  window.open("https://wa.me/2347015585397", "_blank")
+                  navigate("/about", { state: { scrollTo: "contact" } })
                 }
                 className="px-8 py-4 rounded-2xl font-black text-lg border-2 border-slate-200 dark:border-gray-800 hover:bg-slate-50 dark:hover:bg-gray-900 transition-all"
               >

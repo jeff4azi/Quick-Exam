@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useUniversities } from "../hooks/useUniversities";
 import {
   FaBolt,
@@ -38,11 +38,29 @@ const PREMIUM_FEATURES = [
 
 const AboutPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { universities } = useUniversities();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    const scrollTarget = location.state?.scrollTo;
+    if (!scrollTarget) {
+      window.scrollTo(0, 0);
+      return;
+    }
+
+    // Wait for full paint before scrolling
+    const timer = setTimeout(() => {
+      const el = document.getElementById(scrollTarget);
+      if (el) {
+        const navHeight = document.querySelector("nav")?.offsetHeight ?? 80;
+        const top =
+          el.getBoundingClientRect().top + window.scrollY - navHeight - 16;
+        window.scrollTo({ top, behavior: "smooth" });
+      }
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [location.state?.scrollTo]);
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-gray-950 text-slate-900 dark:text-gray-100 selection:bg-blue-100 dark:selection:bg-blue-900/30 transition-colors duration-300">
@@ -266,7 +284,7 @@ const AboutPage = () => {
               />
             </ul>
           </div>
-          <div className="lg:col-span-3 bg-white dark:bg-gray-900 p-12 rounded-[3rem] border border-slate-100 dark:border-gray-800 shadow-2xl relative overflow-hidden">
+          <div className="lg:col-span-3 bg-white dark:bg-gray-900 p-12 rounded-[3rem] border border-slate-100 dark:border-gray-800 shadow-2xl relative overflow-hidden scroll-mt-24">
             <div className="absolute top-0 right-0 p-8 opacity-5">
               <FaWhatsapp className="text-[120px]" />
             </div>
@@ -298,6 +316,7 @@ const AboutPage = () => {
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-2xl font-black text-lg shadow-xl shadow-green-200 dark:shadow-none transition-all active:scale-95"
+                id="contact"
               >
                 <FaWhatsapp className="text-xl" /> Message on WhatsApp
               </a>
