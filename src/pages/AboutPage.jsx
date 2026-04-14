@@ -142,9 +142,9 @@ const AboutPage = () => {
                 className="bg-slate-50 dark:bg-gray-900 border border-slate-100 dark:border-gray-800 rounded-[2rem] px-10 py-8 flex flex-col items-center gap-3 min-w-[220px]"
               >
                 <div className="size-14 bg-blue-600 rounded-2xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-200 dark:shadow-none">
-                  {u.id}
+                  {u.id.toUpperCase()}
                 </div>
-                <p className="font-black text-slate-800 dark:text-white text-center text-sm">
+                <p className="font-black text-slate-800 dark:text-white text-center text-sm max-w-xs">
                   {u.name}
                 </p>
               </div>
