@@ -66,7 +66,7 @@ const LandingPage = () => {
     } catch (err) {
       console.error("Error fetching landing stats:", err);
     }
-  }, []);
+  }, [universities.length]);
 
   useEffect(() => {
     fetchStats();
