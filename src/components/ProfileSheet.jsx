@@ -84,7 +84,9 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
             <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
               <FiShield className="mx-auto text-orange-500 mb-1" />
               <p className="text-xs font-bold text-slate-400 uppercase">
-                {userProfile?.university == "TASUED" ? "College" :"Faculty"}
+                {["TASUED", "BOUESTI"].includes(userProfile?.university)
+                  ? "College"
+                  : "Faculty"}
               </p>
               <p className="font-black text-slate-900 dark:text-white">
                 {userProfile?.college || "—"}
