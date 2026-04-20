@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
 import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { RenderMathText } from "../utils/RenderMathText";
@@ -64,6 +66,56 @@ const FibPremiumGateOverlay = ({ onUpgrade, onQuit }) => (
     </div>
   </div>
 );
+
+// ─── Pagination Strip ────────────────────────────────────────────────────────
+// ─── Pagination Strip ────────────────────────────────────────────────────────
+const PaginationStrip = ({ total, currentIndex, answers, onSelect }) => {
+  const swiperRef = useRef(null);
+
+  // Keep active slide centred whenever currentIndex changes
+  useEffect(() => {
+    if (swiperRef.current) {
+      swiperRef.current.slideTo(currentIndex, 300);
+    }
+  }, [currentIndex]);
+
+  return (
+    <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 px-1 py-2.5 rounded-[2rem] shadow-xl overflow-hidden mt-5 mx-3">
+      <Swiper
+        onSwiper={(swiper) => (swiperRef.current = swiper)}
+        slidesPerView="auto"
+        spaceBetween={6}
+        slidesOffsetBefore={4}
+        slidesOffsetAfter={4}
+        slideToClickedSlide={true}
+        onSlideClick={(swiper) => onSelect(swiper.clickedIndex)}
+        className="!overflow-visible"
+      >
+        {Array.from({ length: total }).map((_, idx) => {
+          const isActive = idx === currentIndex;
+          const isAnswered = answers[idx] != null && answers[idx] !== "";
+
+          return (
+            <SwiperSlide key={idx} style={{ width: "auto" }}>
+              <button
+                onClick={() => onSelect(idx)}
+                className={`flex items-center justify-center rounded-full font-bold text-[11px] shrink-0 focus:outline-none transition-all duration-200 ${
+                  isActive
+                    ? "size-8 bg-blue-600 text-white shadow-md shadow-blue-300/60 dark:shadow-blue-900/60 scale-110"
+                    : isAnswered
+                      ? "size-7 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400"
+                      : "size-7 bg-gray-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500"
+                }`}
+              >
+                {idx + 1}
+              </button>
+            </SwiperSlide>
+          );
+        })}
+      </Swiper>
+    </div>
+  );
+};
 
 const calculateTotalTime = (questionCount, isMath, isTheory, isFib) => {
   if (isTheory) return questionCount * 4.5 * 60; // 4m30s per theory question
@@ -810,6 +862,14 @@ const ExamScreen = ({
               )}
             </div>
           </div>
+
+          {/* Pagination strip below question card */}
+          <PaginationStrip
+            total={shuffledQuestions.length}
+            currentIndex={currentIndex}
+            answers={answers}
+            onSelect={setCurrentIndex}
+          />
         </div>
       </div>
 
@@ -818,46 +878,49 @@ const ExamScreen = ({
         className="fixed bottom-0 inset-x-0 px-6 lg:pl-64 py-2 z-40 transition-all duration-200"
         style={{ bottom: kbHeight }}
       >
-        <div className="max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-3">
-          <button
-            onClick={() => {
-              setCurrentIndex((prev) => Math.max(0, prev - 1));
-            }}
-            disabled={currentIndex === 0}
-            className="size-14 rounded-full flex items-center justify-center bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-20 transition-all active:scale-90"
-          >
-            <FiChevronLeft size={24} />
-          </button>
-
-          {currentIndex === totalQuestions - 1 ? (
-            <button
-              onClick={() => setSubmitOverlayOpen(true)}
-              className="flex-1 bg-green-600 hover:bg-green-700 text-white h-14 rounded-[1.8rem] font-black text-lg shadow-lg shadow-green-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-3"
-            >
-              <span>Submit Quiz</span>
-              <FiSend />
-            </button>
-          ) : (
+        <div className="max-w-2xl mx-auto flex flex-col gap-2">
+          {/* Prev / Next row */}
+          <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-3">
             <button
               onClick={() => {
-                if (
-                  isFibExam &&
-                  !isPremium &&
-                  currentIndex >= FREE_FIB_LIMIT - 1
-                ) {
-                  setFibGateOpen(true);
-                  return;
-                }
-                setCurrentIndex((prev) =>
-                  Math.min(totalQuestions - 1, prev + 1),
-                );
+                setCurrentIndex((prev) => Math.max(0, prev - 1));
               }}
-              className="flex-1 bg-blue-600 hover:bg-blue-700 text-white h-14 rounded-[1.8rem] font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
+              disabled={currentIndex === 0}
+              className="size-14 rounded-full flex items-center justify-center bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-20 transition-all active:scale-90"
             >
-              <span>Next Question</span>
-              <FiChevronRight />
+              <FiChevronLeft size={24} />
             </button>
-          )}
+
+            {currentIndex === totalQuestions - 1 ? (
+              <button
+                onClick={() => setSubmitOverlayOpen(true)}
+                className="flex-1 bg-green-600 hover:bg-green-700 text-white h-14 rounded-[1.8rem] font-black text-lg shadow-lg shadow-green-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-3"
+              >
+                <span>Submit Quiz</span>
+                <FiSend />
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  if (
+                    isFibExam &&
+                    !isPremium &&
+                    currentIndex >= FREE_FIB_LIMIT - 1
+                  ) {
+                    setFibGateOpen(true);
+                    return;
+                  }
+                  setCurrentIndex((prev) =>
+                    Math.min(totalQuestions - 1, prev + 1),
+                  );
+                }}
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white h-14 rounded-[1.8rem] font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
+              >
+                <span>Next Question</span>
+                <FiChevronRight />
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
