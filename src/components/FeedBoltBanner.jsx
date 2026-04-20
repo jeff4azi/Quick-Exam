@@ -18,7 +18,7 @@ const useDismissed = () => {
   const set = () => {
     try {
       localStorage.setItem(STORAGE_KEY, "true");
-    } catch {}
+    } catch { /* empty */ }
   };
   return { get, set };
 };
@@ -44,7 +44,7 @@ export const FeedBoltBanner = () => {
       rel="noopener noreferrer"
       aria-label="Visit FeedBolt — post, connect and interact with fellow scholars"
       onClick={() => trackFeedBoltCTAClick("home_banner")}
-      className="group relative flex items-center justify-between gap-4 rounded-[2rem] p-5 overflow-hidden cursor-pointer active:scale-[0.98] transition-transform"
+      className="group relative flex items-center justify-between gap-4 rounded-[2rem] p-5 overflow-hidden cursor-pointer active:scale-[0.98] transition-transform lg:hidden"
       style={{ background: "linear-gradient(135deg, #7C3AED, #6D28D9)" }}
     >
       {/* decorative blob */}
