@@ -868,7 +868,13 @@ const ExamScreen = ({
             total={shuffledQuestions.length}
             currentIndex={currentIndex}
             answers={answers}
-            onSelect={setCurrentIndex}
+            onSelect={(idx) => {
+              if (isFibExam && !isPremium && idx >= FREE_FIB_LIMIT) {
+                setFibGateOpen(true);
+                return;
+              }
+              setCurrentIndex(idx);
+            }}
           />
         </div>
       </div>
