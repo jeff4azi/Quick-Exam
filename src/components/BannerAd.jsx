@@ -53,7 +53,7 @@ function resizeCloudinaryUrl(url) {
     h = 992;
   }
 
-  return url.replace("/upload/", `/upload/w_${w},h_${h},c_fit,q_auto,f_auto/`);
+  return url.replace("/upload/", `/upload/w_${w},h_${h},c_fill,q_auto,f_auto/`);
 }
 
 const BannerAd = ({ onAdClose }) => {
