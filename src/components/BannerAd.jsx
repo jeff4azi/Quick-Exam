@@ -38,29 +38,22 @@ const AD_DATABASE = [
 ];
 
 function resizeCloudinaryUrl(url) {
-   if (!url.includes("cloudinary.com")) return url;
+  if (!url.includes("cloudinary.com")) return url;
+  if (url.includes("/upload/w_")) return url; // already transformed
 
-   // Base size
-   let w = 800;
-   let h = 1131;
+  let w = 800,
+    h = 1131;
+  const width = window.innerWidth;
 
-   const width = window.innerWidth;
+  if (width < 768) {
+    w = 600;
+    h = 849;
+  } else if (width < 1024) {
+    w = 700;
+    h = 992;
+  }
 
-   if (width < 768) {
-     // Mobile
-     w = 600;
-     h = 849;
-   } else if (width < 1024) {
-     // Tablet
-     w = 700;
-     h = 992;
-   }
-   // Desktop stays at 800x1131
-
-   return url.replace(
-     "/upload/",
-     `/upload/w_${w},h_${h},c_fill,q_auto,f_auto/`,
-   );
+  return url.replace("/upload/", `/upload/w_${w},h_${h},c_fit,q_auto,f_auto/`);
 }
 
 const BannerAd = ({ onAdClose }) => {
