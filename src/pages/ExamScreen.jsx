@@ -204,6 +204,7 @@ const ExamScreen = ({
   questionsLoading,
   isPremium,
   autoAdvance,
+  showPagination,
   userProfile,
   questionType,
   questionsContext,
@@ -864,18 +865,20 @@ const ExamScreen = ({
           </div>
 
           {/* Pagination strip below question card */}
-          <PaginationStrip
-            total={shuffledQuestions.length}
-            currentIndex={currentIndex}
-            answers={answers}
-            onSelect={(idx) => {
-              if (isFibExam && !isPremium && idx >= FREE_FIB_LIMIT) {
-                setFibGateOpen(true);
-                return;
-              }
-              setCurrentIndex(idx);
-            }}
-          />
+          {showPagination && (
+            <PaginationStrip
+              total={shuffledQuestions.length}
+              currentIndex={currentIndex}
+              answers={answers}
+              onSelect={(idx) => {
+                if (isFibExam && !isPremium && idx >= FREE_FIB_LIMIT) {
+                  setFibGateOpen(true);
+                  return;
+                }
+                setCurrentIndex(idx);
+              }}
+            />
+          )}
         </div>
       </div>
 

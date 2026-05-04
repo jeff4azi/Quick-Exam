@@ -68,6 +68,15 @@ function App() {
     }
   });
 
+  const [showPagination, setShowPagination] = useState(() => {
+    try {
+      const saved = localStorage.getItem("showPaginationPreference");
+      return saved !== null ? JSON.parse(saved) : true; // Default to true
+    } catch {
+      return true;
+    }
+  });
+
   // FIX: Initialize results logic
   const [results, setResults] = useState({ correct: 0, wrong: 0, answered: 0 });
   const [lastTimeTaken, setLastTimeTaken] = useState(0);
@@ -299,6 +308,17 @@ function App() {
   }, [autoAdvance]);
 
   useEffect(() => {
+    try {
+      localStorage.setItem(
+        "showPaginationPreference",
+        JSON.stringify(showPagination),
+      );
+    } catch (err) {
+      console.error("Failed to save pagination preference:", err);
+    }
+  }, [showPagination]);
+
+  useEffect(() => {
     const loadQuestionsForSelectedCourse = async () => {
       // Don't wipe a just-restored session — wait until the user picks a new exam
       if (!selectedCourse || !selectedQuestionCount) {
@@ -500,6 +520,8 @@ function App() {
     toggleDarkMode: () => setIsDarkMode((prev) => !prev),
     autoAdvance,
     toggleAutoAdvance: () => setAutoAdvance((prev) => !prev),
+    showPagination,
+    toggleShowPagination: () => setShowPagination((prev) => !prev),
     selectedQuestionCount,
     setSelectedQuestionCount,
     userProfile,
@@ -619,6 +641,10 @@ function App() {
                       toggleDarkMode={() => setIsDarkMode((prev) => !prev)}
                       autoAdvance={autoAdvance}
                       toggleAutoAdvance={() => setAutoAdvance((prev) => !prev)}
+                      showPagination={showPagination}
+                      toggleShowPagination={() =>
+                        setShowPagination((prev) => !prev)
+                      }
                       deleteImage={deleteImage}
                     />,
                   )}

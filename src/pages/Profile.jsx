@@ -12,6 +12,7 @@ import {
   FiLogOut,
   FiAlertTriangle,
   FiZap,
+  FiGrid,
 } from "react-icons/fi";
 import { API_BASE_URL } from "../apiConfig";
 import { FaCrown, FaFacebookF, FaWhatsapp } from "react-icons/fa";
@@ -31,6 +32,8 @@ const Profile = ({
   toggleDarkMode,
   autoAdvance,
   toggleAutoAdvance,
+  showPagination,
+  toggleShowPagination,
   deleteImage,
 }) => {
   const navigate = useNavigate();
@@ -88,16 +91,13 @@ const Profile = ({
         throw new Error("No session found");
       }
 
-      const res = await fetch(
-        `${API_BASE_URL}/api/users/delete-account`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${session.access_token}`,
-          },
+      const res = await fetch(`${API_BASE_URL}/api/users/delete-account`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${session.access_token}`,
         },
-      );
+      });
 
       const data = await res.json();
 
@@ -447,12 +447,14 @@ const Profile = ({
               <button
                 type="button"
                 onClick={toggleDarkMode}
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${isDarkMode ? "bg-blue-600" : "bg-gray-300"
-                  }`}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
+                  isDarkMode ? "bg-blue-600" : "bg-gray-300"
+                }`}
               >
                 <div
-                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${isDarkMode ? "translate-x-6" : ""
-                    }`}
+                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                    isDarkMode ? "translate-x-6" : ""
+                  }`}
                 />
               </button>
             </div>
@@ -481,12 +483,14 @@ const Profile = ({
                     ? toggleAutoAdvance
                     : () => setPremiumOverlayOpen(true)
                 }
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${autoAdvance && isPremium ? "bg-blue-600" : "bg-gray-300"
-                  } ${!isPremium ? "opacity-60 cursor-not-allowed" : ""}`}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
+                  autoAdvance && isPremium ? "bg-blue-600" : "bg-gray-300"
+                } ${!isPremium ? "opacity-60 cursor-not-allowed" : ""}`}
               >
                 <div
-                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${autoAdvance && isPremium ? "translate-x-6" : ""
-                    }`}
+                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                    autoAdvance && isPremium ? "translate-x-6" : ""
+                  }`}
                 />
               </button>
 
@@ -496,6 +500,36 @@ const Profile = ({
                   <FaCrown className="text-[8px] text-white" />
                 </div>
               )}
+            </div>
+
+            {/* Show Pagination Toggle */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <span className="size-9 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400">
+                  <FiGrid className="text-lg" />
+                </span>
+                <div>
+                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
+                    Question Pagination
+                  </p>
+                  <p className="text-[11px] text-slate-400 dark:text-slate-500">
+                    Show question bubbles on the exam screen.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={toggleShowPagination}
+                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
+                  showPagination ? "bg-blue-600" : "bg-gray-300"
+                }`}
+              >
+                <div
+                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                    showPagination ? "translate-x-6" : ""
+                  }`}
+                />
+              </button>
             </div>
           </div>
         </div>
@@ -509,12 +543,13 @@ const Profile = ({
         className="absolute bottom-8 right-6"
       >
         <div
-          className={`size-14 rounded-full flex items-center justify-center shadow-xl shadow-blue-200 dark:shadow-none transition-all ${isSaving
+          className={`size-14 rounded-full flex items-center justify-center shadow-xl shadow-blue-200 dark:shadow-none transition-all ${
+            isSaving
               ? "bg-green-600/80 cursor-wait"
               : isEditing
                 ? "bg-green-600 hover:bg-green-700 active:scale-95"
                 : "bg-blue-600 hover:bg-blue-700 active:scale-95"
-            }`}
+          }`}
         >
           {isSaving ? (
             <FiLoader className="text-white text-xl animate-spin" />
