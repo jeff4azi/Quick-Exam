@@ -5,7 +5,7 @@ import { FiX, FiVolume2, FiVolumeX } from "react-icons/fi";
 const AD_DATABASE = [
   {
     type: "image",
-    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770389975/Advertise_Here_20260206_152335_0000_lg0smh.png",
+    url: "https://res.cloudinary.com/dn5h1cghb/image/upload/v1777905618/Advertise_Here_20260206_152922_0000_bns87b_jm43tr.png",
     duration: 5,
     whatsapp: "2347015585397",
     message:
@@ -13,7 +13,7 @@ const AD_DATABASE = [
   },
   {
     type: "image",
-    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1773144280/Advertise_Here_20260206_152922_0000_bns87b.png",
+    url: "https://res.cloudinary.com/dn5h1cghb/image/upload/v1777905619/Advertise_Here_20260206_152335_0000_lg0smh_tlkppg.png",
     duration: 5,
     whatsapp: "2347015585397",
     message:
@@ -21,7 +21,7 @@ const AD_DATABASE = [
   },
   {
     type: "image",
-    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1770557375/BackgroundEraser_20260208_141707632_sk6ng9.jpg",
+    url: "https://res.cloudinary.com/dn5h1cghb/image/upload/v1777905619/BackgroundEraser_20260208_141707632_sk6ng9_aqz2yp.jpg",
     duration: 5,
     whatsapp: "2348159767554",
     message:
@@ -29,7 +29,7 @@ const AD_DATABASE = [
   },
   {
     type: "image",
-    url: "https://res.cloudinary.com/dxdnhc1hm/image/upload/v1775405359/flyer_fcbjfw.png",
+    url: "https://res.cloudinary.com/dn5h1cghb/image/upload/v1777905622/flyer_fcbjfw_t7sksl.png",
     duration: 5,
     whatsapp: "2347015585397",
     message:
