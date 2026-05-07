@@ -38,6 +38,7 @@ const ChooseCourseScreen = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [theoryOverlayOpen, setTheoryOverlayOpen] = useState(false);
+  const [requestCourseOverlay, setRequestCourseOverlay] = useState(false);
   const [favouriteIds, setFavouriteIds] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -172,15 +173,14 @@ const ChooseCourseScreen = ({
               </p>
             )}
           </div>
-          <a
-            href="https://wa.me/2348134497640?text=Hello%20I%20want%20to%20request%20a%20course.%0A%0ASchool:%20%0ACourse%20Name:%20%0ADo%20you%20have%20materials%3F%20(Yes%2FNo)%0A%0AI%20understand%20I%20need%20to%20send%20PDFs%20or%20notes."
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            type="button"
+            onClick={() => setRequestCourseOverlay(true)}
             className="ml-auto px-4 py-2 text-xs font-black rounded-xl bg-green-500 text-white shadow-md active:scale-95 flex items-center gap-1 transition-all"
           >
             <FaWhatsapp className="inline-block size-4 mr-1" />
             Request Course
-          </a>
+          </button>
         </div>
 
         {/* TABS */}
@@ -476,6 +476,39 @@ const ChooseCourseScreen = ({
         message="Upgrade to Premium to access theory questions and test your written knowledge across all courses."
         confirmText="Get Premium"
         cancelText="Maybe later"
+      />
+
+      <ConfirmOverlay
+        isOpen={requestCourseOverlay}
+        onClose={() => setRequestCourseOverlay(false)}
+        onConfirm={() => {
+          window.open(
+            "https://wa.me/2348134497640?text=Hello%20I%20want%20to%20request%20a%20course.%0A%0ASchool:%20%0ACourse%20Name:%20%0ADo%20you%20have%20materials%3F%20(Yes%2FNo)%0A%0AI%20understand%20I%20need%20to%20send%20PDFs%20or%20notes.",
+            "_blank",
+          );
+          setRequestCourseOverlay(false);
+        }}
+        title="Request a New Course"
+        message={
+          <span>
+            You&apos;ll be redirected to WhatsApp to submit your course request.
+            If you contribute useful PDFs, notes, or past questions for the
+            course, you&apos;ll receive{" "}
+            <span className="font-black text-amber-400 text-base">
+              FREE 7-Day Premium Access
+            </span>{" "}
+            after verification.
+          </span>
+        }
+        confirmText={
+          <span className="flex items-center justify-center gap-2">
+            <FaWhatsapp size={18} />
+            Continue to WhatsApp
+          </span>
+        }
+        confirmButtonClassName="w-full py-4 rounded-2xl font-bold text-white shadow-lg transition-all active:scale-95 bg-[#25D366] hover:bg-[#1ebe5d] shadow-green-200 dark:shadow-none"
+        icon={<FaWhatsapp size={32} className="text-[#25D366]" />}
+        cancelText="Cancel"
       />
 
       <NavBar
