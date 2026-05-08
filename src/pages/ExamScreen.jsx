@@ -773,7 +773,10 @@ const ExamScreen = ({
                         : [];
                       return (
                         <span key={i}>
-                          {part}
+                          <RenderMathText
+                            text={part}
+                            courseId={selectedCourse?.id}
+                          />
                           {i < arr.length - 1 && (
                             <input
                               type="text"
