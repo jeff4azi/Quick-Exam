@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { FaHistory, FaChevronRight, FaTrashAlt, FaTrophy, FaChartLine, FaLayerGroup, FaRedoAlt } from "react-icons/fa";
+import {
+  FaHistory,
+  FaChevronRight,
+  FaTrashAlt,
+  FaTrophy,
+  FaChartLine,
+  FaLayerGroup,
+  FaRedoAlt,
+} from "react-icons/fa";
 import { FiTrash2, FiClock, FiRefreshCw } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
@@ -15,8 +23,7 @@ const formatTime = (seconds) => {
   return `${mins}m ${secs}s`;
 };
 
-
-const HistoryScreen = ({ isPremium }) => {
+const HistoryScreen = ({ isPremium, setQuestionType }) => {
   const [historyData, setHistoryData] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false);
@@ -27,10 +34,13 @@ const HistoryScreen = ({ isPremium }) => {
 
   const fetchHistory = useCallback(async () => {
     setLoading(true);
-    const { data: { user }, error: userError } = await withTimeout(
+    const {
+      data: { user },
+      error: userError,
+    } = await withTimeout(
       supabase.auth.getUser(),
       15000,
-      "Session check took too long while loading history."
+      "Session check took too long while loading history.",
     );
 
     if (userError || !user) {
@@ -43,7 +53,8 @@ const HistoryScreen = ({ isPremium }) => {
     const { data, error } = await withTimeout(
       supabase
         .from("exam_attempts")
-        .select(`
+        .select(
+          `
       id,
       course_id,
       score,
@@ -52,11 +63,12 @@ const HistoryScreen = ({ isPremium }) => {
       time_taken,
       is_retake,
       type
-    `)
+    `,
+        )
         .eq("user_id", user.id)
         .order("date_taken", { ascending: false }),
       15000,
-      "Loading your history took too long. Please try again."
+      "Loading your history took too long. Please try again.",
     );
 
     if (error) {
@@ -76,7 +88,6 @@ const HistoryScreen = ({ isPremium }) => {
   // Re-fetch history whenever the tab regains focus after being idle/hidden
   useVisibilityRefresh(fetchHistory);
 
-
   // Scroll shadow effect
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -89,53 +100,44 @@ const HistoryScreen = ({ isPremium }) => {
   const bestScore =
     totalExams > 0
       ? Math.max(
-        ...historyData.map(
-          (h) => (Number(h.score) / Number(h.total_questions)) * 100
+          ...historyData.map(
+            (h) => (Number(h.score) / Number(h.total_questions)) * 100,
+          ),
         )
-      )
       : 0;
 
   const avgScore =
     totalExams > 0
       ? Math.round(
-        historyData.reduce(
-          (acc, h) =>
-            acc +
-            (Number(h.score) / Number(h.total_questions)) * 100,
-          0
-        ) / totalExams
-      )
+          historyData.reduce(
+            (acc, h) =>
+              acc + (Number(h.score) / Number(h.total_questions)) * 100,
+            0,
+          ) / totalExams,
+        )
       : 0;
 
   const avgTime =
     totalExams > 0
       ? Math.round(
-        historyData.reduce((acc, h) => acc + (Number(h.time_taken) || 0), 0) /
-        totalExams
-      )
+          historyData.reduce((acc, h) => acc + (Number(h.time_taken) || 0), 0) /
+            totalExams,
+        )
       : 0;
   const formattedAvgTime = formatTime(avgTime);
 
-  const retakeCount = historyData.filter(h => h.is_retake).length;
+  const retakeCount = historyData.filter((h) => h.is_retake).length;
 
   const retakeRate =
-    totalExams > 0
-      ? Math.round((retakeCount / totalExams) * 100)
-      : 0;
+    totalExams > 0 ? Math.round((retakeCount / totalExams) * 100) : 0;
   const formattedRetake =
-    totalExams > 0
-      ? `${retakeRate}% (${retakeCount})`
-      : "—";
-
+    totalExams > 0 ? `${retakeRate}% (${retakeCount})` : "—";
 
   const deleteExam = async (id) => {
     const { error } = await withTimeout(
-      supabase
-        .from("exam_attempts")
-        .delete()
-        .eq("id", id),
+      supabase.from("exam_attempts").delete().eq("id", id),
       15000,
-      "Deleting this attempt took too long. Please try again."
+      "Deleting this attempt took too long. Please try again.",
     );
 
     if (error) {
@@ -146,25 +148,21 @@ const HistoryScreen = ({ isPremium }) => {
     setHistoryData((prev) => prev.filter((exam) => exam.id !== id));
   };
 
-
   const clearAllHistory = async () => {
     const {
       data: { user },
     } = await withTimeout(
       supabase.auth.getUser(),
       15000,
-      "Session check took too long while clearing history."
+      "Session check took too long while clearing history.",
     );
 
     if (!user) return;
 
     const { error } = await withTimeout(
-      supabase
-        .from("exam_attempts")
-        .delete()
-        .eq("user_id", user.id),
+      supabase.from("exam_attempts").delete().eq("user_id", user.id),
       15000,
-      "Clearing history took too long. Please try again."
+      "Clearing history took too long. Please try again.",
     );
 
     if (error) {
@@ -175,7 +173,6 @@ const HistoryScreen = ({ isPremium }) => {
     setHistoryData([]);
     setOverlayOpen(false);
   };
-
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
@@ -278,6 +275,7 @@ const HistoryScreen = ({ isPremium }) => {
                         date: new Date(exam.date_taken).toLocaleDateString(),
                       }}
                       onDelete={() => deleteExam(exam.id)}
+                      setQuestionType={setQuestionType}
                     />
                   ))}
                 </div>
@@ -324,18 +322,24 @@ const StatCard = ({ label, value, icon, color, className = "" }) => {
     indigo: "text-indigo-600 bg-indigo-50 dark:bg-indigo-500/10",
   };
   return (
-    <div className={`bg-white dark:bg-slate-800/50 p-5 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm ${className}`}>
-      <div className={`size-10 rounded-xl flex items-center justify-center mb-3 ${colors[color]}`}>
+    <div
+      className={`bg-white dark:bg-slate-800/50 p-5 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm ${className}`}
+    >
+      <div
+        className={`size-10 rounded-xl flex items-center justify-center mb-3 ${colors[color]}`}
+      >
         {icon}
       </div>
       <p className="text-2xl font-black">{value}</p>
-      <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">{label}</p>
+      <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+        {label}
+      </p>
     </div>
   );
 };
 
 /* --- HISTORY ITEM COMPONENT --- */
-const HistoryItem = ({ exam, onDelete }) => {
+const HistoryItem = ({ exam, onDelete, setQuestionType }) => {
   const navigate = useNavigate();
   // Ensure values are treated as numbers to avoid calculation errors
   const score = parseFloat((Number(exam.score) || 0).toFixed(2));
@@ -347,9 +351,17 @@ const HistoryItem = ({ exam, onDelete }) => {
     ? "border-purple-200 dark:border-purple-900/40 bg-purple-50/40 dark:bg-purple-900/10"
     : "border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-800/50";
 
+  const handleRetake = () => {
+    // Map DB type → question type string used by the app
+    const typeMap = { THY: "theory", FIB: "fib", OBJ: "objective" };
+    const qType = typeMap[exam.type] ?? "objective";
+    if (setQuestionType) setQuestionType(qType);
+    navigate(`/choose-course?course=${exam.course_id}`);
+  };
+
   return (
     <div
-      onClick={() => navigate(`/choose-course?course=${exam.course_id}`)}
+      onClick={handleRetake}
       className={`group relative p-5 rounded-[2rem] border flex items-center justify-between transition-all duration-300 active:scale-[0.98] hover:shadow-xl hover:shadow-slate-200/40 dark:hover:shadow-none ${cardStyle}`}
     >
       <div className="flex flex-col gap-0.5">
@@ -364,11 +376,15 @@ const HistoryItem = ({ exam, onDelete }) => {
                 exam.type === "THY"
                   ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
                   : exam.type === "FIB"
-                  ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
-                  : "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                    ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                    : "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
               }`}
             >
-              {exam.type === "THY" ? "Theory" : exam.type === "FIB" ? "Fill in Blanks" : "Obj"}
+              {exam.type === "THY"
+                ? "Theory"
+                : exam.type === "FIB"
+                  ? "Fill in Blanks"
+                  : "Obj"}
             </span>
           )}
 
