@@ -8,41 +8,46 @@ const splitBlanks = (text) => text.split(/_{2,}/g);
  * Back: answer / modal_answer (theory) / filled-in sentence (fib)
  */
 const FlashCard = ({ question, courseId, isFlipped, onFlip }) => {
-  const isTheory = question?.type === "theory" || Array.isArray(question?.keywords);
+  const isTheory =
+    question?.type === "theory" || Array.isArray(question?.keywords);
   const isFib = question?.type === "fib";
 
   const answer = isTheory
-    ? (question?.model_answer || question?.correct || "No answer provided")
+    ? question?.model_answer || question?.correct || "No answer provided"
     : question?.correct || "No answer provided";
 
   // For FIB: build the filled-in sentence using the first accepted value per blank
-  const fibFilledSentence = isFib ? (() => {
-    const parts = splitBlanks(question.question);
-    const groups = Array.isArray(question.answers) ? question.answers : [];
-    return parts.map((part, i) => (
-      <span key={i}>
-        {part}
-        {i < parts.length - 1 && (
-          <span className="font-black text-violet-700 dark:text-violet-300 border-b-2 border-violet-400 px-1 mx-0.5">
-            {groups[i]?.[0] ?? "___"}
+  const fibFilledSentence = isFib
+    ? (() => {
+        const parts = splitBlanks(question.question);
+        const groups = Array.isArray(question.answers) ? question.answers : [];
+        return parts.map((part, i) => (
+          <span key={i}>
+            <RenderMathText text={part} courseId={courseId} />
+            {i < parts.length - 1 && (
+              <span className="font-black text-violet-700 dark:text-violet-300 border-b-2 border-violet-400 px-1 mx-0.5">
+                {groups[i]?.[0] ?? "___"}
+              </span>
+            )}
           </span>
-        )}
-      </span>
-    ));
-  })() : null;
+        ));
+      })()
+    : null;
 
   // For FIB front: show blanks as underlined empty spans
-  const fibQuestionWithBlanks = isFib ? (() => {
-    const parts = splitBlanks(question.question);
-    return parts.map((part, i) => (
-      <span key={i}>
-        {part}
-        {i < parts.length - 1 && (
-          <span className="inline-block border-b-2 border-slate-400 dark:border-slate-500 min-w-[3rem] mx-1" />
-        )}
-      </span>
-    ));
-  })() : null;
+  const fibQuestionWithBlanks = isFib
+    ? (() => {
+        const parts = splitBlanks(question.question);
+        return parts.map((part, i) => (
+          <span key={i}>
+            <RenderMathText text={part} courseId={courseId} />
+            {i < parts.length - 1 && (
+              <span className="inline-block border-b-2 border-slate-400 dark:border-slate-500 min-w-[3rem] mx-1" />
+            )}
+          </span>
+        ));
+      })()
+    : null;
 
   return (
     <div
@@ -75,13 +80,19 @@ const FlashCard = ({ question, courseId, isFlipped, onFlip }) => {
           </div>
           <div className="flex-1 flex items-center justify-center">
             <p className="text-center text-lg font-bold text-slate-800 dark:text-slate-100 leading-relaxed">
-              {isFib
-                ? fibQuestionWithBlanks
-                : <RenderMathText text={question?.question ?? ""} courseId={courseId} />
-              }
+              {isFib ? (
+                fibQuestionWithBlanks
+              ) : (
+                <RenderMathText
+                  text={question?.question ?? ""}
+                  courseId={courseId}
+                />
+              )}
             </p>
           </div>
-          <p className="text-center text-xs text-slate-400 mt-4">Tap to reveal answer</p>
+          <p className="text-center text-xs text-slate-400 mt-4">
+            Tap to reveal answer
+          </p>
         </div>
 
         {/* BACK */}
@@ -94,13 +105,16 @@ const FlashCard = ({ question, courseId, isFlipped, onFlip }) => {
           </span>
           <div className="flex-1 flex items-center justify-center">
             <p className="text-center text-lg font-bold text-slate-800 dark:text-slate-100 leading-relaxed">
-              {isFib
-                ? fibFilledSentence
-                : <RenderMathText text={answer} courseId={courseId} />
-              }
+              {isFib ? (
+                fibFilledSentence
+              ) : (
+                <RenderMathText text={answer} courseId={courseId} />
+              )}
             </p>
           </div>
-          <p className="text-center text-xs text-slate-400 mt-4">Tap to flip back</p>
+          <p className="text-center text-xs text-slate-400 mt-4">
+            Tap to flip back
+          </p>
         </div>
       </div>
     </div>

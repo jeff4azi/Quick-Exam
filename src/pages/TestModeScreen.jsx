@@ -6,7 +6,13 @@ import CoursePicker from "../components/CoursePicker";
 import { RenderMathText } from "../utils/RenderMathText";
 import ProgressBar from "../components/ProgressBar";
 import {
-  FiChevronLeft, FiChevronRight, FiSend, FiLoader, FiCheckCircle, FiXCircle, FiX,
+  FiChevronLeft,
+  FiChevronRight,
+  FiSend,
+  FiLoader,
+  FiCheckCircle,
+  FiXCircle,
+  FiX,
 } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
 import { withTimeout } from "../utils/withTimeout";
@@ -26,7 +32,8 @@ const PremiumGateOverlay = ({ onUpgrade, onQuit }) => (
           Free limit reached
         </h2>
         <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-8 px-2">
-          You&apos;ve answered {FREE_QUESTION_LIMIT} questions. Upgrade to Premium for unlimited tests and full access.
+          You&apos;ve answered {FREE_QUESTION_LIMIT} questions. Upgrade to
+          Premium for unlimited tests and full access.
         </p>
         <div className="flex flex-col w-full gap-3">
           <button
@@ -59,7 +66,13 @@ const shuffle = (arr) => {
 
 const parseKeywords = (kw) => {
   if (Array.isArray(kw)) return kw;
-  if (typeof kw === "string") { try { return JSON.parse(kw); } catch { return []; } }
+  if (typeof kw === "string") {
+    try {
+      return JSON.parse(kw);
+    } catch {
+      return [];
+    }
+  }
   return [];
 };
 
@@ -68,7 +81,9 @@ const gradeTheory = (userAnswer, rawKw) => {
   const kws = parseKeywords(rawKw);
   if (!kws.length) return 0;
   const lower = userAnswer.toLowerCase();
-  const matched = kws.filter((g) => Array.isArray(g) && g.some((k) => lower.includes(k.toLowerCase()))).length;
+  const matched = kws.filter(
+    (g) => Array.isArray(g) && g.some((k) => lower.includes(k.toLowerCase())),
+  ).length;
   return matched / kws.length;
 };
 
@@ -77,7 +92,11 @@ const gradeFib = (userBlanks, answerGroups) => {
   let correct = 0;
   for (let i = 0; i < answerGroups.length; i++) {
     const typed = (userBlanks[i] || "").trim().toLowerCase();
-    if (Array.isArray(answerGroups[i]) && answerGroups[i].some((v) => v.toLowerCase() === typed)) correct++;
+    if (
+      Array.isArray(answerGroups[i]) &&
+      answerGroups[i].some((v) => v.toLowerCase() === typed)
+    )
+      correct++;
   }
   return correct / answerGroups.length;
 };
@@ -103,16 +122,18 @@ const QUESTION_COUNTS = [10, 20, 30, 50];
 
 // ─── FeedbackBadge shown after answering ─────────────────────────────────────
 const FeedbackBadge = ({ result }) => {
-  if (result === "correct") return (
-    <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-black text-sm animate-in fade-in zoom-in-95 duration-300">
-      <FiCheckCircle className="size-4" /> Correct!
-    </div>
-  );
-  if (result === "partial") return (
-    <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-black text-sm animate-in fade-in zoom-in-95 duration-300">
-      <FiCheckCircle className="size-4" /> Partial
-    </div>
-  );
+  if (result === "correct")
+    return (
+      <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-black text-sm animate-in fade-in zoom-in-95 duration-300">
+        <FiCheckCircle className="size-4" /> Correct!
+      </div>
+    );
+  if (result === "partial")
+    return (
+      <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400 font-black text-sm animate-in fade-in zoom-in-95 duration-300">
+        <FiCheckCircle className="size-4" /> Partial
+      </div>
+    );
   return (
     <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-black text-sm animate-in fade-in zoom-in-95 duration-300">
       <FiXCircle className="size-4" /> Wrong
@@ -125,12 +146,19 @@ const QuestionCountPicker = ({ isPremium, onSelect, onBack, courseName }) => (
   <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col">
     <div className="sticky top-0 z-10 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-6 pb-4 border-b border-gray-100 dark:border-slate-800">
       <div className="max-w-lg mx-auto flex items-center gap-3">
-        <button onClick={onBack} className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm active:scale-90 transition-all">
+        <button
+          onClick={onBack}
+          className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm active:scale-90 transition-all"
+        >
           <FiChevronLeft className="size-5 text-slate-600 dark:text-slate-300" />
         </button>
         <div>
-          <h1 className="text-xl font-black text-slate-900 dark:text-white">Test Mode</h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">{courseName} · How many questions?</p>
+          <h1 className="text-xl font-black text-slate-900 dark:text-white">
+            Test Mode
+          </h1>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            {courseName} · How many questions?
+          </p>
         </div>
       </div>
     </div>
@@ -141,13 +169,16 @@ const QuestionCountPicker = ({ isPremium, onSelect, onBack, courseName }) => (
           return (
             <button
               key={count}
-              onClick={() => locked ? null : onSelect(count)}
-              className={`w-full flex items-center justify-between px-6 py-5 rounded-[1.8rem] border-2 transition-all active:scale-[0.98] ${locked
-                ? "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 opacity-60 cursor-not-allowed"
-                : "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 shadow-sm"
-                }`}
+              onClick={() => (locked ? null : onSelect(count))}
+              className={`w-full flex items-center justify-between px-6 py-5 rounded-[1.8rem] border-2 transition-all active:scale-[0.98] ${
+                locked
+                  ? "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 opacity-60 cursor-not-allowed"
+                  : "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 shadow-sm"
+              }`}
             >
-              <span className="text-lg font-black text-slate-900 dark:text-white">{count} Questions</span>
+              <span className="text-lg font-black text-slate-900 dark:text-white">
+                {count} Questions
+              </span>
               {locked ? (
                 <span className="flex items-center gap-1 text-xs font-black text-amber-500 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 rounded-full">
                   <FaCrown size={10} /> PRO
@@ -164,7 +195,12 @@ const QuestionCountPicker = ({ isPremium, onSelect, onBack, courseName }) => (
 );
 
 // ─── Main component ───────────────────────────────────────────────────────────
-const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => {
+const TestModeScreen = ({
+  courses,
+  coursesLoading,
+  isPremium,
+  userProfile,
+}) => {
   const navigate = useNavigate();
 
   // phase: "pick" | "count" | "test" | "done"
@@ -214,13 +250,22 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
         fetch(`${base}?type=fib`),
       ]);
       const [objData, thyData, fibData] = await Promise.all([
-        objRes.json(), thyRes.json(), fibRes.json(),
+        objRes.json(),
+        thyRes.json(),
+        fibRes.json(),
       ]);
       const objective = objRes.ok && Array.isArray(objData) ? objData : [];
-      const theory = thyRes.ok && Array.isArray(thyData) ? thyData.map((q) => ({ ...q, type: "theory" })) : [];
-      const fib = fibRes.ok && Array.isArray(fibData) ? fibData.map((q) => ({ ...q, type: "fib" })) : [];
+      const theory =
+        thyRes.ok && Array.isArray(thyData)
+          ? thyData.map((q) => ({ ...q, type: "theory" }))
+          : [];
+      const fib =
+        fibRes.ok && Array.isArray(fibData)
+          ? fibData.map((q) => ({ ...q, type: "fib" }))
+          : [];
       const all = shuffle([...objective, ...theory, ...fib]);
-      if (all.length === 0) throw new Error("No questions found for this course.");
+      if (all.length === 0)
+        throw new Error("No questions found for this course.");
       const picked = all.slice(0, count).map((q) => ({
         ...q,
         options: Array.isArray(q.options) ? shuffle([...q.options]) : undefined,
@@ -252,9 +297,14 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
   const handleAnswerSubmit = () => {
     if (answered[currentIndex]) return;
     const ans = currentInput;
-    setAnswers((prev) => { const n = [...prev]; n[currentIndex] = ans; return n; });
+    setAnswers((prev) => {
+      const n = [...prev];
+      n[currentIndex] = ans;
+      return n;
+    });
     setAnswered((prev) => {
-      const n = [...prev]; n[currentIndex] = true;
+      const n = [...prev];
+      n[currentIndex] = true;
       // trigger premium gate for free users after FREE_QUESTION_LIMIT answers
       if (!isPremium) {
         const newCount = n.filter(Boolean).length;
@@ -277,7 +327,9 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
   const currentQuestion = questions[currentIndex];
   const isAnswered = answered[currentIndex];
   const totalQuestions = questions.length;
-  const progress = totalQuestions ? ((currentIndex + 1) / totalQuestions) * 100 : 0;
+  const progress = totalQuestions
+    ? ((currentIndex + 1) / totalQuestions) * 100
+    : 0;
   const allAnswered = answered.every(Boolean);
 
   // ── save result and navigate ──
@@ -285,10 +337,15 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
     if (isSubmittingRef.current) return;
     isSubmittingRef.current = true;
 
-    const score = questions.reduce((acc, q, i) => acc + gradeQuestion(q, answers[i]), 0);
+    const score = questions.reduce(
+      (acc, q, i) => acc + gradeQuestion(q, answers[i]),
+      0,
+    );
 
     try {
-      let { data: { session } } = await supabase.auth.getSession();
+      let {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         const { data } = await supabase.auth.refreshSession();
         session = data.session;
@@ -304,7 +361,7 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
             university: userProfile?.university || null,
           }),
           15000,
-          "Saving result took too long."
+          "Saving result took too long.",
         );
         if (error?.message?.toLowerCase().includes("jwt")) {
           const { data: rd } = await supabase.auth.refreshSession();
@@ -323,7 +380,11 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
 
     navigate("/test-result", {
       state: {
-        score: parseFloat(questions.reduce((acc, q, i) => acc + gradeQuestion(q, answers[i]), 0).toFixed(2)),
+        score: parseFloat(
+          questions
+            .reduce((acc, q, i) => acc + gradeQuestion(q, answers[i]), 0)
+            .toFixed(2),
+        ),
         totalQuestions,
         courseId: selectedCourse.id,
         courseName: selectedCourse.name,
@@ -371,7 +432,9 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
               <FiLoader className="size-8 text-blue-600 animate-spin" />
             </div>
           </div>
-          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">Preparing your test...</p>
+          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
+            Preparing your test...
+          </p>
         </div>
       </div>
     );
@@ -383,7 +446,12 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
       <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex items-center justify-center px-5">
         <div className="text-center space-y-4">
           <p className="text-slate-500 dark:text-slate-400">{errorQ}</p>
-          <button onClick={() => setPhase("pick")} className="px-6 py-3 rounded-2xl bg-blue-600 text-white font-bold">Go Back</button>
+          <button
+            onClick={() => setPhase("pick")}
+            className="px-6 py-3 rounded-2xl bg-blue-600 text-white font-bold"
+          >
+            Go Back
+          </button>
         </div>
       </div>
     );
@@ -393,10 +461,16 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
   const isObjQ = !isTheory(currentQuestion) && !isFib(currentQuestion);
   const isThyQ = isTheory(currentQuestion);
   const isFibQ = isFib(currentQuestion);
-  const result = isAnswered ? getResult(currentQuestion, answers[currentIndex]) : null;
+  const result = isAnswered
+    ? getResult(currentQuestion, answers[currentIndex])
+    : null;
 
   // For FIB, currentInput is an array
-  const fibBlanks = isFibQ ? (Array.isArray(currentInput) ? currentInput : []) : [];
+  const fibBlanks = isFibQ
+    ? Array.isArray(currentInput)
+      ? currentInput
+      : []
+    : [];
   const fibParts = isFibQ ? splitFib(currentQuestion.question) : [];
 
   const canSubmit = isAnswered
@@ -413,7 +487,10 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
       {showPremiumGate && (
         <PremiumGateOverlay
           onUpgrade={() => navigate("/premium")}
-          onQuit={() => { setShowPremiumGate(false); setPhase("pick"); }}
+          onQuit={() => {
+            setShowPremiumGate(false);
+            setPhase("pick");
+          }}
         />
       )}
       {/* Header */}
@@ -426,9 +503,14 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
             <FiChevronLeft className="size-6 text-slate-600 dark:text-slate-300" />
           </button>
           <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center">
-            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-0.5">Progress</span>
+            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-600 dark:text-blue-400 mb-0.5">
+              Progress
+            </span>
             <div className="font-black text-slate-900 dark:text-white">
-              {currentIndex + 1} <span className="text-slate-400 font-medium">/ {totalQuestions}</span>
+              {currentIndex + 1}{" "}
+              <span className="text-slate-400 font-medium">
+                / {totalQuestions}
+              </span>
             </div>
           </div>
           <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 text-sm font-black text-slate-700 dark:text-slate-200">
@@ -446,7 +528,8 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
           <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-6 shadow-xl shadow-slate-200/50 dark:shadow-none border border-gray-50 dark:border-slate-800 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <div className="flex justify-between items-center mb-4">
               <div className="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1.5 rounded-full uppercase tracking-widest">
-                {selectedCourse?.name}{isThyQ ? " · Theory" : isFibQ ? " · FIB" : ""}
+                {selectedCourse?.name}
+                {isThyQ ? " · Theory" : isFibQ ? " · FIB" : ""}
               </div>
               {isAnswered && <FeedbackBadge result={result} />}
             </div>
@@ -457,7 +540,10 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
                 <span className="leading-[2.4]">
                   {fibParts.map((part, i, arr) => (
                     <span key={i}>
-                      {part}
+                      <RenderMathText
+                        text={part}
+                        courseId={selectedCourse?.id}
+                      />
                       {i < arr.length - 1 && (
                         <input
                           type="text"
@@ -479,7 +565,10 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
                   ))}
                 </span>
               ) : (
-                <RenderMathText text={currentQuestion?.question ?? ""} courseId={selectedCourse?.id} />
+                <RenderMathText
+                  text={currentQuestion?.question ?? ""}
+                  courseId={selectedCourse?.id}
+                />
               )}
             </div>
 
@@ -497,30 +586,51 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
               ) : isObjQ ? (
                 (currentQuestion?.options ?? []).map((option, idx) => {
                   const label = String.fromCharCode(65 + idx);
-                  const isSelected = currentInput === option || (isAnswered && answers[currentIndex] === option);
-                  const isRight = isAnswered && option === currentQuestion.correct;
-                  const isWrong = isAnswered && isSelected && option !== currentQuestion.correct;
+                  const isSelected =
+                    currentInput === option ||
+                    (isAnswered && answers[currentIndex] === option);
+                  const isRight =
+                    isAnswered && option === currentQuestion.correct;
+                  const isWrong =
+                    isAnswered &&
+                    isSelected &&
+                    option !== currentQuestion.correct;
 
                   return (
                     <button
                       key={idx}
                       disabled={isAnswered}
                       onClick={() => !isAnswered && setCurrentInput(option)}
-                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${isRight
-                        ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                        : isWrong
-                          ? "border-red-400 bg-red-50 dark:bg-red-900/20"
-                          : isSelected
-                            ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
-                            : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                        }`}
+                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${
+                        isRight
+                          ? "border-green-500 bg-green-50 dark:bg-green-900/20"
+                          : isWrong
+                            ? "border-red-400 bg-red-50 dark:bg-red-900/20"
+                            : isSelected
+                              ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
+                              : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
+                      }`}
                     >
-                      <div className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${isRight ? "bg-green-500 text-white" : isWrong ? "bg-red-400 text-white" : isSelected ? "bg-blue-600 text-white" : "bg-gray-100 dark:bg-slate-700 text-slate-500"
-                        }`}>
+                      <div
+                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                          isRight
+                            ? "bg-green-500 text-white"
+                            : isWrong
+                              ? "bg-red-400 text-white"
+                              : isSelected
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-100 dark:bg-slate-700 text-slate-500"
+                        }`}
+                      >
                         {label}
                       </div>
-                      <div className={`text-left font-semibold ${isRight ? "text-green-700 dark:text-green-400" : isWrong ? "text-red-600 dark:text-red-400" : isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}>
-                        <RenderMathText text={option} courseId={selectedCourse?.id} />
+                      <div
+                        className={`text-left font-semibold ${isRight ? "text-green-700 dark:text-green-400" : isWrong ? "text-red-600 dark:text-red-400" : isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
+                      >
+                        <RenderMathText
+                          text={option}
+                          courseId={selectedCourse?.id}
+                        />
                       </div>
                     </button>
                   );
@@ -530,19 +640,27 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
 
             {/* Theory/FIB correct answer reveal */}
             {isAnswered && (isThyQ || isFibQ) && (
-              <div className={`mt-4 p-4 rounded-2xl border-2 ${result === "correct" ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20" : result === "partial" ? "border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20" : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"}`}>
-                <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">Correct Answer</p>
+              <div
+                className={`mt-4 p-4 rounded-2xl border-2 ${result === "correct" ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20" : result === "partial" ? "border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20" : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"}`}
+              >
+                <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+                  Correct Answer
+                </p>
                 {isThyQ ? (
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                    {currentQuestion.model_answer
-                      || currentQuestion.explanation
-                      || `Key points: ${parseKeywords(currentQuestion.keywords)
-                        .map((group) => (Array.isArray(group) ? group[0] : group))
+                    {currentQuestion.model_answer ||
+                      currentQuestion.explanation ||
+                      `Key points: ${parseKeywords(currentQuestion.keywords)
+                        .map((group) =>
+                          Array.isArray(group) ? group[0] : group,
+                        )
                         .join(", ")}`}
                   </p>
                 ) : (
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                    {(currentQuestion.answers || []).map((g) => Array.isArray(g) ? g[0] : g).join(" / ")}
+                    {(currentQuestion.answers || [])
+                      .map((g) => (Array.isArray(g) ? g[0] : g))
+                      .join(" / ")}
                   </p>
                 )}
               </div>
@@ -558,7 +676,9 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
       >
         <div className="max-w-2xl mx-auto bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-3">
           <button
-            onClick={() => { setCurrentIndex((p) => Math.max(0, p - 1)); }}
+            onClick={() => {
+              setCurrentIndex((p) => Math.max(0, p - 1));
+            }}
             disabled={currentIndex === 0}
             className="size-14 rounded-full flex items-center justify-center bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 disabled:opacity-20 transition-all active:scale-90"
           >
@@ -584,15 +704,22 @@ const TestModeScreen = ({ courses, coursesLoading, isPremium, userProfile }) => 
           ) : (
             <button
               onClick={() => {
-                if (currentIndex < totalQuestions - 1) setCurrentIndex((p) => p + 1);
+                if (currentIndex < totalQuestions - 1)
+                  setCurrentIndex((p) => p + 1);
                 else if (allAnswered) handleFinish();
               }}
               className="flex-1 bg-blue-600 text-white h-14 rounded-[1.8rem] font-black shadow-lg shadow-blue-200 dark:shadow-none transition-all active:scale-95 flex items-center justify-center gap-2"
             >
               {currentIndex === totalQuestions - 1 && allAnswered ? (
-                <><span>See Results</span><FiSend /></>
+                <>
+                  <span>See Results</span>
+                  <FiSend />
+                </>
               ) : (
-                <><span>Next</span><FiChevronRight /></>
+                <>
+                  <span>Next</span>
+                  <FiChevronRight />
+                </>
               )}
             </button>
           )}
