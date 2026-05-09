@@ -13,6 +13,7 @@ import {
   FiAlertTriangle,
   FiZap,
   FiGrid,
+  FiClock,
 } from "react-icons/fi";
 import { API_BASE_URL } from "../apiConfig";
 import { FaCrown, FaFacebookF, FaWhatsapp } from "react-icons/fa";
@@ -42,6 +43,7 @@ const Profile = ({
   const [isDeleteOverlayOpen, setDeleteOverlayOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+  const [premiumAccess, setPremiumAccess] = useState(null); // null = loading, false = not found
   const [formData, setFormData] = useState({
     user_name: userProfile?.user_name || "",
     department: userProfile?.department || "",
@@ -55,6 +57,36 @@ const Profile = ({
       department: userProfile.department || "",
     });
   }, [userProfile, isEditing, isSaving]);
+
+  // Fetch premium access record for all users
+  useEffect(() => {
+    (async () => {
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+        if (!user) {
+          setPremiumAccess(false);
+          return;
+        }
+        // Fetch the most recent row regardless of active/expiry
+        const { data, error } = await supabase
+          .from("premium_access")
+          .select("expires_at, reason, granted_at, active")
+          .eq("user_id", user.id)
+          .order("expires_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (error) {
+          setPremiumAccess(false);
+          return;
+        }
+        setPremiumAccess(data ?? false);
+      } catch {
+        setPremiumAccess(false);
+      }
+    })();
+  }, []);
 
   const handleSave = async () => {
     if (!onUpdateProfile) {
@@ -158,11 +190,120 @@ const Profile = ({
               Change photo
             </span>
           </button>
-          <div className="mt-10 lg:mt-15 text-center">
-            <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
-              {isPremium ? "Premium Scholar" : "Standard Account"}
-            </span>
-          </div>
+
+          {/* Premium / plan status */}
+          {premiumAccess !== null && (
+            <div className="mt-10 lg:mt-20">
+              {(() => {
+                const now = new Date();
+                const hasRow = premiumAccess !== false;
+                const isExpired =
+                  hasRow &&
+                  (!premiumAccess.active ||
+                    new Date(premiumAccess.expires_at) <= now);
+                const isActive =
+                  hasRow &&
+                  premiumAccess.active &&
+                  new Date(premiumAccess.expires_at) > now;
+
+                if (isActive) {
+                  // Temp premium — active, not yet expired
+                  return (
+                    <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl px-4 py-3 flex items-center gap-3">
+                      <div className="size-8 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center shrink-0">
+                        <FiClock className="text-amber-500" size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-amber-500 dark:text-amber-400">
+                          Premium Expires
+                        </p>
+                        <p className="text-sm font-black text-slate-800 dark:text-white">
+                          {new Date(
+                            premiumAccess.expires_at,
+                          ).toLocaleDateString(undefined, {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </p>
+                        {premiumAccess.reason && (
+                          <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">
+                            {premiumAccess.reason}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (isExpired) {
+                  // Had temp premium but it's now expired / deactivated
+                  return (
+                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-2xl px-4 py-3 flex items-center gap-3">
+                      <div className="size-8 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center shrink-0">
+                        <FiClock className="text-red-400" size={16} />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-[10px] font-black uppercase tracking-widest text-red-400">
+                          Premium Expired
+                        </p>
+                        <p className="text-sm font-black text-slate-800 dark:text-white">
+                          {new Date(
+                            premiumAccess.expires_at,
+                          ).toLocaleDateString(undefined, {
+                            day: "numeric",
+                            month: "short",
+                            year: "numeric",
+                          })}
+                        </p>
+                        {premiumAccess.reason && (
+                          <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">
+                            {premiumAccess.reason}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                }
+
+                if (isPremium) {
+                  // Premium but no row in table — full semester
+                  return (
+                    <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl px-4 py-3 flex items-center gap-3">
+                      <div className="size-8 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center shrink-0">
+                        <FaCrown className="text-amber-500" size={14} />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black uppercase tracking-widest text-amber-500 dark:text-amber-400">
+                          Access
+                        </p>
+                        <p className="text-sm font-black text-slate-800 dark:text-white">
+                          Full Semester Access
+                        </p>
+                      </div>
+                    </div>
+                  );
+                }
+
+                // Free user — no row, not premium
+                return (
+                  <div className="bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl px-4 py-3 flex items-center gap-3">
+                    <div className="size-8 rounded-xl bg-gray-200 dark:bg-slate-700 flex items-center justify-center shrink-0">
+                      <FiZap className="text-slate-400" size={16} />
+                    </div>
+                    <div>
+                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                        Current Plan
+                      </p>
+                      <p className="text-sm font-black text-slate-600 dark:text-slate-300">
+                        Free Plan
+                      </p>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
         </div>
 
         {/* Input Fields Container */}
