@@ -192,9 +192,18 @@ const Profile = ({
           </button>
 
           {/* Premium / plan status */}
-          {premiumAccess !== null && (
-            <div className="mt-10 lg:mt-20">
-              {(() => {
+          <div className="mt-10 lg:mt-20">
+            {premiumAccess === null ? (
+              /* Skeleton loader */
+              <div className="bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl px-4 py-3 flex items-center gap-3 animate-pulse">
+                <div className="size-8 rounded-xl bg-gray-200 dark:bg-slate-700 shrink-0" />
+                <div className="flex flex-col gap-1.5 flex-1">
+                  <div className="h-2.5 w-20 rounded-full bg-gray-200 dark:bg-slate-700" />
+                  <div className="h-3.5 w-32 rounded-full bg-gray-200 dark:bg-slate-700" />
+                </div>
+              </div>
+            ) : (
+              (() => {
                 const now = new Date();
                 const hasRow = premiumAccess !== false;
                 const isExpired =
@@ -207,7 +216,6 @@ const Profile = ({
                   new Date(premiumAccess.expires_at) > now;
 
                 if (isActive) {
-                  // Temp premium — active, not yet expired
                   return (
                     <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl px-4 py-3 flex items-center gap-3">
                       <div className="size-8 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center shrink-0">
@@ -237,7 +245,6 @@ const Profile = ({
                 }
 
                 if (isExpired) {
-                  // Had temp premium but it's now expired / deactivated
                   return (
                     <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-2xl px-4 py-3 flex items-center gap-3">
                       <div className="size-8 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center shrink-0">
@@ -267,7 +274,6 @@ const Profile = ({
                 }
 
                 if (isPremium) {
-                  // Premium but no row in table — full semester
                   return (
                     <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl px-4 py-3 flex items-center gap-3">
                       <div className="size-8 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center shrink-0">
@@ -285,7 +291,6 @@ const Profile = ({
                   );
                 }
 
-                // Free user — no row, not premium
                 return (
                   <div className="bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl px-4 py-3 flex items-center gap-3">
                     <div className="size-8 rounded-xl bg-gray-200 dark:bg-slate-700 flex items-center justify-center shrink-0">
@@ -301,9 +306,9 @@ const Profile = ({
                     </div>
                   </div>
                 );
-              })()}
-            </div>
-          )}
+              })()
+            )}
+          </div>
         </div>
 
         {/* Input Fields Container */}
