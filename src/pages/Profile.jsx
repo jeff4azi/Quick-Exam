@@ -142,7 +142,7 @@ const Profile = ({
           <button
             type="button"
             onClick={() => navigate("/upload-profile-pic")}
-            className="mt-10 scale-200 relative group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-[2.5rem]"
+            className="mt-5 lg:mt-10 scale-130 lg:scale-200 relative group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-[2.5rem]"
           >
             <Avatar
               avatarUrl={userProfile?.avatar_url}
@@ -158,7 +158,7 @@ const Profile = ({
               Change photo
             </span>
           </button>
-          <div className="mt-15 text-center">
+          <div className="mt-10 lg:mt-15 text-center">
             <span className="bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
               {isPremium ? "Premium Scholar" : "Standard Account"}
             </span>
