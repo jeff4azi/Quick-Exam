@@ -567,7 +567,7 @@ const LeaderboardRow = ({
       onClick={onClick}
     >
       <div className="flex items-center gap-4 min-w-0">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <div
             className={`size-10 rounded-2xl flex items-center justify-center font-black text-sm ${badgeBg}`}
           >
@@ -589,7 +589,13 @@ const LeaderboardRow = ({
             )}
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
-            {userName ? `@${userName} • ` : ""}
+            {userName
+  ? `@${
+      userName.length > 12
+        ? userName.slice(0, 12) + "..."
+        : userName
+    } • `
+  : ""}
             {university}
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
