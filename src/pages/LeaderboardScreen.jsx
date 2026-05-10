@@ -577,7 +577,7 @@ const LeaderboardRow = ({
         </div>
         <div className="min-w-0">
           <p className="font-black text-slate-900 dark:text-white truncate flex items-center gap-1.5">
-            {fullName}
+            {fullName?.trim()?.split(/\s+/)?.[0] || "Scholar"}
             {isPremium && (
               <span
                 className="inline-flex items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-500 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-[0.12em]"
