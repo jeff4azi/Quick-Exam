@@ -567,7 +567,7 @@ const LeaderboardRow = ({
       onClick={onClick}
     >
       <div className="flex items-center gap-4 min-w-0">
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 shrink-0">
           <div
             className={`size-10 rounded-2xl flex items-center justify-center font-black text-sm ${badgeBg}`}
           >
@@ -577,7 +577,7 @@ const LeaderboardRow = ({
         </div>
         <div className="min-w-0">
           <p className="font-black text-slate-900 dark:text-white truncate flex items-center gap-1.5">
-            {fullName}
+            {fullName?.trim()?.split(/\s+/)?.[0] || "Scholar"}
             {isPremium && (
               <span
                 className="inline-flex items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-500 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-[0.12em]"
@@ -589,7 +589,13 @@ const LeaderboardRow = ({
             )}
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
-            {userName ? `@${userName} • ` : ""}
+            {userName
+  ? `@${
+      userName.length > 12
+        ? userName.slice(0, 12) + "..."
+        : userName
+    } • `
+  : ""}
             {university}
           </p>
           <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
