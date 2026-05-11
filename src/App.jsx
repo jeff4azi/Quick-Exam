@@ -7,7 +7,7 @@ import {
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import RouteChangeTracker from "./components/RouteChangeTracker";
 import DesktopLayout from "./components/DesktopLayout";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Home from "./pages/Home.jsx";
 import ExamScreen from "./pages/ExamScreen";
 import ResultScreen from "./pages/ResultScreen";
@@ -35,7 +35,7 @@ import LeaderboardScreen from "./pages/LeaderboardScreen";
 import { API_BASE_URL } from "./apiConfig";
 import UploadProfilePic from "./pages/UploadProfilePic";
 import UpdatePassword from "./pages/UpdatePassword";
-import { loadExamSession } from "./utils/examSessionStorage";
+import { clearExamSession, loadExamSession } from "./utils/examSessionStorage";
 import FlashcardsScreen from "./pages/FlashcardsScreen";
 import MatchScreen from "./pages/MatchScreen";
 import MatchResultScreen from "./pages/MatchResultScreen";
@@ -82,9 +82,26 @@ function App() {
   const [lastTimeTaken, setLastTimeTaken] = useState(0);
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(null);
   const [questionsLoading, setQuestionsLoading] = useState(false);
-  const [questionType, setQuestionType] = useState("objective");
+  const [questionType, setQuestionTypeState] = useState("objective");
   const [questionsContext, setQuestionsContext] = useState(null);
   const sessionRestoredRef = useRef(false);
+
+  const isPremium = userProfile?.isPremium === true;
+  const setQuestionType = useCallback(
+    (nextQuestionType) => {
+      setQuestionTypeState((previousQuestionType) => {
+        const resolvedQuestionType =
+          typeof nextQuestionType === "function"
+            ? nextQuestionType(previousQuestionType)
+            : nextQuestionType;
+
+        return resolvedQuestionType === "theory" && !isPremium
+          ? "objective"
+          : resolvedQuestionType;
+      });
+    },
+    [isPremium],
+  );
 
   const handleExamSubmit = (correctCount, totalCount, timeTaken) => {
     const total = totalCount ?? questions.length;
@@ -261,11 +278,11 @@ function App() {
       sessionRestoredRef.current = true;
 
       if (parsed?.questionType === "theory") {
-        setQuestionType("theory");
+        setQuestionTypeState("theory");
       }
 
       if (parsed?.questionType === "fib") {
-        setQuestionType("fib");
+        setQuestionTypeState("fib");
       }
 
       if (parsed?.selectedCourse) {
@@ -287,6 +304,24 @@ function App() {
       console.error("Failed to restore exam session:", err);
     }
   }, []);
+
+  useEffect(() => {
+    const isExistingTheoryExam =
+      questionsContext?.questionType === "theory" &&
+      questions.length > 0 &&
+      ["/exam", "/results", "/review-answers"].includes(
+        window.location.pathname,
+      );
+
+    if (!isPremium && questionType === "theory" && !isExistingTheoryExam) {
+      clearExamSession();
+      setQuestionTypeState("objective");
+      setQuestions([]);
+      setAnswers([]);
+      setQuestionsContext(null);
+      setSelectedQuestionCount(null);
+    }
+  }, [isPremium, questionType, questions.length, questionsContext]);
 
   useEffect(() => {
     if (isDarkMode) {
@@ -392,8 +427,6 @@ function App() {
   }, [selectedCourse, selectedQuestionCount, questionType]);
 
   // Bookmarks are now loaded from Supabase via getProfile below
-
-  const isPremium = userProfile?.isPremium === true;
 
   const handleLogout = async () => {
     try {
