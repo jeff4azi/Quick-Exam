@@ -203,7 +203,7 @@ const LandingPage = () => {
             </a>
           </div>
           <button
-            onClick={() => navigate("/login")}
+            onClick={() => navigate("/signup")}
             className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-2xl font-bold text-sm transition-all active:scale-95 shadow-lg shadow-blue-200 dark:shadow-none"
           >
             Get Started
@@ -233,7 +233,7 @@ const LandingPage = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <button
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/signup")}
                 className="flex items-center justify-center gap-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-8 py-4 rounded-2xl font-black text-lg hover:opacity-90 transition-all active:scale-95"
               >
                 <FcGoogle className="text-lg" /> Sign in with Google
