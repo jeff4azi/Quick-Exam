@@ -16,6 +16,7 @@ import NavBar from "../components/NavBar";
 import {
   loadFavouriteCourseIds,
   toggleFavouriteCourseId,
+  encodeFavouriteKey,
 } from "../utils/favouriteCourses";
 import { clearExamSession } from "../utils/examSessionStorage";
 
@@ -286,7 +287,9 @@ const ChooseCourseScreen = ({
                 <div className="grid gap-4">
                   {groupedCourses[group].map((course) => {
                     const isSelected = selectedCourse?.id === course.id;
-                    const isFavourite = favouriteIds.includes(course.id);
+                    const isFavourite = favouriteIds.includes(
+                      encodeFavouriteKey(course.id, questionType),
+                    );
                     return (
                       <div
                         key={course.id}
@@ -344,11 +347,17 @@ const ChooseCourseScreen = ({
                                 toggleFavouriteCourseId(
                                   course.id,
                                   favouriteIds,
+                                  questionType,
                                 ).then((updated) => {
                                   setFavouriteIds(updated);
                                   trackFavouriteToggle(
                                     course.id,
-                                    !favouriteIds.includes(course.id),
+                                    !favouriteIds.includes(
+                                      encodeFavouriteKey(
+                                        course.id,
+                                        questionType,
+                                      ),
+                                    ),
                                   );
                                 });
                               }}

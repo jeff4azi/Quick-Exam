@@ -16,7 +16,10 @@ import { FreeMode } from "swiper/modules";
 import { FaCrown, FaFire, FaTrophy } from "react-icons/fa";
 import { FiZap } from "react-icons/fi";
 import { MdStar } from "react-icons/md";
-import { loadFavouriteCourseIds } from "../utils/favouriteCourses";
+import {
+  loadFavouriteCourseIds,
+  decodeFavouriteKey,
+} from "../utils/favouriteCourses";
 import { FeedBoltBanner } from "../components/FeedBoltBanner";
 import {
   trackPWAInstallPrompt,
@@ -44,7 +47,13 @@ const getCurrentWeekStartIso = () => {
 const IOS_TUTORIAL_URL =
   "https://youtube.com/shorts/ndcyOO3Xbog?si=Un0wo2qmTGSgxYf9";
 
-const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
+const Home = ({
+  userProfile,
+  loadingProfile,
+  isPremium,
+  courses,
+  setQuestionType,
+}) => {
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
@@ -322,7 +331,14 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
   const favouriteCourses = useMemo(() => {
     const list = Array.isArray(courses) ? courses : [];
     const map = new Map(list.map((c) => [c?.id, c]));
-    return favouriteIds.map((id) => map.get(id)).filter(Boolean);
+    return favouriteIds
+      .map((key) => {
+        const { courseId, questionType } = decodeFavouriteKey(key);
+        const course = map.get(courseId);
+        if (!course) return null;
+        return { ...course, _favouriteKey: key, _questionType: questionType };
+      })
+      .filter(Boolean);
   }, [courses, favouriteIds]);
 
   const firstName = loadingProfile
@@ -651,12 +667,14 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
               className="pb-2 pr-6"
             >
               {favouriteCourses.map((course) => (
-                <SwiperSlide key={course.id} className="!w-64">
+                <SwiperSlide key={course._favouriteKey} className="!w-64">
                   <button
                     type="button"
-                    onClick={() =>
-                      navigate(`/choose-course?course=${course.id}`)
-                    }
+                    onClick={() => {
+                      if (setQuestionType)
+                        setQuestionType(course._questionType);
+                      navigate(`/choose-course?course=${course.id}`);
+                    }}
                     className="w-full text-left p-5 rounded-[2rem] border bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:border-blue-100 shadow-sm active:scale-[0.98] transition-transform"
                   >
                     <div className="flex items-start justify-between gap-4">
@@ -667,9 +685,29 @@ const Home = ({ userProfile, loadingProfile, isPremium, courses }) => {
                         <p className="text-sm mt-1 leading-snug text-slate-500 dark:text-slate-400 truncate">
                           {course.title}
                         </p>
+                        <span
+                          className={`mt-2 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
+                            course._questionType === "theory"
+                              ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                              : course._questionType === "fib"
+                                ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+                                : "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
+                          }`}
+                        >
+                          {course._questionType === "theory"
+                            ? "Theory"
+                            : course._questionType === "fib"
+                              ? "Fill in Blanks"
+                              : "Objective"}
+                        </span>
                       </div>
                       <div className="shrink-0 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/40 text-[10px] font-semibold tracking-wider text-blue-600 dark:text-blue-400">
-                        {course.questionCount || 0} Qs
+                        {(course._questionType === "theory"
+                          ? course.theoryQuestionCount
+                          : course._questionType === "fib"
+                            ? course.fibQuestionCount
+                            : course.questionCount) || 0}{" "}
+                        Qs
                       </div>
                     </div>
                   </button>
