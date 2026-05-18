@@ -7,7 +7,7 @@ import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import { API_BASE_URL } from "../apiConfig";
 
-const PremiumPage = ({ onActivatePremium, isPremium }) => {
+const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
   const navigate = useNavigate();
   const [premiumCode, setPremiumCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -80,10 +80,12 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
     }
   };
 
+  const price =  userProfile.university === "TASUED" ? 2000 : 500; // Example: TASUED students pay ₦2000, others pay ₦500
+
   const handleGetCode = () => {
     const phoneNumber = "2347015585397"; // Your WhatsApp number here
     const message = encodeURIComponent(
-      "Hello, I just paid ₦2000 for QuizBolt Premium.\n\nName/Email:\n\nHere is my receipt:",
+      `Hello, I just paid ₦${price} for QuizBolt Premium.\n\nName/Email:\n\nHere is my receipt:`,
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
   };
@@ -197,7 +199,11 @@ const PremiumPage = ({ onActivatePremium, isPremium }) => {
             </p>
             <div className="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 text-center mb-3">
               <p className="text-sm font-black text-slate-800 dark:text-white mb-2">
-                Full Semester Access — ₦2,000
+                Full Semester Access —{" "}
+                {price.toLocaleString("en-NG", {
+                  style: "currency",
+                  currency: "NGN",
+                })}
               </p>
 
               <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
