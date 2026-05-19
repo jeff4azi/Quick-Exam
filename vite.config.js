@@ -46,6 +46,7 @@ export default defineConfig({
       workbox: {
         // Cache app shell + static assets
         globPatterns: ["**/*.{js,css,html,ico,png,jpg,jpeg,webp,svg,woff2}"],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         // Skip Supabase and other external calls
         navigateFallback: "/index.html",
         navigateFallbackDenylist: [/^\/api/, /supabase/],
