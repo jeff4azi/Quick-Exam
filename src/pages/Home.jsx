@@ -30,7 +30,7 @@ import {
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
-  const day = now.getDay(); // 0 = Sunday
+  const day = now.getDay();
   const diff = day;
   const weekStart = new Date(
     now.getFullYear(),
@@ -60,7 +60,6 @@ const Home = ({
   const [favouriteIds, setFavouriteIds] = useState([]);
   const [favouritesLoading, setFavouritesLoading] = useState(true);
 
-  // PWA install prompt — only shown on home screen
   const [installPrompt, setInstallPrompt] = useState(null);
   const [showInstallOverlay, setShowInstallOverlay] = useState(false);
   const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
@@ -128,15 +127,13 @@ const Home = ({
 
   useEffect(() => {
     if (isPremium) {
-      setShowAd(false); // force hide if user is premium
+      setShowAd(false);
       return;
     }
-
     const timer = setTimeout(() => setShowAd(true), 750);
     return () => clearTimeout(timer);
   }, [isPremium]);
 
-  // Fetch best score and leaderboard position from Supabase
   const fetchSupabaseStats = useCallback(async () => {
     try {
       const {
@@ -148,9 +145,7 @@ const Home = ({
         "Checking your session took too long.",
       );
 
-      if (userError || !user) {
-        return;
-      }
+      if (userError || !user) return;
 
       const weekStartIso = getCurrentWeekStartIso();
 
@@ -173,7 +168,6 @@ const Home = ({
 
       const attempts = attemptsData || [];
 
-      // Best score for this user (weekly)
       const myAttempts = attempts.filter(
         (a) => a.user_id === user.id && a.total_questions,
       );
@@ -184,7 +178,6 @@ const Home = ({
         if (best === null || pct > best) best = pct;
       });
 
-      // Leaderboard-like aggregation to get position
       const byUser = new Map();
       attempts.forEach((a) => {
         if (!a.user_id || !a.total_questions) return;
@@ -215,10 +208,8 @@ const Home = ({
     fetchSupabaseStats();
   }, [fetchSupabaseStats]);
 
-  // Re-fetch stats whenever the tab regains focus after being idle/hidden
   useVisibilityRefresh(fetchSupabaseStats);
 
-  // Handle streak from Supabase exam_attempts
   const fetchStreak = useCallback(async () => {
     try {
       const {
@@ -243,7 +234,6 @@ const Home = ({
         return;
       }
 
-      // Build a set of unique local date strings (YYYY-MM-DD)
       const dateSet = new Set(
         data.map((r) => new Date(r.date_taken).toLocaleDateString("en-CA")),
       );
@@ -254,7 +244,7 @@ const Home = ({
       for (let offset = 0; ; offset++) {
         const d = new Date(today);
         d.setDate(today.getDate() - offset);
-        const key = d.toLocaleDateString("en-CA"); // YYYY-MM-DD
+        const key = d.toLocaleDateString("en-CA");
         if (dateSet.has(key)) {
           streak += 1;
         } else {
@@ -275,7 +265,6 @@ const Home = ({
 
   useVisibilityRefresh(fetchStreak);
 
-  // Recently done courses carousel (last 5 attempts from Supabase)
   const fetchRecentCourses = useCallback(async () => {
     setRecentCoursesLoading(true);
     try {
@@ -357,15 +346,12 @@ const Home = ({
         </div>
 
         <div className="flex items-center gap-3">
-          {/* User Avatar with Premium Crown - navigates to Profile */}
           <button
             type="button"
             onClick={() => navigate("/profile")}
             className="relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl lg:scale-120"
           >
             <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
-
-            {/* Premium Badge */}
             {isPremium && (
               <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
                 <FaCrown className="text-[8px] text-white" />
@@ -434,7 +420,7 @@ const Home = ({
           ))}
         </div>
 
-        {/* Premium Call to Action (non-premium users) */}
+        {/* Premium CTA */}
         {!isPremium && (
           <div
             onClick={() => navigate("/premium")}
@@ -516,7 +502,7 @@ const Home = ({
         {/* FeedBolt CTA */}
         <FeedBoltBanner />
 
-        {/* Recently done (carousel) */}
+        {/* Recently done */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1">
@@ -532,20 +518,20 @@ const Home = ({
           </div>
 
           {recentCoursesLoading ? (
-            <div className="flex gap-4 overflow-hidden">
+            <div className="flex gap-3 overflow-hidden">
               {[...Array(3)].map((_, i) => (
                 <div
                   key={i}
-                  className="min-w-64 min-h-[120px] bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-200 dark:border-slate-700 animate-pulse"
+                  className="min-w-[200px] sm:min-w-64 min-h-[100px] sm:min-h-[120px] bg-white dark:bg-slate-800 p-3.5 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border border-gray-200 dark:border-slate-700 animate-pulse"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex flex-col gap-2 flex-1">
                       <div className="h-2.5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full" />
                       <div className="h-4 w-28 bg-slate-200 dark:bg-slate-700 rounded-full" />
                     </div>
-                    <div className="size-10 rounded-2xl bg-slate-200 dark:bg-slate-700" />
+                    <div className="size-8 sm:size-10 rounded-xl sm:rounded-2xl bg-slate-200 dark:bg-slate-700" />
                   </div>
-                  <div className="mt-4 h-2.5 w-36 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                  <div className="mt-3 h-2.5 w-36 bg-slate-200 dark:bg-slate-700 rounded-full" />
                 </div>
               ))}
             </div>
@@ -555,7 +541,7 @@ const Home = ({
             </div>
           ) : (
             <Swiper
-              spaceBetween={16}
+              spaceBetween={12}
               slidesPerView={"auto"}
               freeMode={{
                 enabled: true,
@@ -566,18 +552,21 @@ const Home = ({
               className="pb-2 pr-6 lg:w-[80vw]"
             >
               {recentCourses.map((item) => (
-                <SwiperSlide key={`${item.id}-${item.date}`} className="!w-64">
+                <SwiperSlide
+                  key={`${item.id}-${item.date}`}
+                  className="!w-[200px] sm:!w-64"
+                >
                   <button
                     type="button"
                     onClick={() => navigate("/history")}
-                    className="w-full min-h-[120px] bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-200 dark:border-slate-700 text-left shadow-md active:scale-[0.98] transition-transform"
+                    className="w-full min-h-[100px] sm:min-h-[120px] bg-white dark:bg-slate-800 p-3.5 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border border-gray-200 dark:border-slate-700 text-left shadow-md active:scale-[0.98] transition-transform"
                   >
-                    <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 truncate">
+                        <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 truncate">
                           {item?.date || "—"}
                         </p>
-                        <p className="mt-1 text-lg font-black text-slate-900 dark:text-white truncate">
+                        <p className="mt-0.5 text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">
                           {item?.course || "Course"}
                         </p>
                         {item?.type && (
@@ -598,13 +587,13 @@ const Home = ({
                           </span>
                         )}
                       </div>
-                      <div className="size-10 rounded-2xl bg-slate-100 dark:bg-slate-700/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-semibold">
+                      <div className="size-8 sm:size-10 shrink-0 rounded-xl sm:rounded-2xl bg-slate-100 dark:bg-slate-700/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-semibold text-[10px] sm:text-xs">
                         {parseFloat((Number(item?.score) || 0).toFixed(2))}/
                         {item?.total ?? 0}
                       </div>
                     </div>
 
-                    <div className="mt-3 flex items-center gap-2 text-[11px] font-medium text-slate-400 dark:text-slate-500">
+                    <div className="mt-2.5 flex items-center gap-2 text-[10px] sm:text-[11px] font-medium text-slate-400 dark:text-slate-500">
                       <span>
                         Best:{" "}
                         {item?.score != null && item?.total
@@ -633,11 +622,11 @@ const Home = ({
           </h3>
 
           {favouritesLoading ? (
-            <div className="flex gap-4 overflow-hidden">
+            <div className="flex gap-3 overflow-hidden">
               {[...Array(3)].map((_, i) => (
                 <div
                   key={i}
-                  className="min-w-64 bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-200 dark:border-slate-700 animate-pulse"
+                  className="min-w-[200px] sm:min-w-64 bg-white dark:bg-slate-800 p-3.5 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border border-gray-200 dark:border-slate-700 animate-pulse"
                 >
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex flex-col gap-2 flex-1">
@@ -651,12 +640,12 @@ const Home = ({
             </div>
           ) : favouriteCourses.length === 0 ? (
             <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-500/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
-              You haven’t favourited any courses yet. Tap the heart on the
+              You haven't favourited any courses yet. Tap the heart on the
               Courses screen.
             </div>
           ) : (
             <Swiper
-              spaceBetween={16}
+              spaceBetween={12}
               slidesPerView={"auto"}
               freeMode={{
                 enabled: true,
@@ -667,7 +656,10 @@ const Home = ({
               className="pb-2 pr-6"
             >
               {favouriteCourses.map((course) => (
-                <SwiperSlide key={course._favouriteKey} className="!w-64">
+                <SwiperSlide
+                  key={course._favouriteKey}
+                  className="!w-[200px] sm:!w-64"
+                >
                   <button
                     type="button"
                     onClick={() => {
@@ -675,18 +667,18 @@ const Home = ({
                         setQuestionType(course._questionType);
                       navigate(`/choose-course?course=${course.id}`);
                     }}
-                    className="w-full text-left p-5 rounded-[2rem] border bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:border-blue-100 shadow-sm active:scale-[0.98] transition-transform"
+                    className="w-full text-left p-3.5 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700 hover:border-blue-100 shadow-sm active:scale-[0.98] transition-transform"
                   >
-                    <div className="flex items-start justify-between gap-4">
+                    <div className="flex items-start justify-between gap-3">
                       <div className="min-w-0">
-                        <p className="text-xl font-black text-slate-900 dark:text-white truncate">
+                        <p className="text-base sm:text-xl font-black text-slate-900 dark:text-white truncate">
                           {course.name}
                         </p>
-                        <p className="text-sm mt-1 leading-snug text-slate-500 dark:text-slate-400 truncate">
+                        <p className="text-xs sm:text-sm mt-0.5 leading-snug text-slate-500 dark:text-slate-400 truncate">
                           {course.title}
                         </p>
                         <span
-                          className={`mt-2 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
+                          className={`mt-1.5 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
                             course._questionType === "theory"
                               ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
                               : course._questionType === "fib"
@@ -701,7 +693,7 @@ const Home = ({
                               : "Objective"}
                         </span>
                       </div>
-                      <div className="shrink-0 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-700/40 text-[10px] font-semibold tracking-wider text-blue-600 dark:text-blue-400">
+                      <div className="shrink-0 px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-700/40 text-[10px] font-semibold tracking-wider text-blue-600 dark:text-blue-400 whitespace-nowrap">
                         {(course._questionType === "theory"
                           ? course.theoryQuestionCount
                           : course._questionType === "fib"

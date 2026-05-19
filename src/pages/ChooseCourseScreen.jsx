@@ -246,7 +246,7 @@ const ChooseCourseScreen = ({
             Fetching Courses...
           </div>
         ) : filteredCourses.length === 0 ? (
-          /* EMPTY STATE - RESTORED STYLING */
+          /* EMPTY STATE */
           <div className="flex flex-col items-center justify-center py-20 text-center animate-in fade-in zoom-in-95 duration-700">
             <div className="relative mb-6">
               <div className="absolute inset-0 bg-blue-500/10 blur-3xl rounded-full" />
@@ -259,7 +259,7 @@ const ChooseCourseScreen = ({
               Nothing here yet
             </h2>
             <p className="mt-3 text-slate-500 dark:text-slate-400 max-w-[280px] leading-relaxed font-medium">
-              We don’t have courses for your faculty at the moment. We’re
+              We don't have courses for your faculty at the moment. We're
               actively adding more courses stay tuned.
             </p>
             <button
@@ -270,21 +270,21 @@ const ChooseCourseScreen = ({
             </button>
           </div>
         ) : (
-          /* COURSE LIST - FULL ORIGINAL STYLING */
+          /* COURSE LIST */
           groupOrder.map((group) =>
             groupedCourses[group]?.length > 0 ? (
               <section
                 key={group}
                 className="animate-in fade-in slide-in-from-bottom-4 duration-700"
               >
-                <div className="flex items-center gap-3 mb-4 px-1">
+                <div className="flex items-center gap-3 mb-3 px-1">
                   <FiLayers className="text-blue-600 dark:text-blue-400" />
                   <h3 className="text-[11px] font-black uppercase tracking-[0.2em] text-gray-400 dark:text-slate-500">
                     {groupTitles[group]}
                   </h3>
                 </div>
 
-                <div className="grid gap-4">
+                <div className="grid gap-2.5 sm:gap-4">
                   {groupedCourses[group].map((course) => {
                     const isSelected = selectedCourse?.id === course.id;
                     const isFavourite = favouriteIds.includes(
@@ -302,28 +302,27 @@ const ChooseCourseScreen = ({
                             handleSelectCourse(course);
                           }
                         }}
-                        className={`group w-full text-left p-5 rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${
+                        className={`group w-full text-left p-3.5 sm:p-5 rounded-2xl sm:rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${
                           isSelected
                             ? "bg-blue-600 border-blue-600 shadow-xl shadow-blue-200"
                             : "bg-white dark:bg-slate-800 border-white dark:border-slate-800 hover:border-blue-100 shadow-sm"
                         }`}
                       >
-                        <div className="flex justify-between">
+                        <div className="flex justify-between items-center">
                           <div className="max-w-[80%]">
                             <h2
-                              className={`text-xl font-black ${isSelected ? "text-white" : "text-slate-900 dark:text-white"}`}
+                              className={`text-base sm:text-xl font-black leading-tight ${isSelected ? "text-white" : "text-slate-900 dark:text-white"}`}
                             >
                               {course.name}
                             </h2>
                             <p
-                              className={`text-sm mt-1 leading-snug ${isSelected ? "text-blue-100" : "text-slate-500 dark:text-slate-400"}`}
+                              className={`text-xs sm:text-sm mt-0.5 leading-snug ${isSelected ? "text-blue-100" : "text-slate-500 dark:text-slate-400"}`}
                             >
                               {course.title}
                             </p>
 
-                            {/* RE-ADDED THE BADGE STYLING */}
                             <div
-                              className={`inline-flex items-center gap-1.5 mt-3 px-2.5 py-1 rounded-full text-[10px] font-bold ${
+                              className={`inline-flex items-center gap-1 mt-2 sm:mt-3 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] font-bold ${
                                 isSelected
                                   ? "bg-white/20 text-white"
                                   : "bg-blue-50 dark:bg-blue-900/30 text-blue-600"
@@ -361,7 +360,7 @@ const ChooseCourseScreen = ({
                                   );
                                 });
                               }}
-                              className={`size-10 shrink-0 rounded-2xl flex items-center justify-center transition-all active:scale-90 ${
+                              className={`size-8 sm:size-10 shrink-0 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all active:scale-90 ${
                                 isSelected
                                   ? "bg-white/20 text-white"
                                   : "bg-gray-50 dark:bg-slate-700 text-slate-400 dark:text-slate-300"
@@ -378,10 +377,10 @@ const ChooseCourseScreen = ({
                                   className={
                                     isSelected ? "text-white" : "text-rose-500"
                                   }
-                                  size={22}
+                                  size={18}
                                 />
                               ) : (
-                                <IoHeartOutline size={22} />
+                                <IoHeartOutline size={18} />
                               )}
                             </button>
                           </div>
@@ -396,7 +395,7 @@ const ChooseCourseScreen = ({
         )}
       </main>
 
-      {/* QUESTION COUNT MODAL - ORIGINAL STYLING */}
+      {/* QUESTION COUNT MODAL */}
       {selectedCourse && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
           <div
@@ -445,7 +444,6 @@ const ChooseCourseScreen = ({
                     >
                       {num === "All" ? "Full Exam" : `${num} Qs`}
 
-                      {/* PREMIUM OVERLAY ICON */}
                       {isLocked && (
                         <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
                           <FaCrown className="text-[8px] text-white" />
