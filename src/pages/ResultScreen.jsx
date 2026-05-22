@@ -13,7 +13,7 @@ import BannerAd from "../components/BannerAd";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { FaCrown } from "react-icons/fa";
 import Avatar from "../components/Avatar";
-import NavBar from "../components/NavBar";
+/* import NavBar from "../components/NavBar"; */
 import Logo from "../images/Logo";
 import { toPng } from "html-to-image";
 
@@ -126,7 +126,7 @@ const ResultScreen = ({
   const feedback = getFeedback();
 
   return (
-    <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 pb-32 lg:pb-32 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300">
+    <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 pb-16 lg:pb-32 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300">
       <header className="flex justify-between items-center mb-8 lg:px-16">
         <div className="flex items-center gap-2 bg-white dark:bg-gray-900 py-2 px-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <span className="text-gray-400 dark:text-gray-500 text-xs uppercase tracking-wider font-bold">
@@ -244,7 +244,21 @@ const ResultScreen = ({
         </div>
       </main>
 
-      <footer className="mt-10 flex justify-around items-center bg-white dark:bg-gray-900 p-4 lg:mx-64 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm">
+      <footer className="mt-10 flex justify-evenly items-center bg-white dark:bg-gray-900 py-4 lg:mx-64 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm gap-2">
+        {/* Home Button - Most Important */}
+        <ActionButton
+          label="Home"
+          color="bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
+          onClick={() => navigate("/")}
+          icon={
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M3 9.75L12 3l9 6.75M19.5 10.5v9a2.25 2.25 0 01-2.25 2.25H6.75A2.25 2.25 0 014.5 19.5v-9"
+            />
+          }
+        />
+
         <ActionButton
           label="Retake"
           disabled={!isPremium}
@@ -263,6 +277,7 @@ const ResultScreen = ({
             <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
           }
         />
+
         <ActionButton
           label="Review"
           disabled={!isPremium}
@@ -282,6 +297,7 @@ const ResultScreen = ({
             </>
           }
         />
+
         <ActionButton
           label={sharing ? "Sharing..." : "Share"}
           color="bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400"
@@ -448,10 +464,10 @@ const ResultScreen = ({
         confirmText="Get Premium"
         cancelText="Maybe later"
       />
-      <NavBar
+      {/* <NavBar
         isPremium={isPremium}
         onLockedClick={() => setPremiumOverlayOpen(true)}
-      />
+      /> */}
     </div>
   );
 };
