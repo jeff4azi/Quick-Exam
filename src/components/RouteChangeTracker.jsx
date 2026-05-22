@@ -12,6 +12,7 @@ const ROUTE_TITLES = {
   "/leaderboard": "Leaderboard",
   "/bookmarks": "Bookmarks",
   "/profile": "Profile",
+  "/settings": "Settings",
   "/premium": "Premium",
   "/flashcards": "Flashcards",
   "/match": "Match",

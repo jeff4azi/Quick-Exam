@@ -1,75 +1,58 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FiArrowLeft,
-  FiEdit2,
-  FiCheck,
-  FiLoader,
-  FiUser,
+  FiAward,
   FiBookOpen,
+  FiCheck,
+  FiEdit2,
+  FiLoader,
+  FiSettings,
   FiShield,
-  FiInfo,
-  FiLogOut,
-  FiAlertTriangle,
-  FiZap,
-  FiGrid,
-  FiClock,
+  FiUser,
 } from "react-icons/fi";
-import { API_BASE_URL } from "../apiConfig";
-import { FaCrown, FaFacebookF, FaWhatsapp } from "react-icons/fa";
-import { SiTiktok } from "react-icons/si";
-import { HiOutlineMoon } from "react-icons/hi";
-import ConfirmOverlay from "../components/ConfirmOverlay";
-import { supabase } from "../supabaseClient";
+import { FaCrown } from "react-icons/fa";
 import Avatar from "../components/Avatar";
-import { clearExamSession } from "../utils/examSessionStorage";
+import { supabase } from "../supabaseClient";
 
-const Profile = ({
-  userProfile,
-  isPremium,
-  onUpdateProfile,
-  onLogout,
-  isDarkMode,
-  toggleDarkMode,
-  autoAdvance,
-  toggleAutoAdvance,
-  showPagination,
-  toggleShowPagination,
-  deleteImage,
-}) => {
+const formatLevel = (year) => {
+  const value = String(year ?? "").trim();
+  if (!value) return "100";
+  return value.length === 1 ? `${value}00` : value;
+};
+
+const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isDeleteOverlayOpen, setDeleteOverlayOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
-  const [premiumAccess, setPremiumAccess] = useState(null); // null = loading, false = not found
+  const [premiumAccess, setPremiumAccess] = useState(null);
   const [formData, setFormData] = useState({
+    full_name: userProfile?.full_name || "",
     user_name: userProfile?.user_name || "",
     department: userProfile?.department || "",
   });
 
-  // Keep local form state in sync when profile data changes
   useEffect(() => {
     if (!userProfile || isEditing || isSaving) return;
     setFormData({
+      full_name: userProfile.full_name || "",
       user_name: userProfile.user_name || "",
       department: userProfile.department || "",
     });
   }, [userProfile, isEditing, isSaving]);
 
-  // Fetch premium access record for all users
   useEffect(() => {
     (async () => {
       try {
         const {
           data: { user },
         } = await supabase.auth.getUser();
+
         if (!user) {
           setPremiumAccess(false);
           return;
         }
-        // Fetch the most recent row regardless of active/expiry
+
         const { data, error } = await supabase
           .from("premium_access")
           .select("expires_at, reason, granted_at, active")
@@ -77,16 +60,79 @@ const Profile = ({
           .order("expires_at", { ascending: false })
           .limit(1)
           .maybeSingle();
+
         if (error) {
           setPremiumAccess(false);
           return;
         }
+
         setPremiumAccess(data ?? false);
       } catch {
         setPremiumAccess(false);
       }
     })();
   }, []);
+
+  const premiumStatus = useMemo(() => {
+    if (premiumAccess === null) {
+      return {
+        tone: "loading",
+        label: "Checking access",
+        value: "Loading status",
+      };
+    }
+
+    const now = new Date();
+    const hasAccessRecord = premiumAccess !== false;
+    const isAccessActive =
+      hasAccessRecord &&
+      premiumAccess.active &&
+      new Date(premiumAccess.expires_at) > now;
+    const isAccessExpired =
+      hasAccessRecord &&
+      (!premiumAccess.active || new Date(premiumAccess.expires_at) <= now);
+
+    if (isAccessActive) {
+      return {
+        tone: "premium",
+        label: "Premium Active",
+        value: `Expires ${new Date(premiumAccess.expires_at).toLocaleDateString(
+          undefined,
+          { day: "numeric", month: "short", year: "numeric" },
+        )}`,
+        note: premiumAccess.reason,
+      };
+    }
+
+    if (isAccessExpired) {
+      return {
+        tone: "expired",
+        label: "Premium Expired",
+        value: `Expired ${new Date(
+          premiumAccess.expires_at,
+        ).toLocaleDateString(undefined, {
+          day: "numeric",
+          month: "short",
+          year: "numeric",
+        })}`,
+        note: premiumAccess.reason,
+      };
+    }
+
+    if (isPremium) {
+      return {
+        tone: "premium",
+        label: "Premium Active",
+        value: "Full semester access",
+      };
+    }
+
+    return {
+      tone: "free",
+      label: "Free Plan",
+      value: "Upgrade anytime",
+    };
+  }, [isPremium, premiumAccess]);
 
   const handleSave = async () => {
     if (!onUpdateProfile) {
@@ -97,636 +143,228 @@ const Profile = ({
     try {
       setIsSaving(true);
       await onUpdateProfile(formData);
+      setIsEditing(false);
     } catch (err) {
       console.error("Failed to save profile:", err.message);
     } finally {
-      setIsEditing(false);
       setIsSaving(false);
     }
   };
 
-  const handleDeleteAccount = async () => {
-    if (isDeleting) return;
-
-    try {
-      setIsDeleting(true);
-
-      if (userProfile.avatar_public_id) {
-        await deleteImage(userProfile.avatar_public_id);
-      }
-
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      if (!session?.access_token) {
-        throw new Error("No session found");
-      }
-
-      const res = await fetch(`${API_BASE_URL}/api/users/delete-account`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${session.access_token}`,
-        },
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Delete failed");
-      }
-
-      // Clear local stuff
-      localStorage.removeItem("examHistory");
-      clearExamSession();
-
-      // Logout
-      await supabase.auth.signOut();
-      navigate("/login");
-    } catch (err) {
-      console.error("Delete account failed:", err.message);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
+  const fieldRows = [
+    {
+      key: "full_name",
+      label: "Full Name",
+      icon: FiUser,
+      editable: true,
+      placeholder: "Enter your full name",
+      value: formData.full_name || "Scholar",
+    },
+    {
+      key: "user_name",
+      label: "Username",
+      icon: FiAward,
+      editable: true,
+      placeholder: "Enter your username",
+      value: formData.user_name || "username",
+    },
+    {
+      key: "department",
+      label: "Department",
+      icon: FiBookOpen,
+      editable: true,
+      placeholder: "Enter your department",
+      value: formData.department || "General Studies",
+    },
+    {
+      key: "college",
+      label: "College",
+      icon: FiShield,
+      editable: false,
+      value: userProfile?.college || "TASUED",
+    },
+    {
+      key: "level",
+      label: "Level",
+      icon: FiAward,
+      editable: false,
+      value: `${formatLevel(userProfile?.year)} Level`,
+    },
+  ];
 
   return (
-    <div className="max-w-2xl mx-auto h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex flex-col overflow-hidden relative">
-      {/* Header */}
-      <div className="px-6 py-4 flex items-center justify-between">
-        <button
-          onClick={() => navigate(-1)}
-          className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-transform"
-        >
-          <FiArrowLeft className="size-6 text-slate-700 dark:text-slate-200" />
-        </button>
-        <h2 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
-          My Profile
-        </h2>
-        <div className="w-12"></div> {/* Spacer for symmetry */}
-      </div>
-
-      {/* Main content */}
-      <div className="flex-1 px-6 lg:px-16 overflow-y-auto no-scrollbar pb-32">
-        {/* Avatar Section */}
-        <div className="flex flex-col items-center mt-4 mb-8">
+    <div className="min-h-[100dvh] bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
+      <header className="sticky top-0 z-40 border-b border-slate-200/70 dark:border-slate-800 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 lg:px-8">
           <button
             type="button"
-            onClick={() => navigate("/upload-profile-pic")}
-            className="mt-5 lg:mt-10 scale-130 lg:scale-200 relative group focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-[2.5rem]"
+            onClick={() => navigate(-1)}
+            className="size-11 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
+            aria-label="Go back"
           >
-            <Avatar
-              avatarUrl={userProfile?.avatar_url}
-              size="lg"
-              className="shadow-2xl shadow-blue-200 dark:shadow-none"
-            />
-            {isPremium && (
-              <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-2xl p-2 border-4 border-gray-50 dark:border-slate-900 shadow-lg">
-                <FaCrown className="text-sm text-white" />
-              </div>
-            )}
-            <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-slate-900/90 text-white text-[10px] font-bold px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">
-              Change photo
-            </span>
+            <FiArrowLeft size={20} />
           </button>
-
-          {/* Premium / plan status */}
-          <div className="mt-10 lg:mt-20">
-            {premiumAccess === null ? (
-              /* Skeleton loader */
-              <div className="bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl px-4 py-3 flex items-center gap-3 animate-pulse">
-                <div className="size-8 rounded-xl bg-gray-200 dark:bg-slate-700 shrink-0" />
-                <div className="flex flex-col gap-1.5 flex-1">
-                  <div className="h-2.5 w-20 rounded-full bg-gray-200 dark:bg-slate-700" />
-                  <div className="h-3.5 w-32 rounded-full bg-gray-200 dark:bg-slate-700" />
-                </div>
-              </div>
-            ) : (
-              (() => {
-                const now = new Date();
-                const hasRow = premiumAccess !== false;
-                const isExpired =
-                  hasRow &&
-                  (!premiumAccess.active ||
-                    new Date(premiumAccess.expires_at) <= now);
-                const isActive =
-                  hasRow &&
-                  premiumAccess.active &&
-                  new Date(premiumAccess.expires_at) > now;
-
-                if (isActive) {
-                  return (
-                    <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl px-4 py-3 flex items-center gap-3">
-                      <div className="size-8 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center shrink-0">
-                        <FiClock className="text-amber-500" size={16} />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-amber-500 dark:text-amber-400">
-                          Premium Expires
-                        </p>
-                        <p className="text-sm font-black text-slate-800 dark:text-white">
-                          {new Date(
-                            premiumAccess.expires_at,
-                          ).toLocaleDateString(undefined, {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </p>
-                        {premiumAccess.reason && (
-                          <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">
-                            {premiumAccess.reason}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  );
-                }
-
-                if (isExpired) {
-                  return (
-                    <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/50 rounded-2xl px-4 py-3 flex items-center gap-3">
-                      <div className="size-8 rounded-xl bg-red-100 dark:bg-red-900/40 flex items-center justify-center shrink-0">
-                        <FiClock className="text-red-400" size={16} />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-black uppercase tracking-widest text-red-400">
-                          Premium Expired
-                        </p>
-                        <p className="text-sm font-black text-slate-800 dark:text-white">
-                          {new Date(
-                            premiumAccess.expires_at,
-                          ).toLocaleDateString(undefined, {
-                            day: "numeric",
-                            month: "short",
-                            year: "numeric",
-                          })}
-                        </p>
-                        {premiumAccess.reason && (
-                          <p className="text-[10px] text-slate-400 dark:text-slate-500 truncate">
-                            {premiumAccess.reason}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  );
-                }
-
-                if (isPremium) {
-                  return (
-                    <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl px-4 py-3 flex items-center gap-3">
-                      <div className="size-8 rounded-xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center shrink-0">
-                        <FaCrown className="text-amber-500" size={14} />
-                      </div>
-                      <div>
-                        <p className="text-[10px] font-black uppercase tracking-widest text-amber-500 dark:text-amber-400">
-                          Access
-                        </p>
-                        <p className="text-sm font-black text-slate-800 dark:text-white">
-                          Full Semester Access
-                        </p>
-                      </div>
-                    </div>
-                  );
-                }
-
-                return (
-                  <div className="bg-gray-100 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl px-4 py-3 flex items-center gap-3">
-                    <div className="size-8 rounded-xl bg-gray-200 dark:bg-slate-700 flex items-center justify-center shrink-0">
-                      <FiZap className="text-slate-400" size={16} />
-                    </div>
-                    <div>
-                      <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
-                        Current Plan
-                      </p>
-                      <p className="text-sm font-black text-slate-600 dark:text-slate-300">
-                        Free Plan
-                      </p>
-                    </div>
-                  </div>
-                );
-              })()
-            )}
+          <div className="text-center">
+            <h1 className="text-lg font-black tracking-tight">Profile</h1>
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
+              Identity & access
+            </p>
           </div>
+          <button
+            type="button"
+            onClick={() => navigate("/settings")}
+            className="size-11 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
+            aria-label="Open settings"
+            title="Settings"
+          >
+            <FiSettings size={20} />
+          </button>
         </div>
+      </header>
 
-        {/* Input Fields Container */}
-        <div className="space-y-4">
-          {/* User Name Field (Editable) */}
-          <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm transition-all">
-            <div className="flex items-center gap-4 mb-2">
-              <div className="size-10 rounded-xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600">
-                <FiUser size={20} />
-              </div>
-              <label className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
-                User Name
-              </label>
-            </div>
-            {isEditing ? (
-              <input
-                type="text"
-                value={formData.user_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, user_name: e.target.value })
-                }
-                className="w-full bg-gray-50 dark:bg-slate-900/50 border-none rounded-xl p-3 text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="Enter your username"
-              />
-            ) : (
-              <p className="text-lg font-bold text-slate-800 dark:text-white px-1">
-                {formData.user_name || "username"}
-              </p>
-            )}
-          </div>
-
-          {/* Full Name Field (Non-Editable) */}
-          <div className="bg-gray-100/50 dark:bg-slate-800/40 p-5 rounded-[2rem] border border-dashed border-gray-400 dark:border-slate-700 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="size-10 rounded-xl bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
-                <FiUser size={20} />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                  Full Name
-                </p>
-                <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
-                  {userProfile?.full_name || "Scholar"}
-                </p>
-              </div>
-            </div>
-            <div className="text-[10px] text-gray-400 dark:text-slate-500">
-              Cannot be edited
-            </div>
-          </div>
-
-          {/* Department Field */}
-          <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm transition-all">
-            <div className="flex items-center gap-4 mb-2">
-              <div className="size-10 rounded-xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center text-purple-600">
-                <FiBookOpen size={20} />
-              </div>
-              <label className="text-xs font-bold text-gray-400 dark:text-slate-500 uppercase tracking-wider">
-                Department
-              </label>
-            </div>
-            {isEditing ? (
-              <input
-                type="text"
-                value={formData.department}
-                onChange={(e) =>
-                  setFormData({ ...formData, department: e.target.value })
-                }
-                className="w-full bg-gray-50 dark:bg-slate-900/50 border-none rounded-xl p-3 text-slate-900 dark:text-white font-bold focus:ring-2 focus:ring-blue-500 outline-none"
-                placeholder="Enter department"
-              />
-            ) : (
-              <p className="text-lg font-bold text-slate-800 dark:text-white px-1">
-                {formData.department || "TASUED Student"}
-              </p>
-            )}
-          </div>
-
-          {/* Non-Editable College Info */}
-          <div className="bg-gray-100/50 dark:bg-slate-800/40 p-5 rounded-[2rem] border border-dashed border-gray-400 dark:border-slate-700 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="size-10 rounded-xl bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
-                <FiShield size={20} />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                  College
-                </p>
-                <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
-                  {userProfile?.college || "TASUED"}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Level Info (Non-Editable) */}
-          <div className="bg-gray-100/50 dark:bg-slate-800/40 p-5 rounded-[2rem] border border-dashed border-gray-400 dark:border-slate-700 flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="size-10 rounded-xl bg-gray-200 dark:bg-slate-700 flex items-center justify-center text-slate-500">
-                <FiZap size={20} />
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">
-                  Current Level
-                </p>
-                <p className="text-sm font-bold text-slate-500 dark:text-slate-400">
-                  Level {userProfile?.year || "1"}00 Student
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Premium & App Section */}
-          {!isPremium && (
-            <div
-              onClick={() => navigate("/premium")}
-              className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-[2rem] p-5 shadow-lg shadow-blue-200 dark:shadow-none relative overflow-hidden"
-            >
-              <div className="absolute -right-6 -top-6 size-28 bg-white/10 rounded-full blur-2xl" />
-              <div className="relative z-10 flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="size-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-md">
-                    <FiZap className="text-yellow-300 text-xl" />
-                  </div>
-                  <div>
-                    <h4 className="text-white font-black text-lg">
-                      Go Premium
-                    </h4>
-                    <p className="text-blue-100 text-[11px] leading-relaxed font-medium">
-                      Unlock Unlimited Questions & No Interruptions
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Community Links */}
-          <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm">
-            <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest mb-4">
-              Community
-            </h3>
-            <ul className="space-y-2">
-              <li>
-                <a
-                  href="https://chat.whatsapp.com/FMPmsBbwU9kL6t2vJ6C8qq"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-700/60 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="size-9 rounded-2xl bg-green-50 dark:bg-green-900/30 flex items-center justify-center text-green-500">
-                      <FaWhatsapp size={18} />
-                    </span>
-                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                      WhatsApp Group
-                    </span>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.facebook.com/share/17RabkxuWY/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-700/60 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="size-9 rounded-2xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
-                      <FaFacebookF size={16} />
-                    </span>
-                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                      Facebook Page
-                    </span>
-                  </div>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://www.tiktok.com/@codejeffrey18"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-700/60 transition-all"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="size-9 rounded-2xl bg-gray-100 dark:bg-slate-700 flex items-center justify-center text-black dark:text-white">
-                      <SiTiktok size={16} />
-                    </span>
-                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                      TikTok
-                    </span>
-                  </div>
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* App Settings */}
-          <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm space-y-3">
-            <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">
-              App
-            </h3>
-            <button
-              type="button"
-              onClick={() => navigate("/about")}
-              className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-700/60 transition-all"
-            >
-              <div className="flex items-center gap-3">
-                <span className="size-9 rounded-2xl bg-indigo-50 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-500">
-                  <FiInfo />
-                </span>
-                <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                  About Quiz Bolt
-                </span>
-              </div>
-            </button>
-            <a
-              href="https://wa.me/2347015585397?text=Hi%20Quiz%20Bolt%20Support,%20I%20found%20an%20issue..."
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-gray-50 dark:hover:bg-slate-700/60 transition-all"
-            >
-              <div className="flex items-center gap-3">
-                <span className="size-9 rounded-2xl bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center text-amber-500">
-                  <FiAlertTriangle />
-                </span>
-                <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                  Report a Problem
-                </span>
-              </div>
-            </a>
-            <button
-              type="button"
-              onClick={onLogout}
-              className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
-            >
-              <div className="flex items-center gap-3">
-                <span className="size-9 rounded-2xl bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-500">
-                  <FiLogOut />
-                </span>
-                <span className="text-sm font-semibold text-red-600 dark:text-red-400">
-                  Sign Out
-                </span>
-              </div>
-            </button>
-            <button
-              type="button"
-              onClick={() => setDeleteOverlayOpen(true)}
-              className="w-full flex items-center justify-between p-3 rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/20 transition-all"
-            >
-              <div className="flex items-center gap-3">
-                <span className="size-9 rounded-2xl bg-red-50 dark:bg-red-900/30 flex items-center justify-center text-red-600">
-                  <FiAlertTriangle />
-                </span>
-                <span className="text-sm font-semibold text-red-700 dark:text-red-400">
-                  Delete Account
-                </span>
-              </div>
-            </button>
-          </div>
-
-          <div className="bg-white dark:bg-slate-800 p-5 rounded-[2rem] border border-gray-100 dark:border-slate-700 shadow-sm space-y-7">
-            <h3 className="text-[11px] font-bold text-gray-400 dark:text-slate-500 uppercase tracking-widest">
-              Preferences
-            </h3>
-
-            {/* Dark Mode Toggle */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="size-9 rounded-2xl bg-slate-100 dark:bg-slate-700 flex items-center justify-center text-slate-500 dark:text-blue-300">
-                  <HiOutlineMoon className="text-lg" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                    Dark Mode
-                  </p>
-                  <p className="text-[11px] text-slate-400 dark:text-slate-500">
-                    Toggle between light and dark themes.
-                  </p>
-                </div>
-              </div>
+      <main className="mx-auto max-w-5xl px-5 pb-28 pt-6 lg:px-8">
+        <section className="grid gap-6 lg:grid-cols-[320px_1fr] lg:items-start">
+          <aside className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+            <div className="flex flex-col items-center text-center">
               <button
                 type="button"
-                onClick={toggleDarkMode}
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
-                  isDarkMode ? "bg-blue-600" : "bg-gray-300"
+                onClick={() => navigate("/upload-profile-pic")}
+                className="group relative rounded-[2rem] focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
+              >
+                <Avatar
+                  avatarUrl={userProfile?.avatar_url}
+                  size="lg"
+                  className="shadow-xl shadow-blue-100 dark:shadow-none"
+                />
+                {isPremium && (
+                  <span className="absolute -right-2 -top-2 rounded-2xl border-4 border-white dark:border-slate-900 bg-amber-400 p-2 shadow-lg">
+                    <FaCrown className="text-sm text-white" />
+                  </span>
+                )}
+                <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-slate-950 px-3 py-1 text-[10px] font-bold text-white opacity-0 transition-opacity group-hover:opacity-100">
+                  Change photo
+                </span>
+              </button>
+
+              <h2 className="mt-8 max-w-full truncate text-2xl font-black tracking-tight">
+                {formData.full_name || "Scholar"}
+              </h2>
+              <p className="mt-1 text-sm font-bold text-slate-400">
+                @{formData.user_name || "username"}
+              </p>
+
+              <div
+                className={`mt-5 w-full rounded-2xl border px-4 py-3 text-left ${
+                  premiumStatus.tone === "premium"
+                    ? "border-amber-200 bg-amber-50 text-amber-700 dark:border-amber-800/50 dark:bg-amber-900/20 dark:text-amber-300"
+                    : premiumStatus.tone === "expired"
+                      ? "border-red-200 bg-red-50 text-red-600 dark:border-red-800/50 dark:bg-red-900/20 dark:text-red-300"
+                      : "border-slate-200 bg-slate-50 text-slate-600 dark:border-slate-700 dark:bg-slate-800/70 dark:text-slate-300"
                 }`}
               >
-                <div
-                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
-                    isDarkMode ? "translate-x-6" : ""
-                  }`}
-                />
-              </button>
-            </div>
-
-            {/* Auto-Advance Toggle */}
-            <div className="flex items-center justify-between relative">
-              <div className="flex items-center gap-3">
-                <span className="size-9 rounded-2xl bg-amber-50 dark:bg-amber-900/20 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                  <FiZap className="text-lg" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                    Auto-Advance
-                  </p>
-                  <p className="text-[11px] text-slate-400 dark:text-slate-500">
-                    Automatically go to next question.
-                  </p>
+                <div className="flex items-center gap-3">
+                  <span className="size-9 shrink-0 rounded-xl bg-white/70 dark:bg-slate-950/30 flex items-center justify-center">
+                    {premiumStatus.tone === "premium" ? (
+                      <FaCrown />
+                    ) : (
+                      <FiAward />
+                    )}
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-black uppercase tracking-[0.18em]">
+                      {premiumStatus.label}
+                    </p>
+                    <p className="truncate text-sm font-black">
+                      {premiumStatus.value}
+                    </p>
+                    {premiumStatus.note && (
+                      <p className="truncate text-[11px] opacity-70">
+                        {premiumStatus.note}
+                      </p>
+                    )}
+                  </div>
                 </div>
               </div>
 
-              {/* Toggle Button */}
-              <button
-                type="button"
-                onClick={
-                  isPremium
-                    ? toggleAutoAdvance
-                    : () => setPremiumOverlayOpen(true)
-                }
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
-                  autoAdvance && isPremium ? "bg-blue-600" : "bg-gray-300"
-                } ${!isPremium ? "opacity-60 cursor-not-allowed" : ""}`}
-              >
-                <div
-                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
-                    autoAdvance && isPremium ? "translate-x-6" : ""
-                  }`}
-                />
-              </button>
-
-              {/* Crown overlay for non-premium users */}
               {!isPremium && (
-                <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-                  <FaCrown className="text-[8px] text-white" />
-                </div>
+                <button
+                  type="button"
+                  onClick={() => navigate("/premium")}
+                  className="mt-4 w-full rounded-2xl bg-blue-600 px-4 py-3 text-sm font-black text-white shadow-lg shadow-blue-200 transition-all active:scale-[0.98] dark:shadow-none"
+                >
+                  Upgrade to Premium
+                </button>
               )}
             </div>
+          </aside>
 
-            {/* Show Pagination Toggle */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <span className="size-9 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                  <FiGrid className="text-lg" />
-                </span>
-                <div>
-                  <p className="text-sm font-semibold text-slate-800 dark:text-slate-100">
-                    Question Pagination
-                  </p>
-                  <p className="text-[11px] text-slate-400 dark:text-slate-500">
-                    Show question bubbles on the exam screen.
-                  </p>
-                </div>
+          <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-5 py-4">
+              <div>
+                <h3 className="font-black">Profile details</h3>
+                <p className="text-xs font-semibold text-slate-400">
+                  Keep your public exam identity accurate.
+                </p>
               </div>
               <button
                 type="button"
-                onClick={toggleShowPagination}
-                className={`w-12 h-6 flex items-center rounded-full p-1 transition-colors duration-300 ${
-                  showPagination ? "bg-blue-600" : "bg-gray-300"
+                disabled={isSaving}
+                onClick={isEditing ? handleSave : () => setIsEditing(true)}
+                className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-black text-white transition-all active:scale-95 ${
+                  isSaving
+                    ? "bg-green-600/80"
+                    : isEditing
+                      ? "bg-green-600 hover:bg-green-700"
+                      : "bg-blue-600 hover:bg-blue-700"
                 }`}
               >
-                <div
-                  className={`bg-white size-4 rounded-full shadow-md transform transition-transform duration-300 ${
-                    showPagination ? "translate-x-6" : ""
-                  }`}
-                />
+                {isSaving ? (
+                  <FiLoader className="animate-spin" />
+                ) : isEditing ? (
+                  <FiCheck />
+                ) : (
+                  <FiEdit2 />
+                )}
+                {isSaving ? "Saving" : isEditing ? "Save" : "Edit"}
               </button>
             </div>
-          </div>
-        </div>
-      </div>
 
-      {/* Floating Edit Profile Button */}
-      <button
-        type="button"
-        disabled={isSaving}
-        onClick={isEditing ? handleSave : () => setIsEditing(true)}
-        className="absolute bottom-8 right-6"
-      >
-        <div
-          className={`size-14 rounded-full flex items-center justify-center shadow-xl shadow-blue-200 dark:shadow-none transition-all ${
-            isSaving
-              ? "bg-green-600/80 cursor-wait"
-              : isEditing
-                ? "bg-green-600 hover:bg-green-700 active:scale-95"
-                : "bg-blue-600 hover:bg-blue-700 active:scale-95"
-          }`}
-        >
-          {isSaving ? (
-            <FiLoader className="text-white text-xl animate-spin" />
-          ) : isEditing ? (
-            <FiCheck className="text-white text-xl" />
-          ) : (
-            <FiEdit2 className="text-white text-xl" />
-          )}
-        </div>
-      </button>
+            <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              {fieldRows.map(({ key, label, icon: Icon, editable, value, placeholder }) => (
+                <div
+                  key={key}
+                  className="grid gap-3 px-5 py-4 sm:grid-cols-[180px_1fr] sm:items-center"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="size-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-300">
+                      <Icon />
+                    </span>
+                    <span className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
+                      {label}
+                    </span>
+                  </div>
 
-      <ConfirmOverlay
-        isOpen={isDeleteOverlayOpen}
-        onClose={() => setDeleteOverlayOpen(false)}
-        onConfirm={handleDeleteAccount}
-        title="Delete Account?"
-        message="This will remove your profile and exam history from this device. This action cannot be undone."
-        confirmText={isDeleting ? "Deleting..." : "Yes, delete my account"}
-        cancelText="Cancel"
-        danger={true}
-      />
-
-      <ConfirmOverlay
-        isOpen={isPremiumOverlayOpen}
-        onClose={() => setPremiumOverlayOpen(false)}
-        onConfirm={() => navigate("/premium")}
-        title="Auto-Advance with Premium"
-        message="Upgrade to Premium to control whether questions automatically advance after answering. Give yourself more time to think or speed through your exams!"
-        confirmText="Upgrade to Premium"
-        cancelText="Not now"
-      />
+                  {isEditing && editable ? (
+                    <input
+                      type="text"
+                      value={formData[key]}
+                      onChange={(e) =>
+                        setFormData({ ...formData, [key]: e.target.value })
+                      }
+                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                      placeholder={placeholder}
+                    />
+                  ) : (
+                    <p className="min-w-0 truncate text-base font-bold text-slate-800 dark:text-slate-100">
+                      {value}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        </section>
+      </main>
     </div>
   );
 };

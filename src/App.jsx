@@ -29,6 +29,7 @@ import OnboardingRoute from "./components/OnboardingRoute";
 import PremiumPage from "./pages/PremiumPage";
 import LandingPage from "./pages/LandingPage";
 import Profile from "./pages/Profile";
+import SettingsScreen from "./pages/SettingsScreen";
 import { AuthProvider } from "./context/AuthContext";
 import "katex/dist/katex.min.css";
 import LeaderboardScreen from "./pages/LeaderboardScreen";
@@ -472,9 +473,10 @@ function App() {
       );
       if (userError) throw userError;
 
-      const { user_name, department } = updates || {};
+      const { full_name, user_name, department } = updates || {};
 
       // Determine next values, falling back to existing profile data
+      const nextFullName = full_name ?? userProfile?.full_name ?? "";
       const nextUserName = user_name ?? userProfile?.user_name ?? "";
       const nextDepartment = department ?? userProfile?.department ?? "";
 
@@ -483,6 +485,7 @@ function App() {
         supabase.from("profiles").upsert(
           {
             id: user.id,
+            full_name: nextFullName || null,
             user_name: nextUserName || null,
             department: nextDepartment || null,
             college: userProfile?.college ?? null,
@@ -504,6 +507,7 @@ function App() {
       // Update local React state so UI reflects changes immediately
       setUserProfile((prev) => ({
         ...prev,
+        full_name: nextFullName,
         user_name: nextUserName,
         department: nextDepartment,
       }));
@@ -669,6 +673,19 @@ function App() {
                       userProfile={userProfile}
                       isPremium={isPremium}
                       onUpdateProfile={handleUpdateProfile}
+                    />,
+                  )}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/settings"
+              element={
+                <ProtectedRoute>
+                  {withDesktop(
+                    <SettingsScreen
+                      userProfile={userProfile}
+                      isPremium={isPremium}
                       onLogout={handleLogout}
                       isDarkMode={isDarkMode}
                       toggleDarkMode={() => setIsDarkMode((prev) => !prev)}
