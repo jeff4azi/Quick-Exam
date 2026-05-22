@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import {
   FiArrowLeft,
   FiCamera,
+  FiCheck,
+  FiImage,
+  FiInfo,
   FiUploadCloud,
   FiTrash2,
   FiLoader,
@@ -10,6 +13,7 @@ import {
 import imageCompression from "browser-image-compression";
 import { supabase } from "../supabaseClient";
 import NavBar from "../components/NavBar";
+import { DEFAULT_AVATAR_URL } from "../components/Avatar";
 
 const CLOUDINARY_CLOUD_NAME =
   import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
@@ -92,8 +96,8 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage, isPremium 
       formData.append("public_id", uniquePublicId);
 
       // If user already has an avatar, delete the old one first
-      console.log("Deleting Cloudinary image:", userProfile.avatar_public_id);
-      if (userProfile.avatar_public_id) {
+      console.log("Deleting Cloudinary image:", userProfile?.avatar_public_id);
+      if (userProfile?.avatar_public_id) {
         await deleteImage(userProfile.avatar_public_id);
       }
 
@@ -151,7 +155,7 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage, isPremium 
         });
       }
 
-      setTimeout(() => navigate("/"), 1000);
+      setTimeout(() => navigate("/profile"), 900);
     } catch (error) {
       console.error("Upload error:", error);
       let errorMessage = "Upload failed.";
@@ -187,8 +191,8 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage, isPremium 
       } = await supabase.auth.getUser();
       if (userError || !user) throw new Error("Could not get user.");
 
-      console.log("Deleting Cloudinary image:", userProfile.avatar_public_id);
-      if (userProfile.avatar_public_id) {
+      console.log("Deleting Cloudinary image:", userProfile?.avatar_public_id);
+      if (userProfile?.avatar_public_id) {
         await deleteImage(userProfile.avatar_public_id);
       }
 
@@ -221,103 +225,186 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage, isPremium 
   };
 
   return (
-    <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6 flex flex-col items-center">
-      {/* Header */}
-      <div className="w-full max-w-xl flex items-center justify-between mb-10 mt-4">
-        {previewUrl ? (
+    <div className="min-h-[100dvh] bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
+      <header className="sticky top-0 z-40 border-b border-slate-200/70 dark:border-slate-800 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 lg:px-8">
           <button
+            type="button"
             onClick={() => navigate(-1)}
-            className="bg-white dark:bg-slate-800 p-3.5 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 active:scale-90 transition-transform"
+            className="size-11 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
+            aria-label="Go back"
           >
-            <FiArrowLeft className="size-6 text-slate-700 dark:text-slate-200" />
-          </button>) : (<div className="size-12" />)
-        }
-        <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
-          Profile Picture
-        </h1>
-        <div className="w-10" />
-      </div>
-
-      {/* Main Card */}
-      <div className="w-full max-w-sm bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 border border-gray-100 dark:border-slate-700 shadow-xl flex flex-col items-center animate-in fade-in slide-in-from-bottom-4 duration-700">
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleFileChange}
-          accept="image/*"
-          className="hidden"
-        />
-
-        <div className="relative mb-10">
-          <img
-            src={
-              previewUrl && previewUrl.trim() !== "" && previewUrl !== "NULL"
-                ? previewUrl
-                : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
-            }
-            alt="Profile Preview"
-            className="size-40 rounded-[3rem] object-cover border-4 border-white dark:border-slate-700 shadow-2xl ring-4 ring-blue-50 dark:ring-blue-900/30"
-          />
-
-          <button
-            onClick={triggerFileInput}
-            className="absolute -bottom-3 -right-3 size-12 bg-blue-600 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white dark:border-slate-800 active:scale-90 transition-all"
-            disabled={uploading}
-          >
-            <FiCamera size={20} />
+            <FiArrowLeft size={20} />
           </button>
+          <div className="text-center">
+            <h1 className="text-lg font-black tracking-tight">
+              Profile Picture
+            </h1>
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
+              Update your avatar
+            </p>
+          </div>
+          <div className="size-11" />
         </div>
+      </header>
 
-        <div className="w-full space-y-3">
-          <button
-            onClick={triggerFileInput}
-            disabled={uploading}
-            className="w-full flex items-center justify-center gap-3 p-5 bg-blue-50 dark:bg-blue-900/20 rounded-3xl text-blue-700 dark:text-blue-300 font-bold hover:bg-blue-100 dark:hover:bg-blue-900/40 active:scale-95 transition-all"
-          >
-            {previewUrl ? <FiUploadCloud /> : <FiCamera />}
-            {previewUrl ? "Change Photo" : "Choose Photo"}
-          </button>
+      <main className="mx-auto max-w-5xl px-5 pb-32 pt-6 lg:px-8">
+        <section className="grid gap-6 lg:grid-cols-[360px_1fr] lg:items-start">
+          <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 shadow-sm">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              accept="image/jpeg,image/png,image/webp"
+              className="hidden"
+            />
 
-          {previewUrl && (
-            <button
-              onClick={handleRemovePhoto}
-              disabled={uploading}
-              className="w-full flex items-center justify-center gap-3 p-4 text-red-500 font-semibold text-sm active:scale-95 transition-all"
-            >
-              <FiTrash2 size={16} />
-              Remove Current Photo
-            </button>
-          )}
-
-          {!previewUrl && (
-            <button
-              onClick={() => {
-                localStorage.setItem("skipAvatar", "true");
-                navigate("/"); // go back to home
+            <div
+              className="group relative aspect-square overflow-hidden rounded-3xl bg-slate-100 dark:bg-slate-800"
+              role="button"
+              tabIndex={0}
+              onClick={triggerFileInput}
+              onKeyDown={(event) => {
+                if (event.key === "Enter" || event.key === " ") {
+                  event.preventDefault();
+                  triggerFileInput();
+                }
               }}
-              disabled={uploading}
-              className="w-full mt-4 flex items-center justify-center gap-2 p-4 text-sm font-bold text-gray-500 dark:text-gray-400 hover:underline"
             >
-              Skip for now
-            </button>
-          )}
-        </div>
-      </div>
+              <img
+                src={
+                  previewUrl && previewUrl.trim() !== "" && previewUrl !== "NULL"
+                    ? previewUrl
+                    : DEFAULT_AVATAR_URL
+                }
+                alt="Profile preview"
+                className="size-full object-cover"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-slate-950/0 transition-colors group-hover:bg-slate-950/30">
+                <span className="scale-95 rounded-2xl bg-white/95 px-4 py-2 text-xs font-black text-slate-900 opacity-0 shadow-lg transition-all group-hover:scale-100 group-hover:opacity-100">
+                  Choose photo
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  triggerFileInput();
+                }}
+                className="absolute bottom-4 right-4 size-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-lg shadow-blue-200 transition-transform active:scale-95 dark:shadow-none"
+                disabled={uploading}
+                aria-label="Choose photo"
+              >
+                <FiCamera size={20} />
+              </button>
+            </div>
 
-      {status.message && (
-        <div
-          className={`mt-8 px-6 py-3 rounded-full text-xs font-bold ${status.type === "error" ? "bg-red-50 text-red-600" : "bg-blue-50 text-blue-700"} animate-in fade-in`}
-        >
-          {status.message}
-        </div>
-      )}
+            {status.message && (
+              <div
+                className={`mt-4 flex items-center gap-2 rounded-2xl px-4 py-3 text-xs font-bold ${
+                  status.type === "error"
+                    ? "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-300"
+                    : status.type === "success"
+                      ? "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-300"
+                      : "bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-300"
+                }`}
+              >
+                {status.type === "success" ? <FiCheck /> : <FiInfo />}
+                {status.message}
+              </div>
+            )}
+          </div>
+
+          <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+            <div className="border-b border-slate-100 dark:border-slate-800 px-5 py-4">
+              <h2 className="font-black">Photo controls</h2>
+              <p className="text-xs font-semibold text-slate-400">
+                Use a clear square photo. JPEG, PNG, and WEBP are supported.
+              </p>
+            </div>
+
+            <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <button
+                type="button"
+                onClick={triggerFileInput}
+                disabled={uploading}
+                className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60 disabled:opacity-60"
+              >
+                <span className="flex min-w-0 items-center gap-3">
+                  <span className="size-10 shrink-0 rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-300 flex items-center justify-center">
+                    {previewUrl ? <FiUploadCloud /> : <FiImage />}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-sm font-black text-slate-900 dark:text-white">
+                      {previewUrl ? "Change photo" : "Choose photo"}
+                    </span>
+                    <span className="block truncate text-xs font-medium text-slate-400">
+                      Select an image from your device
+                    </span>
+                  </span>
+                </span>
+              </button>
+
+              {previewUrl && (
+                <button
+                  type="button"
+                  onClick={handleRemovePhoto}
+                  disabled={uploading}
+                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-60"
+                >
+                  <span className="flex min-w-0 items-center gap-3">
+                    <span className="size-10 shrink-0 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-300 flex items-center justify-center">
+                      <FiTrash2 />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-black text-red-600 dark:text-red-300">
+                        Remove current photo
+                      </span>
+                      <span className="block truncate text-xs font-medium text-slate-400">
+                        Return to the default avatar
+                      </span>
+                    </span>
+                  </span>
+                </button>
+              )}
+
+              {!previewUrl && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    localStorage.setItem("skipAvatar", "true");
+                    navigate("/profile");
+                  }}
+                  disabled={uploading}
+                  className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60 disabled:opacity-60"
+                >
+                  <span className="flex min-w-0 items-center gap-3">
+                    <span className="size-10 shrink-0 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-500 flex items-center justify-center">
+                      <FiArrowLeft />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-sm font-black text-slate-900 dark:text-white">
+                        Skip for now
+                      </span>
+                      <span className="block truncate text-xs font-medium text-slate-400">
+                        Continue without a profile photo
+                      </span>
+                    </span>
+                  </span>
+                </button>
+              )}
+            </div>
+          </div>
+        </section>
+      </main>
 
       {file && (
-        <div className="fixed bottom-6 inset-x-6 max-w-sm mx-auto">
+        <div className="fixed bottom-6 inset-x-5 z-50 mx-auto max-w-sm lg:left-[16rem]">
           <button
+            type="button"
             onClick={handleSave}
             disabled={uploading}
-            className="w-full bg-blue-600 dark:bg-blue-700 py-5 rounded-2xl font-black text-white text-lg shadow-2xl shadow-blue-200 dark:shadow-none flex items-center justify-center gap-3 active:scale-95 transition-all disabled:opacity-70"
+            className="w-full rounded-2xl bg-blue-600 py-4 text-base font-black text-white shadow-2xl shadow-blue-200 dark:shadow-none flex items-center justify-center gap-3 active:scale-[0.98] transition-all disabled:opacity-70"
           >
             {uploading ? (
               <>
