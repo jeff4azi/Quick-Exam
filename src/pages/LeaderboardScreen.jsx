@@ -1,5 +1,14 @@
 import React, { useEffect, useMemo, useState, useCallback } from "react";
-import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
+import {
+  FaChevronDown,
+  FaCrown,
+  FaGlobeAfrica,
+  FaMedal,
+  FaSlidersH,
+  FaTimes,
+  FaTrophy,
+  FaUniversity,
+} from "react-icons/fa";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import ProfileSheet from "../components/ProfileSheet";
@@ -38,8 +47,17 @@ const LeaderboardScreen = ({
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [universityFilter, setUniversityFilter] = useState("mine");
   const [questionCountFilter, setQuestionCountFilter] = useState("all");
+  const [levelFilter, setLevelFilter] = useState("all");
   const [examType, setExamType] = useState("OBJ");
   const [filtersOpen, setFiltersOpen] = useState(false);
+
+  const levelOptions = ["all", "100", "200", "300", "400"];
+
+  const normalizeLevel = (year) => {
+    const value = String(year ?? "").trim();
+    if (!value) return null;
+    return value.length === 1 ? `${value}00` : value;
+  };
 
   const questionCountOptions = examType === "THY"
     ? ["all", 3, 5, 7, 10]
@@ -273,15 +291,20 @@ const LeaderboardScreen = ({
       };
     });
 
+    const levelFilteredEntries =
+      levelFilter === "all"
+        ? entries
+        : entries.filter((entry) => normalizeLevel(entry.year) === levelFilter);
+
     // Sort by best score, then attempts count
-    entries.sort((a, b) => {
+    levelFilteredEntries.sort((a, b) => {
       if (b.bestPercent !== a.bestPercent) {
         return b.bestPercent - a.bestPercent;
       }
       return b.attemptsCount - a.attemptsCount;
     });
 
-    return entries;
+    return levelFilteredEntries;
   }, [
     attempts,
     profiles,
@@ -289,6 +312,7 @@ const LeaderboardScreen = ({
     universityFilter,
     userProfile,
     questionCountFilter,
+    levelFilter,
   ]);
 
   const formatTime = (seconds) => {
@@ -326,8 +350,9 @@ const LeaderboardScreen = ({
       <main className="max-w-2xl mx-auto px-6 pt-4 pb-32">
         {/* Exam type toggle */}
         <section className="mb-4">
-          <div className="inline-flex bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
-            {[
+          <div className="flex items-center gap-2">
+            <div className="flex min-w-0 flex-1 bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
+              {[
               { key: "OBJ", label: "Objective" },
               { key: "FIB", label: "Fill in Blank" },
               { key: "THY", label: "Theory" },
@@ -336,19 +361,29 @@ const LeaderboardScreen = ({
                 key={key}
                 type="button"
                 onClick={() => setExamType(key)}
-                className={`px-5 py-2 rounded-xl text-xs font-black transition-all ${examType === key
+                  className={`flex-1 px-2 sm:px-5 py-2 rounded-xl text-[11px] sm:text-xs font-black transition-all whitespace-nowrap ${examType === key
                   ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
                   : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                   }`}
               >
                 {label}
               </button>
-            ))}
+              ))}
+            </div>
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(true)}
+              aria-label="Open leaderboard filters"
+              title="Open leaderboard filters"
+              className="size-11 shrink-0 rounded-2xl bg-blue-600/70 text-gray-100 shadow-lg shadow-blue-200 dark:shadow-none flex items-center justify-center transition-transform active:scale-95"
+            >
+              <FaSlidersH />
+            </button>
           </div>
         </section>
 
         {/* Collapsible filters */}
-        <section className="mb-4">
+        <section className="hidden">
           <button
             type="button"
             onClick={() => setFiltersOpen((prev) => !prev)}
@@ -500,6 +535,150 @@ const LeaderboardScreen = ({
           </section>
         )}
       </main>
+
+      {filtersOpen && (
+        <div
+          className="fixed inset-0 z-[70] bg-slate-950/50 backdrop-blur-sm px-4 py-6 flex items-end sm:items-center justify-center"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="leaderboard-filters-title"
+          onClick={() => setFiltersOpen(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-[1.5rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl shadow-slate-950/20 overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800">
+              <div>
+                <h2
+                  id="leaderboard-filters-title"
+                  className="text-base font-black text-slate-950 dark:text-white"
+                >
+                  Refine leaderboard
+                </h2>
+                <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">
+                  Choose scope, level, course, and question count.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(false)}
+                aria-label="Close leaderboard filters"
+                className="size-10 rounded-2xl bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-300 flex items-center justify-center transition-transform active:scale-95"
+              >
+                <FaTimes />
+              </button>
+            </div>
+
+            <div className="p-5 space-y-5">
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 mb-2">
+                  Scope
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                  {[
+                    {
+                      key: "mine",
+                      label: "My University",
+                      icon: FaUniversity,
+                    },
+                    { key: "all", label: "Global", icon: FaGlobeAfrica },
+                  ].map(({ key, label, icon: Icon }) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setUniversityFilter(key)}
+                      className={`h-12 rounded-2xl border text-xs font-black flex items-center justify-center gap-2 transition-all ${universityFilter === key
+                        ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 dark:shadow-none"
+                        : "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                        }`}
+                    >
+                      <Icon className="text-sm" />
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 mb-2">
+                  Questions
+                </p>
+                <div className="grid grid-cols-5 gap-2">
+                  {questionCountOptions.map((count) => (
+                    <button
+                      key={count}
+                      type="button"
+                      onClick={() => setQuestionCountFilter(count)}
+                      className={`h-11 rounded-2xl border text-xs font-black transition-all ${questionCountFilter === count
+                        ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 dark:shadow-none"
+                        : "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                        }`}
+                    >
+                      {count === "all" ? "All" : count}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 mb-2">
+                  Level
+                </p>
+                <div className="grid grid-cols-5 gap-2">
+                  {levelOptions.map((level) => (
+                    <button
+                      key={level}
+                      type="button"
+                      onClick={() => setLevelFilter(level)}
+                      className={`h-11 rounded-2xl border text-xs font-black transition-all ${levelFilter === level
+                        ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 dark:shadow-none"
+                        : "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                        }`}
+                    >
+                      {level === "all" ? "All" : level}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label
+                  htmlFor="leaderboard-course-filter"
+                  className="block text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 mb-2"
+                >
+                  Course
+                </label>
+                <div className="relative">
+                  <select
+                    id="leaderboard-course-filter"
+                    value={selectedCourseId}
+                    onChange={(e) => setSelectedCourseId(e.target.value)}
+                    className="w-full h-12 appearance-none bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl pl-4 pr-11 text-sm font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    {courseOptions.map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.label}
+                      </option>
+                    ))}
+                  </select>
+                  <FaChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
+                </div>
+              </div>
+            </div>
+
+            <div className="px-5 pb-5">
+              <button
+                type="button"
+                onClick={() => setFiltersOpen(false)}
+                className="w-full h-12 rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none text-sm font-black transition-transform active:scale-[0.98]"
+              >
+                Apply
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <ProfileSheet
         isOpen={isSheetOpen}
