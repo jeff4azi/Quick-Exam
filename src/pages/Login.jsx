@@ -69,7 +69,7 @@ const LoginScreen = () => {
             Welcome Back
           </h1>
           <p className="text-gray-500 dark:text-gray-400 font-medium tracking-wide uppercase text-[10px]">
-            TASUED PDFs questions made simple
+            Master exams with structured practice questions
           </p>
         </div>
 
