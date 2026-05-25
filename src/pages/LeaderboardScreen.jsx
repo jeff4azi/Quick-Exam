@@ -350,7 +350,7 @@ const LeaderboardScreen = ({
       <main className="max-w-2xl mx-auto px-6 pt-4 pb-32">
         {/* Exam type toggle */}
         <section className="mb-4">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-5">
             <div className="flex min-w-0 flex-1 bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
               {[
               { key: "OBJ", label: "Objective" },

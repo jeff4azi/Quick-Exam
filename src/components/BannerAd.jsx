@@ -35,6 +35,14 @@ const AD_DATABASE = [
     message:
       "Hi, I’m interested in getting a website built. Can you share your pricing and examples of your work?",
   },
+  {
+    type: "image",
+    url: "https://res.cloudinary.com/dn5h1cghb/image/upload/v1779707308/WhatsApp_Image_2026-05-24_at_00.04.45_x19cgf.jpg",
+    duration: 5,
+    whatsapp: "2348120390409",
+    message:
+      "Hi, I saw your flyer online and wanted to connect. I’m interested in learning more about your solar panel and inverter setup services.",
+  },
 ];
 
 function resizeCloudinaryUrl(url) {
@@ -94,7 +102,8 @@ const BannerAd = ({ onAdClose }) => {
 
   const radius = 15;
   const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (timeLeft / currentAd.duration) * circumference;
+  const strokeDashoffset =
+    circumference - (timeLeft / currentAd.duration) * circumference;
 
   return (
     <div className="fixed inset-0 z-[999] flex items-center justify-center px-6">
