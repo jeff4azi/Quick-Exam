@@ -19,17 +19,21 @@ export function decodeFavouriteKey(key) {
 
 // ─── Supabase helpers ─────────────────────────────────────────────────────────
 
-export async function loadFavouriteCourseIds() {
+export async function loadFavouriteCourseIds(userId) {
   try {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    if (!user) return [];
+    let profileId = userId;
+    if (!profileId) {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      profileId = user?.id;
+    }
+    if (!profileId) return [];
 
     const { data, error } = await supabase
       .from("profiles")
       .select("favourite_courses")
-      .eq("id", user.id)
+      .eq("id", profileId)
       .single();
 
     if (error || !data) return [];

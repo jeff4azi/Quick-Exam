@@ -46,6 +46,105 @@ const getCurrentWeekStartIso = () => {
 
 const IOS_TUTORIAL_URL =
   "https://youtube.com/shorts/ndcyOO3Xbog?si=Un0wo2qmTGSgxYf9";
+const HOME_DASHBOARD_CACHE_PREFIX = "quizboltHomeDashboard:";
+const DEFAULT_HOME_STATS = {
+  bestScore: "--",
+  position: "--",
+  streak: 0,
+};
+
+const getHomeDashboardCacheKey = (userId) =>
+  `${HOME_DASHBOARD_CACHE_PREFIX}${userId}`;
+
+const readHomeDashboardCache = (userId) => {
+  try {
+    if (!userId) return null;
+    const raw = localStorage.getItem(getHomeDashboardCacheKey(userId));
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+};
+
+const writeHomeDashboardCache = (userId, patch) => {
+  try {
+    const key = getHomeDashboardCacheKey(userId);
+    const current = JSON.parse(localStorage.getItem(key) || "{}");
+    const next = { ...current, ...patch, updatedAt: Date.now() };
+    localStorage.setItem(key, JSON.stringify(next));
+  } catch {
+    // Cache failures should never block the fresh Supabase data.
+  }
+};
+
+const getWeeklyStats = (attempts, userId) => {
+  const myAttempts = attempts.filter(
+    (a) => a.user_id === userId && a.total_questions,
+  );
+  let best = null;
+  myAttempts.forEach((a) => {
+    const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
+    if (!Number.isFinite(pct)) return;
+    if (best === null || pct > best) best = pct;
+  });
+
+  const byUser = new Map();
+  attempts.forEach((a) => {
+    if (!a.user_id || !a.total_questions) return;
+    const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
+    if (!Number.isFinite(pct)) return;
+    const existing = byUser.get(a.user_id);
+    if (!existing || pct > existing.bestPercent) {
+      byUser.set(a.user_id, { bestPercent: pct });
+    }
+  });
+
+  const sorted = Array.from(byUser.entries()).sort(
+    (a, b) => b[1].bestPercent - a[1].bestPercent,
+  );
+  const idx = sorted.findIndex(([id]) => id === userId);
+
+  return {
+    bestScore: best !== null ? `${Math.round(best)}%` : "--",
+    position: idx !== -1 ? `#${idx + 1}` : "--",
+  };
+};
+
+const getStreak = (attempts) => {
+  const dateSet = new Set(
+    attempts.map((r) => new Date(r.date_taken).toLocaleDateString("en-CA")),
+  );
+  let streak = 0;
+  const today = new Date();
+
+  for (let offset = 0; ; offset++) {
+    const d = new Date(today);
+    d.setDate(today.getDate() - offset);
+    const key = d.toLocaleDateString("en-CA");
+    if (dateSet.has(key)) {
+      streak += 1;
+    } else {
+      break;
+    }
+  }
+
+  return streak;
+};
+
+const formatRecentCourses = (attempts) =>
+  attempts.map((r) => ({
+    id: r.id,
+    course: r.course_id,
+    date: new Date(r.date_taken).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }),
+    score: r.score,
+    total: r.total_questions,
+    timeTaken: r.time_taken,
+    type: r.type,
+  }));
 
 const Home = ({
   userProfile,
@@ -55,10 +154,18 @@ const Home = ({
   setQuestionType,
 }) => {
   const navigate = useNavigate();
+  const cachedDashboard = useMemo(
+    () => readHomeDashboardCache(userProfile?.id),
+    [userProfile?.id],
+  );
   const [showAd, setShowAd] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
-  const [favouriteIds, setFavouriteIds] = useState([]);
-  const [favouritesLoading, setFavouritesLoading] = useState(true);
+  const [favouriteIds, setFavouriteIds] = useState(
+    () => cachedDashboard?.favouriteIds || [],
+  );
+  const [favouritesLoading, setFavouritesLoading] = useState(
+    () => !cachedDashboard?.favouriteIds,
+  );
 
   const [installPrompt, setInstallPrompt] = useState(null);
   const [showInstallOverlay, setShowInstallOverlay] = useState(false);
@@ -111,19 +218,24 @@ const Home = ({
     trackPWADismissed();
   };
 
+  const [recentCourses, setRecentCourses] = useState(
+    () => cachedDashboard?.recentCourses || [],
+  );
+  const [recentCoursesLoading, setRecentCoursesLoading] = useState(
+    () => !cachedDashboard?.recentCourses,
+  );
+  const [stats, setStats] = useState(
+    () => cachedDashboard?.stats || DEFAULT_HOME_STATS,
+  );
+
   useEffect(() => {
-    loadFavouriteCourseIds().then((ids) => {
-      setFavouriteIds(ids);
-      setFavouritesLoading(false);
-    });
-  }, []);
-  const [recentCourses, setRecentCourses] = useState([]);
-  const [recentCoursesLoading, setRecentCoursesLoading] = useState(true);
-  const [stats, setStats] = useState({
-    bestScore: "--",
-    position: "--",
-    streak: 0,
-  });
+    if (!cachedDashboard) return;
+    setStats(cachedDashboard.stats || DEFAULT_HOME_STATS);
+    setRecentCourses(cachedDashboard.recentCourses || []);
+    setFavouriteIds(cachedDashboard.favouriteIds || []);
+    setRecentCoursesLoading(false);
+    setFavouritesLoading(false);
+  }, [cachedDashboard]);
 
   useEffect(() => {
     if (isPremium) {
@@ -134,7 +246,13 @@ const Home = ({
     return () => clearTimeout(timer);
   }, [isPremium]);
 
-  const fetchSupabaseStats = useCallback(async () => {
+  const fetchHomeDashboard = useCallback(async () => {
+    const hasCachedDashboard = Boolean(cachedDashboard);
+    if (!hasCachedDashboard) {
+      setRecentCoursesLoading(true);
+      setFavouritesLoading(true);
+    }
+
     try {
       const {
         data: { user },
@@ -145,177 +263,87 @@ const Home = ({
         "Checking your session took too long.",
       );
 
-      if (userError || !user) return;
+      if (userError || !user) {
+        setRecentCoursesLoading(false);
+        setFavouritesLoading(false);
+        return;
+      }
 
       const weekStartIso = getCurrentWeekStartIso();
+      const [weeklyResult, streakResult, recentResult, favouriteIdsResult] =
+        await Promise.all([
+          withTimeout(
+            supabase
+              .from("exam_attempts")
+              .select("user_id, score, total_questions, date_taken, is_retake")
+              .eq("is_retake", false)
+              .gte("date_taken", weekStartIso),
+            15000,
+            "Loading your stats took too long.",
+          ),
+          withTimeout(
+            supabase
+              .from("exam_attempts")
+              .select("date_taken")
+              .eq("user_id", user.id)
+              .order("date_taken", { ascending: false }),
+            15000,
+            "Loading streak took too long.",
+          ),
+          withTimeout(
+            supabase
+              .from("exam_attempts")
+              .select(
+                "id, course_id, score, total_questions, time_taken, date_taken, type",
+              )
+              .eq("user_id", user.id)
+              .order("date_taken", { ascending: false })
+              .limit(7),
+            15000,
+            "Loading recent courses took too long.",
+          ),
+          loadFavouriteCourseIds(user.id),
+        ]);
 
-      const { data: attemptsData, error: attemptsError } = await withTimeout(
-        supabase
-          .from("exam_attempts")
-          .select(
-            "user_id, score, total_questions, time_taken, date_taken, is_retake",
-          )
-          .eq("is_retake", false)
-          .gte("date_taken", weekStartIso),
-        15000,
-        "Loading your stats took too long.",
-      );
+      const nextStats = {
+        ...DEFAULT_HOME_STATS,
+        ...(weeklyResult.error || !weeklyResult.data
+          ? {}
+          : getWeeklyStats(weeklyResult.data || [], user.id)),
+        streak:
+          streakResult.error || !streakResult.data
+            ? 0
+            : getStreak(streakResult.data || []),
+      };
+      const nextRecentCourses =
+        recentResult.error || !recentResult.data
+          ? []
+          : formatRecentCourses(recentResult.data || []);
+      const nextFavouriteIds = Array.isArray(favouriteIdsResult)
+        ? favouriteIdsResult
+        : [];
 
-      if (attemptsError || !attemptsData) {
-        console.error("Failed to load attempts for stats:", attemptsError);
-        return;
-      }
-
-      const attempts = attemptsData || [];
-
-      const myAttempts = attempts.filter(
-        (a) => a.user_id === user.id && a.total_questions,
-      );
-      let best = null;
-      myAttempts.forEach((a) => {
-        const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
-        if (!Number.isFinite(pct)) return;
-        if (best === null || pct > best) best = pct;
+      setStats(nextStats);
+      setRecentCourses(nextRecentCourses);
+      setFavouriteIds(nextFavouriteIds);
+      writeHomeDashboardCache(user.id, {
+        stats: nextStats,
+        recentCourses: nextRecentCourses,
+        favouriteIds: nextFavouriteIds,
       });
-
-      const byUser = new Map();
-      attempts.forEach((a) => {
-        if (!a.user_id || !a.total_questions) return;
-        const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
-        if (!Number.isFinite(pct)) return;
-        const existing = byUser.get(a.user_id);
-        if (!existing || pct > existing.bestPercent) {
-          byUser.set(a.user_id, { bestPercent: pct });
-        }
-      });
-
-      const sorted = Array.from(byUser.entries()).sort(
-        (a, b) => b[1].bestPercent - a[1].bestPercent,
-      );
-      const idx = sorted.findIndex(([id]) => id === user.id);
-
-      setStats((prev) => ({
-        ...prev,
-        bestScore: best !== null ? `${Math.round(best)}%` : "--",
-        position: idx !== -1 ? `#${idx + 1}` : "--",
-      }));
     } catch (err) {
-      console.error("Failed to load Supabase stats:", err);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchSupabaseStats();
-  }, [fetchSupabaseStats]);
-
-  useVisibilityRefresh(fetchSupabaseStats);
-
-  const fetchStreak = useCallback(async () => {
-    try {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (userError || !user) return;
-
-      const { data, error } = await withTimeout(
-        supabase
-          .from("exam_attempts")
-          .select("date_taken")
-          .eq("user_id", user.id)
-          .order("date_taken", { ascending: false }),
-        15000,
-        "Loading streak took too long.",
-      );
-
-      if (error || !data) {
-        setStats((prev) => ({ ...prev, streak: 0 }));
-        return;
-      }
-
-      const dateSet = new Set(
-        data.map((r) => new Date(r.date_taken).toLocaleDateString("en-CA")),
-      );
-
-      let streak = 0;
-      const today = new Date();
-
-      for (let offset = 0; ; offset++) {
-        const d = new Date(today);
-        d.setDate(today.getDate() - offset);
-        const key = d.toLocaleDateString("en-CA");
-        if (dateSet.has(key)) {
-          streak += 1;
-        } else {
-          break;
-        }
-      }
-
-      setStats((prev) => ({ ...prev, streak }));
-    } catch (err) {
-      console.error("Failed to compute streak:", err);
-      setStats((prev) => ({ ...prev, streak: 0 }));
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchStreak();
-  }, [fetchStreak]);
-
-  useVisibilityRefresh(fetchStreak);
-
-  const fetchRecentCourses = useCallback(async () => {
-    setRecentCoursesLoading(true);
-    try {
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-      if (userError || !user) return;
-
-      const { data, error } = await withTimeout(
-        supabase
-          .from("exam_attempts")
-          .select(
-            "id, course_id, score, total_questions, time_taken, date_taken, type",
-          )
-          .eq("user_id", user.id)
-          .order("date_taken", { ascending: false })
-          .limit(7),
-        15000,
-        "Loading recent courses took too long.",
-      );
-
-      if (error || !data) return;
-
-      setRecentCourses(
-        data.map((r) => ({
-          id: r.id,
-          course: r.course_id,
-          date: new Date(r.date_taken).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-            year: "numeric",
-          }),
-          score: r.score,
-          total: r.total_questions,
-          timeTaken: r.time_taken,
-          type: r.type,
-        })),
-      );
-    } catch {
-      setRecentCourses([]);
+      console.error("Failed to load home dashboard:", err);
     } finally {
       setRecentCoursesLoading(false);
+      setFavouritesLoading(false);
     }
-  }, []);
+  }, [cachedDashboard]);
 
   useEffect(() => {
-    fetchRecentCourses();
-  }, [fetchRecentCourses]);
+    fetchHomeDashboard();
+  }, [fetchHomeDashboard]);
 
-  useVisibilityRefresh(fetchRecentCourses);
+  useVisibilityRefresh(fetchHomeDashboard);
 
   const favouriteCourses = useMemo(() => {
     const list = Array.isArray(courses) ? courses : [];

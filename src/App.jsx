@@ -145,6 +145,7 @@ function App() {
 
         // Profiles table is now the single source of truth for user info (except name)
         const profile = {
+          id: user.id,
           full_name:
             profileData?.full_name ||
             profileData?.name ||
