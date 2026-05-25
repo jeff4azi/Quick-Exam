@@ -120,17 +120,12 @@ function App() {
     setUserProfile((prev) => ({ ...prev, isPremium: true }));
   };
 
-  useEffect(() => {
-    let isInitialLoad = true;
-    // Track whether the initial session load has finished, so the
-    // visibility handler doesn't fire on the very first paint.
-    const initialLoadDone = { current: false };
-
-    const getProfile = async (user) => {
+  const loadProfileAndCourses = useCallback(
+    async (user, { initial = false } = {}) => {
       if (!user) {
         setUserProfile(null);
         setAvailableCourses([]);
-        if (isInitialLoad) setLoading(false);
+        if (initial) setLoading(false);
         return;
       }
 
@@ -153,8 +148,8 @@ function App() {
             user.user_metadata?.name ||
             "Scholar",
           user_name: profileData?.user_name || null,
-          university: profileData?.university.trim() || null,
-          college: profileData?.college || "TASUED",
+          university: profileData?.university?.trim() || null,
+          college: profileData?.college || null,
           department: profileData?.department || "General Studies",
           year: profileData?.year?.toString() || "1",
           isPremium: profileData?.is_premium === true,
@@ -208,29 +203,45 @@ function App() {
         console.error("Profile fetch error:", err.message);
         // On initial load, fall back to logged-out state.
         // On later updates, keep the last known profile instead of wiping it.
-        if (isInitialLoad) {
+        if (initial) {
           setUserProfile(null);
           setAvailableCourses([]);
         }
       } finally {
-        if (isInitialLoad) {
+        if (initial) {
           setLoading(false);
-          isInitialLoad = false;
-          initialLoadDone.current = true;
         }
       }
-    };
+    },
+    [],
+  );
+
+  const refreshAppProfile = useCallback(async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+    await loadProfileAndCourses(session?.user);
+  }, [loadProfileAndCourses]);
+
+  useEffect(() => {
+    // Track whether the initial session load has finished, so the
+    // visibility handler doesn't fire on the very first paint.
+    const initialLoadDone = { current: false };
 
     // Initial load
     supabase.auth.getSession().then(({ data }) => {
-      getProfile(data.session?.user);
+      loadProfileAndCourses(data.session?.user, { initial: true }).finally(
+        () => {
+          initialLoadDone.current = true;
+        },
+      );
     });
 
     // Auth listener — fires on SIGNED_IN, TOKEN_REFRESHED, SIGNED_OUT, etc.
     // This is the primary way the profile stays in sync after a session refresh.
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        getProfile(session?.user);
+        loadProfileAndCourses(session?.user);
       },
     );
 
@@ -305,7 +316,7 @@ function App() {
     } catch (err) {
       console.error("Failed to restore exam session:", err);
     }
-  }, []);
+  }, [loadProfileAndCourses]);
 
   useEffect(() => {
     const isExistingTheoryExam =
@@ -611,7 +622,7 @@ function App() {
               path="/onboarding"
               element={
                 <OnboardingRoute>
-                  <OnboardingScreen />
+                  <OnboardingScreen onProfileReady={refreshAppProfile} />
                 </OnboardingRoute>
               }
             />

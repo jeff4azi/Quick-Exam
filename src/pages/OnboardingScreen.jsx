@@ -15,7 +15,7 @@ import { useAuth } from "../context/AuthContext";
 import { useUniversities } from "../hooks/useUniversities";
 import { useColleges } from "../hooks/useColleges";
 
-const OnboardingScreen = () => {
+const OnboardingScreen = ({ onProfileReady }) => {
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
   const {
@@ -167,6 +167,7 @@ const OnboardingScreen = () => {
 
       // 4. Exit onboarding permanently
       await refreshProfile();
+      await onProfileReady?.();
       navigate("/", { replace: true });
     } catch (err) {
       setError(err.message);
