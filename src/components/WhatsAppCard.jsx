@@ -2,9 +2,15 @@ import React, { useState, useEffect } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
 
+const WHATSAPP_CARD_HIDE_UNTIL_KEY = "whatsAppCardHideUntil";
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 const WhatsAppCard = ({ university }) => {
   const [visible, setVisible] = useState(false);
-  const [show, setShow] = useState(true);
+  const [show, setShow] = useState(() => {
+    const hideUntil = Number(localStorage.getItem(WHATSAPP_CARD_HIDE_UNTIL_KEY));
+    return !hideUntil || Date.now() >= hideUntil;
+  });
 
   const universityGroups = {
     tasued: "https://chat.whatsapp.com/FMPmsBbwU9kL6t2vJ6C8qq",
@@ -24,8 +30,19 @@ const WhatsAppCard = ({ university }) => {
   const handleClose = (e) => {
     e.stopPropagation();
     e.preventDefault();
+    localStorage.setItem(
+      WHATSAPP_CARD_HIDE_UNTIL_KEY,
+      String(Date.now() + DAY_MS),
+    );
     setVisible(false);
     setTimeout(() => setShow(false), 500);
+  };
+
+  const handleJoin = () => {
+    localStorage.setItem(
+      WHATSAPP_CARD_HIDE_UNTIL_KEY,
+      String(Date.now() + 14 * DAY_MS),
+    );
   };
 
   if (!show) return null;
@@ -43,6 +60,7 @@ const WhatsAppCard = ({ university }) => {
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center gap-3 group"
+        onClick={handleJoin}
       >
         {/* WhatsApp Icon */}
         <div className="relative flex-shrink-0">
@@ -58,7 +76,7 @@ const WhatsAppCard = ({ university }) => {
             Connect With Students
           </h4>
           <p className="text-[13px] text-slate-500 dark:text-slate-400 font-medium mt-0.5 leading-snug">
-            Enter the Student Challenge Zone ⚡
+            Compete With Students From Your School ⚡
           </p>
         </div>
       </a>
