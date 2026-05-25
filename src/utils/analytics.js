@@ -1,10 +1,14 @@
 import ReactGA from "react-ga4";
 
-const GA_ID = "G-LDLEG48Z7Q";
+const GA_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "G-LDLEG48Z7Q";
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 export const initGA = () => {
-  ReactGA.initialize(GA_ID);
+  ReactGA.initialize(GA_ID, {
+    gtagOptions: {
+      send_page_view: false,
+    },
+  });
 };
 
 // ── Page view ─────────────────────────────────────────────────────────────────
@@ -13,8 +17,14 @@ export const trackPage = (path, title) => {
 };
 
 // ── Generic event helper ──────────────────────────────────────────────────────
+const normalizeEventParams = ({ category, label, ...params } = {}) => ({
+  ...params,
+  ...(category ? { event_category: category } : {}),
+  ...(label ? { event_label: label } : {}),
+});
+
 const track = (action, params = {}) => {
-  ReactGA.event({ action, ...params });
+  ReactGA.event(action, normalizeEventParams(params));
 };
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
