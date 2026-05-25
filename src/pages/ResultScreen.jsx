@@ -452,7 +452,7 @@ const ResultScreen = ({
       </div>
 
       <div className="fixed bottom-24 right-6 pointer-events-auto">
-        <WhatsAppCard />
+        <WhatsAppCard university={userProfile?.university} />
       </div>
       {!isPremium && showAd && <BannerAd onAdClose={() => setShowAd(false)} />}
       <ConfirmOverlay

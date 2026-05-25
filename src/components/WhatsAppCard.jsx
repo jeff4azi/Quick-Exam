@@ -2,9 +2,19 @@ import React, { useState, useEffect } from "react";
 import { FaWhatsapp } from "react-icons/fa";
 import { FiX } from "react-icons/fi";
 
-const WhatsAppCard = () => {
+const WhatsAppCard = ({ university }) => {
   const [visible, setVisible] = useState(false);
   const [show, setShow] = useState(true);
+
+  const universityGroups = {
+    tasued: "https://chat.whatsapp.com/FMPmsBbwU9kL6t2vJ6C8qq",
+    lasu: "https://chat.whatsapp.com/BzjyLkZ25ws61XSjcEx1vb",
+    bouesti: "https://chat.whatsapp.com/Ciw58Fdv32K4SFYfaVAdR2",
+  };
+  const defaultCommunityUrl =
+    "https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f";
+  const communityUrl =
+    universityGroups[university?.trim().toLowerCase()] || defaultCommunityUrl;
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 3000);
@@ -29,7 +39,7 @@ const WhatsAppCard = () => {
       ${visible ? "translate-y-0 opacity-100 scale-100" : "translate-y-20 opacity-0 scale-90 pointer-events-none"}`}
     >
       <a
-        href="https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f"
+        href={communityUrl}
         target="_blank"
         rel="noopener noreferrer"
         className="flex items-center gap-3 group"
@@ -45,10 +55,10 @@ const WhatsAppCard = () => {
         {/* Text Content */}
         <div className="flex-1 min-w-0">
           <h4 className="font-black text-slate-900 dark:text-white text-[15px] leading-tight tracking-tight">
-            Join the Community
+            Connect With Students
           </h4>
           <p className="text-[13px] text-slate-500 dark:text-slate-400 font-medium mt-0.5 leading-snug">
-            Get Updates and Challenge Yourself! ⚡️
+            Enter the Student Challenge Zone ⚡
           </p>
         </div>
       </a>
