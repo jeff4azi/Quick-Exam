@@ -185,6 +185,19 @@ const shuffleArray = (array) => {
   return arr;
 };
 
+/** Plain-text length for MCQ options (math delimiters stripped). */
+const getOptionPlainLength = (option) => {
+  const text = typeof option === "string" ? option : String(option ?? "");
+  return text.replace(/\$[^$]*\$/g, " ").replace(/\s+/g, " ").trim().length;
+};
+
+const getOptionTextSizeClass = (option) => {
+  const len = getOptionPlainLength(option);
+  if (len >= 120) return "text-xs leading-snug";
+  if (len >= 72) return "text-sm leading-snug";
+  return "";
+};
+
 const getTimeLeftFromEndsAtMs = (endsAtMs) => {
   if (!Number.isFinite(endsAtMs)) return null;
   return Math.max(0, Math.ceil((endsAtMs - Date.now()) / 1000));
@@ -832,6 +845,7 @@ const ExamScreen = ({
                 (currentQuestion?.options ?? []).map((option, index) => {
                   const isSelected = selectedOption === option;
                   const label = String.fromCharCode(65 + index);
+                  const optionSizeClass = getOptionTextSizeClass(option);
 
                   return (
                     <button
@@ -844,7 +858,7 @@ const ExamScreen = ({
                       }`}
                     >
                       <div
-                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                        className={`size-10 shrink-0 rounded-2xl flex items-center justify-center font-black transition-colors ${
                           isSelected
                             ? "bg-blue-600 text-white"
                             : "bg-gray-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
@@ -853,7 +867,7 @@ const ExamScreen = ({
                         {label}
                       </div>
                       <div
-                        className={`text-left font-semibold ${isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
+                        className={`min-w-0 flex-1 text-left font-semibold ${optionSizeClass} ${isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
                       >
                         <RenderMathText
                           text={option}
