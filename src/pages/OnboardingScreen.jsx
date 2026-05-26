@@ -178,6 +178,13 @@ const OnboardingScreen = ({ onProfileReady }) => {
 
       if (upsertError) throw upsertError;
 
+      // Referral code was consumed during onboarding; remove to avoid stale reuse.
+      try {
+        localStorage.removeItem("quizbolt_referral_code");
+      } catch {
+        // ignore
+      }
+
       // 3. Let auth listener catch up (small but important)
       await supabase.auth.getSession();
 

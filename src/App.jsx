@@ -42,6 +42,7 @@ import MatchScreen from "./pages/MatchScreen";
 import MatchResultScreen from "./pages/MatchResultScreen";
 import TestModeScreen from "./pages/TestModeScreen";
 import TestResultScreen from "./pages/TestResultScreen";
+import ReferralDashboard from "./pages/ReferralDashboard";
 
 function App() {
   const REFERRAL_STORAGE_KEY = "quizbolt_referral_code";
@@ -701,6 +702,14 @@ function App() {
                       onUpdateProfile={handleUpdateProfile}
                     />,
                   )}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/referral-dashboard"
+              element={
+                <ProtectedRoute>
+                  {withDesktop(<ReferralDashboard />)}
                 </ProtectedRoute>
               }
             />

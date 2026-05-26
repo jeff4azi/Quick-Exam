@@ -295,6 +295,14 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
                   Upgrade to Premium
                 </button>
               )}
+
+              <button
+                type="button"
+                onClick={() => navigate("/referral-dashboard")}
+                className="mt-3 w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-800 px-4 py-3 text-sm font-black text-slate-900 dark:text-white shadow-sm transition-all active:scale-[0.98]"
+              >
+                Referral Dashboard
+              </button>
             </div>
           </aside>
 
