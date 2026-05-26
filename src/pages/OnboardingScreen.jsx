@@ -34,6 +34,7 @@ const OnboardingScreen = ({ onProfileReady }) => {
     college: "",
     department: "",
     year: "",
+    referralCode: "",
   });
 
   const colleges = useColleges(formData.university);
@@ -63,7 +64,20 @@ const OnboardingScreen = ({ onProfileReady }) => {
       // Not onboarded yet — prefill name and show the form
       const nameFromGoogle =
         user.user_metadata?.full_name || user.user_metadata?.name || "";
-      setFormData((prev) => ({ ...prev, fullName: nameFromGoogle }));
+
+      let referralFromStorage = "";
+      try {
+        referralFromStorage =
+          localStorage.getItem("quizbolt_referral_code") || "";
+      } catch {
+        referralFromStorage = "";
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        fullName: nameFromGoogle,
+        referralCode: referralFromStorage,
+      }));
       setChecking(false);
     };
 
@@ -146,6 +160,7 @@ const OnboardingScreen = ({ onProfileReady }) => {
         .trim();
 
       // 3. Save onboarding data + create user_name from full_name
+      const referralCode = formData.referralCode?.trim() || "";
       const { error: upsertError } = await supabase.from("profiles").upsert({
         id: user.id,
         full_name: fullName,
@@ -154,6 +169,7 @@ const OnboardingScreen = ({ onProfileReady }) => {
         college: formData.college,
         department: formData.department,
         year: parseInt(formData.year, 10) || null,
+        referred_by: referralCode || null,
         onboarding_complete: true,
         is_premium: false,
         avatar_url: avatarUrl,
@@ -364,6 +380,23 @@ I understand I need to provide correct details.`;
                 <option value="3">Year 3 (Junior)</option>
                 <option value="4">Year 4 (Senior)</option>
               </select>
+            </div>
+          </div>
+
+          {/* Referral code */}
+          <div className="group">
+            <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-4 mb-1 block">
+              Referral code (optional)
+            </label>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="e.g. QB-T4LD"
+                name="referralCode"
+                value={formData.referralCode}
+                onChange={handleChange}
+                className="w-full pl-4 pr-4 py-4 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold focus:outline-none focus:ring-4 focus:ring-blue-600/5 focus:border-blue-600 transition-all shadow-sm"
+              />
             </div>
           </div>
 

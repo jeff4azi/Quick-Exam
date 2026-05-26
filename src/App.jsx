@@ -44,6 +44,20 @@ import TestModeScreen from "./pages/TestModeScreen";
 import TestResultScreen from "./pages/TestResultScreen";
 
 function App() {
+  const REFERRAL_STORAGE_KEY = "quizbolt_referral_code";
+
+  // Capture referral code from URL (e.g. https://quizbolt.site?ref=QB-T4LD)
+  // so it survives the redirect to /landing.
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const refFromUrl = params.get("ref");
+    if (refFromUrl) {
+      localStorage.setItem(REFERRAL_STORAGE_KEY, refFromUrl);
+    }
+  } catch {
+    // Ignore storage / URL parsing issues.
+  }
+
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const [availableCourses, setAvailableCourses] = useState([]);
