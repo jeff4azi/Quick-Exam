@@ -1,30 +1,38 @@
-import ReactGA from "react-ga4";
+// ── Analytics – uses the gtag() global loaded in index.html ──────────────────
+// No react-ga4 dependency needed. gtag is loaded in <head> before React mounts,
+// so it's always available by the time any of these functions are called.
 
-const GA_ID = import.meta.env.VITE_GA_MEASUREMENT_ID || "G-LDLEG48Z7Q";
+const GA_ID = "G-LDLEG48Z7Q";
 
-// ── Init ─────────────────────────────────────────────────────────────────────
+const gtag = (...args) => {
+  if (typeof window !== "undefined" && typeof window.gtag === "function") {
+    window.gtag(...args);
+  }
+};
+
+// ── Init (no-op – gtag is initialised in index.html) ─────────────────────────
 export const initGA = () => {
-  ReactGA.initialize(GA_ID, {
-    gtagOptions: {
-      send_page_view: false,
-    },
-  });
+  // Nothing to do here. Kept for compatibility so main.jsx doesn't need changes.
 };
 
 // ── Page view ─────────────────────────────────────────────────────────────────
 export const trackPage = (path, title) => {
-  ReactGA.send({ hitType: "pageview", page: path, title });
+  gtag("event", "page_view", {
+    page_path: path,
+    page_title: title,
+    send_to: GA_ID,
+  });
 };
 
 // ── Generic event helper ──────────────────────────────────────────────────────
-const normalizeEventParams = ({ category, label, ...params } = {}) => ({
-  ...params,
-  ...(category ? { event_category: category } : {}),
-  ...(label ? { event_label: label } : {}),
-});
-
 const track = (action, params = {}) => {
-  ReactGA.event(action, normalizeEventParams(params));
+  const { category, label, ...rest } = params;
+  gtag("event", action, {
+    ...rest,
+    ...(category ? { event_category: category } : {}),
+    ...(label ? { event_label: label } : {}),
+    send_to: GA_ID,
+  });
 };
 
 // ── Auth ──────────────────────────────────────────────────────────────────────
@@ -68,13 +76,7 @@ export const trackExamStart = (courseId, questionCount, questionType) =>
     question_type: questionType,
   });
 
-export const trackExamSubmit = (
-  courseId,
-  score,
-  total,
-  timeTaken,
-  questionType,
-) =>
+export const trackExamSubmit = (courseId, score, total, timeTaken, questionType) =>
   track("exam_submit", {
     category: "Exam",
     label: courseId,
@@ -85,12 +87,7 @@ export const trackExamSubmit = (
   });
 
 export const trackExamTimeUp = (courseId, answered, total) =>
-  track("exam_time_up", {
-    category: "Exam",
-    label: courseId,
-    answered,
-    total,
-  });
+  track("exam_time_up", { category: "Exam", label: courseId, answered, total });
 
 export const trackExamExit = (courseId, currentIndex, total) =>
   track("exam_exit", {
@@ -148,25 +145,13 @@ export const trackMatchStart = (courseId) =>
   track("match_start", { category: "Match", label: courseId });
 
 export const trackMatchComplete = (courseId, timeTaken) =>
-  track("match_complete", {
-    category: "Match",
-    label: courseId,
-    time_taken: timeTaken,
-  });
+  track("match_complete", { category: "Match", label: courseId, time_taken: timeTaken });
 
 export const trackTestStart = (courseId, questionCount) =>
-  track("test_start", {
-    category: "Test",
-    label: courseId,
-    question_count: questionCount,
-  });
+  track("test_start", { category: "Test", label: courseId, question_count: questionCount });
 
 export const trackTestComplete = (courseId, scorePercent) =>
-  track("test_complete", {
-    category: "Test",
-    label: courseId,
-    score_percent: scorePercent,
-  });
+  track("test_complete", { category: "Test", label: courseId, score_percent: scorePercent });
 
 // ── UI / Settings ─────────────────────────────────────────────────────────────
 export const trackDarkModeToggle = (isDark) =>
@@ -176,14 +161,11 @@ export const trackAutoAdvanceToggle = (enabled) =>
   track("auto_advance_toggle", { category: "Settings", enabled });
 
 // ── PWA ───────────────────────────────────────────────────────────────────────
-export const trackPWAInstallPrompt = () =>
-  track("pwa_install_prompt", { category: "PWA" });
+export const trackPWAInstallPrompt = () => track("pwa_install_prompt", { category: "PWA" });
 
-export const trackPWAInstalled = () =>
-  track("pwa_installed", { category: "PWA" });
+export const trackPWAInstalled = () => track("pwa_installed", { category: "PWA" });
 
-export const trackPWADismissed = () =>
-  track("pwa_install_dismissed", { category: "PWA" });
+export const trackPWADismissed = () => track("pwa_install_dismissed", { category: "PWA" });
 
 // ── FeedBolt CTA ──────────────────────────────────────────────────────────────
 export const trackFeedBoltCTAClick = (source) =>
