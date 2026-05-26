@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import WhatsAppCard from "../components/WhatsAppCard";
 import { useEffect, useState, useRef } from "react";
-import ReactGA from "react-ga4";
 import {
   trackResultView,
   trackResultShare,
