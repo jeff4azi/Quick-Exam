@@ -243,7 +243,7 @@ const ReferralDashboard = () => {
                 </div>
                 <div className="rounded-2xl bg-white/5 border border-white/10 px-4 py-3">
                   <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-300">
-                    Completed exam
+                    Validated
                   </p>
                   <p className="text-xl font-black mt-2 text-emerald-300">
                     {stats.validated}
@@ -381,7 +381,7 @@ const ReferralDashboard = () => {
                                 : "bg-white/5 text-slate-200 border-white/15"
                             }`}
                           >
-                            {r.is_validated ? "Verified" : "Pending"}
+                            {r.is_validated ? "Qualified" : "Pending"}
                           </div>
                         </div>
                       </div>
@@ -391,9 +391,8 @@ const ReferralDashboard = () => {
               </div>
 
               <p className="mt-4 text-xs text-slate-400 font-semibold">
-                A referral counts once your friend completes a full 30-question
-                exam.
-              </p>
+  Low-quality or inactive referrals will not be counted.
+</p>
             </div>
           </div>
         </div>
@@ -403,4 +402,3 @@ const ReferralDashboard = () => {
 };
 
 export default ReferralDashboard;
-
