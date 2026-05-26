@@ -237,13 +237,13 @@ const ReferralDashboard = () => {
               <div className="grid w-full grid-cols-3 gap-3 mt-2">
                 <div className="rounded-2xl bg-white/5 border border-white/10 px-4 py-3">
                   <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-300">
-                    Total invited
+                    Total invites
                   </p>
                   <p className="text-xl font-black mt-2">{stats.total}</p>
                 </div>
                 <div className="rounded-2xl bg-white/5 border border-white/10 px-4 py-3">
                   <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-300">
-                    Validated
+                    Validated invites
                   </p>
                   <p className="text-xl font-black mt-2 text-emerald-300">
                     {stats.validated}
