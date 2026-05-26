@@ -123,7 +123,7 @@ const ReferralDashboard = () => {
   };
 
   const ring = useMemo(() => {
-    const radius = 44;
+    const radius = 96;
     const circumference = 2 * Math.PI * radius;
     const dashOffset = circumference * (1 - stats.progress);
 
@@ -166,7 +166,9 @@ const ReferralDashboard = () => {
           </button>
 
           <div className="text-center">
-            <h1 className="text-lg font-black tracking-tight">Referral Dashboard</h1>
+            <h1 className="text-lg font-black tracking-tight">
+              Referral Dashboard
+            </h1>
             <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
               Earn premium by inviting friends
             </p>
@@ -177,8 +179,8 @@ const ReferralDashboard = () => {
       </header>
 
       <main className="mx-auto max-w-5xl px-5 pb-28 pt-6 lg:px-8">
-        <div className="rounded-[2.5rem] bg-slate-950 text-white border border-slate-800 shadow-lg overflow-hidden">
-          <div className="p-6 sm:p-8">
+        <div className="text-white">
+          <div>
             {error && (
               <div className="mb-5 rounded-2xl bg-red-500/10 border border-red-500/30 px-4 py-3 text-red-200 text-sm font-semibold">
                 {error}
@@ -186,34 +188,36 @@ const ReferralDashboard = () => {
             )}
 
             <div className="flex flex-col items-center text-center gap-4">
-              <div className="relative w-28 h-28">
-                <svg width="112" height="112" viewBox="0 0 112 112">
+              <div className="relative w-44 h-44 sm:w-56 sm:h-56">
+                <svg width="100%" height="100%" viewBox="0 0 224 224">
                   <circle
-                    cx="56"
-                    cy="56"
+                    cx="112"
+                    cy="112"
                     r={ring.radius}
                     stroke="#334155"
-                    strokeWidth="8"
+                    strokeWidth="10"
                     fill="transparent"
                   />
                   <circle
-                    cx="56"
-                    cy="56"
+                    cx="112"
+                    cy="112"
                     r={ring.radius}
                     stroke="#14b8a6"
-                    strokeWidth="8"
+                    strokeWidth="10"
                     fill="transparent"
                     strokeDasharray={ring.circumference}
                     strokeDashoffset={ring.dashOffset}
                     strokeLinecap="round"
-                    transform="rotate(-90 56 56)"
+                    transform="rotate(-90 112 112)"
                     style={{ transition: "stroke-dashoffset 500ms ease" }}
                   />
                 </svg>
 
                 <div className="absolute inset-0 flex flex-col items-center justify-center leading-none">
-                  <div className="text-3xl font-black">{stats.validated}</div>
-                  <div className="text-xs opacity-70 font-bold mt-1">
+                  <div className="text-5xl sm:text-6xl font-black">
+                    {stats.validated}
+                  </div>
+                  <div className="text-sm sm:text-base opacity-70 font-bold mt-2">
                     of {TARGET_FRIENDS}
                   </div>
                 </div>
@@ -222,7 +226,8 @@ const ReferralDashboard = () => {
               <p className="text-sm font-semibold text-slate-300">
                 {stats.stillNeeded > 0 ? (
                   <>
-                    {stats.stillNeeded} more friends needed for {PREMIUM_DAYS} days premium
+                    {stats.stillNeeded} more friends needed for {PREMIUM_DAYS}{" "}
+                    days premium
                   </>
                 ) : (
                   <>Referral goal completed. Premium unlocked soon.</>
@@ -312,9 +317,7 @@ const ReferralDashboard = () => {
                 <div className="mt-3 flex gap-3">
                   <button
                     type="button"
-                    onClick={() =>
-                      copyToClipboard(referralCode || "", "code")
-                    }
+                    onClick={() => copyToClipboard(referralCode || "", "code")}
                     className="flex-1 rounded-2xl bg-white/10 border border-white/15 px-4 py-3 text-sm font-black hover:bg-white/15 active:scale-[0.98] transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     disabled={!referralCode}
                   >
@@ -342,8 +345,11 @@ const ReferralDashboard = () => {
                 ) : (
                   referrals.map((r) => {
                     const referredName =
-                      r.referred?.full_name || r.referred?.user_name || "Scholar";
-                    const initial = referredName?.trim()?.[0]?.toUpperCase() || "S";
+                      r.referred?.full_name ||
+                      r.referred?.user_name ||
+                      "Scholar";
+                    const initial =
+                      referredName?.trim()?.[0]?.toUpperCase() || "S";
 
                     return (
                       <div
@@ -355,7 +361,9 @@ const ReferralDashboard = () => {
                             {initial}
                           </div>
                           <div className="min-w-0">
-                            <div className="font-black truncate">{referredName}</div>
+                            <div className="font-black truncate">
+                              {referredName}
+                            </div>
                             <div className="text-[11px] text-slate-400 font-bold uppercase tracking-[0.08em] mt-1">
                               {r.is_validated ? "Verified" : "Pending"}
                             </div>
@@ -383,7 +391,8 @@ const ReferralDashboard = () => {
               </div>
 
               <p className="mt-4 text-xs text-slate-400 font-semibold">
-                A referral counts once your friend completes a full 30-question exam.
+                A referral counts once your friend completes a full 30-question
+                exam.
               </p>
             </div>
           </div>
