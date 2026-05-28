@@ -14,7 +14,7 @@ import "swiper/css";
 import { FreeMode } from "swiper/modules";
 
 import { FaCrown, FaFire, FaTrophy } from "react-icons/fa";
-import { FiZap } from "react-icons/fi";
+import { FiZap, FiPlay, FiX } from "react-icons/fi";
 import { MdStar } from "react-icons/md";
 import {
   loadFavouriteCourseIds,
@@ -27,6 +27,10 @@ import {
   trackPWADismissed,
   trackStudyModeClick,
 } from "../utils/analytics";
+import {
+  loadExamSession,
+  clearExamSession,
+} from "../utils/examSessionStorage";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -166,6 +170,8 @@ const Home = ({
   const [favouritesLoading, setFavouritesLoading] = useState(
     () => !cachedDashboard?.favouriteIds,
   );
+  const [examSession, setExamSession] = useState(() => loadExamSession());
+  const [showQuitConfirm, setShowQuitConfirm] = useState(false);
 
   const [installPrompt, setInstallPrompt] = useState(null);
   const [showInstallOverlay, setShowInstallOverlay] = useState(false);
@@ -216,6 +222,18 @@ const Home = ({
   const handleInstallDismiss = () => {
     setShowInstallOverlay(false);
     trackPWADismissed();
+  };
+
+  const handleResumeExam = () => {
+    if (examSession) {
+      navigate("/exam");
+    }
+  };
+
+  const handleQuitExam = () => {
+    clearExamSession();
+    setExamSession(null);
+    setShowQuitConfirm(false);
   };
 
   const [recentCourses, setRecentCourses] = useState(
@@ -403,6 +421,108 @@ const Home = ({
             Ready for your next challenge?
           </p>
         </div>
+
+        {/* Resume Exam Section */}
+        {examSession && (
+          <div className="relative bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-5 lg:p-6 rounded-[1.75rem] shadow-md">
+            {/* Close button - Top Right */}
+            <button
+              type="button"
+              onClick={() => setShowQuitConfirm(true)}
+              className="absolute top-4 right-4 lg:top-5 lg:right-5 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors active:scale-95"
+              title="Quit exam"
+            >
+              <FiX size={20} className="text-slate-400 dark:text-slate-500" />
+            </button>
+
+            <div className="space-y-4">
+              {/* Header */}
+              <div className="pr-8">
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="size-6 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                    <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+                      ▶
+                    </span>
+                  </div>
+                  <p className="text-xs font-semibold uppercase tracking-widest text-slate-500 dark:text-slate-400">
+                    In Progress
+                  </p>
+                </div>
+                <h3 className="text-lg lg:text-xl font-black text-slate-900 dark:text-white">
+                  {examSession.courseName || "Your Exam"}
+                </h3>
+              </div>
+
+              {/* Info Grid */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* Current Question */}
+                <div className="bg-gray-50 dark:bg-slate-700/40 p-3 lg:p-4 rounded-xl">
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                    Question
+                  </p>
+                  <p className="text-lg lg:text-xl font-black text-slate-900 dark:text-white">
+                    {examSession.currentQuestionIndex + 1 || 1}
+                  </p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                    of {examSession.totalQuestions || "?"}
+                  </p>
+                </div>
+
+                {/* Total Questions */}
+                <div className="bg-gray-50 dark:bg-slate-700/40 p-3 lg:p-4 rounded-xl">
+                  <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                    Total
+                  </p>
+                  <p className="text-lg lg:text-xl font-black text-slate-900 dark:text-white">
+                    {examSession.totalQuestions || "?"}
+                  </p>
+                  <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
+                    questions
+                  </p>
+                </div>
+
+                {/* Time Remaining */}
+                {examSession.timeRemaining != null && (
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-3 lg:p-4 rounded-xl border border-blue-200 dark:border-blue-800/50">
+                    <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-1">
+                      Time Left
+                    </p>
+                    <p className="text-lg lg:text-xl font-black text-blue-700 dark:text-blue-300">
+                      {Math.floor(examSession.timeRemaining / 60)}m{" "}
+                      {examSession.timeRemaining % 60}s
+                    </p>
+                  </div>
+                )}
+
+                {/* Question Type */}
+                {examSession.questionType && (
+                  <div className="bg-gray-50 dark:bg-slate-700/40 p-3 lg:p-4 rounded-xl">
+                    <p className="text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-1">
+                      Type
+                    </p>
+                    <p className="text-sm lg:text-base font-bold text-slate-900 dark:text-white">
+                      {examSession.questionType === "theory"
+                        ? "Theory"
+                        : examSession.questionType === "fib"
+                          ? "Fill in Blanks"
+                          : "Objective"}
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Resume Button */}
+              <button
+                type="button"
+                onClick={handleResumeExam}
+                className="w-full py-3.5 lg:py-4 px-4 rounded-xl font-bold text-white bg-blue-600 hover:bg-blue-700 dark:bg-blue-600 dark:hover:bg-blue-700 shadow-lg shadow-blue-200 dark:shadow-blue-900/30 active:scale-95 transition-all flex items-center justify-center gap-2"
+              >
+                <FiPlay size={18} />
+                Resume Exam
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-3">
@@ -767,6 +887,16 @@ const Home = ({
         }
         confirmText={isIOS ? "See How" : "Install"}
         cancelText="Not now"
+      />
+
+      <ConfirmOverlay
+        isOpen={showQuitConfirm}
+        onClose={() => setShowQuitConfirm(false)}
+        onConfirm={handleQuitExam}
+        title="Quit Exam?"
+        message="Are you sure you want to quit this exam? Your progress will be lost."
+        confirmText="Quit"
+        cancelText="Cancel"
       />
     </div>
   );
