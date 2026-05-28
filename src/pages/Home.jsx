@@ -27,10 +27,7 @@ import {
   trackPWADismissed,
   trackStudyModeClick,
 } from "../utils/analytics";
-import {
-  loadExamSession,
-  clearExamSession,
-} from "../utils/examSessionStorage";
+import { loadExamSession, clearExamSession } from "../utils/examSessionStorage";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -449,7 +446,9 @@ const Home = ({
                   </p>
                 </div>
                 <h3 className="text-lg lg:text-xl font-black text-slate-900 dark:text-white">
-                  {examSession.courseName || "Your Exam"}
+                  {examSession.selectedCourse?.name ||
+                    examSession.selectedCourse ||
+                    "Your Exam"}
                 </h3>
               </div>
 
@@ -461,10 +460,10 @@ const Home = ({
                     Question
                   </p>
                   <p className="text-lg lg:text-xl font-black text-slate-900 dark:text-white">
-                    {examSession.currentQuestionIndex + 1 || 1}
+                    {(examSession.currentIndex || 0) + 1}
                   </p>
                   <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                    of {examSession.totalQuestions || "?"}
+                    of {(examSession.questions && examSession.questions.length) || "?"}
                   </p>
                 </div>
 
@@ -474,7 +473,7 @@ const Home = ({
                     Total
                   </p>
                   <p className="text-lg lg:text-xl font-black text-slate-900 dark:text-white">
-                    {examSession.totalQuestions || "?"}
+                    {(examSession.questions && examSession.questions.length) || "?"}
                   </p>
                   <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
                     questions
@@ -482,14 +481,28 @@ const Home = ({
                 </div>
 
                 {/* Time Remaining */}
-                {examSession.timeRemaining != null && (
+                {(examSession.timeLeft != null ||
+                  examSession.endsAtMs != null) && (
                   <div className="bg-blue-50 dark:bg-blue-900/20 p-3 lg:p-4 rounded-xl border border-blue-200 dark:border-blue-800/50">
                     <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-1">
                       Time Left
                     </p>
                     <p className="text-lg lg:text-xl font-black text-blue-700 dark:text-blue-300">
-                      {Math.floor(examSession.timeRemaining / 60)}m{" "}
-                      {examSession.timeRemaining % 60}s
+                      {(() => {
+                        let timeRemaining = 0;
+                        // Prefer endsAtMs since it's a real timestamp and more accurate
+                        if (examSession.endsAtMs != null) {
+                          timeRemaining = Math.max(
+                            0,
+                            examSession.endsAtMs - Date.now(),
+                          );
+                        } else if (examSession.timeLeft != null) {
+                          timeRemaining = examSession.timeLeft;
+                        }
+                        const minutes = Math.floor(timeRemaining / 1000 / 60);
+                        const seconds = Math.floor((timeRemaining / 1000) % 60);
+                        return `${minutes}m ${seconds}s`;
+                      })()}
                     </p>
                   </div>
                 )}
