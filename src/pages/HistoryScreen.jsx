@@ -310,10 +310,20 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
           <>
             {/* ---- STAT CARDS ---- */}
             <section className="mt-4 mb-6">
-              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 ml-1 mb-3">
-                Overview
-              </p>
-              <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+              <div className="flex flex-col gap-1.5 sm:flex-row sm:items-end sm:justify-between mb-4">
+                <div>
+                  <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                    Overview
+                  </p>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100">
+                    Your performance at a glance
+                  </h2>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
+                  Track exam totals, score averages, time efficiency and retake habits in one place.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                 <StatCard
                   label="Exams done"
                   value={totalExams}
@@ -352,20 +362,30 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
             {/* ---- PERFORMANCE TREND CHART ---- */}
             {chartData.length > 1 && (
               <section className="mb-6">
-                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 ml-1 mb-3">
-                  Performance trend
-                </p>
+                <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between mb-4">
+                  <div>
+                    <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                      Performance trend
+                    </p>
+                    <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100">
+                      Recent progress in one chart
+                    </h2>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
+                    Switch between score, time and questions to compare your latest attempts.
+                  </p>
+                </div>
 
                 {/* Tab switcher */}
-                <div className="flex gap-2 mb-4">
+                <div className="flex flex-wrap gap-2 mb-4">
                   {CHART_TABS.map((t) => (
                     <button
                       key={t.key}
                       onClick={() => setChartTab(t.key)}
-                      className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all ${
+                      className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
                         chartTab === t.key
-                          ? "bg-blue-600 text-white shadow-sm"
-                          : "bg-white dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-gray-100 dark:border-slate-700"
+                          ? "bg-slate-900 text-white shadow-lg"
+                          : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700"
                       }`}
                     >
                       {t.label}
@@ -373,28 +393,22 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                   ))}
                 </div>
 
-                {/* Legend */}
-                {chartTab === "score" && (
-                  <div className="flex gap-4 mb-2 ml-1">
-                    <span className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                      <span className="inline-block w-3 h-0.5 bg-blue-500 rounded" />{" "}
-                      Score
-                    </span>
-                    <span className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                      <span
-                        className="inline-block w-3 h-0.5 bg-emerald-500 rounded"
-                        style={{
-                          borderTop: "2px dashed #1D9E75",
-                          background: "transparent",
-                        }}
-                      />{" "}
-                      Passing (50%)
-                    </span>
+                <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200/80 dark:border-slate-700/80 p-4 shadow-[0_18px_60px_-40px_rgba(15,23,42,0.15)] overflow-hidden">
+                  <div className="flex items-center justify-between gap-3 mb-4">
+                    <div>
+                      <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                        {CHART_TABS.find((tab) => tab.key === chartTab)?.label}
+                      </p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400">
+                        Last {chartData.length} attempts
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 text-[11px] text-slate-500 dark:text-slate-400">
+                      <span className="inline-flex h-2 w-2 rounded-full bg-slate-900 dark:bg-white" />
+                      Latest data
+                    </div>
                   </div>
-                )}
-
-                <div className="bg-white dark:bg-slate-800 rounded-[1.5rem] border border-gray-100 dark:border-slate-700 p-4 shadow-sm">
-                  <ResponsiveContainer width="100%" height={180}>
+                  <ResponsiveContainer width="100%" height={220}>
                     {chartTab === "score" ? (
                       <LineChart
                         data={chartData}
@@ -419,9 +433,9 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                         />
                         <Tooltip
                           contentStyle={{
-                            borderRadius: "12px",
+                            borderRadius: "14px",
                             border: "none",
-                            boxShadow: "0 4px 24px rgba(0,0,0,0.10)",
+                            boxShadow: "0 10px 30px rgba(15,23,42,0.18)",
                             fontSize: 12,
                           }}
                           formatter={(v) => [`${v}%`, "Score"]}
@@ -433,13 +447,19 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                           strokeDasharray="5 4"
                           strokeWidth={1.5}
                         />
+                        <ReferenceLine
+                          y={Math.round(avgScore)}
+                          stroke="#8B5CF6"
+                          strokeDasharray="4 6"
+                          strokeWidth={1}
+                        />
                         <Line
                           type="monotone"
                           dataKey="score"
-                          stroke="#378ADD"
-                          strokeWidth={2.5}
-                          dot={{ r: 3.5, fill: "#378ADD", strokeWidth: 0 }}
-                          activeDot={{ r: 5 }}
+                          stroke="#2563EB"
+                          strokeWidth={3}
+                          dot={{ r: 4, fill: "#2563EB", strokeWidth: 0 }}
+                          activeDot={{ r: 6, fill: "#fff", stroke: "#2563EB", strokeWidth: 2 }}
                         />
                       </LineChart>
                     ) : chartTab === "time" ? (
@@ -531,31 +551,35 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
               </p>
               <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                 {/* Streak */}
-                <div className="col-span-2 bg-white dark:bg-slate-800 rounded-[1.5rem] border border-gray-100 dark:border-slate-700 p-4 shadow-sm">
-                  <div className="flex items-center gap-2 mb-3">
-                    <FaFire className="text-orange-500" size={14} />
-                    <span className="text-xs font-black text-slate-500 uppercase tracking-wider">
-                      Daily streak
-                    </span>
-                    <span className="ml-auto text-base font-black text-orange-500">
-                      {streak} {streak === 1 ? "day" : "days"}
-                    </span>
+                <div className="col-span-2 bg-white dark:bg-slate-900 rounded-[1.75rem] border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+                  <div className="flex items-start gap-3 mb-4">
+                    <div className="size-11 rounded-3xl bg-orange-100 dark:bg-orange-900/20 text-orange-600 dark:text-orange-300 grid place-items-center">
+                      <FaFire size={16} />
+                    </div>
+                    <div>
+                      <p className="text-[11px] uppercase tracking-[0.18em] font-black text-slate-400 dark:text-slate-500 mb-1">
+                        Daily streak
+                      </p>
+                      <p className="text-2xl font-black text-slate-900 dark:text-white">
+                        {streak} {streak === 1 ? "day" : "days"}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex gap-1.5 sm:gap-2">
+                  <div className="grid grid-cols-7 gap-2 mb-4">
                     {weeklyActivity.map((d, i) => (
                       <div
                         key={i}
-                        className={`flex-1 aspect-square rounded-xl flex items-center justify-center text-[11px] font-bold transition-all ${
+                        className={`aspect-square rounded-2xl flex items-center justify-center text-sm font-black transition-all ${
                           d.active
-                            ? "bg-orange-100 dark:bg-orange-900/30 text-orange-600 dark:text-orange-400"
-                            : "bg-gray-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500"
+                            ? "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-200"
+                            : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500"
                         }`}
                       >
                         {d.day}
                       </div>
                     ))}
                   </div>
-                  <p className="text-[10px] text-slate-400 mt-2 text-center">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
                     {streak > 0
                       ? `Keep it up! You've studied ${streak} day${streak > 1 ? "s" : ""} in a row.`
                       : "Start a streak — take an exam today!"}
@@ -586,14 +610,14 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                   )}
 
                 {/* Mode split */}
-                <div className="col-span-2 bg-white dark:bg-slate-800 rounded-[1.5rem] border border-gray-100 dark:border-slate-700 p-4 shadow-sm">
+                <div className="col-span-2 bg-slate-100/80 dark:bg-slate-900 rounded-[1.5rem] border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
                   <div className="flex items-center gap-2 mb-3">
-                    <FiPieChart size={13} className="text-blue-500" />
+                    <FiPieChart size={14} className="text-slate-700 dark:text-slate-200" />
                     <span className="text-xs font-black text-slate-500 uppercase tracking-wider">
                       Mode split
                     </span>
                   </div>
-                  <div className="flex gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
                       {
                         label: "Objective",
@@ -635,10 +659,20 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
 
             {/* ---- HISTORY LIST ---- */}
             <section>
-              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500 ml-1 mb-3">
-                Recent attempts
-              </p>
-              <div className="space-y-2.5">
+              <div className="flex flex-col gap-1.5 sm:flex-row sm:items-end sm:justify-between mb-4">
+                <div>
+                  <p className="text-[11px] font-black uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                    Recent attempts
+                  </p>
+                  <h2 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-slate-100">
+                    Latest exam results
+                  </h2>
+                </div>
+                <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
+                  Tap an attempt to retake the same course and keep improving.
+                </p>
+              </div>
+              <div className="bg-white dark:bg-slate-900 rounded-[2rem] border border-slate-200 dark:border-slate-700 shadow-sm p-4 space-y-3">
                 {historyData.map((exam) => (
                   <HistoryItem
                     key={exam.id}
@@ -695,30 +729,30 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
 /* -------------------------------------------------------------------------- */
 const StatCard = ({ label, value, sub, icon, color, wide = false }) => {
   const iconColors = {
-    blue: "text-blue-600 bg-blue-50 dark:bg-blue-900/20",
-    amber: "text-amber-600 bg-amber-50 dark:bg-amber-900/20",
-    green: "text-emerald-600 bg-emerald-50 dark:bg-emerald-900/20",
-    purple: "text-purple-600 bg-purple-50 dark:bg-purple-900/20",
-    red: "text-red-500 bg-red-50 dark:bg-red-900/20",
+    blue: "text-blue-600 bg-blue-100 dark:bg-blue-900/20",
+    amber: "text-amber-600 bg-amber-100 dark:bg-amber-900/20",
+    green: "text-emerald-600 bg-emerald-100 dark:bg-emerald-900/20",
+    purple: "text-purple-600 bg-purple-100 dark:bg-purple-900/20",
+    red: "text-red-500 bg-red-100 dark:bg-red-900/20",
   };
   return (
     <div
-      className={`bg-white dark:bg-slate-800 p-3.5 sm:p-4 rounded-[1.5rem] border border-gray-100 dark:border-slate-700 shadow-sm ${wide ? "col-span-2" : ""}`}
+      className={`bg-white dark:bg-slate-900 p-4 rounded-[1.75rem] border border-slate-200 dark:border-slate-700 shadow-sm ${wide ? "lg:col-span-2" : ""}`}
     >
       <div
-        className={`size-8 rounded-xl flex items-center justify-center mb-2.5 ${iconColors[color]}`}
+        className={`size-10 rounded-2xl flex items-center justify-center mb-3 ${iconColors[color]}`}
       >
         {icon}
       </div>
-      <p className="text-lg sm:text-xl font-black text-slate-900 dark:text-white leading-none">
+      <p className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white leading-none">
         {value}
-        {sub && (
-          <span className="text-xs font-medium text-slate-400 ml-1.5">
-            {sub}
-          </span>
-        )}
       </p>
-      <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400 mt-1">
+      {sub && (
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+          {sub}
+        </p>
+      )}
+      <p className="text-[10px] uppercase font-bold tracking-[0.18em] text-slate-400 dark:text-slate-500 mt-4">
         {label}
       </p>
     </div>
@@ -729,19 +763,21 @@ const StatCard = ({ label, value, sub, icon, color, wide = false }) => {
 /*  INSIGHT CARD                                                                */
 /* -------------------------------------------------------------------------- */
 const InsightCard = ({ icon, label, value, sub, colorClass }) => (
-  <div className="bg-white dark:bg-slate-800 p-3.5 sm:p-4 rounded-[1.5rem] border border-gray-100 dark:border-slate-700 shadow-sm">
+  <div className="bg-white dark:bg-slate-900 p-4 rounded-[1.75rem] border border-slate-200 dark:border-slate-700 shadow-sm">
     <div
-      className={`size-7 rounded-lg flex items-center justify-center mb-2 ${colorClass}`}
+      className={`size-8 rounded-2xl flex items-center justify-center mb-3 ${colorClass}`}
     >
       {icon}
     </div>
-    <p className="text-[10px] uppercase font-bold tracking-wider text-slate-400">
+    <p className="text-[10px] uppercase font-bold tracking-[0.18em] text-slate-400 mb-1">
       {label}
     </p>
-    <p className="text-base font-black text-slate-900 dark:text-white mt-0.5 truncate">
+    <p className="text-xl font-black text-slate-900 dark:text-white truncate">
       {value}
     </p>
-    <p className="text-[11px] text-slate-400 mt-0.5 leading-tight">{sub}</p>
+    <p className="text-sm text-slate-500 dark:text-slate-400 mt-2 leading-tight">
+      {sub}
+    </p>
   </div>
 );
 
@@ -769,25 +805,25 @@ const HistoryItem = ({ exam, onDelete, setQuestionType }) => {
   return (
     <div
       onClick={handleRetake}
-      className={`group relative p-3.5 sm:p-4 rounded-[1.5rem] border flex items-center justify-between transition-all duration-200 active:scale-[0.98] cursor-pointer ${
+      className={`group relative p-4 sm:p-5 rounded-[1.5rem] border flex items-center justify-between gap-4 transition-all duration-200 active:scale-[0.98] cursor-pointer ${
         exam.is_retake
           ? "border-purple-200 dark:border-purple-900/40 bg-purple-50/30 dark:bg-purple-900/10"
-          : "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800"
+          : "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800"
       }`}
     >
-      <div className="flex flex-col gap-1 min-w-0 mr-3">
+      <div className="flex flex-col gap-2 min-w-0 mr-3">
         <div className="flex items-center gap-2 flex-wrap">
-          <span className="font-black text-slate-900 dark:text-white truncate max-w-[130px] sm:max-w-none text-sm sm:text-base">
+          <span className="font-black text-slate-900 dark:text-white truncate max-w-[150px] sm:max-w-none text-base sm:text-lg">
             {exam.course?.toLowerCase() || "Course"}
           </span>
           {exam.type && (
             <span
-              className={`text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md shrink-0 ${
+              className={`text-[10px] font-black uppercase tracking-[0.18em] px-2 py-1 rounded-2xl shrink-0 ${
                 exam.type === "THY"
-                  ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                  ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300"
                   : exam.type === "FIB"
-                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
-                    : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300"
+                    : "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300"
               }`}
             >
               {exam.type === "THY"
@@ -798,23 +834,24 @@ const HistoryItem = ({ exam, onDelete, setQuestionType }) => {
             </span>
           )}
           {exam.is_retake && (
-            <FaRedoAlt size={10} className="text-purple-400" title="Retake" />
+            <span className="inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-[0.18em] text-purple-600 bg-purple-100 dark:bg-purple-900/30 dark:text-purple-300 rounded-full px-2 py-1">
+              <FaRedoAlt size={10} /> Retake
+            </span>
           )}
         </div>
-        <span className="text-[11px] text-slate-400 flex items-center gap-1.5 flex-wrap">
+        <span className="text-sm text-slate-500 dark:text-slate-400 flex flex-wrap gap-2 items-center">
           <span>{exam.date}</span>
-          <span>·</span>
+          <span className="hidden sm:inline">·</span>
           <span>{total} Qs</span>
           {formattedTime && (
             <>
-              <span>·</span>
-              <FiClock size={10} className="opacity-70" />
+              <span className="hidden sm:inline">·</span>
+              <FiClock size={12} className="opacity-70" />
               <span>{formattedTime}</span>
             </>
           )}
         </span>
-        {/* Inline progress bar */}
-        <div className="w-24 h-1 rounded-full bg-gray-100 dark:bg-slate-700 overflow-hidden mt-0.5">
+        <div className="w-full h-2 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden mt-2">
           <div
             className="h-full rounded-full transition-all"
             style={{ width: `${percent}%`, backgroundColor: progressColor }}
@@ -822,16 +859,16 @@ const HistoryItem = ({ exam, onDelete, setQuestionType }) => {
         </div>
       </div>
 
-      <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      <div className="flex items-center gap-3 sm:gap-4 shrink-0">
         <div className="text-right">
-          <p className="text-lg font-black leading-none text-slate-900 dark:text-white">
+          <p className="text-2xl font-black leading-none text-slate-900 dark:text-white">
             {score}
-            <span className="text-xs text-slate-300 dark:text-slate-600 font-medium ml-0.5">
+            <span className="text-sm text-slate-400 dark:text-slate-500 font-medium ml-1">
               /{total}
             </span>
           </p>
           <p
-            className={`text-[10px] font-black mt-0.5 ${isPassed ? "text-emerald-500" : "text-red-500"}`}
+            className={`text-xs font-black mt-1 ${isPassed ? "text-emerald-500" : "text-red-500"}`}
           >
             {percent}% {isPassed ? "PASS" : "FAIL"}
           </p>
@@ -841,12 +878,12 @@ const HistoryItem = ({ exam, onDelete, setQuestionType }) => {
             e.stopPropagation();
             onDelete();
           }}
-          className="p-2 rounded-xl bg-red-50 dark:bg-red-900/20 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:flex"
+          className="p-2 rounded-2xl bg-red-50 dark:bg-red-900/20 text-red-500 opacity-0 group-hover:opacity-100 transition-opacity hidden sm:inline-flex"
         >
-          <FaTrashAlt size={12} />
+          <FaTrashAlt size={14} />
         </button>
-        <div className="p-1.5 rounded-full bg-gray-50 dark:bg-slate-700 text-slate-300">
-          <FaChevronRight size={10} />
+        <div className="size-10 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 grid place-items-center">
+          <FaChevronRight size={12} />
         </div>
       </div>
     </div>
