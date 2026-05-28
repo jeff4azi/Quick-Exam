@@ -463,7 +463,9 @@ const Home = ({
                     {(examSession.currentIndex || 0) + 1}
                   </p>
                   <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
-                    of {(examSession.questions && examSession.questions.length) || "?"}
+                    of{" "}
+                    {(examSession.questions && examSession.questions.length) ||
+                      "?"}
                   </p>
                 </div>
 
@@ -473,7 +475,8 @@ const Home = ({
                     Total
                   </p>
                   <p className="text-lg lg:text-xl font-black text-slate-900 dark:text-white">
-                    {(examSession.questions && examSession.questions.length) || "?"}
+                    {(examSession.questions && examSession.questions.length) ||
+                      "?"}
                   </p>
                   <p className="text-xs text-slate-400 dark:text-slate-500 mt-1">
                     questions
