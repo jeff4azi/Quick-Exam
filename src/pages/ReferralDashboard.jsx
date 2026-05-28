@@ -244,7 +244,7 @@ const ReferralDashboard = () => {
                 </div>
                 <div className="rounded-2xl bg-white border border-slate-200 dark:bg-white/5 dark:border-white/10 px-4 py-3 shadow-sm dark:shadow-none">
                   <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-300">
-                    Validated
+                    Validated invites
                   </p>
                   <p className="text-xl font-black mt-2 text-emerald-600 dark:text-emerald-300">
                     {stats.validated}
