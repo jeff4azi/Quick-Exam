@@ -320,7 +320,8 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                   </h2>
                 </div>
                 <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
-                  Track exam totals, score averages, time efficiency and retake habits in one place.
+                  Track exam totals, score averages, time efficiency and retake
+                  habits in one place.
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -372,7 +373,8 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                     </h2>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm">
-                    Switch between score, time and questions to compare your latest attempts.
+                    Switch between score, time and questions to compare your
+                    latest attempts.
                   </p>
                 </div>
 
@@ -459,7 +461,12 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                           stroke="#2563EB"
                           strokeWidth={3}
                           dot={{ r: 4, fill: "#2563EB", strokeWidth: 0 }}
-                          activeDot={{ r: 6, fill: "#fff", stroke: "#2563EB", strokeWidth: 2 }}
+                          activeDot={{
+                            r: 6,
+                            fill: "#fff",
+                            stroke: "#2563EB",
+                            strokeWidth: 2,
+                          }}
                         />
                       </LineChart>
                     ) : chartTab === "time" ? (
@@ -612,7 +619,10 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                 {/* Mode split */}
                 <div className="col-span-2 bg-slate-100/80 dark:bg-slate-900 rounded-[1.5rem] border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
                   <div className="flex items-center gap-2 mb-3">
-                    <FiPieChart size={14} className="text-slate-700 dark:text-slate-200" />
+                    <FiPieChart
+                      size={14}
+                      className="text-slate-700 dark:text-slate-200"
+                    />
                     <span className="text-xs font-black text-slate-500 uppercase tracking-wider">
                       Mode split
                     </span>
@@ -748,9 +758,7 @@ const StatCard = ({ label, value, sub, icon, color, wide = false }) => {
         {value}
       </p>
       {sub && (
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          {sub}
-        </p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">{sub}</p>
       )}
       <p className="text-[10px] uppercase font-bold tracking-[0.18em] text-slate-400 dark:text-slate-500 mt-4">
         {label}
