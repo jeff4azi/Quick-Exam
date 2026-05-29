@@ -17,7 +17,7 @@ import {
 import { FaCrown } from "react-icons/fa";
 import { withTimeout } from "../utils/withTimeout";
 
-const FREE_QUESTION_LIMIT = 5;
+const FREE_QUESTION_LIMIT = 10;
 
 // ─── Premium gate overlay ─────────────────────────────────────────────────────
 const PremiumGateOverlay = ({ onUpgrade, onQuit }) => (
@@ -481,6 +481,21 @@ const TestModeScreen = ({
         ? typeof currentInput === "string" && currentInput.trim().length > 0
         : fibBlanks.some((b) => (b || "").trim().length > 0);
 
+  const getOptionPlainLength = (option) => {
+    const text = typeof option === "string" ? option : String(option ?? "");
+    return text
+      .replace(/\$[^$]*\$/g, " ")
+      .replace(/\s+/g, " ")
+      .trim().length;
+  };
+
+  const getOptionTextSizeClass = (option) => {
+    const len = getOptionPlainLength(option);
+    if (len >= 120) return "text-xs leading-snug";
+    if (len >= 72) return "text-sm leading-snug";
+    return "";
+  };
+
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col transition-colors duration-500">
       {/* Premium gate overlay */}
@@ -586,6 +601,7 @@ const TestModeScreen = ({
               ) : isObjQ ? (
                 (currentQuestion?.options ?? []).map((option, idx) => {
                   const label = String.fromCharCode(65 + idx);
+                  const optionSizeClass = getOptionTextSizeClass(option);
                   const isSelected =
                     currentInput === option ||
                     (isAnswered && answers[currentIndex] === option);
@@ -612,7 +628,7 @@ const TestModeScreen = ({
                       }`}
                     >
                       <div
-                        className={`size-10 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                        className={`size-10 shrink-0 rounded-2xl flex items-center justify-center font-black transition-colors ${
                           isRight
                             ? "bg-green-500 text-white"
                             : isWrong
@@ -625,7 +641,7 @@ const TestModeScreen = ({
                         {label}
                       </div>
                       <div
-                        className={`text-left font-semibold ${isRight ? "text-green-700 dark:text-green-400" : isWrong ? "text-red-600 dark:text-red-400" : isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
+                        className={`min-w-0 flex-1 text-left font-semibold ${optionSizeClass} ${isRight ? "text-green-700 dark:text-green-400" : isWrong ? "text-red-600 dark:text-red-400" : isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
                       >
                         <RenderMathText
                           text={option}
