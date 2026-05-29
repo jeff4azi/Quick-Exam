@@ -12,7 +12,6 @@ import {
   IoTrophy,
   IoTrophyOutline,
 } from "react-icons/io5";
-import { FaCrown } from "react-icons/fa";
 
 const isActivePath = (pathname, target) => {
   if (!pathname) return false;
@@ -21,13 +20,15 @@ const isActivePath = (pathname, target) => {
 };
 
 // ── Mobile bottom-bar item ──────────────────────────────────────────────────
-const MobileNavItem = ({ label, icon, active, onClick, locked, showCrown }) => (
+const MobileNavItem = ({ label, icon, active, onClick }) => (
   <button
     type="button"
     onClick={onClick}
     className={`flex flex-col items-center flex-1 text-xs font-semibold transition-colors ${
-      active ? "text-blue-600 dark:text-blue-400" : "text-slate-500 dark:text-slate-300"
-    } ${locked ? "opacity-60 cursor-not-allowed" : ""}`}
+      active
+        ? "text-blue-600 dark:text-blue-400"
+        : "text-slate-500 dark:text-slate-300"
+    }`}
     aria-current={active ? "page" : undefined}
   >
     <div
@@ -36,18 +37,13 @@ const MobileNavItem = ({ label, icon, active, onClick, locked, showCrown }) => (
       }`}
     >
       {icon}
-      {showCrown && (
-        <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-          <FaCrown className="text-[8px] text-white" />
-        </div>
-      )}
     </div>
     <span>{label}</span>
   </button>
 );
 
 // ── Desktop sidebar item ────────────────────────────────────────────────────
-const SidebarNavItem = ({ label, icon, active, onClick, locked, showCrown }) => (
+const SidebarNavItem = ({ label, icon, active, onClick }) => (
   <button
     type="button"
     onClick={onClick}
@@ -55,16 +51,11 @@ const SidebarNavItem = ({ label, icon, active, onClick, locked, showCrown }) => 
       active
         ? "bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400"
         : "text-slate-500 dark:text-slate-400 hover:bg-gray-100 dark:hover:bg-slate-700/50 hover:text-slate-800 dark:hover:text-slate-200"
-    } ${locked ? "opacity-60 cursor-not-allowed" : ""}`}
+    }`}
     aria-current={active ? "page" : undefined}
   >
     <div className="relative shrink-0 size-9 flex items-center justify-center w-[40px]">
       {icon}
-      {showCrown && (
-        <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-white dark:border-slate-800 shadow-sm flex items-center justify-center">
-          <FaCrown className="text-[8px] text-white" />
-        </div>
-      )}
     </div>
     <span>{label}</span>
   </button>
@@ -78,16 +69,14 @@ const NavBar = ({ isPremium, onLockedClick }) => {
   const go = (path) => navigate(path);
 
   const handleSavedClick = () => {
-    if (isPremium) { go("/bookmarks"); return; }
-    if (onLockedClick) { onLockedClick(); return; }
-    go("/premium");
+    go("/bookmarks");
   };
 
-  const homeActive     = isActivePath(pathname, "/");
-  const coursesActive  = isActivePath(pathname, "/choose-course");
-  const historyActive  = isActivePath(pathname, "/history");
-  const savedActive    = isActivePath(pathname, "/bookmarks");
-  const leadersActive  = isActivePath(pathname, "/leaderboard");
+  const homeActive = isActivePath(pathname, "/");
+  const coursesActive = isActivePath(pathname, "/choose-course");
+  const historyActive = isActivePath(pathname, "/history");
+  const savedActive = isActivePath(pathname, "/bookmarks");
+  const leadersActive = isActivePath(pathname, "/leaderboard");
 
   const navItems = [
     {
@@ -100,7 +89,11 @@ const NavBar = ({ isPremium, onLockedClick }) => {
       label: "Courses",
       active: coursesActive,
       onClick: () => go("/choose-course"),
-      icon: coursesActive ? <IoLibrary size={22} /> : <IoLibraryOutline size={22} />,
+      icon: coursesActive ? (
+        <IoLibrary size={22} />
+      ) : (
+        <IoLibraryOutline size={22} />
+      ),
     },
     {
       label: "History",
@@ -112,15 +105,21 @@ const NavBar = ({ isPremium, onLockedClick }) => {
       label: "Saved",
       active: savedActive,
       onClick: handleSavedClick,
-      locked: !isPremium,
-      showCrown: !isPremium,
-      icon: savedActive ? <IoBookmark size={20} /> : <IoBookmarkOutline size={20} />,
+      icon: savedActive ? (
+        <IoBookmark size={20} />
+      ) : (
+        <IoBookmarkOutline size={20} />
+      ),
     },
     {
       label: "Leaders",
       active: leadersActive,
       onClick: () => go("/leaderboard"),
-      icon: leadersActive ? <IoTrophy size={18} /> : <IoTrophyOutline size={18} />,
+      icon: leadersActive ? (
+        <IoTrophy size={18} />
+      ) : (
+        <IoTrophyOutline size={18} />
+      ),
     },
   ];
 

@@ -13,7 +13,6 @@ import {
   IoTrophy,
   IoTrophyOutline,
 } from "react-icons/io5";
-import { FiUser } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
 import Logo from "../images/Logo";
 import Avatar from "./Avatar";
@@ -40,11 +39,7 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
   const go = (path) => navigate(path);
 
   const handleSavedClick = () => {
-    if (isPremium) {
-      go("/bookmarks");
-      return;
-    }
-    setPremiumOverlayOpen(true);
+    go("/bookmarks");
   };
 
   const isExamActive = pathname === "/exam";
@@ -83,8 +78,6 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
       label: "Saved",
       active: savedActive,
       onClick: handleSavedClick,
-      locked: !isPremium,
-      showCrown: !isPremium,
       icon: savedActive ? (
         <IoBookmark size={20} />
       ) : (
