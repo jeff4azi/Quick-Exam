@@ -12,7 +12,7 @@ import {
 } from "react-icons/fi";
 import imageCompression from "browser-image-compression";
 import { supabase } from "../supabaseClient";
-import NavBar from "../components/NavBar";
+/* import NavBar from "../components/NavBar"; */
 import { DEFAULT_AVATAR_URL } from "../components/Avatar";
 
 const CLOUDINARY_CLOUD_NAME =
@@ -29,7 +29,7 @@ const validateCloudinaryConfig = () => {
   }
 };
 
-const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage, isPremium }) => {
+const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
@@ -228,14 +228,14 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage, isPremium 
     <div className="min-h-[100dvh] bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
       <header className="sticky top-0 z-40 border-b border-slate-200/70 dark:border-slate-800 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 lg:px-8">
-          <button
+          {previewUrl ? <button
             type="button"
             onClick={() => navigate(-1)}
             className="size-11 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
             aria-label="Go back"
           >
             <FiArrowLeft size={20} />
-          </button>
+          </button> : <div className="size-11" />}
           <div className="text-center">
             <h1 className="text-lg font-black tracking-tight">
               Profile Picture
@@ -373,7 +373,7 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage, isPremium 
                   type="button"
                   onClick={() => {
                     localStorage.setItem("skipAvatar", "true");
-                    navigate("/profile");
+                    navigate("/");
                   }}
                   disabled={uploading}
                   className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-slate-50 dark:hover:bg-slate-800/60 disabled:opacity-60"
@@ -417,7 +417,7 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage, isPremium 
         </div>
       )}
 
-      {!file && <NavBar isPremium={isPremium} />}
+      {/* {!file && <NavBar isPremium={isPremium} />} */}
     </div>
   );
 };
