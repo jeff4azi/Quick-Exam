@@ -2,7 +2,6 @@ import { useNavigate } from "react-router-dom";
 import WhatsAppCard from "../components/WhatsAppCard";
 import { useEffect, useState, useRef } from "react";
 import {
-  trackResultView,
   trackResultShare,
   trackReviewAnswers,
   trackExamRetake,
@@ -44,7 +43,6 @@ const ResultScreen = ({
   const [showAd, setShowAd] = useState(true);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [isRetryOverlayOpen, setRetryOverlayOpen] = useState(false);
-  const [isReviewOverlayOpen, setReviewOverlayOpen] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [freeRetryAvailable, setFreeRetryAvailable] = useState(canUseFreeRetry);
@@ -58,13 +56,6 @@ const ResultScreen = ({
     darkQuery.addEventListener("change", listener);
     return () => darkQuery.removeEventListener("change", listener);
   }, []);
-
-  useEffect(() => {
-    trackResultView(selectedCourse.id, scorePercentage, questionType);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const userData = userProfile || { full_name: "Scholar", college: "" };
   const formatNum = (num) => String(num).padStart(2, "0");
   const answeredCount = answers.filter((a) => a !== undefined).length;
 
@@ -118,21 +109,21 @@ const ResultScreen = ({
   const getFeedback = () => {
     if (scorePercentage >= 80)
       return {
-        msg: `Outstanding work, ${userData.full_name.split(" ")[0]}!`,
+        msg: `Outstanding work, ${userProfile?.full_name.split(" ")[0]}!`,
         color: "text-green-500",
       };
     if (scorePercentage >= 60)
       return {
-        msg: `Great job, ${userData.full_name.split(" ")[0]}!`,
+        msg: `Great job, ${userProfile?.full_name.split(" ")[0]}!`,
         color: "text-blue-500",
       };
     if (scorePercentage >= 45)
       return {
-        msg: `Good effort, ${userData.full_name.split(" ")[0]}.`,
+        msg: `Good effort, ${userProfile?.full_name.split(" ")[0]}.`,
         color: "text-amber-500",
       };
     return {
-      msg: `Don't give up, ${userData.full_name.split(" ")[0]}.`,
+      msg: `Don't give up, ${userProfile?.full_name.split(" ")[0]}.`,
       color: "text-red-500",
     };
   };
@@ -154,10 +145,10 @@ const ResultScreen = ({
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block">
             <p className="text-xs font-black text-gray-800 dark:text-gray-200 leading-none">
-              {userData.full_name}
+              {userProfile?.full_name}
             </p>
             <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tighter mt-1">
-              {userData.college}
+              {userProfile?.college}
             </p>
           </div>
           <button
@@ -276,6 +267,7 @@ const ResultScreen = ({
         <ActionButton
           label="Retake"
           disabled={!isPremium && !freeRetryAvailable}
+          showCrown={!isPremium && !freeRetryAvailable}
           color="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
           onLockedClick={() => {
             setRetryOverlayOpen(true);
@@ -291,7 +283,6 @@ const ResultScreen = ({
             setHasRetaken(true);
             trackExamRetake(selectedCourse.id);
           }}
-          freeLabel={!isPremium && freeRetryAvailable ? "Free" : null}
           icon={
             <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
           }
@@ -302,11 +293,8 @@ const ResultScreen = ({
           disabled={false}
           color="bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
           onClick={() => {
-            if (!isPremium) setReviewOverlayOpen(true);
-            else {
-              trackReviewAnswers(selectedCourse.id);
-              navigate("/review-answers");
-            }
+            trackReviewAnswers(selectedCourse.id);
+            navigate("/review-answers");
           }}
           icon={
             <>
@@ -354,10 +342,10 @@ const ResultScreen = ({
               </div>
               <div className="flex flex-col">
                 <span className="text-[12px] font-bold text-slate-800 dark:text-white leading-none truncate max-w-[120px]">
-                  {userData.full_name}
+                  {userProfile?.full_name}
                 </span>
                 <span className="text-[9px] font-medium text-slate-400 mt-1 uppercase tracking-tight truncate max-w-[120px]">
-                  {userData.college}
+                  {userProfile?.college}
                 </span>
               </div>
             </div>
@@ -492,19 +480,7 @@ const ResultScreen = ({
         cancelText="Maybe tomorrow"
         icon={<FiRefreshCw size={32} />}
       />
-      <ConfirmOverlay
-        isOpen={isReviewOverlayOpen}
-        onClose={() => setReviewOverlayOpen(false)}
-        onConfirm={() => {
-          trackReviewAnswers(selectedCourse.id);
-          navigate("/review-answers");
-        }}
-        title="Review First 10 Free"
-        message="You can review the first 10 questions for free. Upgrade to Premium for the full answer breakdown on every question."
-        confirmText="Review Free Questions"
-        cancelText="Get Premium Instead"
-        icon={<FiEye size={32} />}
-      />
+
       {/* <NavBar
         isPremium={isPremium}
         onLockedClick={() => setPremiumOverlayOpen(true)}
@@ -534,7 +510,7 @@ const ActionButton = ({
   onLockedClick,
   color,
   disabled,
-  freeLabel,
+  showCrown,
 }) => (
   <button
     onClick={disabled ? onLockedClick : onClick}
@@ -553,14 +529,9 @@ const ActionButton = ({
       >
         {icon}
       </svg>
-      {disabled && (
+      {disabled && showCrown && (
         <div className="absolute -top-1 -right-1 bg-amber-400 rounded-full p-1 border-2 border-white dark:border-gray-950 shadow-md">
           <FaCrown className="text-[8px] text-white" />
-        </div>
-      )}
-      {!disabled && freeLabel && (
-        <div className="absolute -top-1 -right-1 bg-emerald-500 rounded-full px-1.5 py-0.5 border-2 border-white dark:border-gray-950 shadow-md">
-          <span className="text-[7px] font-black text-white uppercase leading-none">{freeLabel}</span>
         </div>
       )}
     </div>
