@@ -21,38 +21,7 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
     );
   }
 
-  if (!isPremium) {
-      return (
-        <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] dark:bg-[#0F172A] px-6">
-          <div className="max-w-sm w-full bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-700 text-center">
-            <div className="text-4xl mb-4 flex justify-center items-center">
-              <FiLock />
-            </div>
-  
-            <h2 className="text-xl font-black mb-2">Premium Required</h2>
-  
-            <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
-              Review Answers is a premium feature. Upgrade to unlock your saved
-              questions.
-            </p>
-  
-            <button
-              onClick={() => navigate("/premium")}
-              className="w-full py-3 rounded-2xl bg-blue-600 text-white font-bold hover:scale-[1.02] active:scale-[0.98] transition"
-            >
-              Get Premium
-            </button>
-  
-            <span
-              onClick={() => navigate(-1)}
-              className="text-xs text-slate-500 dark:text-slate-400 mt-4 block cursor-pointer"
-            >
-              Go back
-            </span>
-          </div>
-        </div>
-      );
-    }
+  const FREE_REVIEW_LIMIT = 10;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pb-6">
@@ -76,6 +45,7 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
       {/* Questions */}
       <div className="space-y-6 px-5 mt-5 max-w-4xl mx-auto">
         {questions.map((question, index) => {
+          if (!isPremium && index >= FREE_REVIEW_LIMIT) return null;
           const userAnswer = answers[index];
           const isTheory =
             Array.isArray(question.keywords) || question.type === "theory";
@@ -279,6 +249,27 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
             </div>
           );
         })}
+        {!isPremium && questions.length > FREE_REVIEW_LIMIT && (
+          <div className="mx-auto max-w-md bg-white dark:bg-slate-800 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-700 p-6 text-center">
+            <div className="flex justify-center mb-3">
+              <div className="bg-amber-100 dark:bg-amber-900/30 p-3 rounded-2xl">
+                <FiLock className="text-amber-500 dark:text-amber-400" size={24} />
+              </div>
+            </div>
+            <h3 className="text-lg font-black text-slate-800 dark:text-white mb-1">
+              {questions.length - FREE_REVIEW_LIMIT} more question{questions.length - FREE_REVIEW_LIMIT !== 1 ? "s" : ""} locked
+            </h3>
+            <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
+              You&apos;ve reviewed the first {FREE_REVIEW_LIMIT} for free. Upgrade to unlock the full review for every question.
+            </p>
+            <button
+              onClick={() => navigate("/premium")}
+              className="w-full py-3 rounded-2xl bg-blue-600 text-white font-bold hover:scale-[1.02] active:scale-[0.98] transition"
+            >
+              Unlock Full Review
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

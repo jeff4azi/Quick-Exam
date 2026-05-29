@@ -11,10 +11,22 @@ import {
 import BannerAd from "../components/BannerAd";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { FaCrown } from "react-icons/fa";
+import { FiRefreshCw, FiEye } from "react-icons/fi";
 import Avatar from "../components/Avatar";
 /* import NavBar from "../components/NavBar"; */
 import Logo from "../images/Logo";
 import { toPng } from "html-to-image";
+
+const FREE_DAILY_RETRY_KEY = "free_retry_date";
+
+const canUseFreeRetry = () => {
+  const today = new Date().toDateString();
+  return localStorage.getItem(FREE_DAILY_RETRY_KEY) !== today;
+};
+
+const consumeFreeRetry = () => {
+  localStorage.setItem(FREE_DAILY_RETRY_KEY, new Date().toDateString());
+};
 
 const ResultScreen = ({
   questions,
@@ -31,8 +43,11 @@ const ResultScreen = ({
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(true);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
+  const [isRetryOverlayOpen, setRetryOverlayOpen] = useState(false);
+  const [isReviewOverlayOpen, setReviewOverlayOpen] = useState(false);
   const [sharing, setSharing] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [freeRetryAvailable, setFreeRetryAvailable] = useState(canUseFreeRetry);
 
   const shareRef = useRef(null);
 
@@ -260,18 +275,23 @@ const ResultScreen = ({
 
         <ActionButton
           label="Retake"
-          disabled={!isPremium}
+          disabled={!isPremium && !freeRetryAvailable}
           color="bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
           onLockedClick={() => {
-            setPremiumOverlayOpen(true);
+            setRetryOverlayOpen(true);
             trackPremiumGateHit("retake");
           }}
           onClick={() => {
+            if (!isPremium) {
+              consumeFreeRetry();
+              setFreeRetryAvailable(false);
+            }
             setAnswers([]);
             navigate("/exam");
             setHasRetaken(true);
             trackExamRetake(selectedCourse.id);
           }}
+          freeLabel={!isPremium && freeRetryAvailable ? "Free" : null}
           icon={
             <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
           }
@@ -279,15 +299,14 @@ const ResultScreen = ({
 
         <ActionButton
           label="Review"
-          disabled={!isPremium}
+          disabled={false}
           color="bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400"
-          onLockedClick={() => {
-            setPremiumOverlayOpen(true);
-            trackPremiumGateHit("review_answers");
-          }}
           onClick={() => {
-            trackReviewAnswers(selectedCourse.id);
-            navigate("/review-answers");
+            if (!isPremium) setReviewOverlayOpen(true);
+            else {
+              trackReviewAnswers(selectedCourse.id);
+              navigate("/review-answers");
+            }
           }}
           icon={
             <>
@@ -463,6 +482,29 @@ const ResultScreen = ({
         confirmText="Get Premium"
         cancelText="Maybe later"
       />
+      <ConfirmOverlay
+        isOpen={isRetryOverlayOpen}
+        onClose={() => setRetryOverlayOpen(false)}
+        onConfirm={() => navigate("/premium")}
+        title="Daily Retry Used"
+        message="You've already used your 1 free retry today. Upgrade to Premium for unlimited retakes anytime."
+        confirmText="Get Premium"
+        cancelText="Maybe tomorrow"
+        icon={<FiRefreshCw size={32} />}
+      />
+      <ConfirmOverlay
+        isOpen={isReviewOverlayOpen}
+        onClose={() => setReviewOverlayOpen(false)}
+        onConfirm={() => {
+          trackReviewAnswers(selectedCourse.id);
+          navigate("/review-answers");
+        }}
+        title="Review First 10 Free"
+        message="You can review the first 10 questions for free. Upgrade to Premium for the full answer breakdown on every question."
+        confirmText="Review Free Questions"
+        cancelText="Get Premium Instead"
+        icon={<FiEye size={32} />}
+      />
       {/* <NavBar
         isPremium={isPremium}
         onLockedClick={() => setPremiumOverlayOpen(true)}
@@ -492,6 +534,7 @@ const ActionButton = ({
   onLockedClick,
   color,
   disabled,
+  freeLabel,
 }) => (
   <button
     onClick={disabled ? onLockedClick : onClick}
@@ -513,6 +556,11 @@ const ActionButton = ({
       {disabled && (
         <div className="absolute -top-1 -right-1 bg-amber-400 rounded-full p-1 border-2 border-white dark:border-gray-950 shadow-md">
           <FaCrown className="text-[8px] text-white" />
+        </div>
+      )}
+      {!disabled && freeLabel && (
+        <div className="absolute -top-1 -right-1 bg-emerald-500 rounded-full px-1.5 py-0.5 border-2 border-white dark:border-gray-950 shadow-md">
+          <span className="text-[7px] font-black text-white uppercase leading-none">{freeLabel}</span>
         </div>
       )}
     </div>

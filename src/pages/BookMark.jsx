@@ -102,33 +102,10 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
     setOverlayOpen(false);
   };
 
-  if (!isPremium) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] dark:bg-[#0F172A] px-6 pb-32">
-        <div className="max-w-sm w-full bg-white dark:bg-slate-800 p-8 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-700 text-center">
-          <div className="text-4xl mb-4 flex justify-center items-center">
-            <FiLock />
-          </div>
-
-          <h2 className="text-xl font-black mb-2">Premium Required</h2>
-
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
-            Bookmark review is a premium feature. Upgrade to unlock your saved
-            questions.
-          </p>
-
-          <button
-            onClick={() => navigate("/premium")}
-            className="w-full py-3 rounded-2xl bg-blue-600 text-white font-bold hover:scale-[1.02] active:scale-[0.98] transition"
-          >
-            Get Premium
-          </button>
-        </div>
-
-        <NavBar isPremium={isPremium} />
-      </div>
-    );
-  }
+  const FREE_BOOKMARK_LIMIT = 5;
+  const visibleQuestions = isPremium
+    ? bookmarkedQuestions
+    : bookmarkedQuestions.slice(0, FREE_BOOKMARK_LIMIT);
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
@@ -191,7 +168,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
             </h3>
 
             <div className="space-y-5">
-              {bookmarkedQuestions.map((question, index) => {
+              {visibleQuestions.map((question, index) => {
                 const isTheory = Array.isArray(question.keywords) || question.type === "theory";
                 const isFib = question.type === "fib" || Array.isArray(question.answers);
                 const fibParts = isFib ? question.question.split(/_{2,}/g) : [];
@@ -336,6 +313,27 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                   </div>
                 );
               })}
+              {!isPremium && bookmarkedQuestions.length > FREE_BOOKMARK_LIMIT && (
+                <div className="bg-white dark:bg-slate-800/50 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm text-center">
+                  <div className="flex justify-center mb-3">
+                    <div className="bg-amber-100 dark:bg-amber-900/30 p-3 rounded-2xl">
+                      <FiLock className="text-amber-500 dark:text-amber-400" size={22} />
+                    </div>
+                  </div>
+                  <p className="text-sm font-black text-slate-800 dark:text-white mb-1">
+                    {bookmarkedQuestions.length - FREE_BOOKMARK_LIMIT} more bookmark{bookmarkedQuestions.length - FREE_BOOKMARK_LIMIT !== 1 ? "s" : ""} hidden
+                  </p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                    Free users can view up to {FREE_BOOKMARK_LIMIT} saved questions. Upgrade to see all.
+                  </p>
+                  <button
+                    onClick={() => navigate("/premium")}
+                    className="px-6 py-2.5 rounded-2xl bg-blue-600 text-white text-sm font-bold hover:scale-[1.02] active:scale-[0.98] transition"
+                  >
+                    Unlock All Bookmarks
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

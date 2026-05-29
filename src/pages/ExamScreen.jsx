@@ -299,7 +299,8 @@ const ExamScreen = ({
   const currentQuestion = shuffledQuestions[currentIndex];
   const selectedOption = answers[currentIndex];
   const isBookmarked = bookmarks.includes(currentQuestion?.id);
-  const isBookmarkLocked = !isPremium;
+  const FREE_BOOKMARK_LIMIT = 5;
+  const isBookmarkLocked = !isPremium && !isBookmarked && bookmarks.length >= FREE_BOOKMARK_LIMIT;
 
   useEffect(() => {
     if (!hasMatchingQuestions) {
@@ -978,8 +979,8 @@ const ExamScreen = ({
         isOpen={isPremiumOverlayOpen}
         onClose={() => setPremiumOverlayOpen(false)}
         onConfirm={() => navigate("/premium")}
-        title="Bookmark with Premium"
-        message="Upgrade to Premium to bookmark questions during exams and review them later from your Saved list."
+        title="Bookmark This Question"
+        message="Save important questions to revisit later. Free users can view up to 5 bookmarks — upgrade for unlimited saves and full review."
         confirmText="Upgrade to Premium"
         cancelText="Not now"
       />
