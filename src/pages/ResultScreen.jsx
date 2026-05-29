@@ -481,6 +481,7 @@ const ResultScreen = ({
         icon={<FiRefreshCw size={32} />}
       />
 
+      
       {/* <NavBar
         isPremium={isPremium}
         onLockedClick={() => setPremiumOverlayOpen(true)}
