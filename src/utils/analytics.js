@@ -2,7 +2,7 @@
 // No react-ga4 dependency needed. gtag is loaded in <head> before React mounts,
 // so it's always available by the time any of these functions are called.
 
-const GA_ID = "G-LDLEG48Z7Q";
+const GA_ID = "G-Z745YX8682";
 
 const gtag = (...args) => {
   if (typeof window !== "undefined" && typeof window.gtag === "function") {
