@@ -410,11 +410,13 @@ const ExamScreen = ({
       questions: shuffledQuestions.length ? shuffledQuestions : questions,
       answers,
       currentIndex,
+      hasRetaken,
       timeLeft: effectiveTimeLeft, // snapshot for quick restore + legacy consumers
     };
   }, [
     answers,
     currentIndex,
+    hasRetaken,
     endsAtMs,
     questions,
     questionType,

@@ -38,6 +38,7 @@ const ResultScreen = ({
   isPremium,
   questionType,
   timeTaken,
+  hasRetaken,
 }) => {
   const navigate = useNavigate();
   const [showAd, setShowAd] = useState(true);
@@ -216,6 +217,11 @@ const ResultScreen = ({
                 ? "Fill in the Blanks"
                 : "Objectives"}
           </p>
+          {hasRetaken && (
+            <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-purple-600 dark:bg-purple-900/30 dark:text-purple-300">
+              <FiRefreshCw size={12} /> Retake Attempt
+            </div>
+          )}
           <p className={`text-sm mt-2 font-bold ${feedback.color}`}>
             {feedback.msg}
           </p>
@@ -279,8 +285,8 @@ const ResultScreen = ({
               setFreeRetryAvailable(false);
             }
             setAnswers([]);
-            navigate("/exam");
             setHasRetaken(true);
+            navigate("/exam");
             trackExamRetake(selectedCourse.id);
           }}
           icon={

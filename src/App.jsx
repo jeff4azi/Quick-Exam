@@ -292,6 +292,7 @@ function App() {
   }, []);
 
   useEffect(() => {
+    if (sessionRestoredRef.current) return;
     setHasRetaken(false); // every time new questions are loaded
   }, [questions]);
 
@@ -328,6 +329,8 @@ function App() {
       if (Array.isArray(parsed?.answers)) {
         setAnswers(parsed.answers);
       }
+
+      setHasRetaken(parsed?.hasRetaken === true || parsed?.is_retake === true);
     } catch (err) {
       console.error("Failed to restore exam session:", err);
     }
