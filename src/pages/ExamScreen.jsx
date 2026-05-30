@@ -238,18 +238,23 @@ const ExamScreen = ({
   });
 
   const [endsAtMs, setEndsAtMs] = useState(() => {
+    const savedTimeLeft = savedSession?.timeLeft;
+    if (typeof savedTimeLeft === "number" && savedTimeLeft > 0) {
+      return Date.now() + savedTimeLeft * 1000;
+    }
+
     const v = savedSession?.endsAtMs;
     return Number.isFinite(v) ? v : null;
   });
 
   const [timeLeft, setTimeLeft] = useState(() => {
-    const fromEnds = getTimeLeftFromEndsAtMs(savedSession?.endsAtMs);
-    if (typeof fromEnds === "number") return fromEnds;
-
     const savedTimeLeft = savedSession?.timeLeft;
     if (typeof savedTimeLeft === "number" && savedTimeLeft > 0) {
       return savedTimeLeft;
     }
+
+    const fromEnds = getTimeLeftFromEndsAtMs(savedSession?.endsAtMs);
+    if (typeof fromEnds === "number") return fromEnds;
 
     return 0;
   });
@@ -336,17 +341,16 @@ const ExamScreen = ({
           setAnswers(savedSession.answers);
         }
 
-        if (!Number.isFinite(savedSession.endsAtMs)) {
-          const legacyTimeLeft =
-            typeof savedSession.timeLeft === "number" &&
-            savedSession.timeLeft > 0
-              ? savedSession.timeLeft
-              : null;
-          if (legacyTimeLeft != null) {
-            const nextEndsAt = Date.now() + legacyTimeLeft * 1000;
-            setEndsAtMs(nextEndsAt);
-            setTimeLeft(legacyTimeLeft);
-          }
+        const savedTimeLeft =
+          typeof savedSession.timeLeft === "number" &&
+          savedSession.timeLeft > 0
+            ? savedSession.timeLeft
+            : null;
+        if (savedTimeLeft != null) {
+          setEndsAtMs(Date.now() + savedTimeLeft * 1000);
+          setTimeLeft(savedTimeLeft);
+        } else if (!Number.isFinite(savedSession.endsAtMs)) {
+          setEndsAtMs(null);
         }
 
         return; // session is valid, skip fresh exam setup
@@ -406,7 +410,6 @@ const ExamScreen = ({
       questions: shuffledQuestions.length ? shuffledQuestions : questions,
       answers,
       currentIndex,
-      endsAtMs,
       timeLeft: effectiveTimeLeft, // snapshot for quick restore + legacy consumers
     };
   }, [
@@ -460,6 +463,9 @@ const ExamScreen = ({
     window.addEventListener("beforeunload", onBeforeUnload);
 
     return () => {
+      if (!isSubmittingRef.current) {
+        persistExamSessionThrottled({ force: true });
+      }
       clearInterval(id);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("beforeunload", onBeforeUnload);

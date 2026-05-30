@@ -492,18 +492,17 @@ const Home = ({
                     </p>
                     <p className="text-lg lg:text-xl font-black text-blue-700 dark:text-blue-300">
                       {(() => {
-                        let timeRemaining = 0;
-                        // Prefer endsAtMs since it's a real timestamp and more accurate
-                        if (examSession.endsAtMs != null) {
-                          timeRemaining = Math.max(
+                        let secondsRemaining = 0;
+                        if (examSession.timeLeft != null) {
+                          secondsRemaining = examSession.timeLeft;
+                        } else if (examSession.endsAtMs != null) {
+                          secondsRemaining = Math.max(
                             0,
-                            examSession.endsAtMs - Date.now(),
+                            Math.ceil((examSession.endsAtMs - Date.now()) / 1000),
                           );
-                        } else if (examSession.timeLeft != null) {
-                          timeRemaining = examSession.timeLeft;
                         }
-                        const minutes = Math.floor(timeRemaining / 1000 / 60);
-                        const seconds = Math.floor((timeRemaining / 1000) % 60);
+                        const minutes = Math.floor(secondsRemaining / 60);
+                        const seconds = Math.floor(secondsRemaining % 60);
                         return `${minutes}m ${seconds}s`;
                       })()}
                     </p>
