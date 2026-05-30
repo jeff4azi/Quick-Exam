@@ -28,6 +28,10 @@ import {
   trackStudyModeClick,
 } from "../utils/analytics";
 import { loadExamSession, clearExamSession } from "../utils/examSessionStorage";
+import {
+  buildLeaderboardEntries,
+  compareLeaderboardEntries,
+} from "../utils/leaderboardRanking";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -78,35 +82,24 @@ const writeHomeDashboardCache = (userId, patch) => {
   }
 };
 
-const getWeeklyStats = (attempts, userId) => {
-  const myAttempts = attempts.filter(
-    (a) => a.user_id === userId && a.total_questions,
-  );
-  let best = null;
-  myAttempts.forEach((a) => {
-    const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
-    if (!Number.isFinite(pct)) return;
-    if (best === null || pct > best) best = pct;
+const getWeeklyStats = (attempts, userId, userUniversity) => {
+  const normalizedUserUniversity = (userUniversity ?? "").trim().toLowerCase();
+  const leaderboardAttempts = attempts.filter((attempt) => {
+    if ((attempt.type ?? "OBJ") !== "OBJ") return false;
+    if (!normalizedUserUniversity) return true;
+
+    const attemptUniversity = (attempt.university ?? "").trim().toLowerCase();
+    return attemptUniversity === normalizedUserUniversity;
   });
 
-  const byUser = new Map();
-  attempts.forEach((a) => {
-    if (!a.user_id || !a.total_questions) return;
-    const pct = (Number(a.score) / Number(a.total_questions || 1)) * 100;
-    if (!Number.isFinite(pct)) return;
-    const existing = byUser.get(a.user_id);
-    if (!existing || pct > existing.bestPercent) {
-      byUser.set(a.user_id, { bestPercent: pct });
-    }
-  });
-
-  const sorted = Array.from(byUser.entries()).sort(
-    (a, b) => b[1].bestPercent - a[1].bestPercent,
+  const sorted = buildLeaderboardEntries(leaderboardAttempts).sort(
+    compareLeaderboardEntries,
   );
-  const idx = sorted.findIndex(([id]) => id === userId);
+  const currentUserEntry = sorted.find((entry) => entry.userId === userId);
+  const idx = sorted.findIndex((entry) => entry.userId === userId);
 
   return {
-    bestScore: best !== null ? `${Math.round(best)}%` : "--",
+    bestScore: currentUserEntry ? `${currentUserEntry.bestPercent}%` : "--",
     position: idx !== -1 ? `#${idx + 1}` : "--",
   };
 };
@@ -250,7 +243,7 @@ const Home = ({
     setFavouriteIds(cachedDashboard.favouriteIds || []);
     setRecentCoursesLoading(false);
     setFavouritesLoading(false);
-  }, [cachedDashboard]);
+  }, [cachedDashboard, userProfile?.university]);
 
   useEffect(() => {
     if (isPremium) {
@@ -290,7 +283,9 @@ const Home = ({
           withTimeout(
             supabase
               .from("exam_attempts")
-              .select("user_id, score, total_questions, date_taken, is_retake")
+              .select(
+                "user_id, score, total_questions, time_taken, date_taken, is_retake, university, type",
+              )
               .eq("is_retake", false)
               .gte("date_taken", weekStartIso),
             15000,
@@ -324,7 +319,11 @@ const Home = ({
         ...DEFAULT_HOME_STATS,
         ...(weeklyResult.error || !weeklyResult.data
           ? {}
-          : getWeeklyStats(weeklyResult.data || [], user.id)),
+          : getWeeklyStats(
+              weeklyResult.data || [],
+              user.id,
+              userProfile?.university,
+            )),
         streak:
           streakResult.error || !streakResult.data
             ? 0

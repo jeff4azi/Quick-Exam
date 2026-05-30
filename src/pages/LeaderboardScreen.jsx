@@ -17,6 +17,10 @@ import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import NavBar from "../components/NavBar";
 import { useVisibilityRefresh } from "../hooks/useVisibilityRefresh";
+import {
+  buildLeaderboardEntries,
+  compareLeaderboardEntries,
+} from "../utils/leaderboardRanking";
 
 const getCurrentWeekStartIso = () => {
   const now = new Date();
@@ -240,33 +244,7 @@ const LeaderboardScreen = ({
           (a) => Number(a.total_questions) === questionCountFilter,
         );
 
-    const byUser = new Map();
-
-    filteredAttempts.forEach((attempt) => {
-      if (!attempt.user_id || !attempt.total_questions) return;
-
-      const percent =
-        (Number(attempt.score) / Number(attempt.total_questions)) * 100;
-
-      const key = attempt.user_id;
-      const existing = byUser.get(key);
-
-      if (!existing) {
-        byUser.set(key, {
-          userId: attempt.user_id,
-          bestPercent: percent,
-          attemptsCount: 1,
-          totalTime: Number(attempt.time_taken) || 0,
-          university: attempt.university?.trim() ?? null,
-        });
-      } else {
-        existing.bestPercent = Math.max(existing.bestPercent, percent);
-        existing.attemptsCount += 1;
-        existing.totalTime += Number(attempt.time_taken) || 0;
-      }
-    });
-
-    const entries = Array.from(byUser.values()).map((entry) => {
+    const entries = buildLeaderboardEntries(filteredAttempts).map((entry) => {
       const avgTimeSeconds =
         entry.attemptsCount > 0
           ? Math.round(entry.totalTime / entry.attemptsCount)
@@ -296,13 +274,7 @@ const LeaderboardScreen = ({
         ? entries
         : entries.filter((entry) => normalizeLevel(entry.year) === levelFilter);
 
-    // Sort by best score, then attempts count
-    levelFilteredEntries.sort((a, b) => {
-      if (b.bestPercent !== a.bestPercent) {
-        return b.bestPercent - a.bestPercent;
-      }
-      return b.attemptsCount - a.attemptsCount;
-    });
+    levelFilteredEntries.sort(compareLeaderboardEntries);
 
     return levelFilteredEntries;
   }, [
