@@ -1,7 +1,24 @@
 <!doctype html>
-<html lang="en">
+<html lang="en-NG">
   <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>QuizBolt | University CBT Past Questions, Flashcards & Exam Practice</title>
+    <meta
+      name="description"
+      content="QuizBolt helps students at Tai Solarin University of Education (TASUED), Lagos State University (LASU), Bamidele Olumilua University of Education, Science and Technology, Ikere-Ekiti (BOUESTI) and other supported Nigerian universities prepare for CBT exams with past questions, flashcards, answer review, retakes and leaderboards."
+    />
+    <meta
+      name="keywords"
+      content="QuizBolt, Quiz Bolt, university past questions, CBT exam practice, Nigerian university exams, TASUED past questions, Tai Solarin University of Education, LASU past questions, Lagos State University, BOUSTI past questions, BOUSTI CBT, BOUESTI past questions, Bamidele Olumilua University of Education Science and Technology Ikere-Ekiti, supported universities, objective questions, theory questions, fill in the blank questions, flashcards, exam retake, answer review, academic leaderboard, course revision, student study app, online quiz app, exam preparation Nigeria"
+    />
+    <meta name="application-name" content="QuizBolt" />
+    <meta name="author" content="QuizBolt" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://quizbolt.site/" />
+
     <link rel="icon" href="https://quizbolt.site/favicon.ico" />
     <link
       rel="icon"
@@ -16,7 +33,7 @@
       href="https://quizbolt.site/favicon-16x16.png"
     />
     <link rel="manifest" href="/manifest.webmanifest" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 
     <!-- PWA / Mobile -->
     <meta
@@ -35,36 +52,84 @@
       name="apple-mobile-web-app-status-bar-style"
       content="black-translucent"
     />
-    <meta name="apple-mobile-web-app-title" content="Quiz Bolt" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-
-    <!-- Basic Meta -->
-    <meta
-      name="description"
-      content="Quiz Bolt ⚡ – Boost your exam prep with fast, fun, and interactive quizzes! Practice past questions from your university and track your progress anytime, anywhere."
-    />
+    <meta name="apple-mobile-web-app-title" content="QuizBolt" />
 
     <!-- Open Graph / Facebook / Discord -->
-    <meta property="og:title" content="Quiz Bolt ⚡" />
+    <meta property="og:site_name" content="QuizBolt" />
+    <meta
+      property="og:title"
+      content="QuizBolt | University CBT Past Questions & Exam Practice"
+    />
     <meta
       property="og:description"
-      content="Boost your exam prep with Quiz Bolt ⚡! Practice past university questions through fast, interactive quizzes and monitor your progress."
+      content="Practice university past questions, flashcards, theory, FIB and objective CBT exams. Track progress, review answers, retake exams and compete on weekly leaderboards."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://quizbolt.site/" />
     <meta property="og:image" content="https://quizbolt.site/QuizBolt.jpg" />
+    <meta
+      property="og:image:alt"
+      content="QuizBolt exam practice dashboard for university students"
+    />
+    <meta property="og:locale" content="en_NG" />
 
-    <!-- Twitter -->
+    <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Quiz Bolt ⚡" />
+    <meta
+      name="twitter:title"
+      content="QuizBolt | CBT Past Questions & Study Tools"
+    />
     <meta
       name="twitter:description"
-      content="Boost your exam prep with Quiz Bolt ⚡! Practice past university questions with fast, interactive quizzes and track your progress."
+      content="Prepare for university CBT exams with past questions, flashcards, answer review, retakes, progress tracking and leaderboards."
     />
     <meta name="twitter:image" content="https://quizbolt.site/QuizBolt.jpg" />
-    <meta name="google-site-verification" content="qrU3UjSxoRFobRid2n7tA10OhSvD0I4B9XfRKoHtmpw" />
+    <meta
+      name="twitter:image:alt"
+      content="QuizBolt exam practice dashboard for university students"
+    />
+    <meta
+      name="google-site-verification"
+      content="qrU3UjSxoRFobRid2n7tA10OhSvD0I4B9XfRKoHtmpw"
+    />
 
-    <!-- Google Analytics – loaded here so it survives React's body render -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "QuizBolt",
+        "alternateName": "Quiz Bolt",
+        "url": "https://quizbolt.site/",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web, Android, iOS",
+        "description": "QuizBolt is a CBT exam preparation platform for students at Tai Solarin University of Education (TASUED), Lagos State University (LASU), Bamidele Olumilua University of Education, Science and Technology, Ikere-Ekiti (BOUESTI) and other supported Nigerian universities. It provides past-question practice, objective, theory and fill-in-the-blank exam modes, flashcards, answer review, retakes, bookmarks, progress tracking and weekly leaderboards.",
+        "image": "https://quizbolt.site/QuizBolt.jpg",
+        "inLanguage": "en-NG",
+        "audience": {
+          "@type": "EducationalAudience",
+          "educationalRole": "student"
+        },
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "NGN"
+        },
+        "featureList": [
+          "University past questions",
+          "Objective CBT practice",
+          "Theory exam mode",
+          "Fill-in-the-blank questions",
+          "Flashcards",
+          "Answer review",
+          "Exam retakes",
+          "Bookmarks",
+          "Progress tracking",
+          "Weekly leaderboards"
+        ]
+      }
+    </script>
+
+    <!-- Google Analytics: loaded here so it survives React's body render -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z745YX8682"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -72,11 +137,27 @@
       gtag('js', new Date());
       gtag('config', 'G-Z745YX8682', { send_page_view: false });
     </script>
-
-    <title>Quiz Bolt ⚡ – Past Questions &amp; Exam Practice</title>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <main>
+        <h1>QuizBolt University CBT Exam Practice</h1>
+        <p>
+          QuizBolt helps Nigerian university students prepare for CBT exams with
+          past questions, objective practice, theory mode, fill-in-the-blank
+          questions, flashcards, bookmarks, retakes, answer review, progress
+          tracking and weekly leaderboards for Tai Solarin University of
+          Education (TASUED), Lagos State University (LASU), Bamidele Olumilua
+          University of Education, Science and Technology, Ikere-Ekiti
+          (BOUESTI) and other supported Nigerian universities.
+        </p>
+        <p>
+          Enable JavaScript to sign in, choose your university and course, start
+          an exam, review answers and track your study progress.
+        </p>
+      </main>
+    </noscript>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

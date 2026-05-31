@@ -12,10 +12,10 @@ export default defineConfig({
       injectRegister: "script",
       devOptions: { enabled: true },
       manifest: {
-        name: "Quiz Bolt ⚡",
-        short_name: "Quiz Bolt",
+        name: "QuizBolt - University CBT Exam Practice",
+        short_name: "QuizBolt",
         description:
-          "Boost your exam prep with fast, fun, and interactive quizzes. Practice past questions and track your progress.",
+          "Practice CBT past questions for TASUED, LASU, BOUSTI/BOUESTI and other supported Nigerian universities. Use objective, theory, fill-in-the-blank and flashcard modes, then review answers and track progress.",
         start_url: "/",
         scope: "/",
         display: "standalone",
@@ -52,12 +52,12 @@ export default defineConfig({
         navigateFallbackDenylist: [/^\/api/, /supabase/],
         runtimeCaching: [
           {
-            // Supabase API — network only, never cache
+            // Supabase API: network only, never cache
             urlPattern: /supabase\.co/,
             handler: "NetworkOnly",
           },
           {
-            // Images — cache first
+            // Images: cache first
             urlPattern: /\.(?:png|jpg|jpeg|webp|svg|ico)$/,
             handler: "CacheFirst",
             options: {
@@ -66,7 +66,7 @@ export default defineConfig({
             },
           },
           {
-            // JS/CSS — stale while revalidate
+            // JS/CSS: stale while revalidate
             urlPattern: /\.(?:js|css)$/,
             handler: "StaleWhileRevalidate",
             options: { cacheName: "quizbolt-assets" },
