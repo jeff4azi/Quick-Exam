@@ -43,6 +43,7 @@ import MatchResultScreen from "./pages/MatchResultScreen";
 import TestModeScreen from "./pages/TestModeScreen";
 import TestResultScreen from "./pages/TestResultScreen";
 import ReferralDashboard from "./pages/ReferralDashboard";
+import RouteStateFallback from "./components/RouteStateFallback";
 
 function App() {
   const REFERRAL_STORAGE_KEY = "quizbolt_referral_code";
@@ -612,6 +613,16 @@ function App() {
     </DesktopLayout>
   );
 
+  const hasActiveExamState =
+    Boolean(selectedCourse) &&
+    (questionsLoading ||
+      (questions.length > 0 &&
+        questionsContext?.courseId === selectedCourse?.id &&
+        questionsContext?.questionType === questionType));
+
+  const hasResultState =
+    Boolean(selectedCourse) && questions.length > 0 && results.answered > 0;
+
   return (
     <Router>
       <RouteChangeTracker />
@@ -742,26 +753,35 @@ function App() {
             <Route
               path="/exam"
               element={
-                <ProtectedRoute
-                  stateCheck={
-                    Boolean(selectedCourse) &&
-                    (questionsLoading ||
-                      (questions.length > 0 &&
-                        questionsContext?.courseId === selectedCourse?.id &&
-                        questionsContext?.questionType === questionType))
-                  }
-                >
-                  {withDesktop(<ExamScreen {...props} />)}
+                <ProtectedRoute>
+                  {withDesktop(
+                    hasActiveExamState ? (
+                      <ExamScreen {...props} />
+                    ) : (
+                      <RouteStateFallback
+                        title="No exam in progress"
+                        message="Choose a course first so QuizBolt can prepare the right questions for you."
+                      />
+                    ),
+                  )}
                 </ProtectedRoute>
               }
             />
 
-            {/* FIX: Results route checks results.answered, which handleExamSubmit updates */}
             <Route
               path="/results"
               element={
-                <ProtectedRoute stateCheck={results.answered > 0}>
-                  {withDesktop(<ResultScreen {...props} />)}
+                <ProtectedRoute>
+                  {withDesktop(
+                    hasResultState ? (
+                      <ResultScreen {...props} />
+                    ) : (
+                      <RouteStateFallback
+                        title="No result available"
+                        message="Submit an exam first, then your score and review options will appear here."
+                      />
+                    ),
+                  )}
                 </ProtectedRoute>
               }
             />
