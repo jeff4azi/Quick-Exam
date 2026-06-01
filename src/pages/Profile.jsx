@@ -183,8 +183,12 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
       value: formData.department || "General Studies",
     },
     {
-      key: "college",
-      label: "College",
+      key: ["TASUED", "BOUESTI"].includes(userProfile?.university)
+        ? "College"
+        : "Faculty",
+      label: ["TASUED", "BOUESTI"].includes(userProfile?.university)
+        ? "College"
+        : "Faculty",
       icon: FiShield,
       editable: false,
       value: userProfile?.college || "TASUED",
