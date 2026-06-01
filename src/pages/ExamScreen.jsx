@@ -191,10 +191,13 @@ const getOptionPlainLength = (option) => {
   return text.replace(/\$[^$]*\$/g, " ").replace(/\s+/g, " ").trim().length;
 };
 
-const getOptionTextSizeClass = (option) => {
+const getOptionTextSizeClass = (option, isDesktopViewport = false) => {
   const len = getOptionPlainLength(option);
-  if (len >= 120) return "text-xs leading-snug";
-  if (len >= 72) return "text-sm leading-snug";
+  const compactLimit = isDesktopViewport ? 100 : 60;
+  const relaxedLimit = isDesktopViewport ? 72 : 45;
+
+  if (len >= compactLimit) return "text-xs leading-snug";
+  if (len >= relaxedLimit) return "text-sm leading-snug";
   return "";
 };
 
@@ -228,6 +231,10 @@ const ExamScreen = ({
   const navigate = useNavigate();
 
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
+  const [isDesktopViewport, setIsDesktopViewport] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia("(min-width: 1024px)").matches;
+  });
 
   const savedSession = useMemo(() => loadExamSession(), []);
 
@@ -285,6 +292,17 @@ const ExamScreen = ({
       vv.removeEventListener("resize", handler);
       vv.removeEventListener("scroll", handler);
     };
+  }, []);
+
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 1024px)");
+    const handleChange = (event) => {
+      setIsDesktopViewport(event.matches);
+    };
+
+    setIsDesktopViewport(desktopQuery.matches);
+    desktopQuery.addEventListener("change", handleChange);
+    return () => desktopQuery.removeEventListener("change", handleChange);
   }, []);
 
   const hasMatchingQuestions =
@@ -854,7 +872,10 @@ const ExamScreen = ({
                 (currentQuestion?.options ?? []).map((option, index) => {
                   const isSelected = selectedOption === option;
                   const label = String.fromCharCode(65 + index);
-                  const optionSizeClass = getOptionTextSizeClass(option);
+                  const optionSizeClass = getOptionTextSizeClass(
+                    option,
+                    isDesktopViewport,
+                  );
 
                   return (
                     <button
