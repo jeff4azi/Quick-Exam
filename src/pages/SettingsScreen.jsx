@@ -104,7 +104,6 @@ const SettingsScreen = ({
   toggleAutoAdvance,
   showPagination,
   toggleShowPagination,
-  deleteImage,
 }) => {
   const navigate = useNavigate();
   const [isDeleteOverlayOpen, setDeleteOverlayOpen] = useState(false);
@@ -116,10 +115,6 @@ const SettingsScreen = ({
 
     try {
       setIsDeleting(true);
-
-      if (userProfile?.avatar_public_id) {
-        await deleteImage(userProfile.avatar_public_id);
-      }
 
       const {
         data: { session },
@@ -149,6 +144,9 @@ const SettingsScreen = ({
       navigate("/login");
     } catch (err) {
       console.error("Delete account failed:", err.message);
+      window.alert(
+        err.message || "We couldn't delete your account. Please try again.",
+      );
     } finally {
       setIsDeleting(false);
     }
