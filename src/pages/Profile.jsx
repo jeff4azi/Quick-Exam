@@ -11,8 +11,13 @@ import {
   FiShield,
   FiUser,
 } from "react-icons/fi";
-import { FaCrown } from "react-icons/fa";
+import { FaCrown, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
 import Avatar from "../components/Avatar";
+import whatsappChannelIcon from "../images/whatsappchannelicon.png";
+import {
+  getWhatsAppCommunityUrl,
+  WHATSAPP_CHANNEL_URL,
+} from "../components/WhatsAppCard";
 import { supabase } from "../supabaseClient";
 
 const formatLevel = (year) => {
@@ -23,6 +28,7 @@ const formatLevel = (year) => {
 
 const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
   const navigate = useNavigate();
+  const telegramGroupUrl = "";
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [premiumAccess, setPremiumAccess] = useState(null);
@@ -192,6 +198,39 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
     },
   ];
 
+  const communityRows = [
+    {
+      key: "whatsapp-group",
+      label: "WhatsApp Group",
+      description: `${userProfile?.university || "QuizBolt"} community`,
+      icon: FaWhatsapp,
+      href: getWhatsAppCommunityUrl(userProfile?.university),
+      tone: "green",
+    },
+    {
+      key: "whatsapp-channel",
+      label: "WhatsApp Channel",
+      description: "QuizBolt updates",
+      image: whatsappChannelIcon,
+      href: WHATSAPP_CHANNEL_URL,
+      tone: "green",
+    },
+    {
+      key: "telegram-group",
+      label: "Telegram Group",
+      description: "Coming soon",
+      icon: FaTelegramPlane,
+      href: telegramGroupUrl,
+      tone: "sky",
+    },
+  ];
+
+  const toneClasses = {
+    green: "bg-green-50 text-green-600 dark:bg-green-900/20 dark:text-green-300",
+    blue: "bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-300",
+    sky: "bg-sky-50 text-sky-600 dark:bg-sky-900/20 dark:text-sky-300",
+  };
+
   return (
     <div className="min-h-[100dvh] bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
       <header className="sticky top-0 z-40 border-b border-slate-200/70 dark:border-slate-800 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl">
@@ -306,71 +345,149 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
             </div>
           </aside>
 
-          <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
-            <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-5 py-4">
-              <div>
-                <h3 className="font-black">Profile details</h3>
+          <div className="space-y-6">
+            <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 px-5 py-4">
+                <div>
+                  <h3 className="font-black">Profile details</h3>
+                  <p className="text-xs font-semibold text-slate-400">
+                    Keep your public exam identity accurate.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  disabled={isSaving}
+                  onClick={isEditing ? handleSave : () => setIsEditing(true)}
+                  className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-black text-white transition-all active:scale-95 ${
+                    isSaving
+                      ? "bg-green-600/80"
+                      : isEditing
+                        ? "bg-green-600 hover:bg-green-700"
+                        : "bg-blue-600 hover:bg-blue-700"
+                  }`}
+                >
+                  {isSaving ? (
+                    <FiLoader className="animate-spin" />
+                  ) : isEditing ? (
+                    <FiCheck />
+                  ) : (
+                    <FiEdit2 />
+                  )}
+                  {isSaving ? "Saving" : isEditing ? "Save" : "Edit"}
+                </button>
+              </div>
+
+              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                {fieldRows.map(
+                  ({ key, label, icon: Icon, editable, value, placeholder }) => (
+                    <div
+                      key={key}
+                      className="grid gap-3 px-5 py-4 sm:grid-cols-[180px_1fr] sm:items-center"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="size-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-300">
+                          <Icon />
+                        </span>
+                        <span className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
+                          {label}
+                        </span>
+                      </div>
+
+                      {isEditing && editable ? (
+                        <input
+                          type="text"
+                          value={formData[key]}
+                          onChange={(e) =>
+                            setFormData({ ...formData, [key]: e.target.value })
+                          }
+                          className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
+                          placeholder={placeholder}
+                        />
+                      ) : (
+                        <p className="min-w-0 truncate text-base font-bold text-slate-800 dark:text-slate-100">
+                          {value}
+                        </p>
+                      )}
+                    </div>
+                  )
+                )}
+              </div>
+            </section>
+
+            <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+              <div className="border-b border-slate-100 dark:border-slate-800 px-5 py-4">
+                <h3 className="font-black">Communities</h3>
                 <p className="text-xs font-semibold text-slate-400">
-                  Keep your public exam identity accurate.
+                  Join QuizBolt student spaces.
                 </p>
               </div>
-              <button
-                type="button"
-                disabled={isSaving}
-                onClick={isEditing ? handleSave : () => setIsEditing(true)}
-                className={`inline-flex items-center gap-2 rounded-2xl px-4 py-2.5 text-sm font-black text-white transition-all active:scale-95 ${
-                  isSaving
-                    ? "bg-green-600/80"
-                    : isEditing
-                      ? "bg-green-600 hover:bg-green-700"
-                      : "bg-blue-600 hover:bg-blue-700"
-                }`}
-              >
-                {isSaving ? (
-                  <FiLoader className="animate-spin" />
-                ) : isEditing ? (
-                  <FiCheck />
-                ) : (
-                  <FiEdit2 />
+
+              <div className="grid gap-3 p-5 sm:grid-cols-3">
+                {communityRows.map(
+                  ({
+                    key,
+                    label,
+                    description,
+                    icon: Icon,
+                    image,
+                    href,
+                    tone,
+                  }) => {
+                    const content = (
+                      <>
+                        <span
+                          className={`size-10 rounded-2xl flex items-center justify-center ${toneClasses[tone]}`}
+                        >
+                          {image ? (
+                            <img
+                              src={image}
+                              alt=""
+                              className="size-4.5 object-contain"
+                            />
+                          ) : (
+                            <Icon size={19} />
+                          )}
+                        </span>
+                        <span className="min-w-0 text-left">
+                          <span className="block truncate text-sm font-black text-slate-900 dark:text-white">
+                            {label}
+                          </span>
+                          <span className="block truncate text-xs font-semibold text-slate-400">
+                            {description}
+                          </span>
+                        </span>
+                      </>
+                    );
+
+                    if (!href) {
+                      return (
+                        <button
+                          key={key}
+                          type="button"
+                          disabled
+                          className="flex min-h-20 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 opacity-70 dark:border-slate-800 dark:bg-slate-800/50"
+                        >
+                          {content}
+                        </button>
+                      );
+                    }
+
+                    return (
+                      <a
+                        key={key}
+                        href={href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex min-h-20 items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 transition hover:border-blue-200 hover:bg-white active:scale-[0.98] dark:border-slate-800 dark:bg-slate-800/50 dark:hover:border-slate-700 dark:hover:bg-slate-800"
+                      >
+                        {content}
+                      </a>
+                    );
+                  },
                 )}
-                {isSaving ? "Saving" : isEditing ? "Save" : "Edit"}
-              </button>
-            </div>
-
-            <div className="divide-y divide-slate-100 dark:divide-slate-800">
-              {fieldRows.map(({ key, label, icon: Icon, editable, value, placeholder }) => (
-                <div
-                  key={key}
-                  className="grid gap-3 px-5 py-4 sm:grid-cols-[180px_1fr] sm:items-center"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="size-9 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-300">
-                      <Icon />
-                    </span>
-                    <span className="text-xs font-black uppercase tracking-[0.16em] text-slate-400">
-                      {label}
-                    </span>
-                  </div>
-
-                  {isEditing && editable ? (
-                    <input
-                      type="text"
-                      value={formData[key]}
-                      onChange={(e) =>
-                        setFormData({ ...formData, [key]: e.target.value })
-                      }
-                      className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-bold text-slate-900 outline-none transition focus:border-blue-500 focus:ring-4 focus:ring-blue-600/10 dark:border-slate-700 dark:bg-slate-800 dark:text-white"
-                      placeholder={placeholder}
-                    />
-                  ) : (
-                    <p className="min-w-0 truncate text-base font-bold text-slate-800 dark:text-slate-100">
-                      {value}
-                    </p>
-                  )}
-                </div>
-              ))}
-            </div>
-          </section>
+              </div>
+            </section>
+          </div>
         </section>
       </main>
     </div>

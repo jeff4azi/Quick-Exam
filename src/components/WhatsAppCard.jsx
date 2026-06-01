@@ -5,6 +5,19 @@ import { FiX } from "react-icons/fi";
 const WHATSAPP_CARD_HIDE_UNTIL_KEY = "whatsAppCardHideUntil";
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+export const WHATSAPP_UNIVERSITY_GROUPS = {
+  tasued: "https://chat.whatsapp.com/FMPmsBbwU9kL6t2vJ6C8qq",
+  lasu: "https://chat.whatsapp.com/BzjyLkZ25ws61XSjcEx1vb",
+  bouesti: "https://chat.whatsapp.com/Ciw58Fdv32K4SFYfaVAdR2",
+};
+
+export const WHATSAPP_CHANNEL_URL =
+  "https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f";
+
+export const getWhatsAppCommunityUrl = (university) =>
+  WHATSAPP_UNIVERSITY_GROUPS[university?.trim().toLowerCase()] ||
+  WHATSAPP_CHANNEL_URL;
+
 const WhatsAppCard = ({ university }) => {
   const [visible, setVisible] = useState(false);
   const [show, setShow] = useState(() => {
@@ -12,15 +25,7 @@ const WhatsAppCard = ({ university }) => {
     return !hideUntil || Date.now() >= hideUntil;
   });
 
-  const universityGroups = {
-    tasued: "https://chat.whatsapp.com/FMPmsBbwU9kL6t2vJ6C8qq",
-    lasu: "https://chat.whatsapp.com/BzjyLkZ25ws61XSjcEx1vb",
-    bouesti: "https://chat.whatsapp.com/Ciw58Fdv32K4SFYfaVAdR2",
-  };
-  const defaultCommunityUrl =
-    "https://whatsapp.com/channel/0029Vb6t7rnKrWQx4oL6m31f";
-  const communityUrl =
-    universityGroups[university?.trim().toLowerCase()] || defaultCommunityUrl;
+  const communityUrl = getWhatsAppCommunityUrl(university);
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 3000);
