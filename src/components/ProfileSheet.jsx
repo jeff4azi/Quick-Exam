@@ -38,7 +38,7 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
         <div className="px-8 pb-12 max-h-[80vh]">
           {/* User Info Section */}
           <div className="flex items-center gap-5 mb-8">
-            <div className="relative">
+            <div className="relative shrink-0">
               <button
                 onClick={() => {
                   setIsImageOverlayOpen(true);
