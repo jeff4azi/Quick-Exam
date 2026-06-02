@@ -85,7 +85,7 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
   const handleGetCode = () => {
     const phoneNumber = "2347015585397"; // Your WhatsApp number here
     const message = encodeURIComponent(
-      `Hello, I just paid ₦${price} for QuizBolt Premium.\n\nName: ${userProfile.full_name}\nUniversity: ${userProfile.university}\n\nHere is my receipt:`,
+      `Hello, I just paid ₦${price} for QuizBolt Premium.\n\nUser Name: ${userProfile.user_name}\nUniversity: ${userProfile.university}\n\nHere is my receipt:`,
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
   };
