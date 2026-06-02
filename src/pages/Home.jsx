@@ -13,8 +13,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { FreeMode } from "swiper/modules";
 
-import { FaCrown, FaFire, FaTrophy } from "react-icons/fa";
-import { FiZap, FiPlay, FiX } from "react-icons/fi";
+import { FaCrown, FaFire, FaTrophy, FaUserFriends } from "react-icons/fa";
+import { FiArrowRight, FiZap, FiPlay, FiX } from "react-icons/fi";
 import { MdStar } from "react-icons/md";
 import {
   loadFavouriteCourseIds,
@@ -143,10 +143,11 @@ const formatRecentCourses = (attempts) =>
 const Home = ({
   userProfile,
   loadingProfile,
-  isPremium,
+  /* isPremium, */
   courses,
   setQuestionType,
 }) => {
+  const isPremium = false;
   const navigate = useNavigate();
   const cachedDashboard = useMemo(
     () => readHomeDashboardCache(userProfile?.id),
@@ -351,7 +352,7 @@ const Home = ({
       setRecentCoursesLoading(false);
       setFavouritesLoading(false);
     }
-  }, [cachedDashboard]);
+  }, [cachedDashboard, userProfile?.university]);
 
   useEffect(() => {
     fetchHomeDashboard();
@@ -497,7 +498,9 @@ const Home = ({
                         } else if (examSession.endsAtMs != null) {
                           secondsRemaining = Math.max(
                             0,
-                            Math.ceil((examSession.endsAtMs - Date.now()) / 1000),
+                            Math.ceil(
+                              (examSession.endsAtMs - Date.now()) / 1000,
+                            ),
                           );
                         }
                         const minutes = Math.floor(secondsRemaining / 60);
@@ -599,7 +602,7 @@ const Home = ({
                     Go Premium
                   </h4>
                   <p className="text-blue-100 text-[11px] font-medium">
-                    Unlock Unlimited Questions & No Interruptions
+                    Unlock Unlimited Questions & Remove all Ads
                   </p>
                 </div>
               </div>
@@ -660,6 +663,38 @@ const Home = ({
             </button>
           ))}
         </div>
+
+        {/* Referral CTA */}
+        {!isPremium && (
+          <button
+            type="button"
+            onClick={() => navigate("/referral-dashboard")}
+            className="group relative overflow-hidden rounded-[1.75rem] border border-emerald-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] dark:border-emerald-500/20 dark:bg-slate-800/70"
+          >
+            <div className="absolute right-0 top-0 h-full w-28 bg-emerald-100/70 dark:bg-emerald-400/10" />
+            <div className="relative z-10 flex items-center justify-between gap-4">
+              <div className="flex min-w-0 items-center gap-3">
+                <div className="size-12 shrink-0 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center dark:bg-emerald-400/15 dark:text-emerald-300">
+                  <FaUserFriends className="text-xl" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[11px] font-black uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-300">
+                    Free premium offer
+                  </p>
+                  <h4 className="mt-1 text-base font-black leading-tight text-slate-900 dark:text-white">
+                    Refer 5 friends. Get 7 days free Premium.
+                  </h4>
+                  <p className="mt-1 text-xs font-semibold text-slate-500 dark:text-slate-400">
+                    Track invites and share your referral link.
+                  </p>
+                </div>
+              </div>
+              <div className="size-10 shrink-0 rounded-2xl bg-slate-900 text-white flex items-center justify-center transition-transform group-hover:translate-x-1 dark:bg-white dark:text-slate-900">
+                <FiArrowRight size={18} />
+              </div>
+            </div>
+          </button>
+        )}
 
         {/* FeedBolt CTA */}
         <FeedBoltBanner />

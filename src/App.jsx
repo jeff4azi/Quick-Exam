@@ -723,7 +723,7 @@ function App() {
               path="/referral-dashboard"
               element={
                 <ProtectedRoute>
-                  {withDesktop(<ReferralDashboard />)}
+                  {withDesktop(<ReferralDashboard isPremium={isPremium} />)}
                 </ProtectedRoute>
               }
             />

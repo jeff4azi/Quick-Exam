@@ -20,7 +20,7 @@ const formatShortDate = (dateValue) => {
   }
 };
 
-const ReferralDashboard = () => {
+const ReferralDashboard = ({isPremium}) => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
 
@@ -143,6 +143,17 @@ const ReferralDashboard = () => {
         <div className="flex items-center gap-3 rounded-2xl bg-white px-5 py-4 text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-200">
           <FiLoader className="animate-spin text-blue-600 dark:text-blue-400" />
           <span className="text-sm font-semibold">Loading referral dashboard...</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (isPremium) {
+    return (
+      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500">
+        <div className="flex items-center gap-3 rounded-2xl bg-white px-5 py-4 text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-200">
+          <FiCheckCircle className="text-emerald-500 dark:text-emerald-300" />
+          <span className="text-sm font-semibold">You have already unlocked premium. Enjoy!</span>
         </div>
       </div>
     );
