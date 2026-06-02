@@ -143,11 +143,10 @@ const formatRecentCourses = (attempts) =>
 const Home = ({
   userProfile,
   loadingProfile,
-  /* isPremium, */
+  isPremium,
   courses,
   setQuestionType,
 }) => {
-  const isPremium = false;
   const navigate = useNavigate();
   const cachedDashboard = useMemo(
     () => readHomeDashboardCache(userProfile?.id),
