@@ -290,7 +290,7 @@ function App() {
       listener.subscription.unsubscribe();
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [loadProfileAndCourses]);
 
   useEffect(() => {
     if (sessionRestoredRef.current) return;
