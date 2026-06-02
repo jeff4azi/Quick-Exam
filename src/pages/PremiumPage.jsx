@@ -47,28 +47,29 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
       const token = session.access_token;
 
       // 🔥 STEP 3: Call backend
-      const response = await fetch(
-        `${API_BASE_URL}/api/premium/redeem`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            code: premiumCode.trim(),
-          }),
+      const response = await fetch(`${API_BASE_URL}/api/premium/redeem`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+        body: JSON.stringify({
+          code: premiumCode.trim(),
+        }),
+      });
 
       const result = await response.json();
+      // PremiumPage.jsx — around line 64, after getting result
+      const message =
+        result.message ||
+        result.error ||
+        "Something went wrong. Please try again.";
 
-      // 🔥 STEP 4: Handle backend result
       if (result.success) {
-        setStatus({ type: "success", message: result.message });
+        setStatus({ type: "success", message });
         onActivatePremium?.();
       } else {
-        setStatus({ type: "error", message: result.message });
+        setStatus({ type: "error", message });
       }
     } catch (err) {
       setStatus({
