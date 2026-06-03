@@ -179,8 +179,9 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
 
   /* ----------------------- INSIGHTS: top + worst course ------------------- */
   const courseInsights = useMemo(() => {
+    const filtered = historyData.filter((h) => !h.is_retake);
     const map = {};
-    historyData.forEach((h) => {
+    filtered.forEach((h) => {
       if (!h.course_id || !h.total_questions) return;
       const pct = (Number(h.score) / Number(h.total_questions)) * 100;
       if (!map[h.course_id]) map[h.course_id] = { total: 0, count: 0 };
@@ -201,11 +202,12 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
 
   /* ----------------------- MODE SPLIT ------------------------------------- */
   const modeSplit = useMemo(() => {
+    const filtered = historyData.filter((h) => !h.is_retake);
     const counts = { OBJ: 0, FIB: 0, THY: 0 };
-    historyData.forEach((h) => {
+    filtered.forEach((h) => {
       if (h.type && counts[h.type] !== undefined) counts[h.type]++;
     });
-    const total = historyData.length || 1;
+    const total = filtered.length || 1;
     return {
       obj: Math.round((counts.OBJ / total) * 100),
       fib: Math.round((counts.FIB / total) * 100),
@@ -216,6 +218,7 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
   /* ----------------------- CHART DATA (last 15) ---------------------------- */
   const chartData = useMemo(() => {
     return [...historyData]
+      .filter((h) => !h.is_retake)
       .slice(0, 15)
       .reverse()
       .map((h, i) => ({
@@ -456,12 +459,26 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                           stroke="#1D9E75"
                           strokeDasharray="5 4"
                           strokeWidth={1.5}
+                          label={{
+                            value: "Pass",
+                            position: "insideTopRight",
+                            fontSize: 10,
+                            fill: "#1D9E75",
+                            fontWeight: 700,
+                          }}
                         />
                         <ReferenceLine
                           y={Math.round(avgScore)}
                           stroke="#8B5CF6"
                           strokeDasharray="4 6"
                           strokeWidth={1}
+                          label={{
+                            value: `Avg ${Math.round(avgScore)}%`,
+                            position: "insideTopRight",
+                            fontSize: 10,
+                            fill: "#8B5CF6",
+                            fontWeight: 700,
+                          }}
                         />
                         <Line
                           type="monotone"
