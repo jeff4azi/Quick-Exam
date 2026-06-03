@@ -750,7 +750,7 @@ const Home = ({
               {recentCourses.map((item) => (
                 <SwiperSlide
                   key={`${item.id}-${item.date}`}
-                  className="!w-[200px] sm:!w-64"
+                  className="!w-[200px] sm:!w-56 lg:!w-44 xl:!w-56"
                 >
                   <button
                     type="button"
@@ -854,7 +854,7 @@ const Home = ({
               {favouriteCourses.map((course) => (
                 <SwiperSlide
                   key={course._favouriteKey}
-                  className="!w-[200px] sm:!w-64"
+                  className="!w-[200px] sm:!w-56 lg:!w-44 xl:!w-56"
                 >
                   <button
                     type="button"
