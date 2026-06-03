@@ -23,6 +23,10 @@ import { FcGoogle } from "react-icons/fc";
 import { FiCheckCircle, FiShuffle, FiZap } from "react-icons/fi";
 import { supabase } from "../supabaseClient";
 import { useUniversities } from "../hooks/useUniversities";
+import {
+  buildLeaderboardEntries,
+  compareLeaderboardEntries,
+} from "../utils/leaderboardRanking";
 
 const PREMIUM_FEATURES = [
   { icon: <FiZap />, text: "Unlimited Questions in Every Exam" },
@@ -76,53 +80,49 @@ const LandingPage = () => {
 
   const fetchGlobalLeaderboard = useCallback(async () => {
     try {
+      // Only today's attempts
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+
       const { data: attemptsData, error } = await supabase
         .from("exam_attempts")
-        .select("user_id, score, total_questions, date_taken")
-        .eq("is_retake", false);
+        .select(
+          "user_id, score, total_questions, time_taken, date_taken, university",
+        )
+        .eq("is_retake", false)
+        .eq("type", "OBJ")
+        .gte("date_taken", todayStart.toISOString());
+
       if (error) throw error;
 
-      const userBestMap = new Map();
-      attemptsData.forEach((att) => {
-        const percent = Math.round((att.score / att.total_questions) * 100);
-        const existing = userBestMap.get(att.user_id);
-        if (!existing || percent > existing.score)
-          userBestMap.set(att.user_id, {
-            score: percent,
-            date: att.date_taken,
-          });
-      });
+      const entries = buildLeaderboardEntries(attemptsData || [])
+        .sort(compareLeaderboardEntries)
+        .slice(0, 5);
 
-      const topUserIds = Array.from(userBestMap.keys());
+      const topUserIds = entries.map((e) => e.userId);
+
       const { data: profilesData } = await supabase
         .from("profiles")
         .select("id, full_name, user_name, university")
         .in("id", topUserIds);
 
       const profileMap = {};
-      profilesData?.forEach(
-        (p) =>
-          (profileMap[p.id] = {
-            name: p.user_name || p.full_name,
-            university: p.university || "—",
-          }),
+      profilesData?.forEach((p) => {
+        profileMap[p.id] = {
+          name: p.user_name || p.full_name || "Scholar",
+          university: p.university?.trim() || "—",
+        };
+      });
+
+      setTopPlayers(
+        entries.map((entry, i) => ({
+          rank: i + 1,
+          name: profileMap[entry.userId]?.name || "Scholar",
+          university:
+            profileMap[entry.userId]?.university || entry.university || "—",
+          score: entry.bestPercent,
+        })),
       );
-
-      const formatted = Array.from(userBestMap.entries())
-        .map(([userId, data]) => ({
-          name: profileMap[userId]?.name || "Scholar",
-          university: profileMap[userId]?.university || "—",
-          score: data.score,
-          date: new Date(data.date).toLocaleDateString("en-US", {
-            month: "short",
-            day: "numeric",
-          }),
-        }))
-        .sort((a, b) => b.score - a.score)
-        .slice(0, 5)
-        .map((p, i) => ({ rank: i + 1, ...p }));
-
-      setTopPlayers(formatted);
     } catch (err) {
       console.error("Error fetching leaderboard:", err);
     }
@@ -496,48 +496,57 @@ const LandingPage = () => {
             </p>
           </div>
           <div className="bg-white dark:bg-gray-900 rounded-[2.5rem] shadow-xl border border-slate-100 dark:border-gray-800 overflow-hidden">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-50 dark:bg-gray-800/50">
-                  {["Rank", "Username", "Score", "Date", "University"].map(
-                    (h) => (
+            {topPlayers.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-16 text-center px-6">
+                <div className="size-14 bg-slate-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center mb-4">
+                  <FaTrophy className="text-slate-300 dark:text-gray-600 text-2xl" />
+                </div>
+                <p className="font-black text-slate-700 dark:text-gray-200 text-base">
+                  No activity yet today
+                </p>
+                <p className="text-sm text-slate-400 dark:text-gray-500 mt-1 font-medium">
+                  Be the first to take an exam and claim the top spot.
+                </p>
+              </div>
+            ) : (
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50 dark:bg-gray-800/50">
+                    {["Rank", "Username", "Score", "University"].map((h) => (
                       <th
                         key={h}
                         className="px-6 py-4 text-[10px] font-black uppercase tracking-widest text-slate-400"
                       >
                         {h}
                       </th>
-                    ),
-                  )}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-50 dark:divide-gray-800">
-                {topPlayers.map((p) => (
-                  <tr
-                    key={p.rank}
-                    className="hover:bg-blue-50/30 dark:hover:bg-blue-900/5 transition-colors"
-                  >
-                    <td className="px-6 py-4">
-                      <span
-                        className={`size-8 flex items-center justify-center rounded-full font-black text-sm ${p.rank === 1 ? "bg-amber-100 text-amber-600" : p.rank === 2 ? "bg-slate-100 text-slate-600" : p.rank === 3 ? "bg-orange-100 text-orange-600" : "text-slate-400"}`}
-                      >
-                        {p.rank}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 font-bold">{p.name}</td>
-                    <td className="px-6 py-4 font-black text-blue-600 dark:text-blue-400">
-                      {p.score}%
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-400 font-medium">
-                      {p.date}
-                    </td>
-                    <td className="px-6 py-4 text-sm text-slate-400 font-medium">
-                      {p.university}
-                    </td>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-50 dark:divide-gray-800">
+                  {topPlayers.map((p) => (
+                    <tr
+                      key={p.rank}
+                      className="hover:bg-blue-50/30 dark:hover:bg-blue-900/5 transition-colors"
+                    >
+                      <td className="px-6 py-4">
+                        <span
+                          className={`size-8 flex items-center justify-center rounded-full font-black text-sm ${p.rank === 1 ? "bg-amber-100 text-amber-600" : p.rank === 2 ? "bg-slate-100 text-slate-600" : p.rank === 3 ? "bg-orange-100 text-orange-600" : "text-slate-400"}`}
+                        >
+                          {p.rank}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 font-bold">{p.name}</td>
+                      <td className="px-6 py-4 font-black text-blue-600 dark:text-blue-400">
+                        {p.score}%
+                      </td>
+                      <td className="px-6 py-4 text-sm text-slate-400 font-medium">
+                        {p.university}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       </section>
