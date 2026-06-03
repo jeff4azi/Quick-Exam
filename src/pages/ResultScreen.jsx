@@ -34,6 +34,7 @@ const ResultScreen = ({
   setAnswers,
   setHasRetaken,
   selectedCourse,
+  setSelectedCourse,
   userProfile,
   isPremium,
   questionType,
@@ -260,7 +261,10 @@ const ResultScreen = ({
         <ActionButton
           label="Home"
           color="bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
-          onClick={() => navigate("/")}
+          onClick={() => {
+            setSelectedCourse(null);
+            navigate("/")
+          }}
           icon={
             <path
               strokeLinecap="round"
