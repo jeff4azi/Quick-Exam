@@ -11,7 +11,7 @@ import {
   FiShield,
   FiUser,
 } from "react-icons/fi";
-import { FaCrown, FaTelegramPlane, FaWhatsapp } from "react-icons/fa";
+import { FaCrown, FaTelegramPlane, FaWhatsapp, FaCamera } from "react-icons/fa";
 import Avatar from "../components/Avatar";
 import whatsappChannelIcon from "../images/whatsappchannelicon.png";
 import {
@@ -284,8 +284,8 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
                     <FaCrown className="text-sm text-white" />
                   </span>
                 )}
-                <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-slate-950 px-3 py-1 text-[10px] font-bold text-white opacity-0 transition-opacity group-hover:opacity-100">
-                  Change photo
+                <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-slate-950 px-3 py-1 text-[10px] font-bold text-white transition-opacity border border-transparent group-hover:border-white/70">
+                  <FaCamera size={12} className="inline-block mr-1" /> Change photo
                 </span>
               </button>
 
