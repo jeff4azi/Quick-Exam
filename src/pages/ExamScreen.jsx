@@ -191,13 +191,17 @@ const getOptionPlainLength = (option) => {
   return text.replace(/\$[^$]*\$/g, " ").replace(/\s+/g, " ").trim().length;
 };
 
-const getOptionTextSizeClass = (option, isDesktopViewport = false) => {
+const getOptionTextSizeClass = (option, viewportTier = "mobile") => {
   const len = getOptionPlainLength(option);
-  const compactLimit = isDesktopViewport ? 100 : 60;
-  const relaxedLimit = isDesktopViewport ? 72 : 45;
+  const limits = {
+    mobile:  { compact: 60,  relaxed: 45 },
+    tablet:  { compact: 100,  relaxed: 72 },
+    desktop: { compact: 120, relaxed: 92 },
+  };
+  const { compact, relaxed } = limits[viewportTier] ?? limits.mobile;
 
-  if (len >= compactLimit) return "text-xs leading-snug";
-  if (len >= relaxedLimit) return "text-sm leading-snug";
+  if (len >= compact) return "text-xs leading-snug";
+  if (len >= relaxed) return "text-sm leading-snug";
   return "";
 };
 
@@ -231,10 +235,13 @@ const ExamScreen = ({
   const navigate = useNavigate();
 
   const [shuffledQuestions, setShuffledQuestions] = useState([]);
-  const [isDesktopViewport, setIsDesktopViewport] = useState(() => {
-    if (typeof window === "undefined") return false;
-    return window.matchMedia("(min-width: 1024px)").matches;
-  });
+  const getViewportTier = () => {
+    if (typeof window === "undefined") return "mobile";
+    if (window.matchMedia("(min-width: 1024px)").matches) return "desktop";
+    if (window.matchMedia("(min-width: 640px)").matches) return "tablet";
+    return "mobile";
+  };
+  const [viewportTier, setViewportTier] = useState(getViewportTier);
 
   const savedSession = useMemo(() => loadExamSession(), []);
 
@@ -295,12 +302,12 @@ const ExamScreen = ({
   }, []);
 
   useEffect(() => {
-    const desktopQuery = window.matchMedia("(min-width: 1024px)");
-    const handleChange = (event) => {
-      setIsDesktopViewport(event.matches);
-    };
+    const desktopQuery = window.matchMedia(
+      "(min-width: 640px), (min-width: 1024px)",
+    );
+    const handleChange = () => setViewportTier(getViewportTier());
 
-    setIsDesktopViewport(desktopQuery.matches);
+    setViewportTier(getViewportTier());
     desktopQuery.addEventListener("change", handleChange);
     return () => desktopQuery.removeEventListener("change", handleChange);
   }, []);
@@ -874,7 +881,7 @@ const ExamScreen = ({
                   const label = String.fromCharCode(65 + index);
                   const optionSizeClass = getOptionTextSizeClass(
                     option,
-                    isDesktopViewport,
+                    viewportTier,
                   );
 
                   return (
