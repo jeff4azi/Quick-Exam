@@ -655,7 +655,6 @@ const ExamScreen = ({
       finalTime,
       questionType,
     );
-    setSelectedCourse(null);
     navigate("/results");
   };
 
@@ -688,7 +687,6 @@ const ExamScreen = ({
       answers.filter(Boolean).length,
       shuffledQuestions.length,
     );
-    setSelectedCourse(null);
     navigate("/results");
   };
 
