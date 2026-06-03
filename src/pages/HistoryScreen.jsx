@@ -332,7 +332,7 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                   habits in one place.
                 </p>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                 <StatCard
                   label="Exams done"
                   value={totalExams}
@@ -755,7 +755,7 @@ const StatCard = ({ label, value, sub, icon, color, wide = false }) => {
   };
   return (
     <div
-      className={`bg-white dark:bg-slate-900 p-4 rounded-[1.75rem] border border-slate-200 dark:border-slate-700 shadow-sm ${wide ? "lg:col-span-2" : ""}`}
+      className={`bg-white dark:bg-slate-900 p-4 rounded-[1.75rem] border border-slate-200 dark:border-slate-700 shadow-sm ${wide ? "col-span-2" : ""}`}
     >
       <div
         className={`size-10 rounded-2xl flex items-center justify-center mb-3 ${iconColors[color]}`}
