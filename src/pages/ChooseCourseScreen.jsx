@@ -50,9 +50,19 @@ const ChooseCourseScreen = ({
   const userCollege = userProfile?.college;
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 20);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    // On desktop the page scrolls inside .desktop-content-wrapper, not window.
+    // Listen on both so it works on mobile (window) and desktop (scrollable parent).
+    const scrollContainer =
+      document.querySelector(".desktop-content-wrapper") || window;
+    const getScroll = () =>
+      scrollContainer === window ? window.scrollY : scrollContainer.scrollTop;
+    const handler = () => setIsScrolled(getScroll() > 20);
+    scrollContainer.addEventListener("scroll", handler, { passive: true });
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => {
+      scrollContainer.removeEventListener("scroll", handler);
+      window.removeEventListener("scroll", handler);
+    };
   }, []);
 
   /* ----------------------------- FILTER COURSES ----------------------------- */

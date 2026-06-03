@@ -16,9 +16,17 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    const scrollContainer =
+      document.querySelector(".desktop-content-wrapper") || window;
+    const getScroll = () =>
+      scrollContainer === window ? window.scrollY : scrollContainer.scrollTop;
+    const handler = () => setIsScrolled(getScroll() > 10);
+    scrollContainer.addEventListener("scroll", handler, { passive: true });
+    window.addEventListener("scroll", handler, { passive: true });
+    return () => {
+      scrollContainer.removeEventListener("scroll", handler);
+      window.removeEventListener("scroll", handler);
+    };
   }, []);
 
   // Load full question data for all bookmarked IDs from the external API
@@ -37,7 +45,10 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ ids: bookmarks, university: userProfile?.university.trim() || "TASUED" }),
+          body: JSON.stringify({
+            ids: bookmarks,
+            university: userProfile?.university.trim() || "TASUED",
+          }),
         });
 
         const data = await res.json();
@@ -45,7 +56,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
         if (!res.ok) {
           console.error(
             "Failed to load bookmarked questions:",
-            data?.msg || res.status
+            data?.msg || res.status,
           );
           setBookmarkedQuestions([]);
           return;
@@ -79,9 +90,14 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
     const updated = bookmarks.filter((b) => b !== id);
     setBookmarks(updated);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
-        await supabase.from("profiles").update({ bookmarks: updated }).eq("id", user.id);
+        await supabase
+          .from("profiles")
+          .update({ bookmarks: updated })
+          .eq("id", user.id);
       }
     } catch (err) {
       console.error("Failed to remove bookmark:", err);
@@ -92,9 +108,14 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
   const handleClearAll = async () => {
     setBookmarks([]);
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (user) {
-        await supabase.from("profiles").update({ bookmarks: [] }).eq("id", user.id);
+        await supabase
+          .from("profiles")
+          .update({ bookmarks: [] })
+          .eq("id", user.id);
       }
     } catch (err) {
       console.error("Failed to clear bookmarks:", err);
@@ -133,7 +154,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                 <FiTrash2 size={20} />
               </button>
             )}
-            
+
             <div className="bg-blue-50 dark:bg-blue-500/10 px-4 py-1.5 rounded-full border border-blue-100 dark:border-blue-500/20">
               <span className="text-xs font-black text-blue-600 dark:text-blue-400">
                 {bookmarkedQuestions.length} TOTAL
@@ -154,7 +175,10 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
         ) : bookmarkedQuestions.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 text-center animate-in fade-in duration-700">
             <div className="size-24 bg-slate-100 dark:bg-slate-800 rounded-[2rem] flex items-center justify-center mb-6">
-              <FaBookmark size={36} className="text-slate-300 dark:text-slate-600" />
+              <FaBookmark
+                size={36}
+                className="text-slate-300 dark:text-slate-600"
+              />
             </div>
             <h3 className="text-xl font-black">Archive is empty</h3>
             <p className="text-slate-500 text-sm max-w-[240px] mt-2 leading-relaxed">
@@ -169,8 +193,11 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
 
             <div className="space-y-5">
               {visibleQuestions.map((question, index) => {
-                const isTheory = Array.isArray(question.keywords) || question.type === "theory";
-                const isFib = question.type === "fib" || Array.isArray(question.answers);
+                const isTheory =
+                  Array.isArray(question.keywords) ||
+                  question.type === "theory";
+                const isFib =
+                  question.type === "fib" || Array.isArray(question.answers);
                 const fibParts = isFib ? question.question.split(/_{2,}/g) : [];
 
                 return (
@@ -207,13 +234,18 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                     {/* Question text */}
                     <div className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-snug mb-4">
                       <div className="flex gap-2">
-                        <span className="text-blue-500 shrink-0">{index + 1}.</span>
+                        <span className="text-blue-500 shrink-0">
+                          {index + 1}.
+                        </span>
                         <div className="flex-1 break-words whitespace-normal">
                           {isFib ? (
                             <span>
                               {fibParts.map((part, i) => (
                                 <span key={i}>
-                                  <RenderMathText text={part} courseId={question.id} />
+                                  <RenderMathText
+                                    text={part}
+                                    courseId={question.id}
+                                  />
                                   {i < fibParts.length - 1 && (
                                     <span className="inline-flex items-center mx-1">
                                       <span className="px-2.5 py-0.5 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 font-black text-sm border border-emerald-200 dark:border-emerald-500/30">
@@ -227,7 +259,10 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                               ))}
                             </span>
                           ) : (
-                            <RenderMathText text={question.question} courseId={question.id} />
+                            <RenderMathText
+                              text={question.question}
+                              courseId={question.id}
+                            />
                           )}
                         </div>
                       </div>
@@ -237,7 +272,10 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                       <>
                         {question.model_answer && (
                           <div className="mt-3 flex gap-3 p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-100/50 dark:border-emerald-500/10">
-                            <FaLightbulb className="text-emerald-500 shrink-0 mt-0.5" size={16} />
+                            <FaLightbulb
+                              className="text-emerald-500 shrink-0 mt-0.5"
+                              size={16}
+                            />
                             <div className="space-y-1">
                               <p className="text-[11px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400">
                                 Model Answer
@@ -252,32 +290,44 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                     ) : isFib ? (
                       <>
                         {/* FIB answers list */}
-                        {Array.isArray(question.answers) && question.answers.length > 0 && (
-                          <div className="mt-3 p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-100/50 dark:border-emerald-500/10 space-y-2">
-                            <p className="text-[11px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-2">
-                              Answers
-                            </p>
-                            {question.answers.map((group, i) => (
-                              <div key={i} className="flex items-center gap-2">
-                                <span className="size-5 rounded-md bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black shrink-0">
-                                  {i + 1}
-                                </span>
-                                <span className="text-sm font-black text-emerald-700 dark:text-emerald-300">
-                                  {Array.isArray(group) ? group.join(" / ") : group}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                        {Array.isArray(question.answers) &&
+                          question.answers.length > 0 && (
+                            <div className="mt-3 p-4 rounded-2xl bg-emerald-50/50 dark:bg-emerald-500/5 border border-emerald-100/50 dark:border-emerald-500/10 space-y-2">
+                              <p className="text-[11px] font-black uppercase tracking-wider text-emerald-600 dark:text-emerald-400 mb-2">
+                                Answers
+                              </p>
+                              {question.answers.map((group, i) => (
+                                <div
+                                  key={i}
+                                  className="flex items-center gap-2"
+                                >
+                                  <span className="size-5 rounded-md bg-emerald-500 flex items-center justify-center text-white text-[10px] font-black shrink-0">
+                                    {i + 1}
+                                  </span>
+                                  <span className="text-sm font-black text-emerald-700 dark:text-emerald-300">
+                                    {Array.isArray(group)
+                                      ? group.join(" / ")
+                                      : group}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                         {question.reason && (
                           <div className="mt-3 flex gap-3 p-4 rounded-2xl bg-blue-50/30 dark:bg-blue-500/5 border-l-4 border-blue-500">
-                            <FaLightbulb className="text-blue-500 shrink-0 mt-0.5" size={16} />
+                            <FaLightbulb
+                              className="text-blue-500 shrink-0 mt-0.5"
+                              size={16}
+                            />
                             <div className="space-y-1">
                               <p className="text-[11px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
                                 Explanation
                               </p>
                               <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                                <RenderMathText text={question.reason} courseId={question.id} />
+                                <RenderMathText
+                                  text={question.reason}
+                                  courseId={question.id}
+                                />
                               </div>
                             </div>
                           </div>
@@ -291,19 +341,28 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                             <span className="text-[10px] font-black">ANS</span>
                           </div>
                           <div className="text-emerald-700 dark:text-emerald-400 font-black">
-                            <RenderMathText text={question.correct} courseId={question.id} />
+                            <RenderMathText
+                              text={question.correct}
+                              courseId={question.id}
+                            />
                           </div>
                         </div>
 
                         {question.reason && (
                           <div className="mt-4 flex gap-3 p-4 rounded-2xl bg-blue-50/30 dark:bg-blue-500/5 border-l-4 border-blue-500">
-                            <FaLightbulb className="text-blue-500 shrink-0 mt-0.5" size={16} />
+                            <FaLightbulb
+                              className="text-blue-500 shrink-0 mt-0.5"
+                              size={16}
+                            />
                             <div className="space-y-1">
                               <p className="text-[11px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
                                 Explanation
                               </p>
                               <div className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                                <RenderMathText text={question.reason} courseId={question.id} />
+                                <RenderMathText
+                                  text={question.reason}
+                                  courseId={question.id}
+                                />
                               </div>
                             </div>
                           </div>
@@ -313,27 +372,37 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
                   </div>
                 );
               })}
-              {!isPremium && bookmarkedQuestions.length > FREE_BOOKMARK_LIMIT && (
-                <div className="bg-white dark:bg-slate-800/50 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm text-center">
-                  <div className="flex justify-center mb-3">
-                    <div className="bg-amber-100 dark:bg-amber-900/30 p-3 rounded-2xl">
-                      <FiLock className="text-amber-500 dark:text-amber-400" size={22} />
+              {!isPremium &&
+                bookmarkedQuestions.length > FREE_BOOKMARK_LIMIT && (
+                  <div className="bg-white dark:bg-slate-800/50 p-6 rounded-[2rem] border border-slate-100 dark:border-slate-800 shadow-sm text-center">
+                    <div className="flex justify-center mb-3">
+                      <div className="bg-amber-100 dark:bg-amber-900/30 p-3 rounded-2xl">
+                        <FiLock
+                          className="text-amber-500 dark:text-amber-400"
+                          size={22}
+                        />
+                      </div>
                     </div>
+                    <p className="text-sm font-black text-slate-800 dark:text-white mb-1">
+                      {bookmarkedQuestions.length - FREE_BOOKMARK_LIMIT} more
+                      bookmark
+                      {bookmarkedQuestions.length - FREE_BOOKMARK_LIMIT !== 1
+                        ? "s"
+                        : ""}{" "}
+                      hidden
+                    </p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                      Free users can view up to {FREE_BOOKMARK_LIMIT} saved
+                      questions. Upgrade to see all.
+                    </p>
+                    <button
+                      onClick={() => navigate("/premium")}
+                      className="px-6 py-2.5 rounded-2xl bg-blue-600 text-white text-sm font-bold hover:scale-[1.02] active:scale-[0.98] transition"
+                    >
+                      Unlock All Bookmarks
+                    </button>
                   </div>
-                  <p className="text-sm font-black text-slate-800 dark:text-white mb-1">
-                    {bookmarkedQuestions.length - FREE_BOOKMARK_LIMIT} more bookmark{bookmarkedQuestions.length - FREE_BOOKMARK_LIMIT !== 1 ? "s" : ""} hidden
-                  </p>
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-                    Free users can view up to {FREE_BOOKMARK_LIMIT} saved questions. Upgrade to see all.
-                  </p>
-                  <button
-                    onClick={() => navigate("/premium")}
-                    className="px-6 py-2.5 rounded-2xl bg-blue-600 text-white text-sm font-bold hover:scale-[1.02] active:scale-[0.98] transition"
-                  >
-                    Unlock All Bookmarks
-                  </button>
-                </div>
-              )}
+                )}
             </div>
           </div>
         )}

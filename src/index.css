@@ -56,32 +56,39 @@ body {
   fills the available space. Mobile styles are completely untouched.
 */
 @media (min-width: 1024px) {
-  /* Content area fills the space next to the sidebar without overflowing */
+  /* 
+    The wrapper IS the scroll container on desktop.
+    This means sticky headers inside pages will stick relative to this element,
+    and scroll events fire on this element — not window.
+  */
   .desktop-content-wrapper {
     min-width: 0;
     overflow-x: hidden;
+    overflow-y: auto;
+    height: 100dvh;
   }
 
-  /* Page root containers: remove the mobile narrow cap, fill the wrapper */
+  /* Page root containers: fill the wrapper, let wrapper handle scrolling */
   .desktop-content-wrapper > * {
     max-width: 100% !important;
     width: 100% !important;
-    height: 100dvh;
-    overflow-x: hidden;
+    min-height: 100%;
+    overflow: visible !important;
   }
 
-  /* Inner scrollable content columns: fluid width that grows with the screen */
+  /* 
+    Inner scrollable content columns: fluid width that grows with the screen.
+    - On ~1280px laptop  (1024px available): 85% ≈ 870px  ✓
+    - On ~1920px desktop (1664px available): 85% → capped at 1400px ✓
+  */
   .desktop-content-wrapper .desktop-content-col {
-    /* 
-      clamp(min, preferred, max)
-      - On a ~1280px laptop  (1280-256=1024px available): ~90% = ~920px  ✓
-      - On a ~1920px desktop (1920-256=1664px available): ~78% = ~1300px ✓
-      - Never narrower than 640px, never wider than 1400px
-    */
     max-width: clamp(40rem, 85%, 87.5rem);
     margin-left: auto;
     margin-right: auto;
     width: 100%;
+    /* Don't create a nested scroll context — wrapper handles it */
+    overflow: visible !important;
+    flex: 1;
   }
 
   /* Remove the bottom padding reserved for the mobile NavBar */
@@ -95,15 +102,10 @@ body {
     padding-bottom: 2rem !important;
   }
 
-  /* Ensure full-height pages fill the viewport */
-  .desktop-content-wrapper .h-\[100dvh\] {
-    height: 100dvh;
-  }
-
   /* Swipers must not exceed the content area */
   .desktop-content-wrapper .swiper {
     max-width: 100% !important;
     width: 100% !important;
-    overflow: hidden;
+    overflow: hidden !important;
   }
 }
