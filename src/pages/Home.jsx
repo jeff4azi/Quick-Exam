@@ -377,7 +377,7 @@ const Home = ({
     : userProfile?.full_name?.split(" ")[0] || "Scholar";
 
   return (
-    <div className="max-w-2xl mx-auto relative min-h-[100dvh] flex flex-col bg-gray-50 dark:bg-slate-900 transition-colors duration-500 overflow-hidden">
+    <div className="max-w-2xl mx-auto lg:max-w-full relative min-h-[100dvh] flex flex-col bg-gray-50 dark:bg-slate-900 transition-colors duration-500 overflow-x-hidden">
       {/* Top Navigation Bar */}
       <div className="px-6 pt-4 pb-7 flex items-center justify-between z-50 lg:hidden">
         <div className="flex items-center gap-2">
@@ -404,7 +404,7 @@ const Home = ({
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 px-6 lg:px-16 pb-32 pt-2 lg:pt-6 flex flex-col gap-6 overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-700">
+      <div className="flex-1 px-6 lg:px-10 pb-32 pt-2 lg:pt-6 flex flex-col gap-6 overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-700 desktop-content-col">
         {/* Greeting */}
         <div>
           <h1 className="mt-1 text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
@@ -745,7 +745,7 @@ const Home = ({
                 momentumVelocityRatio: 0.8,
               }}
               modules={[FreeMode]}
-              className="pb-2 pr-6 lg:w-[80vw]"
+              className="pb-2 pr-6"
             >
               {recentCourses.map((item) => (
                 <SwiperSlide
