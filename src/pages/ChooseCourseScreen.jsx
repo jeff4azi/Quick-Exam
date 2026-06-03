@@ -50,17 +50,25 @@ const ChooseCourseScreen = ({
   const userCollege = userProfile?.college;
 
   useEffect(() => {
-    // On desktop the page scrolls inside .desktop-content-wrapper, not window.
-    // Listen on both so it works on mobile (window) and desktop (scrollable parent).
-    const scrollContainer =
-      document.querySelector(".desktop-content-wrapper") || window;
-    const getScroll = () =>
-      scrollContainer === window ? window.scrollY : scrollContainer.scrollTop;
+    // On desktop (lg+) the scroll container is .desktop-content-wrapper.
+    // On mobile it's window. Use the breakpoint to decide — the element exists
+    // in the DOM on both, so checking existence alone isn't enough.
+    const getContainer = () =>
+      window.innerWidth >= 1024
+        ? document.querySelector(".desktop-content-wrapper") || window
+        : window;
+    const getScroll = () => {
+      const el = getContainer();
+      return el === window ? window.scrollY : el.scrollTop;
+    };
     const handler = () => setIsScrolled(getScroll() > 20);
-    scrollContainer.addEventListener("scroll", handler, { passive: true });
+
+    // Attach to both in case of resize; duplicate events are harmless.
+    const wrapper = document.querySelector(".desktop-content-wrapper");
+    if (wrapper) wrapper.addEventListener("scroll", handler, { passive: true });
     window.addEventListener("scroll", handler, { passive: true });
     return () => {
-      scrollContainer.removeEventListener("scroll", handler);
+      if (wrapper) wrapper.removeEventListener("scroll", handler);
       window.removeEventListener("scroll", handler);
     };
   }, []);

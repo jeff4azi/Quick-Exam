@@ -110,15 +110,21 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
   useVisibilityRefresh(fetchHistory);
 
   useEffect(() => {
-    const scrollContainer =
-      document.querySelector(".desktop-content-wrapper") || window;
-    const getScroll = () =>
-      scrollContainer === window ? window.scrollY : scrollContainer.scrollTop;
+    const getContainer = () =>
+      window.innerWidth >= 1024
+        ? document.querySelector(".desktop-content-wrapper") || window
+        : window;
+    const getScroll = () => {
+      const el = getContainer();
+      return el === window ? window.scrollY : el.scrollTop;
+    };
     const handler = () => setIsScrolled(getScroll() > 10);
-    scrollContainer.addEventListener("scroll", handler, { passive: true });
+
+    const wrapper = document.querySelector(".desktop-content-wrapper");
+    if (wrapper) wrapper.addEventListener("scroll", handler, { passive: true });
     window.addEventListener("scroll", handler, { passive: true });
     return () => {
-      scrollContainer.removeEventListener("scroll", handler);
+      if (wrapper) wrapper.removeEventListener("scroll", handler);
       window.removeEventListener("scroll", handler);
     };
   }, []);
