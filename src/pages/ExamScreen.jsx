@@ -218,6 +218,7 @@ const ExamScreen = ({
   questions,
   onSubmit,
   selectedCourse,
+  setSelectedCourse,
   bookmarks,
   setBookmarks,
   hasRetaken,
@@ -654,6 +655,7 @@ const ExamScreen = ({
       finalTime,
       questionType,
     );
+    setSelectedCourse(null);
     navigate("/results");
   };
 
@@ -686,6 +688,7 @@ const ExamScreen = ({
       answers.filter(Boolean).length,
       shuffledQuestions.length,
     );
+    setSelectedCourse(null);
     navigate("/results");
   };
 
@@ -1001,8 +1004,10 @@ const ExamScreen = ({
         isOpen={isExitOverlayOpen}
         onClose={() => setExitOverlayOpen(false)}
         onConfirm={() => {
+          isSubmittingRef.current = true;
           clearExamSession();
-          navigate("/");
+          navigate(isPremium ? -1 : "/");
+          setSelectedCourse(null);
         }}
         title="Quit Exam?"
         message="Your current progress will be lost. Are you sure?"
@@ -1027,7 +1032,8 @@ const ExamScreen = ({
           onQuit={() => {
             setFibGateOpen(false);
             clearExamSession();
-            navigate("/");
+            navigate(isPremium ? -1 : "/");
+            setSelectedCourse(null);
           }}
         />
       )}

@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState, useEffect, useMemo } from "react";
 import {
   trackCourseSelected,
-  trackCourseSearch,
+  /* trackCourseSearch, */
   trackQuestionTypeSwitch,
   trackFavouriteToggle,
   trackExamStart,
