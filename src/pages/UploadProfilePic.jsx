@@ -28,6 +28,36 @@ const validateCloudinaryConfig = () => {
   }
 };
 
+const cropToSquare = (file) => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+
+    img.onload = () => {
+      const size = Math.min(img.width, img.height);
+
+      const canvas = document.createElement("canvas");
+      canvas.width = size;
+      canvas.height = size;
+
+      const ctx = canvas.getContext("2d");
+
+      const offsetX = (img.width - size) / 2;
+      const offsetY = (img.height - size) / 2;
+
+      ctx.drawImage(img, offsetX, offsetY, size, size, 0, 0, size, size);
+
+      canvas.toBlob((blob) => {
+        const croppedFile = new File([blob], file.name, {
+          type: file.type,
+        });
+
+        resolve(croppedFile);
+      }, file.type);
+    };
+  });
+};
+
 const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
@@ -37,7 +67,7 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
   const [uploading, setUploading] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
 
-  const handleFileChange = (event) => {
+  const handleFileChange = async (event) => {
     const selectedFile = event.target.files[0];
     if (!selectedFile) return;
 
@@ -50,9 +80,21 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
       return;
     }
 
-    setFile(selectedFile);
-    setPreviewUrl(URL.createObjectURL(selectedFile));
-    setStatus({ type: "", message: "" });
+    setStatus({ type: "info", message: "Preparing image..." });
+
+    try {
+      const cropped = await cropToSquare(selectedFile);
+
+      setFile(cropped);
+      setPreviewUrl(URL.createObjectURL(cropped));
+
+      setStatus({ type: "", message: "" });
+    } catch (err) {
+      setStatus({
+        type: "error",
+        message: "Failed to process image.",
+      });
+    }
   };
 
   const triggerFileInput = () => fileInputRef.current.click();
