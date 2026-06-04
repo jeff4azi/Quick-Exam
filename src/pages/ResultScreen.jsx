@@ -34,7 +34,6 @@ const ResultScreen = ({
   setAnswers,
   setHasRetaken,
   selectedCourse,
-  setSelectedCourse,
   userProfile,
   isPremium,
   questionType,
@@ -262,8 +261,7 @@ const ResultScreen = ({
           label="Home"
           color="bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
           onClick={() => {
-            setSelectedCourse(null);
-            navigate("/")
+            navigate("/");
           }}
           icon={
             <path
@@ -491,7 +489,6 @@ const ResultScreen = ({
         icon={<FiRefreshCw size={32} />}
       />
 
-      
       {/* <NavBar
         isPremium={isPremium}
         onLockedClick={() => setPremiumOverlayOpen(true)}

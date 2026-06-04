@@ -146,6 +146,7 @@ const Home = ({
   isPremium,
   courses,
   setQuestionType,
+  setSelectedCourse,
 }) => {
   const navigate = useNavigate();
   const cachedDashboard = useMemo(
@@ -191,6 +192,10 @@ const Home = ({
     return () => window.removeEventListener("beforeinstallprompt", handler);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    setSelectedCourse(null);
+  }, [setSelectedCourse]);
 
   const handleInstallConfirm = async () => {
     if (isIOS) {
@@ -854,7 +859,7 @@ const Home = ({
               {favouriteCourses.map((course) => (
                 <SwiperSlide
                   key={course._favouriteKey}
-                  className="!w-[200px] sm:!w-56 lg:!w-44 xl:!w-56"
+                  className="!w-[175px] sm:!w-39 lg:!w-44 xl:!w-56"
                 >
                   <button
                     type="button"
