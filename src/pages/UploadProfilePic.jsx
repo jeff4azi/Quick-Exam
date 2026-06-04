@@ -15,8 +15,7 @@ import { supabase } from "../supabaseClient";
 /* import NavBar from "../components/NavBar"; */
 import { DEFAULT_AVATAR_URL } from "../components/Avatar";
 
-const CLOUDINARY_CLOUD_NAME =
-  import.meta.env.VITE_CLOUDINARY_CLOUD_NAME
+const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const CLOUDINARY_UPLOAD_PRESET = "profile_pictures";
 
 // Validate Cloudinary configuration
@@ -95,10 +94,16 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
       formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
       formData.append("public_id", uniquePublicId);
 
-      // If user already has an avatar, delete the old one first
-      console.log("Deleting Cloudinary image:", userProfile?.avatar_public_id);
-      if (userProfile?.avatar_public_id) {
-        await deleteImage(userProfile.avatar_public_id);
+      // Only delete the old image if one actually exists
+      const oldPublicId = userProfile?.avatar_public_id;
+      if (
+        oldPublicId &&
+        typeof oldPublicId === "string" &&
+        oldPublicId.trim() !== "NULL" &&
+        oldPublicId.trim() !== ""
+      ) {
+        console.log("Deleting old Cloudinary image:", oldPublicId);
+        await deleteImage(oldPublicId);
       }
 
       const uploadUrl = `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`;
@@ -228,14 +233,18 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
     <div className="min-h-[100dvh] bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
       <header className="sticky top-0 z-40 border-b border-slate-200/70 dark:border-slate-800 bg-white/85 dark:bg-slate-900/85 backdrop-blur-xl">
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 lg:px-8">
-          {previewUrl ? <button
-            type="button"
-            onClick={() => navigate(-1)}
-            className="size-11 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
-            aria-label="Go back"
-          >
-            <FiArrowLeft size={20} />
-          </button> : <div className="size-11" />}
+          {previewUrl ? (
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="size-11 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
+              aria-label="Go back"
+            >
+              <FiArrowLeft size={20} />
+            </button>
+          ) : (
+            <div className="size-11" />
+          )}
           <div className="text-center">
             <h1 className="text-lg font-black tracking-tight">
               Profile Picture
@@ -273,7 +282,9 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
             >
               <img
                 src={
-                  previewUrl && previewUrl.trim() !== "" && previewUrl !== "NULL"
+                  previewUrl &&
+                  previewUrl.trim() !== "" &&
+                  previewUrl !== "NULL"
                     ? previewUrl
                     : DEFAULT_AVATAR_URL
                 }
