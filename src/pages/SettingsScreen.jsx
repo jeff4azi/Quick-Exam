@@ -169,8 +169,7 @@ const SettingsScreen = ({
               Preferences & account
             </p>
           </div>
-          <div>            
-          </div>
+          <div className="size-11" /> {/* Placeholder for spacing - matches back button size */}
         </div>
       </header>
 
