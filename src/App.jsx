@@ -24,6 +24,7 @@ import { withTimeout } from "./utils/withTimeout";
 import ReviewAnswers from "./pages/ReviewAnswers";
 import BookMark from "./pages/BookMark";
 import ProtectedRoute from "./components/ProtectedRoutes";
+import GuestRoute from "./components/GuestRoute";
 import { trackLogout } from "./utils/analytics";
 import OnboardingRoute from "./components/OnboardingRoute";
 import PremiumPage from "./pages/PremiumPage";
@@ -644,13 +645,48 @@ function App() {
       ) : (
         <AuthProvider>
           <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
+            <Route
+              path="/login"
+              element={
+                <GuestRoute>
+                  <Login />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/signup"
+              element={
+                <GuestRoute>
+                  <SignUp />
+                </GuestRoute>
+              }
+            />
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/about" element={<AboutPage />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/update-password" element={<UpdatePassword />} />
-            <Route path="/confirm-email" element={<ConfirmEmailScreen />} />
+            <Route
+              path="/reset-password"
+              element={
+                <GuestRoute>
+                  <ResetPassword />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/update-password"
+              element={
+                <GuestRoute>
+                  <UpdatePassword />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/confirm-email"
+              element={
+                <GuestRoute>
+                  <ConfirmEmailScreen />
+                </GuestRoute>
+              }
+            />
             <Route
               path="/onboarding"
               element={
