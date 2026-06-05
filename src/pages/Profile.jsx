@@ -241,7 +241,9 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 lg:px-8">
           <button
             type="button"
-            onClick={() => navigate(-1)}
+            onClick={() =>
+              window.history.length > 1 ? navigate(-1) : navigate("/")
+            }
             className="size-11 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
             aria-label="Go back"
           >
@@ -285,7 +287,8 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
                   </span>
                 )}
                 <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-slate-950 px-3 py-1 text-[10px] font-bold text-white transition-opacity border border-transparent group-hover:border-white/70">
-                  <FaCamera size={12} className="inline-block mr-1" /> Change photo
+                  <FaCamera size={12} className="inline-block mr-1" /> Change
+                  photo
                 </span>
               </button>
 
@@ -339,13 +342,15 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
                 </button>
               )}
 
-              {!isPremium && <button
-                type="button"
-                onClick={() => navigate("/referral-dashboard")}
-                className="mt-3 w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-800 px-4 py-3 text-sm font-black text-slate-900 dark:text-white shadow-sm transition-all active:scale-[0.98]"
-              >
-                Referral Dashboard
-              </button>}
+              {!isPremium && (
+                <button
+                  type="button"
+                  onClick={() => navigate("/referral-dashboard")}
+                  className="mt-3 w-full rounded-2xl border border-slate-200 dark:border-slate-700 bg-white/70 dark:bg-slate-800 px-4 py-3 text-sm font-black text-slate-900 dark:text-white shadow-sm transition-all active:scale-[0.98]"
+                >
+                  Referral Dashboard
+                </button>
+              )}
             </div>
           </aside>
 
@@ -383,7 +388,14 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
 
               <div className="divide-y divide-slate-100 dark:divide-slate-800">
                 {fieldRows.map(
-                  ({ key, label, icon: Icon, editable, value, placeholder }) => (
+                  ({
+                    key,
+                    label,
+                    icon: Icon,
+                    editable,
+                    value,
+                    placeholder,
+                  }) => (
                     <div
                       key={key}
                       className="grid gap-3 px-5 py-4 sm:grid-cols-[180px_1fr] sm:items-center"
@@ -413,7 +425,7 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
                         </p>
                       )}
                     </div>
-                  )
+                  ),
                 )}
               </div>
             </section>

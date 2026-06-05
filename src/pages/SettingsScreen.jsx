@@ -157,7 +157,9 @@ const SettingsScreen = ({
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 lg:px-8">
           <button
             type="button"
-            onClick={() => navigate(-1)}
+            onClick={() =>
+              window.history.length > 1 ? navigate(-1) : navigate("/")
+            }
             className="size-11 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
             aria-label="Go back"
           >
@@ -169,7 +171,8 @@ const SettingsScreen = ({
               Preferences & account
             </p>
           </div>
-          <div className="size-11" /> {/* Placeholder for spacing - matches back button size */}
+          <div className="size-11" />{" "}
+          {/* Placeholder for spacing - matches back button size */}
         </div>
       </header>
 
@@ -220,10 +223,7 @@ const SettingsScreen = ({
               title="Pagination"
               description="Show question bubbles during exams."
             >
-              <Toggle
-                checked={showPagination}
-                onClick={toggleShowPagination}
-              />
+              <Toggle checked={showPagination} onClick={toggleShowPagination} />
             </SettingRow>
           </div>
         </section>

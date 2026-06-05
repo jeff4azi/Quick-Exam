@@ -138,12 +138,16 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 p-6 flex flex-col">
       <div className="mx-auto">
-        <button
-          onClick={() => navigate(-1)}
-          className="p-3 absolute top-6 left-6 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 active:scale-95 transition-all"
-        >
-          <FiArrowLeft size={20} />
-        </button>
+        {!isPremium && (
+          <button
+            onClick={() =>
+              window.history.length > 1 ? navigate(-1) : navigate("/")
+            }
+            className="p-3 absolute top-6 left-6 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-600 dark:text-slate-300 active:scale-95 transition-all"
+          >
+            <FiArrowLeft size={20} />
+          </button>
+        )}
         <Logo className="w-[175px]" />
       </div>
 

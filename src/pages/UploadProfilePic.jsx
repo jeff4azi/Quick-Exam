@@ -278,7 +278,9 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
           {previewUrl ? (
             <button
               type="button"
-              onClick={() => navigate(-1)}
+              onClick={() =>
+                window.history.length > 1 ? navigate(-1) : navigate("/")
+              }
               className="size-11 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
               aria-label="Go back"
             >

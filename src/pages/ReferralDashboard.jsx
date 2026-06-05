@@ -166,7 +166,9 @@ const ReferralDashboard = ({isPremium}) => {
         <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 lg:px-8">
           <button
             type="button"
-            onClick={() => navigate(-1)}
+            onClick={() =>
+              window.history.length > 1 ? navigate(-1) : navigate("/")
+            }
             className="size-11 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-300 active:scale-95 transition-transform"
             aria-label="Go back"
           >
@@ -251,7 +253,9 @@ const ReferralDashboard = ({isPremium}) => {
                   <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-300">
                     Total invites
                   </p>
-                  <p className="text-xl font-black mt-2 text-slate-900 dark:text-white">{stats.total}</p>
+                  <p className="text-xl font-black mt-2 text-slate-900 dark:text-white">
+                    {stats.total}
+                  </p>
                 </div>
                 <div className="rounded-2xl bg-white border border-slate-200 dark:bg-white/5 dark:border-white/10 px-4 py-3 shadow-sm dark:shadow-none">
                   <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400 dark:text-slate-300">
