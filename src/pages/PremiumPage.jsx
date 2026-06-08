@@ -172,7 +172,7 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
             <FiArrowLeft size={20} />
           </button>
         )}
-        <Logo className="w-[175px]" />
+        <Logo className="w-[150px] lg:w-[175px]" />
       </div>
 
       <div className="flex-1 flex flex-col max-w-sm mx-auto w-full animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -185,47 +185,6 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
             semester.
           </p>
         </div>
-
-        {isTASUEDStudent && (
-          <div className="grid gap-4 mb-8">
-            {tasuedPlans.map((plan) => (
-              <button
-                key={plan.id}
-                type="button"
-                onClick={() => setSelectedPlan(plan)}
-                className={`w-full rounded-[2rem] border p-5 text-left transition-all shadow-sm ${
-                  selectedPlan.id === plan.id
-                    ? "border-blue-600 bg-blue-50 dark:bg-blue-900/30"
-                    : "border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-800"
-                } ${plan.popular ? "relative" : ""}`}
-              >
-                {plan.popular && (
-                  <span className="absolute -top-3 right-2 rounded-full bg-blue-600 text-white text-[10px] uppercase font-black px-3 py-1">
-                    Popular
-                  </span>
-                )}
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <p className="text-slate-900 dark:text-white font-black text-lg">
-                      {plan.title}
-                    </p>
-                    <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
-                      {plan.description}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-black text-slate-900 dark:text-white">
-                      ₦{plan.price.toLocaleString()}
-                    </p>
-                    <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400 mt-1">
-                      {plan.duration}
-                    </p>
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        )}
 
         <form onSubmit={handleActivate} className="space-y-4">
           <div className="relative group">
@@ -314,10 +273,51 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
             >
               I’ve Made Payment — Send Receipt
             </button>
+
+            {isTASUEDStudent && (
+              <div className="grid gap-4 mt-8 mb-8">
+                {tasuedPlans.map((plan) => (
+                  <button
+                    key={plan.id}
+                    type="button"
+                    onClick={() => setSelectedPlan(plan)}
+                    className={`w-full rounded-[2rem] border p-5 text-left transition-all shadow-sm ${
+                      selectedPlan.id === plan.id
+                        ? "border-blue-600 bg-blue-50 dark:bg-blue-900/30"
+                        : "border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-800"
+                    } ${plan.popular ? "relative" : ""}`}
+                  >
+                    {plan.popular && (
+                      <span className="absolute -top-3 right-2 rounded-full bg-blue-600 text-white text-[10px] uppercase font-black px-3 py-1">
+                        Popular
+                      </span>
+                    )}
+                    <div className="flex items-center justify-between gap-4">
+                      <div>
+                        <p className="text-slate-900 dark:text-white font-black text-lg">
+                          {plan.title}
+                        </p>
+                        <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
+                          {plan.description}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-2xl font-black text-slate-900 dark:text-white">
+                          ₦{plan.price.toLocaleString()}
+                        </p>
+                        <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400 mt-1">
+                          {plan.duration}
+                        </p>
+                      </div>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </form>
 
-        <div className="mt-12 pt-10 border-t border-gray-100 dark:border-slate-800">
+        <div className="pt-10 border-t border-gray-100 dark:border-slate-800">
           <p className="text-slate-400 dark:text-slate-500 text-xs font-bold uppercase tracking-widest text-center mb-2">
             What You Get
           </p>
