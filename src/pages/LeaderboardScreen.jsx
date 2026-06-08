@@ -63,11 +63,12 @@ const LeaderboardScreen = ({
     return value.length === 1 ? `${value}00` : value;
   };
 
-  const questionCountOptions = examType === "THY"
-    ? ["all", 3, 5, 7, 10]
-    : examType === "FIB"
-      ? ["all", 10, 15, 20, 30]
-      : ["all", 30, 50, 70, 100];
+  const questionCountOptions =
+    examType === "THY"
+      ? ["all", 3, 5, 7, 10]
+      : examType === "FIB"
+        ? ["all", 10, 15, 20, 30]
+        : ["all", 30, 50, 70, 100];
 
   useEffect(() => {
     setSelectedCourseId("all");
@@ -130,7 +131,7 @@ const LeaderboardScreen = ({
       }
 
       const safeAttempts = (attemptsData || []).filter(
-        (a) => (a.type ?? "OBJ") === examType
+        (a) => (a.type ?? "OBJ") === examType,
       );
       setAttempts(safeAttempts);
 
@@ -222,12 +223,14 @@ const LeaderboardScreen = ({
     const universityFiltered =
       universityFilter === "mine"
         ? attempts.filter((a) => {
-          const attemptUni = (a.university ?? "").trim().toLowerCase();
-          const userUni = (userProfile?.university ?? "").trim().toLowerCase();
-          if (!userUni) return true; // no university set — show all
-          if (!attemptUni) return false; // attempt has no university — exclude
-          return attemptUni === userUni;
-        })
+            const attemptUni = (a.university ?? "").trim().toLowerCase();
+            const userUni = (userProfile?.university ?? "")
+              .trim()
+              .toLowerCase();
+            if (!userUni) return true; // no university set — show all
+            if (!attemptUni) return false; // attempt has no university — exclude
+            return attemptUni === userUni;
+          })
         : attempts;
 
     // 2. Course filter
@@ -241,8 +244,8 @@ const LeaderboardScreen = ({
       questionCountFilter === "all"
         ? courseFiltered
         : courseFiltered.filter(
-          (a) => Number(a.total_questions) === questionCountFilter,
-        );
+            (a) => Number(a.total_questions) === questionCountFilter,
+          );
 
     const entries = buildLeaderboardEntries(filteredAttempts).map((entry) => {
       const avgTimeSeconds =
@@ -325,21 +328,22 @@ const LeaderboardScreen = ({
           <div className="flex items-center gap-5">
             <div className="flex min-w-0 flex-1 bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
               {[
-              { key: "OBJ", label: "Objective" },
-              { key: "FIB", label: "Fill in Blank" },
-              { key: "THY", label: "Theory" },
-            ].map(({ key, label }) => (
-              <button
-                key={key}
-                type="button"
-                onClick={() => setExamType(key)}
-                  className={`flex-1 px-2 sm:px-5 py-2 rounded-xl text-[11px] sm:text-xs font-black transition-all whitespace-nowrap ${examType === key
-                  ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                { key: "OBJ", label: "Objective" },
+                { key: "FIB", label: "Fill in Blank" },
+                { key: "THY", label: "Theory" },
+              ].map(({ key, label }) => (
+                <button
+                  key={key}
+                  type="button"
+                  onClick={() => setExamType(key)}
+                  className={`flex-1 px-2 sm:px-5 py-2 rounded-xl text-[11px] sm:text-xs font-black transition-all whitespace-nowrap ${
+                    examType === key
+                      ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                      : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
                   }`}
-              >
-                {label}
-              </button>
+                >
+                  {label}
+                </button>
               ))}
             </div>
             <button
@@ -375,19 +379,21 @@ const LeaderboardScreen = ({
                 <div className="flex gap-2">
                   <button
                     onClick={() => setUniversityFilter("mine")}
-                    className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${universityFilter === "mine"
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
-                      : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-                      }`}
+                    className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
+                      universityFilter === "mine"
+                        ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
+                        : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                    }`}
                   >
                     🏫 My University
                   </button>
                   <button
                     onClick={() => setUniversityFilter("all")}
-                    className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${universityFilter === "all"
-                      ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
-                      : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-                      }`}
+                    className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
+                      universityFilter === "all"
+                        ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
+                        : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                    }`}
                   >
                     🌍 Global
                   </button>
@@ -404,10 +410,11 @@ const LeaderboardScreen = ({
                     <button
                       key={count}
                       onClick={() => setQuestionCountFilter(count)}
-                      className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${questionCountFilter === count
-                        ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
-                        : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-                        }`}
+                      className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
+                        questionCountFilter === count
+                          ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
+                          : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                      }`}
                     >
                       {count === "all" ? "All" : count}
                     </button>
@@ -483,6 +490,7 @@ const LeaderboardScreen = ({
                   attempts={entry.attemptsCount}
                   avgTime={formatTime(entry.avgTimeSeconds)}
                   university={entry.university}
+                  isCurrentUser={entry.userId === userProfile?.id}
                   onClick={() => {
                     const profile = profiles[entry.userId] || {};
                     setSheetProfile({
@@ -560,10 +568,11 @@ const LeaderboardScreen = ({
                       key={key}
                       type="button"
                       onClick={() => setUniversityFilter(key)}
-                      className={`h-12 rounded-2xl border text-xs font-black flex items-center justify-center gap-2 transition-all ${universityFilter === key
-                        ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 dark:shadow-none"
-                        : "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-                        }`}
+                      className={`h-12 rounded-2xl border text-xs font-black flex items-center justify-center gap-2 transition-all ${
+                        universityFilter === key
+                          ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 dark:shadow-none"
+                          : "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                      }`}
                     >
                       <Icon className="text-sm" />
                       {label}
@@ -582,10 +591,11 @@ const LeaderboardScreen = ({
                       key={count}
                       type="button"
                       onClick={() => setQuestionCountFilter(count)}
-                      className={`h-11 rounded-2xl border text-xs font-black transition-all ${questionCountFilter === count
-                        ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 dark:shadow-none"
-                        : "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-                        }`}
+                      className={`h-11 rounded-2xl border text-xs font-black transition-all ${
+                        questionCountFilter === count
+                          ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 dark:shadow-none"
+                          : "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                      }`}
                     >
                       {count === "all" ? "All" : count}
                     </button>
@@ -603,10 +613,11 @@ const LeaderboardScreen = ({
                       key={level}
                       type="button"
                       onClick={() => setLevelFilter(level)}
-                      className={`h-11 rounded-2xl border text-xs font-black transition-all ${levelFilter === level
-                        ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 dark:shadow-none"
-                        : "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-                        }`}
+                      className={`h-11 rounded-2xl border text-xs font-black transition-all ${
+                        levelFilter === level
+                          ? "bg-blue-600 text-white border-blue-600 shadow-lg shadow-blue-200 dark:shadow-none"
+                          : "bg-slate-50 dark:bg-slate-800/70 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
+                      }`}
                     >
                       {level === "all" ? "All" : level}
                     </button>
@@ -688,6 +699,7 @@ const LeaderboardRow = ({
   bestPercent,
   attempts,
   avgTime,
+  isCurrentUser = false,
   onClick,
 }) => {
   const isTop1 = rank === 1;
@@ -714,9 +726,29 @@ const LeaderboardRow = ({
 
   return (
     <div
-      className="group flex items-center justify-between p-4 rounded-[1.8rem] bg-white dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 shadow-sm hover:shadow-xl hover:shadow-slate-200/40 dark:hover:shadow-none transition-all duration-300 active:scale-[0.98] cursor-pointer"
+      className={`group relative flex items-center justify-between p-4 rounded-[1.8rem] shadow-sm hover:shadow-xl transition-all duration-300 active:scale-[0.98] cursor-pointer ${
+        isCurrentUser
+          ? "bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border-2 border-blue-400 dark:border-blue-600 shadow-lg shadow-blue-200/40 dark:shadow-blue-900/20"
+          : "bg-white dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 hover:shadow-slate-200/40 dark:hover:shadow-none"
+      }`}
       onClick={onClick}
     >
+      {/* Current user indicator badge */}
+      {isCurrentUser && (
+        <div className="absolute -top-2 -right-2 z-10">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-blue-600 text-white text-[10px] font-black uppercase tracking-wider shadow-lg shadow-blue-300/50 dark:shadow-blue-900/30">
+            <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+              <path
+                fillRule="evenodd"
+                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                clipRule="evenodd"
+              />
+            </svg>
+            You
+          </span>
+        </div>
+      )}
+
       <div className="flex items-center gap-4 min-w-0">
         <div className="flex items-center gap-3 shrink-0">
           <div
@@ -724,10 +756,20 @@ const LeaderboardRow = ({
           >
             {badgeIcon ? badgeIcon : <span>#{rank}</span>}
           </div>
-          <Avatar avatarUrl={avatarUrl} size="sm" lazy={true} />
+          <div
+            className={`relative ${isCurrentUser ? "ring-2 ring-blue-400 dark:ring-blue-500 rounded-full" : ""}`}
+          >
+            <Avatar avatarUrl={avatarUrl} size="sm" lazy={true} />
+          </div>
         </div>
         <div className="min-w-0">
-          <p className="font-black text-slate-900 dark:text-white truncate flex items-center gap-1.5">
+          <p
+            className={`font-black truncate flex items-center gap-1.5 ${
+              isCurrentUser
+                ? "text-blue-700 dark:text-blue-400"
+                : "text-slate-900 dark:text-white"
+            }`}
+          >
             {fullName?.trim()?.split(/\s+/)?.[0] || "Scholar"}
             {isPremium && (
               <span
@@ -739,27 +781,51 @@ const LeaderboardRow = ({
               </span>
             )}
           </p>
-          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium truncate">
+          <p
+            className={`text-[11px] font-medium truncate ${
+              isCurrentUser
+                ? "text-blue-600 dark:text-blue-400"
+                : "text-slate-400 dark:text-slate-500"
+            }`}
+          >
             {userName
-  ? `@${
-      userName.length > 12
-        ? userName.slice(0, 12) + "..."
-        : userName
-    } • `
-  : ""}
+              ? `@${
+                  userName.length > 12
+                    ? userName.slice(0, 12) + "..."
+                    : userName
+                } • `
+              : ""}
             {university}
           </p>
-          <p className="text-[11px] text-slate-400 dark:text-slate-500 font-medium">
+          <p
+            className={`text-[11px] font-medium ${
+              isCurrentUser
+                ? "text-blue-600 dark:text-blue-400"
+                : "text-slate-400 dark:text-slate-500"
+            }`}
+          >
             Best: {bestPercent}% • Attempts: {attempts}
           </p>
         </div>
       </div>
 
       <div className="text-right">
-        <p className="text-xs font-semibold text-slate-400 dark:text-slate-500">
+        <p
+          className={`text-xs font-semibold ${
+            isCurrentUser
+              ? "text-blue-600 dark:text-blue-400"
+              : "text-slate-400 dark:text-slate-500"
+          }`}
+        >
           Avg. Time
         </p>
-        <p className="text-sm font-bold text-slate-800 dark:text-slate-100">
+        <p
+          className={`text-sm font-bold ${
+            isCurrentUser
+              ? "text-blue-700 dark:text-blue-300"
+              : "text-slate-800 dark:text-slate-100"
+          }`}
+        >
           {avgTime}
         </p>
       </div>
