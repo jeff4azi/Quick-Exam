@@ -3,6 +3,7 @@ import {
   trackFeedBoltCTAClick,
   trackFeedBoltCTADismiss,
 } from "../utils/analytics";
+import feedBoltLogo from "../images/FeedBolt.jpg";
 
 const FEEDBOLT_URL = "https://feedbolt-beige.vercel.app/";
 const STORAGE_KEY = "feedbolt_cta_dismissed";
@@ -18,7 +19,9 @@ const useDismissed = () => {
   const set = () => {
     try {
       localStorage.setItem(STORAGE_KEY, "true");
-    } catch { /* empty */ }
+    } catch {
+      /* empty */
+    }
   };
   return { get, set };
 };
@@ -51,8 +54,12 @@ export const FeedBoltBanner = () => {
       <div className="absolute -right-8 -top-8 size-28 rounded-full bg-white/10 blur-2xl pointer-events-none" />
 
       <div className="relative z-10 flex items-center gap-3 min-w-0">
-        <div className="shrink-0 size-10 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center text-lg">
-          ⚡
+        <div className="shrink-0 size-10 rounded-2xl bg-white/15 backdrop-blur-md flex items-center justify-center overflow-hidden">
+          <img
+            src={feedBoltLogo}
+            alt="FeedBolt"
+            className="w-full h-full object-cover"
+          />
         </div>
         <div className="min-w-0">
           <p className="text-white font-black text-base leading-tight">
@@ -91,8 +98,12 @@ export const FeedBoltSidebarLink = () => (
     onClick={() => trackFeedBoltCTAClick("sidebar")}
     className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-purple-600 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 transition-colors group"
   >
-    <span className="size-8 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center text-base shrink-0">
-      ⚡
+    <span className="size-8 rounded-xl bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center overflow-hidden shrink-0">
+      <img
+        src={feedBoltLogo}
+        alt="FeedBolt"
+        className="w-full h-full object-cover"
+      />
     </span>
     <span className="flex-1">FeedBolt</span>
     <span className="text-[9px] font-black uppercase tracking-wider bg-purple-600 text-white px-1.5 py-0.5 rounded-md">

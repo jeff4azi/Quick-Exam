@@ -11,6 +11,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
+import flashCardIcon from "../images/flash-card.webp";
 
 const FREE_CARD_LIMIT = 20;
 
@@ -27,7 +28,8 @@ const PremiumGateOverlay = ({ onUpgrade, onDismiss }) => (
           Free limit reached
         </h2>
         <p className="text-slate-500 dark:text-slate-400 font-medium leading-relaxed mb-8 px-2">
-          You&apos;ve studied {FREE_CARD_LIMIT} cards. Upgrade to Premium to access all flashcards and shuffle.
+          You&apos;ve studied {FREE_CARD_LIMIT} cards. Upgrade to Premium to
+          access all flashcards and shuffle.
         </p>
         <div className="flex flex-col w-full gap-3">
           <button
@@ -60,9 +62,24 @@ const shuffle = (arr) => {
 };
 
 const RATING_LABELS = [
-  { key: "again", label: "Again", color: "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800" },
-  { key: "good",  label: "Good",  color: "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800" },
-  { key: "easy",  label: "Easy",  color: "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800" },
+  {
+    key: "again",
+    label: "Again",
+    color:
+      "bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800",
+  },
+  {
+    key: "good",
+    label: "Good",
+    color:
+      "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800",
+  },
+  {
+    key: "easy",
+    label: "Easy",
+    color:
+      "bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800",
+  },
 ];
 
 // ─── component ──────────────────────────────────────────────────────────────
@@ -91,7 +108,8 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
     setLoadingQ(true);
     setErrorQ(null);
     try {
-      const endpoint = course.questionsEndpoint || `/courses/${course.id}/questions`;
+      const endpoint =
+        course.questionsEndpoint || `/courses/${course.id}/questions`;
       const baseUrl = `${API_BASE_URL}${endpoint}`;
 
       const [objRes, thyRes, fibRes] = await Promise.all([
@@ -107,15 +125,18 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
       ]);
 
       const objective = objRes.ok && Array.isArray(objData) ? objData : [];
-      const theory = thyRes.ok && Array.isArray(thyData)
-        ? thyData.map((q) => ({ ...q, type: "theory" }))
-        : [];
-      const fib = fibRes.ok && Array.isArray(fibData)
-        ? fibData.map((q) => ({ ...q, type: "fib" }))
-        : [];
+      const theory =
+        thyRes.ok && Array.isArray(thyData)
+          ? thyData.map((q) => ({ ...q, type: "theory" }))
+          : [];
+      const fib =
+        fibRes.ok && Array.isArray(fibData)
+          ? fibData.map((q) => ({ ...q, type: "fib" }))
+          : [];
 
       const all = [...objective, ...theory, ...fib];
-      if (all.length === 0) throw new Error("No questions found for this course.");
+      if (all.length === 0)
+        throw new Error("No questions found for this course.");
 
       setQuestions(isPremium ? all : all.slice(0, FREE_CARD_LIMIT));
       setStats({});
@@ -192,15 +213,22 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
     const handler = (e) => {
       if (e.key === "ArrowRight") handleNext();
       else if (e.key === "ArrowLeft") handlePrev();
-      else if (e.key === " ") { e.preventDefault(); setIsFlipped((f) => !f); }
+      else if (e.key === " ") {
+        e.preventDefault();
+        setIsFlipped((f) => !f);
+      }
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
   });
 
   // ── progress ──
-  const progress = questions.length ? ((currentIndex + 1) / questions.length) * 100 : 0;
-  const masteredCount = Object.values(stats).filter((s) => s.correct > 0).length;
+  const progress = questions.length
+    ? ((currentIndex + 1) / questions.length) * 100
+    : 0;
+  const masteredCount = Object.values(stats).filter(
+    (s) => s.correct > 0,
+  ).length;
 
   // ─────────────────────────────────────────────────────────────────────────
   // RENDER: course picker
@@ -226,7 +254,11 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
       <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="size-14 rounded-2xl bg-violet-100 dark:bg-violet-900/30 flex items-center justify-center animate-pulse">
-            <span className="text-2xl">🃏</span>
+            <img
+              src={flashCardIcon}
+              alt="Flashcard"
+              className="w-8 h-8 object-contain"
+            />
           </div>
           <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
             Loading flashcards...
@@ -259,7 +291,6 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col transition-colors duration-500">
-
       {/* Premium gate overlay */}
       {showPremiumGate && (
         <PremiumGateOverlay
@@ -285,7 +316,9 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
               </p>
               <p className="text-sm font-bold text-slate-900 dark:text-white">
                 {currentIndex + 1}{" "}
-                <span className="text-slate-400 font-medium">/ {questions.length}</span>
+                <span className="text-slate-400 font-medium">
+                  / {questions.length}
+                </span>
               </p>
             </div>
 
@@ -301,7 +334,9 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
                 }`}
               >
                 <FiShuffle className="size-4" />
-                {!isPremium && <FaCrown className="size-2.5 text-amber-400 absolute -top-0.5 -right-0.5" />}
+                {!isPremium && (
+                  <FaCrown className="size-2.5 text-amber-400 absolute -top-0.5 -right-0.5" />
+                )}
               </button>
               <button
                 onClick={handleRestart}
@@ -390,7 +425,6 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
           </button>
         </div>
       </div>
-
     </div>
   );
 };

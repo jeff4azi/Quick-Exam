@@ -5,6 +5,7 @@ import { supabase } from "../supabaseClient";
 import CoursePicker from "../components/CoursePicker";
 import MatchBox from "../components/MatchBox";
 import { FiChevronLeft, FiRefreshCw, FiClock } from "react-icons/fi";
+import matchIcon from "../images/match.png";
 
 // ─── constants ───────────────────────────────────────────────────────────────
 const MATCH_COUNT = 6;
@@ -34,7 +35,7 @@ const buildGame = (questions) => {
       text: q.question,
       pairId: i,
       state: "idle",
-    }))
+    })),
   );
 
   const answerBoxes = shuffle(
@@ -43,7 +44,7 @@ const buildGame = (questions) => {
       text: q.correct,
       pairId: i,
       state: "idle",
-    }))
+    })),
   );
 
   return { questionBoxes, answerBoxes };
@@ -66,7 +67,7 @@ const MatchScreen = ({ courses, coursesLoading }) => {
   const [questionBoxes, setQuestionBoxes] = useState([]);
   const [answerBoxes, setAnswerBoxes] = useState([]);
   const [selectedQ, setSelectedQ] = useState(null); // box id
-  const [wrongPair, setWrongPair] = useState(null);  // { qId, aId }
+  const [wrongPair, setWrongPair] = useState(null); // { qId, aId }
   const [correctCount, setCorrectCount] = useState(0);
   const [attempts, setAttempts] = useState(0);
 
@@ -96,15 +97,18 @@ const MatchScreen = ({ courses, coursesLoading }) => {
     setLoadingQ(true);
     setErrorQ(null);
     try {
-      const endpoint = course.questionsEndpoint || `/courses/${course.id}/questions`;
+      const endpoint =
+        course.questionsEndpoint || `/courses/${course.id}/questions`;
       const res = await fetch(`${API_BASE_URL}${endpoint}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data?.msg || "Failed to load questions");
       const valid = (Array.isArray(data) ? data : []).filter(
-        (q) => q?.question && q?.correct
+        (q) => q?.question && q?.correct,
       );
       if (valid.length < MATCH_COUNT)
-        throw new Error(`Need at least ${MATCH_COUNT} questions. Only ${valid.length} found.`);
+        throw new Error(
+          `Need at least ${MATCH_COUNT} questions. Only ${valid.length} found.`,
+        );
       setAllQuestions(valid);
     } catch (err) {
       setErrorQ(err.message);
@@ -133,7 +137,7 @@ const MatchScreen = ({ courses, coursesLoading }) => {
       startTimer();
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [],
   );
 
   // Start game once questions are loaded
@@ -154,7 +158,9 @@ const MatchScreen = ({ courses, coursesLoading }) => {
     // Save to Supabase in background
     (async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         if (user) {
           await supabase.from("match_attempts").insert({
             user_id: user.id,
@@ -175,7 +181,7 @@ const MatchScreen = ({ courses, coursesLoading }) => {
         courseName: selectedCourse?.name,
       },
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [correctCount, phase]);
 
   // ── clear wrong highlight after 800ms ──
@@ -186,10 +192,10 @@ const MatchScreen = ({ courses, coursesLoading }) => {
       setSelectedQ(null);
       // reset wrong boxes back to idle
       setQuestionBoxes((prev) =>
-        prev.map((b) => (b.state === "wrong" ? { ...b, state: "idle" } : b))
+        prev.map((b) => (b.state === "wrong" ? { ...b, state: "idle" } : b)),
       );
       setAnswerBoxes((prev) =>
-        prev.map((b) => (b.state === "wrong" ? { ...b, state: "idle" } : b))
+        prev.map((b) => (b.state === "wrong" ? { ...b, state: "idle" } : b)),
       );
     }, 800);
     return () => clearTimeout(t);
@@ -202,16 +208,19 @@ const MatchScreen = ({ courses, coursesLoading }) => {
     if (selectedQ === box.id) {
       setSelectedQ(null);
       setQuestionBoxes((prev) =>
-        prev.map((b) => (b.id === box.id ? { ...b, state: "idle" } : b))
+        prev.map((b) => (b.id === box.id ? { ...b, state: "idle" } : b)),
       );
       return;
     }
     // deselect previous q
     setQuestionBoxes((prev) =>
       prev.map((b) =>
-        b.id === selectedQ ? { ...b, state: "idle" } :
-        b.id === box.id   ? { ...b, state: "selected" } : b
-      )
+        b.id === selectedQ
+          ? { ...b, state: "idle" }
+          : b.id === box.id
+            ? { ...b, state: "selected" }
+            : b,
+      ),
     );
     setSelectedQ(box.id);
   };
@@ -227,19 +236,19 @@ const MatchScreen = ({ courses, coursesLoading }) => {
 
     if (isMatch) {
       setQuestionBoxes((prev) =>
-        prev.map((b) => (b.id === selectedQ ? { ...b, state: "correct" } : b))
+        prev.map((b) => (b.id === selectedQ ? { ...b, state: "correct" } : b)),
       );
       setAnswerBoxes((prev) =>
-        prev.map((b) => (b.id === box.id ? { ...b, state: "correct" } : b))
+        prev.map((b) => (b.id === box.id ? { ...b, state: "correct" } : b)),
       );
       setSelectedQ(null);
       setCorrectCount((c) => c + 1);
     } else {
       setQuestionBoxes((prev) =>
-        prev.map((b) => (b.id === selectedQ ? { ...b, state: "wrong" } : b))
+        prev.map((b) => (b.id === selectedQ ? { ...b, state: "wrong" } : b)),
       );
       setAnswerBoxes((prev) =>
-        prev.map((b) => (b.id === box.id ? { ...b, state: "wrong" } : b))
+        prev.map((b) => (b.id === box.id ? { ...b, state: "wrong" } : b)),
       );
       setWrongPair({ qId: selectedQ, aId: box.id });
     }
@@ -269,7 +278,11 @@ const MatchScreen = ({ courses, coursesLoading }) => {
       <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
           <div className="size-14 rounded-2xl bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center animate-pulse">
-            <span className="text-2xl">🧩</span>
+            <img
+              src={matchIcon}
+              alt="Match"
+              className="w-8 h-8 object-contain"
+            />
           </div>
           <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
             Setting up the game...
@@ -285,7 +298,10 @@ const MatchScreen = ({ courses, coursesLoading }) => {
         <div className="text-center space-y-4">
           <p className="text-slate-500 dark:text-slate-400 text-sm">{errorQ}</p>
           <button
-            onClick={() => { setPhase("pick"); setErrorQ(null); }}
+            onClick={() => {
+              setPhase("pick");
+              setErrorQ(null);
+            }}
             className="px-5 py-2.5 rounded-2xl bg-emerald-600 text-white text-sm font-bold"
           >
             Go back
@@ -300,12 +316,14 @@ const MatchScreen = ({ courses, coursesLoading }) => {
   // ─────────────────────────────────────────────────────────────────────────
   return (
     <div className="h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col transition-colors duration-500 overflow-hidden">
-
       {/* ── Header ── */}
       <div className="sticky top-0 z-20 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-5 pb-3 border-b border-gray-100 dark:border-slate-800">
         <div className="max-w-3xl mx-auto flex items-center justify-between gap-3 relative">
           <button
-            onClick={() => { stopTimer(); setPhase("pick"); }}
+            onClick={() => {
+              stopTimer();
+              setPhase("pick");
+            }}
             className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm active:scale-90 transition-all"
           >
             <FiChevronLeft className="size-5 text-slate-600 dark:text-slate-300" />
@@ -376,15 +394,16 @@ const MatchScreen = ({ courses, coursesLoading }) => {
         </div>
 
         {/* Hint */}
-        <p className={`text-center text-xs mt-2 font-semibold transition-colors ${
-          selectedQ
-            ? "text-emerald-500 animate-pulse"
-            : "text-slate-400"
-        }`}>
-          {selectedQ ? "Now tap the matching answer →" : "Tap a question, then its matching answer"}
+        <p
+          className={`text-center text-xs mt-2 font-semibold transition-colors ${
+            selectedQ ? "text-emerald-500 animate-pulse" : "text-slate-400"
+          }`}
+        >
+          {selectedQ
+            ? "Now tap the matching answer →"
+            : "Tap a question, then its matching answer"}
         </p>
       </div>
-
     </div>
   );
 };

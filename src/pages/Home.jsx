@@ -8,6 +8,9 @@ import { withTimeout } from "../utils/withTimeout";
 import Avatar from "../components/Avatar";
 import NavBar from "../components/NavBar";
 import { useVisibilityRefresh } from "../hooks/useVisibilityRefresh";
+import flashCardIcon from "../images/flash-card.webp";
+import testIcon from "../images/test.webp";
+import matchIcon from "../images/match.png";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -625,7 +628,7 @@ const Home = ({
               title: "Flashcards",
               description: "Review and memorize",
               bg: "bg-violet-50 dark:bg-violet-900/20",
-              icon: "🃏",
+              icon: flashCardIcon,
               onClick: () => {
                 trackStudyModeClick("flashcards");
                 navigate("/flashcards");
@@ -635,7 +638,7 @@ const Home = ({
               title: "Test",
               description: "Check your understanding",
               bg: "bg-sky-50 dark:bg-sky-900/20",
-              icon: "📝",
+              icon: testIcon,
               onClick: () => {
                 trackStudyModeClick("test");
                 navigate("/test");
@@ -645,7 +648,7 @@ const Home = ({
               title: "Match",
               description: "Click fast and score high",
               bg: "bg-emerald-50 dark:bg-emerald-900/20",
-              icon: "🧩",
+              icon: matchIcon,
               onClick: () => {
                 trackStudyModeClick("match");
                 navigate("/match");
@@ -658,7 +661,11 @@ const Home = ({
               onClick={mode.onClick}
               className={`${mode.bg} p-6 rounded-2xl text-left cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]`}
             >
-              <span className="text-2xl">{mode.icon}</span>
+              <img
+                src={mode.icon}
+                alt={mode.title}
+                className="w-10 h-10 object-contain"
+              />
               <p className="mt-3 font-black text-slate-800 dark:text-slate-100 text-base">
                 {mode.title}
               </p>

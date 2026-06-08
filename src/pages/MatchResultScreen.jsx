@@ -4,14 +4,30 @@ import { supabase } from "../supabaseClient";
 import { FiChevronLeft, FiClock, FiRefreshCw, FiZap } from "react-icons/fi";
 import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import Avatar from "../components/Avatar";
+import matchIcon from "../images/match.png";
 
 const formatTime = (ms) => `${(ms / 1000).toFixed(2)}s`;
 
 const rankBadge = (rank) => {
-  if (rank === 1) return { bg: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300", icon: <FaCrown className="text-amber-400" /> };
-  if (rank === 2) return { bg: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200", icon: <FaMedal className="text-slate-400" /> };
-  if (rank === 3) return { bg: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300", icon: <FaMedal className="text-orange-400" /> };
-  return { bg: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300", icon: <span className="text-xs font-black">#{rank}</span> };
+  if (rank === 1)
+    return {
+      bg: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300",
+      icon: <FaCrown className="text-amber-400" />,
+    };
+  if (rank === 2)
+    return {
+      bg: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200",
+      icon: <FaMedal className="text-slate-400" />,
+    };
+  if (rank === 3)
+    return {
+      bg: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300",
+      icon: <FaMedal className="text-orange-400" />,
+    };
+  return {
+    bg: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300",
+    icon: <span className="text-xs font-black">#{rank}</span>,
+  };
 };
 
 const MatchResultScreen = () => {
@@ -37,7 +53,9 @@ const MatchResultScreen = () => {
     const load = async () => {
       setLoadingLB(true);
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         setMyUserId(user?.id ?? null);
 
         // Start of today in UTC
@@ -46,7 +64,9 @@ const MatchResultScreen = () => {
 
         const { data, error } = await supabase
           .from("match_attempts")
-          .select("user_id, time_ms, created_at, profiles(full_name, avatar_url, is_premium, user_name)")
+          .select(
+            "user_id, time_ms, created_at, profiles(full_name, avatar_url, is_premium, user_name)",
+          )
           .eq("course_id", courseId)
           .gte("created_at", todayStart.toISOString())
           .order("time_ms", { ascending: true })
@@ -64,7 +84,7 @@ const MatchResultScreen = () => {
         });
 
         const sorted = Array.from(bestByUser.values()).sort(
-          (a, b) => a.time_ms - b.time_ms
+          (a, b) => a.time_ms - b.time_ms,
         );
 
         setLeaderboard(sorted);
@@ -85,7 +105,6 @@ const MatchResultScreen = () => {
 
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col transition-colors duration-500">
-
       {/* Header */}
       <div className="sticky top-0 z-10 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-5 pb-3 border-b border-gray-100 dark:border-slate-800">
         <div className="max-w-lg mx-auto flex items-center gap-3">
@@ -96,23 +115,32 @@ const MatchResultScreen = () => {
             <FiChevronLeft className="size-5 text-slate-600 dark:text-slate-300" />
           </button>
           <div>
-            <h1 className="text-lg font-black text-slate-900 dark:text-white">Results</h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">{courseName}</p>
+            <h1 className="text-lg font-black text-slate-900 dark:text-white">
+              Results
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {courseName}
+            </p>
           </div>
         </div>
       </div>
 
       <div className="flex-1 px-5 py-6 overflow-y-auto">
         <div className="max-w-lg mx-auto space-y-5">
-
           {/* Score card */}
           <div className="bg-emerald-600 rounded-[2rem] p-6 text-white shadow-xl shadow-emerald-200 dark:shadow-none">
             <div className="flex items-center gap-3 mb-4">
               <div className="size-12 rounded-2xl bg-white/20 flex items-center justify-center">
-                <span className="text-2xl">🧩</span>
+                <img
+                  src={matchIcon}
+                  alt="Match"
+                  className="w-6 h-6 object-contain"
+                />
               </div>
               <div>
-                <p className="text-emerald-100 text-xs font-bold uppercase tracking-widest">All matched!</p>
+                <p className="text-emerald-100 text-xs font-bold uppercase tracking-widest">
+                  All matched!
+                </p>
                 <p className="text-white font-black text-lg">{courseName}</p>
               </div>
             </div>
@@ -121,12 +149,18 @@ const MatchResultScreen = () => {
               <div className="bg-white/15 rounded-2xl p-4">
                 <div className="flex items-center gap-1.5 mb-1">
                   <FiClock className="size-3 text-emerald-200" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-200">Time</p>
+                  <p className="text-[10px] font-black uppercase tracking-widest text-emerald-200">
+                    Time
+                  </p>
                 </div>
-                <p className="text-2xl font-black tabular-nums">{formatTime(timeMs)}</p>
+                <p className="text-2xl font-black tabular-nums">
+                  {formatTime(timeMs)}
+                </p>
               </div>
               <div className="bg-white/15 rounded-2xl p-4">
-                <p className="text-[10px] font-black uppercase tracking-widest text-emerald-200 mb-1">Attempts</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-emerald-200 mb-1">
+                  Attempts
+                </p>
                 <p className="text-2xl font-black tabular-nums">{attempts}</p>
               </div>
             </div>
@@ -135,7 +169,8 @@ const MatchResultScreen = () => {
               <div className="mt-3 bg-white/15 rounded-2xl px-4 py-3 flex items-center gap-2">
                 <FaTrophy className="text-yellow-300 size-4" />
                 <p className="text-sm font-black">
-                  You ranked <span className="text-yellow-300">#{myRank}</span> today
+                  You ranked <span className="text-yellow-300">#{myRank}</span>{" "}
+                  today
                 </p>
               </div>
             )}
@@ -144,7 +179,11 @@ const MatchResultScreen = () => {
           {/* Action buttons */}
           <div className="flex gap-3">
             <button
-              onClick={() => navigate("/match", { state: { courseId, courseName, replay: true } })}
+              onClick={() =>
+                navigate("/match", {
+                  state: { courseId, courseName, replay: true },
+                })
+              }
               className="flex-1 py-3.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition-all shadow-sm"
             >
               <FiRefreshCw className="size-4" />
@@ -170,7 +209,10 @@ const MatchResultScreen = () => {
             {loadingLB ? (
               <div className="space-y-2">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-14 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 animate-pulse" />
+                  <div
+                    key={i}
+                    className="h-14 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 animate-pulse"
+                  />
                 ))}
               </div>
             ) : leaderboard.length === 0 ? (
@@ -197,37 +239,56 @@ const MatchResultScreen = () => {
                       }`}
                     >
                       {/* Rank badge */}
-                      <div className={`size-10 rounded-2xl flex items-center justify-center font-black text-sm shrink-0 ${bg}`}>
+                      <div
+                        className={`size-10 rounded-2xl flex items-center justify-center font-black text-sm shrink-0 ${bg}`}
+                      >
                         {icon}
                       </div>
 
                       {/* Avatar */}
                       <button
                         type="button"
-                        onClick={() => setPreviewUrl(row.profiles?.avatar_url || null)}
+                        onClick={() =>
+                          setPreviewUrl(row.profiles?.avatar_url || null)
+                        }
                         className="shrink-0 rounded-full active:scale-90 transition-transform"
                       >
-                        <Avatar avatarUrl={row.profiles?.avatar_url} size="sm" lazy />
+                        <Avatar
+                          avatarUrl={row.profiles?.avatar_url}
+                          size="sm"
+                          lazy
+                        />
                       </button>
 
                       {/* Name */}
                       <div className="flex-1 min-w-0">
-                        <p className={`font-black truncate flex items-center gap-1.5 ${isMe ? "text-emerald-700 dark:text-emerald-400" : "text-slate-900 dark:text-white"}`}>
+                        <p
+                          className={`font-black truncate flex items-center gap-1.5 ${isMe ? "text-emerald-700 dark:text-emerald-400" : "text-slate-900 dark:text-white"}`}
+                        >
                           {name}
                           {isPremium && (
                             <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-500 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide">
-                              <FaCrown size={8} />PRO
+                              <FaCrown size={8} />
+                              PRO
                             </span>
                           )}
-                          {isMe && <span className="text-[10px] font-black text-emerald-500">(you)</span>}
+                          {isMe && (
+                            <span className="text-[10px] font-black text-emerald-500">
+                              (you)
+                            </span>
+                          )}
                         </p>
                         {userName && (
-                          <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate">@{userName}</p>
+                          <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate">
+                            @{userName}
+                          </p>
                         )}
                       </div>
 
                       {/* Time */}
-                      <span className={`text-sm font-black tabular-nums shrink-0 ${isMe ? "text-emerald-600 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"}`}>
+                      <span
+                        className={`text-sm font-black tabular-nums shrink-0 ${isMe ? "text-emerald-600 dark:text-emerald-400" : "text-slate-500 dark:text-slate-400"}`}
+                      >
                         {formatTime(row.time_ms)}
                       </span>
                     </div>
