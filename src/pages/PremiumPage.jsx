@@ -81,12 +81,36 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
     }
   };
 
-  const price =  userProfile.university === "TASUED" ? 2000 : 500; // Example: TASUED students pay ₦2000, others pay ₦500
+  const isTASUEDStudent =
+    userProfile?.university?.trim()?.toUpperCase() === "TASUED";
+
+  const tasuedPlans = [
+    {
+      id: "14-days",
+      title: "14-Day Access",
+      price: 1000,
+      description: "Full premium access for 14 days.",
+      duration: "14 days",
+      popular: false,
+    },
+    {
+      id: "full-semester",
+      title: "Full Semester Access",
+      price: 2000,
+      description: "Unlimited premium access for the full semester.",
+      duration: "Full semester",
+      popular: true,
+    },
+  ];
+
+  const [selectedPlan, setSelectedPlan] = useState(tasuedPlans[1]);
+
+  const price = isTASUEDStudent ? selectedPlan.price : 500;
 
   const handleGetCode = () => {
     const phoneNumber = "2347015585397"; // Your WhatsApp number here
     const message = encodeURIComponent(
-      `Hello, I just paid ₦${price} for QuizBolt Premium.\n\nUser Name: ${userProfile.user_name}\nUniversity: ${userProfile.university}\n\nHere is my receipt:`,
+      `Hello, I just paid ₦${price} for QuizBolt Premium.\n\nUser Name: ${userProfile?.user_name || "Scholar"}\nUniversity: ${userProfile?.university || "Unknown"}\nPlan: ${isTASUEDStudent ? selectedPlan.title : "Premium Access"}\n\nHere is my receipt:`,
     );
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
   };
@@ -162,6 +186,47 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
           </p>
         </div>
 
+        {isTASUEDStudent && (
+          <div className="grid gap-4 mb-8">
+            {tasuedPlans.map((plan) => (
+              <button
+                key={plan.id}
+                type="button"
+                onClick={() => setSelectedPlan(plan)}
+                className={`w-full rounded-[2rem] border p-5 text-left transition-all shadow-sm ${
+                  selectedPlan.id === plan.id
+                    ? "border-blue-600 bg-blue-50 dark:bg-blue-900/30"
+                    : "border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-800"
+                } ${plan.popular ? "relative overflow-hidden" : ""}`}
+              >
+                {plan.popular && (
+                  <span className="absolute top-4 right-4 rounded-full bg-blue-600 text-white text-[10px] uppercase font-black px-3 py-1">
+                    Popular
+                  </span>
+                )}
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="text-slate-900 dark:text-white font-black text-lg">
+                      {plan.title}
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-400 text-xs mt-1">
+                      {plan.description}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-2xl font-black text-slate-900 dark:text-white">
+                      ₦{plan.price.toLocaleString()}
+                    </p>
+                    <p className="text-[11px] uppercase tracking-[0.2em] text-slate-400 mt-1">
+                      {plan.duration}
+                    </p>
+                  </div>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
+
         <form onSubmit={handleActivate} className="space-y-4">
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -204,16 +269,24 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
             </p>
             <div className="bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 rounded-2xl p-4 text-center mb-3">
               <p className="text-sm font-black text-slate-800 dark:text-white mb-2">
-                Full Semester Access —{" "}
+                {isTASUEDStudent
+                  ? `${selectedPlan.title} — `
+                  : "Premium Access — "}
                 {price.toLocaleString("en-NG", {
                   style: "currency",
                   currency: "NGN",
                 })}
               </p>
 
-              <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
-                Pay to the account below and send your receipt
-              </p>
+              {isTASUEDStudent ? (
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+                  Pay for the selected TASUED plan and send your receipt.
+                </p>
+              ) : (
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">
+                  Pay to the account below and send your receipt
+                </p>
+              )}
 
               <div className="text-sm font-semibold text-slate-700 dark:text-slate-300 space-y-1">
                 <p>Bank: Palmpay</p>
