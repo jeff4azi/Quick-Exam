@@ -221,6 +221,7 @@ const Home = ({
 
   const handleResumeExam = () => {
     if (examSession) {
+      setSelectedCourse(examSession.selectedCourse);
       navigate("/exam");
     }
   };
