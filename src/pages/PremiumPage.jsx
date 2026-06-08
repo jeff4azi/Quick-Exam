@@ -197,10 +197,10 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
                   selectedPlan.id === plan.id
                     ? "border-blue-600 bg-blue-50 dark:bg-blue-900/30"
                     : "border-gray-200 bg-white dark:border-slate-700 dark:bg-slate-800"
-                } ${plan.popular ? "relative overflow-hidden" : ""}`}
+                } ${plan.popular ? "relative" : ""}`}
               >
                 {plan.popular && (
-                  <span className="absolute top-4 right-4 rounded-full bg-blue-600 text-white text-[10px] uppercase font-black px-3 py-1">
+                  <span className="absolute -top-3 right-2 rounded-full bg-blue-600 text-white text-[10px] uppercase font-black px-3 py-1">
                     Popular
                   </span>
                 )}
