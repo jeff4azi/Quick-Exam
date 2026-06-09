@@ -13,7 +13,7 @@ import {
 } from "react-icons/fi";
 import { FaCrown, FaTelegramPlane, FaWhatsapp, FaCamera } from "react-icons/fa";
 import Avatar from "../components/Avatar";
-import whatsappChannelIcon from "../images/whatsappchannelicon.png";
+import whatsappChannelIcon from "../images/whatsappchannelicon.webp";
 import {
   getWhatsAppCommunityUrl,
   WHATSAPP_CHANNEL_URL,

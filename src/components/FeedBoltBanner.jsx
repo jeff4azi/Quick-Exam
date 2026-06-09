@@ -3,7 +3,7 @@ import {
   trackFeedBoltCTAClick,
   trackFeedBoltCTADismiss,
 } from "../utils/analytics";
-import feedBoltLogo from "../images/FeedBolt.jpg";
+import feedBoltLogo from "../images/FeedBolt.webp";
 
 const FEEDBOLT_URL = "https://feedbolt-beige.vercel.app/";
 const STORAGE_KEY = "feedbolt_cta_dismissed";

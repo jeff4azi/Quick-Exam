@@ -10,7 +10,7 @@ import NavBar from "../components/NavBar";
 import { useVisibilityRefresh } from "../hooks/useVisibilityRefresh";
 import flashCardIcon from "../images/flash-card.webp";
 import testIcon from "../images/test.webp";
-import matchIcon from "../images/match.png";
+import matchIcon from "../images/match.webp";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";

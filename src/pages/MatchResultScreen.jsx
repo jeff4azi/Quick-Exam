@@ -4,7 +4,7 @@ import { supabase } from "../supabaseClient";
 import { FiChevronLeft, FiClock, FiRefreshCw, FiZap } from "react-icons/fi";
 import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import Avatar from "../components/Avatar";
-import matchIcon from "../images/match.png";
+import matchIcon from "../images/match.webp";
 
 const formatTime = (ms) => `${(ms / 1000).toFixed(2)}s`;
 

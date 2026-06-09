@@ -5,7 +5,7 @@ import { supabase } from "../supabaseClient";
 import CoursePicker from "../components/CoursePicker";
 import MatchBox from "../components/MatchBox";
 import { FiChevronLeft, FiRefreshCw, FiClock } from "react-icons/fi";
-import matchIcon from "../images/match.png";
+import matchIcon from "../images/match.webp";
 
 // ─── constants ───────────────────────────────────────────────────────────────
 const MATCH_COUNT = 6;
