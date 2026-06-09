@@ -228,6 +228,7 @@ const ExamScreen = ({
   questionsLoading,
   isPremium,
   autoAdvance,
+  shuffleOptions,
   showPagination,
   userProfile,
   questionType,
@@ -395,11 +396,14 @@ const ExamScreen = ({
       questions.length > 0 &&
       shuffledQuestions.length === 0
     ) {
+      // shuffleOptions defaults to true; premium users can disable it
+      const shouldShuffle = shuffleOptions !== false;
       const shuffled = questions.map((q) => ({
         ...q,
-        options: Array.isArray(q.options)
-          ? shuffleArray([...q.options])
-          : undefined,
+        options:
+          shouldShuffle && Array.isArray(q.options)
+            ? shuffleArray([...q.options])
+            : q.options,
       }));
       setShuffledQuestions(shuffled);
     }
@@ -411,6 +415,7 @@ const ExamScreen = ({
     selectedCourse?.id,
     questionType,
     hasMatchingQuestions,
+    shuffleOptions,
   ]);
 
   // Ensure we always have an endsAtMs when exam starts/resumes.

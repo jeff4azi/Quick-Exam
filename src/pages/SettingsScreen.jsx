@@ -10,6 +10,7 @@ import {
   FiLogOut,
   FiMoon,
   FiSettings,
+  FiShuffle,
   FiTrash2,
   FiZap,
 } from "react-icons/fi";
@@ -101,6 +102,8 @@ const SettingsScreen = ({
   toggleDarkMode,
   autoAdvance,
   toggleAutoAdvance,
+  shuffleOptions,
+  toggleShuffleOptions,
   showPagination,
   toggleShowPagination,
 }) => {
@@ -206,6 +209,30 @@ const SettingsScreen = ({
                   onClick={
                     isPremium
                       ? toggleAutoAdvance
+                      : () => setPremiumOverlayOpen(true)
+                  }
+                  disabled={!isPremium}
+                />
+                {!isPremium && (
+                  <span className="absolute -right-1 -top-2 rounded-full border-2 border-white bg-amber-400 p-1 dark:border-slate-900">
+                    <FaCrown className="text-[8px] text-white" />
+                  </span>
+                )}
+              </div>
+            </SettingRow>
+
+            <SettingRow
+              icon={FiShuffle}
+              title="Shuffle options"
+              description="Randomise answer order for each question."
+              tone={isPremium ? "default" : "warning"}
+            >
+              <div className="relative">
+                <Toggle
+                  checked={shuffleOptions || !isPremium}
+                  onClick={
+                    isPremium
+                      ? toggleShuffleOptions
                       : () => setPremiumOverlayOpen(true)
                   }
                   disabled={!isPremium}

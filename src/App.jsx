@@ -87,6 +87,15 @@ function App() {
     }
   });
 
+  const [shuffleOptions, setShuffleOptions] = useState(() => {
+    try {
+      const saved = localStorage.getItem("shuffleOptionsPreference");
+      return saved !== null ? JSON.parse(saved) : true; // Default to true
+    } catch {
+      return true;
+    }
+  });
+
   const [showPagination, setShowPagination] = useState(() => {
     try {
       const saved = localStorage.getItem("showPaginationPreference");
@@ -379,6 +388,17 @@ function App() {
   useEffect(() => {
     try {
       localStorage.setItem(
+        "shuffleOptionsPreference",
+        JSON.stringify(shuffleOptions),
+      );
+    } catch (err) {
+      console.error("Failed to save shuffle options preference:", err);
+    }
+  }, [shuffleOptions]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
         "showPaginationPreference",
         JSON.stringify(showPagination),
       );
@@ -594,6 +614,8 @@ function App() {
     toggleDarkMode: () => setIsDarkMode((prev) => !prev),
     autoAdvance,
     toggleAutoAdvance: () => setAutoAdvance((prev) => !prev),
+    shuffleOptions,
+    toggleShuffleOptions: () => setShuffleOptions((prev) => !prev),
     showPagination,
     toggleShowPagination: () => setShowPagination((prev) => !prev),
     selectedQuestionCount,
@@ -772,6 +794,10 @@ function App() {
                       toggleDarkMode={() => setIsDarkMode((prev) => !prev)}
                       autoAdvance={autoAdvance}
                       toggleAutoAdvance={() => setAutoAdvance((prev) => !prev)}
+                      shuffleOptions={shuffleOptions}
+                      toggleShuffleOptions={() =>
+                        setShuffleOptions((prev) => !prev)
+                      }
                       showPagination={showPagination}
                       toggleShowPagination={() =>
                         setShowPagination((prev) => !prev)
