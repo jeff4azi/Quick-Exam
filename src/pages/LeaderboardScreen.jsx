@@ -804,29 +804,29 @@ const LeaderboardRow = ({
                 : "text-slate-400 dark:text-slate-500"
             }`}
           >
-            Best: {bestPercent}% • Attempts: {attempts}
+            Avg: {avgTime} • Attempts: {attempts}
           </p>
         </div>
       </div>
 
       <div className="text-right">
         <p
-          className={`text-xs font-semibold ${
+          className={`text-xs font-semibold text-center ${
             isCurrentUser
               ? "text-blue-600 dark:text-blue-400"
               : "text-slate-400 dark:text-slate-500"
           }`}
         >
-          Avg. Time
+          Best
         </p>
         <p
-          className={`text-sm font-bold ${
+          className={`text-lg font-bold ${
             isCurrentUser
               ? "text-blue-700 dark:text-blue-300"
               : "text-slate-800 dark:text-slate-100"
           }`}
         >
-          {avgTime}
+          {bestPercent}%
         </p>
       </div>
     </div>
