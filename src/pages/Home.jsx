@@ -178,6 +178,13 @@ const Home = ({
     if (isInStandaloneMode) return;
     if (localStorage.getItem("pwaInstalled")) return;
 
+    // Don't re-show the prompt while the user has snoozed it
+    const snoozedUntil = parseInt(
+      localStorage.getItem("pwaPromptSnoozedUntil") || "0",
+      10,
+    );
+    if (Date.now() < snoozedUntil) return;
+
     // Android: the event may have already fired before React mounted.
     // main.jsx captures it on window.__pwaInstallPrompt for exactly this case.
     if (window.__pwaInstallPrompt) {
@@ -191,9 +198,16 @@ const Home = ({
     const handler = (e) => {
       e.preventDefault();
       window.__pwaInstallPrompt = e;
-      setInstallPrompt(e);
-      setShowInstallOverlay(true);
-      trackPWAInstallPrompt();
+      // Don't show the overlay if still within the snooze period
+      const snoozed = parseInt(
+        localStorage.getItem("pwaPromptSnoozedUntil") || "0",
+        10,
+      );
+      if (Date.now() >= snoozed) {
+        setInstallPrompt(e);
+        setShowInstallOverlay(true);
+        trackPWAInstallPrompt();
+      }
     };
 
     window.addEventListener("beforeinstallprompt", handler);
@@ -231,6 +245,11 @@ const Home = ({
   };
 
   const handleInstallDismiss = () => {
+    // Snooze for 6 hours — store the time the user dismissed
+    localStorage.setItem(
+      "pwaPromptSnoozedUntil",
+      String(Date.now() + 6 * 60 * 60 * 1000),
+    );
     setShowInstallOverlay(false);
     trackPWADismissed();
   };
