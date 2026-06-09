@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
+import LoadingScreen from "../components/LoadingScreen";
 import { RenderMathText } from "../utils/RenderMathText";
 import ProgressBar from "../components/ProgressBar";
 import Timer from "../components/Timer";
@@ -16,7 +17,6 @@ import {
   FiBookmark,
   FiSend,
   FiChevronRight,
-  FiLoader,
   FiX,
 } from "react-icons/fi";
 import { supabase } from "../supabaseClient";
@@ -707,21 +707,7 @@ const ExamScreen = ({
     shuffledQuestions.length === 0 ||
     !currentQuestion
   ) {
-    return (
-      <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 transition-colors duration-500 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative">
-            <div className="absolute inset-0 rounded-full bg-blue-500/10 animate-ping" />
-            <div className="relative size-16 rounded-3xl bg-white dark:bg-slate-800 border border-blue-100 dark:border-slate-700 flex items-center justify-center shadow-lg shadow-blue-200/60 dark:shadow-none">
-              <FiLoader className="size-8 text-blue-600 dark:text-blue-400 animate-spin" />
-            </div>
-          </div>
-          <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
-            Preparing your questions...
-          </p>
-        </div>
-      </div>
-    );
+    return <LoadingScreen text="Preparing questions" />;
   }
 
   return (
