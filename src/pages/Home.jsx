@@ -178,8 +178,19 @@ const Home = ({
     if (isInStandaloneMode) return;
     if (localStorage.getItem("pwaInstalled")) return;
 
+    // Android: the event may have already fired before React mounted.
+    // main.jsx captures it on window.__pwaInstallPrompt for exactly this case.
+    if (window.__pwaInstallPrompt) {
+      setInstallPrompt(window.__pwaInstallPrompt);
+      setShowInstallOverlay(true);
+      trackPWAInstallPrompt();
+    }
+
+    // Also keep a live listener in case the event fires after mount
+    // (e.g. delayed by browser heuristics on first visit).
     const handler = (e) => {
       e.preventDefault();
+      window.__pwaInstallPrompt = e;
       setInstallPrompt(e);
       setShowInstallOverlay(true);
       trackPWAInstallPrompt();
@@ -187,6 +198,7 @@ const Home = ({
 
     window.addEventListener("beforeinstallprompt", handler);
 
+    // iOS doesn't support beforeinstallprompt — show manual guide instead.
     if (isIOS) {
       setShowInstallOverlay(true);
       trackPWAInstallPrompt();
@@ -213,6 +225,7 @@ const Home = ({
         setShowInstallOverlay(false);
         trackPWAInstalled();
       }
+      window.__pwaInstallPrompt = null;
       setInstallPrompt(null);
     }
   };
