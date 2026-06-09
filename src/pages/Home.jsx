@@ -792,7 +792,7 @@ const Home = ({
                               ? "Theory"
                               : item.type === "FIB"
                                 ? "Fill in Blanks"
-                                : "Obj"}
+                                : "Objective"}
                           </span>
                         )}
                       </div>
@@ -898,7 +898,7 @@ const Home = ({
                           {course._questionType === "theory"
                             ? "Theory"
                             : course._questionType === "fib"
-                              ? "Fill in Blanks"
+                              ? "Fill Blanks"
                               : "Objective"}
                         </span>
                       </div>

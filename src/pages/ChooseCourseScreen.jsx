@@ -21,6 +21,19 @@ import {
 import { clearExamSession } from "../utils/examSessionStorage";
 import SectionLoader from "../components/SectionLoader";
 
+// Read favourite IDs from the same cache Home screen writes to — instant on mount
+const HOME_DASHBOARD_CACHE_PREFIX = "quizboltHomeDashboard:";
+const readCachedFavouriteIds = (userId) => {
+  try {
+    if (!userId) return null;
+    const raw = localStorage.getItem(`${HOME_DASHBOARD_CACHE_PREFIX}${userId}`);
+    const parsed = raw ? JSON.parse(raw) : null;
+    return Array.isArray(parsed?.favouriteIds) ? parsed.favouriteIds : null;
+  } catch {
+    return null;
+  }
+};
+
 const ChooseCourseScreen = ({
   selectedQuestionCount,
   setSelectedQuestionCount,
@@ -41,12 +54,31 @@ const ChooseCourseScreen = ({
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [theoryOverlayOpen, setTheoryOverlayOpen] = useState(false);
   const [requestCourseOverlay, setRequestCourseOverlay] = useState(false);
-  const [favouriteIds, setFavouriteIds] = useState([]);
+  // Initialise immediately from the Home screen's localStorage cache so hearts
+  // render red on first paint — no waiting for the async Supabase fetch.
+  const [favouriteIds, setFavouriteIds] = useState(
+    () => readCachedFavouriteIds(userProfile?.id) ?? [],
+  );
+  const [pendingFavourites, setPendingFavourites] = useState(new Set());
   const [searchQuery, setSearchQuery] = useState("");
 
+  // Sync favourites: if cache was available the UI is already correct; after
+  // the fresh fetch resolves we silently update in the background.
   useEffect(() => {
-    loadFavouriteCourseIds().then(setFavouriteIds);
+    // If we already have ids from cache, skip the loading flash entirely;
+    // still fetch in the background so we're always in sync.
+    loadFavouriteCourseIds().then((fresh) => {
+      setFavouriteIds(fresh);
+    });
   }, []);
+
+  // If userProfile arrives after first render (e.g. slow auth), seed from
+  // cache now so hearts are correct before the async fetch finishes.
+  useEffect(() => {
+    if (!userProfile?.id) return;
+    const cached = readCachedFavouriteIds(userProfile.id);
+    if (cached) setFavouriteIds(cached);
+  }, [userProfile?.id]);
 
   const userCollege = userProfile?.college;
 
@@ -304,9 +336,9 @@ const ChooseCourseScreen = ({
                 <div className="grid gap-2.5 sm:gap-4">
                   {groupedCourses[group].map((course) => {
                     const isSelected = selectedCourse?.id === course.id;
-                    const isFavourite = favouriteIds.includes(
-                      encodeFavouriteKey(course.id, questionType),
-                    );
+                    const favKey = encodeFavouriteKey(course.id, questionType);
+                    const isFavourite = favouriteIds.includes(favKey);
+                    const isPending = pendingFavourites.has(favKey);
                     return (
                       <div
                         key={course.id}
@@ -358,26 +390,52 @@ const ChooseCourseScreen = ({
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
+                              disabled={isPending}
                               onClick={(e) => {
                                 e.stopPropagation();
+
+                                // Optimistically flip the heart immediately
+                                const wasF = isFavourite;
+                                setFavouriteIds((prev) =>
+                                  wasF
+                                    ? prev.filter((id) => id !== favKey)
+                                    : [...prev, favKey],
+                                );
+
+                                // Lock button to prevent double-tap
+                                setPendingFavourites((prev) => {
+                                  const next = new Set(prev);
+                                  next.add(favKey);
+                                  return next;
+                                });
+
                                 toggleFavouriteCourseId(
                                   course.id,
-                                  favouriteIds,
-                                  questionType,
-                                ).then((updated) => {
-                                  setFavouriteIds(updated);
-                                  trackFavouriteToggle(
-                                    course.id,
-                                    !favouriteIds.includes(
-                                      encodeFavouriteKey(
-                                        course.id,
-                                        questionType,
+                                  // Pass the pre-toggle list so the server logic is correct
+                                  wasF
+                                    ? favouriteIds
+                                    : favouriteIds.filter(
+                                        (id) => id !== favKey,
                                       ),
-                                    ),
-                                  );
-                                });
+                                  questionType,
+                                )
+                                  .then((updated) => {
+                                    // Reconcile with server result
+                                    setFavouriteIds(updated);
+                                    trackFavouriteToggle(course.id, !wasF);
+                                  })
+                                  .finally(() => {
+                                    // Unlock button
+                                    setPendingFavourites((prev) => {
+                                      const next = new Set(prev);
+                                      next.delete(favKey);
+                                      return next;
+                                    });
+                                  });
                               }}
                               className={`size-8 sm:size-10 shrink-0 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all active:scale-90 ${
+                                isPending ? "opacity-50 cursor-not-allowed" : ""
+                              } ${
                                 isSelected
                                   ? "bg-white/20 text-white"
                                   : "bg-gray-50 dark:bg-slate-700 text-slate-400 dark:text-slate-300"
@@ -388,8 +446,30 @@ const ChooseCourseScreen = ({
                                   : "Add to favourites"
                               }
                               aria-pressed={isFavourite}
+                              aria-busy={isPending}
                             >
-                              {isFavourite ? (
+                              {isPending ? (
+                                <svg
+                                  className={`size-4 animate-spin ${isSelected ? "text-white" : "text-rose-400"}`}
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <circle
+                                    className="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    strokeWidth="4"
+                                  />
+                                  <path
+                                    className="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                  />
+                                </svg>
+                              ) : isFavourite ? (
                                 <IoHeart
                                   className={
                                     isSelected ? "text-white" : "text-rose-500"
