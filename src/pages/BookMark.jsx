@@ -7,6 +7,7 @@ import ConfirmOverlay from "../components/ConfirmOverlay"; // Added this import
 import { API_BASE_URL } from "../apiConfig";
 import NavBar from "../components/NavBar";
 import { supabase } from "../supabaseClient";
+import SectionLoader from "../components/SectionLoader";
 
 const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
   const navigate = useNavigate();
@@ -172,12 +173,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
 
       <main className="max-w-2xl mx-auto px-6 pt-4 pb-32">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-blue-500 border-b-4 mb-4"></div>
-            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">
-              Loading saved questions...
-            </p>
-          </div>
+          <SectionLoader text="Loading saved questions..." />
         ) : bookmarkedQuestions.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-32 text-center animate-in fade-in duration-700">
             <div className="size-24 bg-slate-100 dark:bg-slate-800 rounded-[2rem] flex items-center justify-center mb-6">

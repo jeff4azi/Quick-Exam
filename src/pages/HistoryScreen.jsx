@@ -35,6 +35,7 @@ import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import NavBar from "../components/NavBar";
 import { useVisibilityRefresh } from "../hooks/useVisibilityRefresh";
+import SectionLoader from "../components/SectionLoader";
 
 const formatTime = (seconds) => {
   if (!seconds) return null;
@@ -307,12 +308,7 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
 
       <main className="max-w-2xl mx-auto px-4 sm:px-6 pt-2 pb-32">
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-blue-500 border-b-2 mb-4" />
-            <p className="text-slate-400 text-sm font-medium">
-              Loading history...
-            </p>
-          </div>
+          <SectionLoader text="Loading history..." />
         ) : totalExams === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
             <div className="size-20 bg-slate-100 dark:bg-slate-800 rounded-full flex items-center justify-center mb-4">

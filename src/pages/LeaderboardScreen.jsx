@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import NavBar from "../components/NavBar";
 import { useVisibilityRefresh } from "../hooks/useVisibilityRefresh";
+import SectionLoader from "../components/SectionLoader";
 import {
   buildLeaderboardEntries,
   compareLeaderboardEntries,
@@ -450,12 +451,7 @@ const LeaderboardScreen = ({
 
         {/* Content */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-4 border-blue-500 border-b-4 mb-4"></div>
-            <p className="text-slate-500 dark:text-slate-400 font-medium">
-              Loading leaderboard...
-            </p>
-          </div>
+          <SectionLoader text="Loading leaderboard..." />
         ) : error ? (
           <div className="bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800 rounded-2xl p-4 text-sm text-red-600 dark:text-red-200 font-medium">
             {error}
