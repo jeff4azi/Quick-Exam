@@ -188,14 +188,17 @@ const shuffleArray = (array) => {
 /** Plain-text length for MCQ options (math delimiters stripped). */
 const getOptionPlainLength = (option) => {
   const text = typeof option === "string" ? option : String(option ?? "");
-  return text.replace(/\$[^$]*\$/g, " ").replace(/\s+/g, " ").trim().length;
+  return text
+    .replace(/\$[^$]*\$/g, " ")
+    .replace(/\s+/g, " ")
+    .trim().length;
 };
 
 const getOptionTextSizeClass = (option, viewportTier = "mobile") => {
   const len = getOptionPlainLength(option);
   const limits = {
-    mobile:  { compact: 60,  relaxed: 45 },
-    tablet:  { compact: 100,  relaxed: 72 },
+    mobile: { compact: 60, relaxed: 45 },
+    tablet: { compact: 100, relaxed: 72 },
     desktop: { compact: 120, relaxed: 92 },
   };
   const { compact, relaxed } = limits[viewportTier] ?? limits.mobile;
@@ -331,7 +334,8 @@ const ExamScreen = ({
   const selectedOption = answers[currentIndex];
   const isBookmarked = bookmarks.includes(currentQuestion?.id);
   const FREE_BOOKMARK_LIMIT = 5;
-  const isBookmarkLocked = !isPremium && !isBookmarked && bookmarks.length >= FREE_BOOKMARK_LIMIT;
+  const isBookmarkLocked =
+    !isPremium && !isBookmarked && bookmarks.length >= FREE_BOOKMARK_LIMIT;
 
   useEffect(() => {
     if (!hasMatchingQuestions) {
@@ -368,8 +372,7 @@ const ExamScreen = ({
         }
 
         const savedTimeLeft =
-          typeof savedSession.timeLeft === "number" &&
-          savedSession.timeLeft > 0
+          typeof savedSession.timeLeft === "number" && savedSession.timeLeft > 0
             ? savedSession.timeLeft
             : null;
         if (savedTimeLeft != null) {
@@ -721,22 +724,14 @@ const ExamScreen = ({
       {/* SUBMITTING LOADING OVERLAY */}
       {isSubmitting && (
         <div className="fixed inset-0 z-[100] bg-gray-50/80 dark:bg-slate-900/80 backdrop-blur-xl flex flex-col items-center justify-center animate-in fade-in duration-300">
-          <div className="relative">
-            {/* Outer Pulse effect */}
-            <div className="absolute inset-0 rounded-full bg-blue-500/20 animate-ping" />
-
-            {/* Center Icon Box */}
-            <div className="relative size-20 bg-blue-600 rounded-[2rem] shadow-2xl shadow-blue-500/40 flex items-center justify-center">
-              <FiLoader className="text-white size-10 animate-spin" />
-            </div>
+          <div className="flex gap-1.5">
+            <div className="h-8 w-1.5 animate-[loading_1s_ease-in-out_infinite] rounded-full bg-blue-600"></div>
+            <div className="h-8 w-1.5 animate-[loading_1s_ease-in-out_0.1s_infinite] rounded-full bg-blue-500"></div>
+            <div className="h-8 w-1.5 animate-[loading_1s_ease-in-out_0.2s_infinite] rounded-full bg-blue-400"></div>
           </div>
-
-          <h2 className="mt-8 text-2xl font-black text-slate-900 dark:text-white tracking-tight">
-            Processing Results
+          <h2 className="mt-6 text-sm font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase">
+            Submitting Exam
           </h2>
-          <p className="mt-2 text-slate-500 dark:text-slate-400 font-medium animate-pulse">
-            Calculating your score...
-          </p>
         </div>
       )}
 

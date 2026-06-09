@@ -4,6 +4,7 @@ import { FiArrowLeft, FiCheckCircle, FiCopy, FiLoader } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
 import { supabase } from "../supabaseClient";
 import { useAuth } from "../context/AuthContext";
+import LoadingScreen from "../components/LoadingScreen";
 
 const TARGET_FRIENDS = 5;
 const PREMIUM_DAYS = 7;
@@ -20,7 +21,7 @@ const formatShortDate = (dateValue) => {
   }
 };
 
-const ReferralDashboard = ({isPremium}) => {
+const ReferralDashboard = ({ isPremium }) => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
 
@@ -48,7 +49,8 @@ const ReferralDashboard = ({isPremium}) => {
 
         const { data: referralsData, error: referralsError } = await supabase
           .from("referrals")
-          .select(`
+          .select(
+            `
             id,
             is_validated,
             created_at,
@@ -56,7 +58,8 @@ const ReferralDashboard = ({isPremium}) => {
               full_name,
               user_name
             )
-          `)
+          `,
+          )
           .eq("referrer_id", user.id)
           .order("created_at", { ascending: false });
 
@@ -127,25 +130,11 @@ const ReferralDashboard = ({isPremium}) => {
   }, [stats.progress]);
 
   if (authLoading) {
-    return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500">
-        <div className="flex items-center gap-3 rounded-2xl bg-white px-5 py-4 text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-200">
-          <FiLoader className="animate-spin text-blue-600 dark:text-blue-400" />
-          <span className="text-sm font-semibold">Loading...</span>
-        </div>
-      </div>
-    );
+    return <LoadingScreen text="Loading" />;
   }
 
   if (loading) {
-    return (
-      <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500">
-        <div className="flex items-center gap-3 rounded-2xl bg-white px-5 py-4 text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-200">
-          <FiLoader className="animate-spin text-blue-600 dark:text-blue-400" />
-          <span className="text-sm font-semibold">Loading referral dashboard...</span>
-        </div>
-      </div>
-    );
+    return <LoadingScreen text="Loading Referrals" />;
   }
 
   if (isPremium) {
@@ -153,7 +142,9 @@ const ReferralDashboard = ({isPremium}) => {
       <div className="min-h-[100dvh] flex flex-col items-center justify-center bg-gray-50 dark:bg-slate-900 transition-colors duration-500">
         <div className="flex items-center gap-3 rounded-2xl bg-white px-5 py-4 text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-200">
           <FiCheckCircle className="text-emerald-500 dark:text-emerald-300" />
-          <span className="text-sm font-semibold">You have already unlocked premium. Enjoy!</span>
+          <span className="text-sm font-semibold">
+            You have already unlocked premium. Enjoy!
+          </span>
         </div>
       </div>
     );

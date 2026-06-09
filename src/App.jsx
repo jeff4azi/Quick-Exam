@@ -45,6 +45,7 @@ import TestModeScreen from "./pages/TestModeScreen";
 import TestResultScreen from "./pages/TestResultScreen";
 import ReferralDashboard from "./pages/ReferralDashboard";
 import RouteStateFallback from "./components/RouteStateFallback";
+import LoadingScreen from "./components/LoadingScreen";
 
 function App() {
   const REFERRAL_STORAGE_KEY = "quizbolt_referral_code";
@@ -632,16 +633,7 @@ function App() {
     <Router>
       <RouteChangeTracker />
       {loading ? (
-        <div className="flex h-screen flex-col items-center justify-center bg-[#F8FAFC] dark:bg-[#0F172A]">
-          <div className="flex gap-1.5">
-            <div className="h-8 w-1.5 animate-[loading_1s_ease-in-out_infinite] rounded-full bg-blue-600"></div>
-            <div className="h-8 w-1.5 animate-[loading_1s_ease-in-out_0.1s_infinite] rounded-full bg-blue-500"></div>
-            <div className="h-8 w-1.5 animate-[loading_1s_ease-in-out_0.2s_infinite] rounded-full bg-blue-400"></div>
-          </div>
-          <h2 className="mt-6 text-sm font-bold tracking-widest text-slate-400 dark:text-slate-500 uppercase">
-            Authenticating
-          </h2>
-        </div>
+        <LoadingScreen text="Authenticating" />
       ) : (
         <AuthProvider>
           <Routes>
