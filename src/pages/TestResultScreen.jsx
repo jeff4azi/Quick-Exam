@@ -4,33 +4,52 @@ import { supabase } from "../supabaseClient";
 import { FiChevronLeft, FiRefreshCw } from "react-icons/fi";
 import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import Avatar from "../components/Avatar";
+import testIcon from "../images/test.webp";
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 const rankBadge = (rank) => {
-  if (rank === 1) return { bg: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300", icon: <FaCrown className="text-amber-400" /> };
-  if (rank === 2) return { bg: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200", icon: <FaMedal className="text-slate-400" /> };
-  if (rank === 3) return { bg: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300", icon: <FaMedal className="text-orange-400" /> };
-  return { bg: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300", icon: <span className="text-xs font-black">#{rank}</span> };
+  if (rank === 1)
+    return {
+      bg: "bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300",
+      icon: <FaCrown className="text-amber-400" />,
+    };
+  if (rank === 2)
+    return {
+      bg: "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200",
+      icon: <FaMedal className="text-slate-400" />,
+    };
+  if (rank === 3)
+    return {
+      bg: "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300",
+      icon: <FaMedal className="text-orange-400" />,
+    };
+  return {
+    bg: "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300",
+    icon: <span className="text-xs font-black">#{rank}</span>,
+  };
 };
 
 const getWeekStartIso = () => {
   const now = new Date();
   const diff = now.getDay();
-  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate() - diff, 0, 0, 0, 0);
+  const start = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate() - diff,
+    0,
+    0,
+    0,
+    0,
+  );
   return start.toISOString();
 };
 
 const cardColor = (pct) => {
-  if (pct >= 70) return "bg-emerald-600 shadow-xl shadow-emerald-200 dark:shadow-none";
-  if (pct >= 50) return "bg-amber-500 shadow-xl shadow-amber-200 dark:shadow-none";
+  if (pct >= 70)
+    return "bg-emerald-600 shadow-xl shadow-emerald-200 dark:shadow-none";
+  if (pct >= 50)
+    return "bg-amber-500 shadow-xl shadow-amber-200 dark:shadow-none";
   return "bg-red-500 shadow-xl shadow-red-200 dark:shadow-none";
-};
-
-const scoreEmoji = (pct) => {
-  if (pct >= 80) return "🏆";
-  if (pct >= 60) return "🎯";
-  if (pct >= 40) return "📚";
-  return "💪";
 };
 
 const TestResultScreen = () => {
@@ -53,14 +72,18 @@ const TestResultScreen = () => {
     const load = async () => {
       setLoadingLB(true);
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
         setMyUserId(user?.id ?? null);
 
         const weekStart = getWeekStartIso();
 
         const { data, error } = await supabase
           .from("test_attempts")
-          .select("user_id, score, total_questions, created_at, profiles(full_name, avatar_url, is_premium, user_name)")
+          .select(
+            "user_id, score, total_questions, created_at, profiles(full_name, avatar_url, is_premium, user_name)",
+          )
           .eq("course_id", courseId)
           .gte("created_at", weekStart)
           .order("score", { ascending: false })
@@ -73,7 +96,9 @@ const TestResultScreen = () => {
         (data || []).forEach((row) => {
           const existing = bestByUser.get(row.user_id);
           const pct = row.total_questions ? row.score / row.total_questions : 0;
-          const existingPct = existing ? existing.score / existing.total_questions : -1;
+          const existingPct = existing
+            ? existing.score / existing.total_questions
+            : -1;
           if (!existing || pct > existingPct) bestByUser.set(row.user_id, row);
         });
 
@@ -113,23 +138,32 @@ const TestResultScreen = () => {
             <FiChevronLeft className="size-5 text-slate-600 dark:text-slate-300" />
           </button>
           <div>
-            <h1 className="text-lg font-black text-slate-900 dark:text-white">Test Results</h1>
-            <p className="text-xs text-slate-500 dark:text-slate-400">{courseName}</p>
+            <h1 className="text-lg font-black text-slate-900 dark:text-white">
+              Test Results
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {courseName}
+            </p>
           </div>
         </div>
       </div>
 
       <div className="flex-1 px-5 py-6 overflow-y-auto">
         <div className="max-w-lg mx-auto space-y-5">
-
           {/* Score card */}
           <div className={`${cardColor(pct)} rounded-[2rem] p-6 text-white`}>
             <div className="flex items-center gap-3 mb-5">
-              <div className="size-12 rounded-2xl bg-white/20 flex items-center justify-center text-2xl">
-                {scoreEmoji(pct)}
+              <div className="size-12 rounded-2xl bg-white/20 flex items-center justify-center">
+                <img
+                  src={testIcon}
+                  alt="Test"
+                  className="w-6 h-6 object-contain"
+                />
               </div>
               <div>
-                <p className="text-white/70 text-xs font-bold uppercase tracking-widest">Test Complete</p>
+                <p className="text-white/70 text-xs font-bold uppercase tracking-widest">
+                  Test Complete
+                </p>
                 <p className="text-white font-black text-lg">{courseName}</p>
               </div>
             </div>
@@ -137,16 +171,22 @@ const TestResultScreen = () => {
             {/* Big score */}
             <div className="bg-white/15 rounded-2xl p-5 mb-3 text-center">
               <p className="text-6xl font-black tabular-nums">{pct}%</p>
-              <p className="text-white/70 text-sm mt-1">{score.toFixed(1)} / {totalQuestions} correct</p>
+              <p className="text-white/70 text-sm mt-1">
+                {score.toFixed(1)} / {totalQuestions} correct
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-white/15 rounded-2xl p-4">
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/60 mb-1">Correct</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/60 mb-1">
+                  Correct
+                </p>
                 <p className="text-2xl font-black tabular-nums">{correct}</p>
               </div>
               <div className="bg-white/15 rounded-2xl p-4">
-                <p className="text-[10px] font-black uppercase tracking-widest text-white/60 mb-1">Wrong</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-white/60 mb-1">
+                  Wrong
+                </p>
                 <p className="text-2xl font-black tabular-nums">{wrong}</p>
               </div>
             </div>
@@ -155,7 +195,8 @@ const TestResultScreen = () => {
               <div className="mt-3 bg-white/15 rounded-2xl px-4 py-3 flex items-center gap-2">
                 <FaTrophy className="text-yellow-300 size-4" />
                 <p className="text-sm font-black">
-                  You ranked <span className="text-yellow-300">#{myRank}</span> this week
+                  You ranked <span className="text-yellow-300">#{myRank}</span>{" "}
+                  this week
                 </p>
               </div>
             )}
@@ -190,7 +231,10 @@ const TestResultScreen = () => {
             {loadingLB ? (
               <div className="space-y-2">
                 {[...Array(5)].map((_, i) => (
-                  <div key={i} className="h-14 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 animate-pulse" />
+                  <div
+                    key={i}
+                    className="h-14 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 animate-pulse"
+                  />
                 ))}
               </div>
             ) : leaderboard.length === 0 ? (
@@ -206,7 +250,9 @@ const TestResultScreen = () => {
                   const name = row.profiles?.full_name || "Player";
                   const userName = row.profiles?.user_name;
                   const rowPremium = row.profiles?.is_premium === true;
-                  const rowPct = row.total_questions ? Math.round((row.score / row.total_questions) * 100) : 0;
+                  const rowPct = row.total_questions
+                    ? Math.round((row.score / row.total_questions) * 100)
+                    : 0;
 
                   return (
                     <div
@@ -217,34 +263,53 @@ const TestResultScreen = () => {
                           : "bg-white dark:bg-slate-800 border-slate-100 dark:border-slate-800"
                       }`}
                     >
-                      <div className={`size-10 rounded-2xl flex items-center justify-center font-black text-sm shrink-0 ${bg}`}>
+                      <div
+                        className={`size-10 rounded-2xl flex items-center justify-center font-black text-sm shrink-0 ${bg}`}
+                      >
                         {icon}
                       </div>
 
                       <button
                         type="button"
-                        onClick={() => setPreviewUrl(row.profiles?.avatar_url || null)}
+                        onClick={() =>
+                          setPreviewUrl(row.profiles?.avatar_url || null)
+                        }
                         className="shrink-0 rounded-full active:scale-90 transition-transform"
                       >
-                        <Avatar avatarUrl={row.profiles?.avatar_url} size="sm" lazy />
+                        <Avatar
+                          avatarUrl={row.profiles?.avatar_url}
+                          size="sm"
+                          lazy
+                        />
                       </button>
 
                       <div className="flex-1 min-w-0">
-                        <p className={`font-black truncate flex items-center gap-1.5 ${isMe ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-white"}`}>
+                        <p
+                          className={`font-black truncate flex items-center gap-1.5 ${isMe ? "text-blue-700 dark:text-blue-400" : "text-slate-900 dark:text-white"}`}
+                        >
                           {name}
                           {rowPremium && (
                             <span className="inline-flex items-center gap-0.5 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-500 px-1.5 py-0.5 text-[9px] font-black uppercase tracking-wide">
-                              <FaCrown size={8} />PRO
+                              <FaCrown size={8} />
+                              PRO
                             </span>
                           )}
-                          {isMe && <span className="text-[10px] font-black text-blue-500">(you)</span>}
+                          {isMe && (
+                            <span className="text-[10px] font-black text-blue-500">
+                              (you)
+                            </span>
+                          )}
                         </p>
                         {userName && (
-                          <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate">@{userName}</p>
+                          <p className="text-[11px] text-slate-400 dark:text-slate-500 truncate">
+                            @{userName}
+                          </p>
                         )}
                       </div>
 
-                      <span className={`text-sm font-black tabular-nums shrink-0 ${isMe ? "text-blue-600 dark:text-blue-400" : "text-slate-500 dark:text-slate-400"}`}>
+                      <span
+                        className={`text-sm font-black tabular-nums shrink-0 ${isMe ? "text-blue-600 dark:text-blue-400" : "text-slate-500 dark:text-slate-400"}`}
+                      >
                         {rowPct}%
                       </span>
                     </div>
@@ -263,7 +328,12 @@ const TestResultScreen = () => {
           onClick={() => setPreviewUrl(null)}
         >
           <div className="size-64 rounded-full overflow-hidden shadow-2xl ring-4 ring-white/20 animate-in zoom-in-95 duration-200">
-            <img src={previewUrl} alt="Avatar" className="w-full h-full object-cover" crossOrigin="anonymous" />
+            <img
+              src={previewUrl}
+              alt="Avatar"
+              className="w-full h-full object-cover"
+              crossOrigin="anonymous"
+            />
           </div>
         </div>
       )}
