@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { RenderMathText } from "../utils/RenderMathText"
+import { RenderMathText } from "../utils/RenderMathText";
 import { FiLock, FiAlertTriangle, FiChevronLeft } from "react-icons/fi";
 
 const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
@@ -49,7 +49,8 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
           const userAnswer = answers[index];
           const isTheory =
             Array.isArray(question.keywords) || question.type === "theory";
-          const isFib = Array.isArray(question.answers) || question.type === "fib";
+          const isFib =
+            Array.isArray(question.answers) || question.type === "fib";
 
           if (isTheory) {
             const matchedGroups = Array.isArray(question.keywords)
@@ -72,6 +73,11 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
                 key={index}
                 className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 hover:shadow-xl transition-shadow duration-300"
               >
+                {question.section && (
+                  <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-widest mb-3">
+                    {question.section}
+                  </div>
+                )}
                 <div className="font-semibold text-gray-800 dark:text-gray-200 text-lg mb-4">
                   {index + 1}.{" "}
                   <RenderMathText
@@ -123,7 +129,9 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
 
           if (isFib) {
             const userBlanks = Array.isArray(userAnswer) ? userAnswer : [];
-            const answerGroups = Array.isArray(question.answers) ? question.answers : [];
+            const answerGroups = Array.isArray(question.answers)
+              ? question.answers
+              : [];
             const parts = question.question.split(/_{2,}/g);
 
             return (
@@ -134,12 +142,19 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
                 <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-[10px] font-black uppercase tracking-widest mb-3">
                   Fill in the Blank
                 </div>
+                {question.section && (
+                  <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-widest mb-3 ml-2">
+                    {question.section}
+                  </div>
+                )}
                 <div className="font-semibold text-gray-800 dark:text-gray-200 text-lg mb-4 leading-loose">
                   {index + 1}.{" "}
                   {parts.map((part, i) => {
                     const typed = (userBlanks[i] || "").trim().toLowerCase();
                     const group = answerGroups[i];
-                    const accepted = Array.isArray(group) ? group.map(v => v.toLowerCase()) : [];
+                    const accepted = Array.isArray(group)
+                      ? group.map((v) => v.toLowerCase())
+                      : [];
                     const isCorrectBlank = accepted.includes(typed);
                     const correctLabel = Array.isArray(group) ? group[0] : "";
                     return (
@@ -147,13 +162,15 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
                         {part}
                         {i < parts.length - 1 && (
                           <span className="inline-flex flex-col items-center mx-1 align-bottom">
-                            <span className={`font-bold border-b-2 px-2 min-w-[3rem] text-center ${
-                              userBlanks[i]
-                                ? isCorrectBlank
-                                  ? "text-green-600 border-green-500"
-                                  : "text-red-500 border-red-400"
-                                : "text-gray-400 border-gray-300 italic"
-                            }`}>
+                            <span
+                              className={`font-bold border-b-2 px-2 min-w-[3rem] text-center ${
+                                userBlanks[i]
+                                  ? isCorrectBlank
+                                    ? "text-green-600 border-green-500"
+                                    : "text-red-500 border-red-400"
+                                  : "text-gray-400 border-gray-300 italic"
+                              }`}
+                            >
                               {userBlanks[i] || "—"}
                             </span>
                             {!isCorrectBlank && userBlanks[i] && (
@@ -169,7 +186,7 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
                 </div>
                 <div className="mt-3 flex justify-end">
                   <a
-                    href={`https://wa.me/2347015585397?text=${encodeURIComponent(`*Question Report*\n\n*ID:* ${question.id}\n\n*Question:* ${question.question}\n\n*User's Answers:* ${userBlanks.join(", ") || "Not answered"}\n\n*Correct Answers:* ${answerGroups.map(g => g[0]).join(", ")}`)}`}
+                    href={`https://wa.me/2347015585397?text=${encodeURIComponent(`*Question Report*\n\n*ID:* ${question.id}\n\n*Question:* ${question.question}\n\n*User's Answers:* ${userBlanks.join(", ") || "Not answered"}\n\n*Correct Answers:* ${answerGroups.map((g) => g[0]).join(", ")}`)}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 text-[11px] font-bold border border-amber-100 dark:border-amber-500/20 active:scale-95 transition-all"
@@ -187,6 +204,12 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
               key={index}
               className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 border border-gray-100 dark:border-gray-700"
             >
+              {/* Section badge */}
+              {question.section && (
+                <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[10px] font-black uppercase tracking-widest mb-3">
+                  {question.section}
+                </div>
+              )}
               {/* Question */}
               <div className="font-semibold text-gray-800 dark:text-gray-200 text-lg mb-4">
                 {index + 1}.{" "}
@@ -253,14 +276,19 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
           <div className="mx-auto max-w-md bg-white dark:bg-slate-800 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-700 p-6 text-center">
             <div className="flex justify-center mb-3">
               <div className="bg-amber-100 dark:bg-amber-900/30 p-3 rounded-2xl">
-                <FiLock className="text-amber-500 dark:text-amber-400" size={24} />
+                <FiLock
+                  className="text-amber-500 dark:text-amber-400"
+                  size={24}
+                />
               </div>
             </div>
             <h3 className="text-lg font-black text-slate-800 dark:text-white mb-1">
-              {questions.length - FREE_REVIEW_LIMIT} more question{questions.length - FREE_REVIEW_LIMIT !== 1 ? "s" : ""} locked
+              {questions.length - FREE_REVIEW_LIMIT} more question
+              {questions.length - FREE_REVIEW_LIMIT !== 1 ? "s" : ""} locked
             </h3>
             <p className="text-sm text-slate-500 dark:text-slate-400 mb-5">
-              You&apos;ve reviewed the first {FREE_REVIEW_LIMIT} for free. Upgrade to unlock the full review for every question.
+              You&apos;ve reviewed the first {FREE_REVIEW_LIMIT} for free.
+              Upgrade to unlock the full review for every question.
             </p>
             <button
               onClick={() => navigate("/premium")}

@@ -165,6 +165,22 @@ const ResultScreen = ({
 
   const feedback = getFeedback();
 
+  // ── Section breakdown (only for courses that have section attr) ──────────
+  const sectionStats = (() => {
+    const hasSections = questions.some((q) => q.section);
+    if (!hasSections) return null;
+
+    const map = {};
+    questions.forEach((q, i) => {
+      const sec = q.section || "General";
+      if (!map[sec]) map[sec] = { correct: 0, total: 0 };
+      map[sec].total += 1;
+      const isCorrect = answers[i] === q.correct;
+      if (isCorrect) map[sec].correct += 1;
+    });
+    return map;
+  })();
+
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 pb-16 lg:pb-32 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300">
       <header className="flex justify-between items-center mb-8 lg:px-16">
@@ -260,6 +276,54 @@ const ResultScreen = ({
             {feedback.msg}
           </p>
         </div>
+
+        {/* ── Section breakdown ── */}
+        {sectionStats && (
+          <div className="w-full bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+            <div className="px-5 pt-4 pb-2 border-b border-gray-100 dark:border-gray-800">
+              <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
+                Section Breakdown
+              </p>
+            </div>
+            <div className="divide-y divide-gray-100 dark:divide-gray-800">
+              {Object.entries(sectionStats).map(
+                ([section, { correct, total }]) => {
+                  const pct = Math.round((correct / total) * 100);
+                  const good = pct >= 60;
+                  return (
+                    <div
+                      key={section}
+                      className="flex items-center justify-between gap-3 px-5 py-3"
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span
+                          className={`shrink-0 size-2 rounded-full ${good ? "bg-green-500" : "bg-red-400"}`}
+                        />
+                        <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">
+                          {section}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2 shrink-0">
+                        <span className="text-xs font-bold text-slate-400">
+                          {correct}/{total}
+                        </span>
+                        <span
+                          className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
+                            good
+                              ? "bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                              : "bg-red-50 text-red-500 dark:bg-red-900/30 dark:text-red-400"
+                          }`}
+                        >
+                          {good ? "Good" : "Needs work"}
+                        </span>
+                      </div>
+                    </div>
+                  );
+                },
+              )}
+            </div>
+          </div>
+        )}
 
         <div className="bg-white dark:bg-gray-900 w-full p-6 grid grid-cols-2 gap-4 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800">
           <StatItem
