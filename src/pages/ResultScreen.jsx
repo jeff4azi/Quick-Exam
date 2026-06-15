@@ -108,25 +108,59 @@ const ResultScreen = ({
     strokeDasharray - (scorePercentage / 100) * strokeDasharray;
 
   const getFeedback = () => {
-    if (scorePercentage >= 80)
-      return {
-        msg: `Outstanding work, ${userProfile?.full_name.split(" ")[0]}!`,
+    const firstName = userProfile?.full_name.split(" ")[0];
+
+    const tiers = [
+      {
+        condition: scorePercentage >= 80,
         color: "text-green-500",
-      };
-    if (scorePercentage >= 60)
-      return {
-        msg: `Great job, ${userProfile?.full_name.split(" ")[0]}!`,
+        messages: [
+          `Outstanding work, ${firstName}! You're clearly on top of this material.`,
+          `Excellent score, ${firstName}! Keep that momentum going.`,
+          `You nailed it, ${firstName}! That's a result to be proud of.`,
+          `Top-tier performance, ${firstName}. Well done!`,
+          `Impressive, ${firstName}! You've got a strong grasp of this topic.`,
+        ],
+      },
+      {
+        condition: scorePercentage >= 60,
         color: "text-blue-500",
-      };
-    if (scorePercentage >= 45)
-      return {
-        msg: `Good effort, ${userProfile?.full_name.split(" ")[0]}.`,
+        messages: [
+          `Great job, ${firstName}! You're on the right track.`,
+          `Solid effort, ${firstName}. A little more review and you'll ace it.`,
+          `Nice work, ${firstName}! You're making real progress.`,
+          `Good result, ${firstName}. Keep pushing and you'll get there.`,
+          `Well done, ${firstName}! You're building strong understanding.`,
+        ],
+      },
+      {
+        condition: scorePercentage >= 45,
         color: "text-amber-500",
-      };
-    return {
-      msg: `Don't give up, ${userProfile?.full_name.split(" ")[0]}.`,
-      color: "text-red-500",
-    };
+        messages: [
+          `Not bad, ${firstName}. A focused review session will make a big difference.`,
+          `You're getting there, ${firstName}. Keep at it!`,
+          `Good effort, ${firstName}. There's room to grow and you can do it.`,
+          `Decent start, ${firstName}. Revisit the weak spots and try again.`,
+          `Keep going, ${firstName}. Consistency is how you improve.`,
+        ],
+      },
+      {
+        condition: true,
+        color: "text-red-500",
+        messages: [
+          `Don't give up, ${firstName}. Every attempt teaches you something new.`,
+          `It's a tough one, ${firstName}, but you'll get there with more practice.`,
+          `Keep your head up, ${firstName}. Review the material and come back stronger.`,
+          `This one didn't go your way, ${firstName}, but that's part of learning.`,
+          `Stay the course, ${firstName}. Progress takes time and effort.`,
+        ],
+      },
+    ];
+
+    const tier = tiers.find((t) => t.condition);
+    const msg = tier.messages[Math.floor(Math.random() * tier.messages.length)];
+
+    return { msg, color: tier.color };
   };
 
   const feedback = getFeedback();
