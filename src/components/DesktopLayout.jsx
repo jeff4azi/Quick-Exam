@@ -17,7 +17,7 @@ import { FaCrown } from "react-icons/fa";
 import Logo from "../images/Logo";
 import Avatar from "./Avatar";
 import ConfirmOverlay from "./ConfirmOverlay";
-
+import NewUserCourseHint, { isNewUserHintVisible } from "./NewUserCourseHint";
 import { FeedBoltSidebarLink } from "./FeedBoltBanner";
 
 /**
@@ -30,7 +30,7 @@ import { FeedBoltSidebarLink } from "./FeedBoltBanner";
  * The `desktop-content-wrapper` class on the main area triggers CSS overrides
  * in index.css that expand pages beyond their mobile max-w-2xl.
  */
-const DesktopLayout = ({ children, isPremium, userProfile }) => {
+const DesktopLayout = ({ children, isPremium, userProfile, isNew }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const pathname = location?.pathname || "/";
@@ -43,6 +43,12 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
   };
 
   const isExamActive = pathname === "/exam";
+  const [hintDismissed, setHintDismissed] = useState(false);
+  const showCourseHint =
+    isNewUserHintVisible(isNew) &&
+    !hintDismissed &&
+    !isExamActive &&
+    pathname !== "/choose-course";
 
   const homeActive = isActivePath(pathname, "/");
   const coursesActive = isActivePath(pathname, "/choose-course");
@@ -115,17 +121,34 @@ const DesktopLayout = ({ children, isPremium, userProfile }) => {
 
         {/* Nav items — pointer-events disabled during exam */}
         <nav
-          className={`flex-1 px-3 py-4 space-y-1 overflow-y-auto relative ${isExamActive ? "pointer-events-none select-none" : ""}`}
+          className={`flex-1 px-3 py-4 space-y-1 overflow-x-hidden overflow-y-auto relative ${isExamActive ? "pointer-events-none select-none" : ""}`}
         >
-          {navItems.map((item) => (
-            <SidebarNavItem
-              key={item.label}
-              {...item}
-              // override active/hover visuals when exam is active
-              active={isExamActive ? false : item.active}
-              locked={isExamActive ? true : item.locked}
-            />
-          ))}
+          {navItems.map((item) =>
+            item.label === "Courses" ? (
+              <div key={item.label}>
+                <SidebarNavItem
+                  {...item}
+                  active={isExamActive ? false : item.active}
+                  locked={isExamActive ? true : item.locked}
+                  highlight={showCourseHint}
+                />
+                {!isExamActive && (
+                  <NewUserCourseHint
+                    variant="desktop"
+                    isNew={isNew}
+                    onDismiss={() => setHintDismissed(true)}
+                  />
+                )}
+              </div>
+            ) : (
+              <SidebarNavItem
+                key={item.label}
+                {...item}
+                active={isExamActive ? false : item.active}
+                locked={isExamActive ? true : item.locked}
+              />
+            ),
+          )}
           {/* Frosted overlay shown during exam */}
           {isExamActive && (
             <div className="absolute inset-0 rounded-xl bg-white/60 dark:bg-slate-900/60 backdrop-blur-[2px] flex flex-col items-center justify-center gap-2">

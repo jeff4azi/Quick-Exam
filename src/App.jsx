@@ -115,6 +115,18 @@ function App() {
   const sessionRestoredRef = useRef(false);
 
   const isPremium = userProfile?.isPremium === true;
+
+  // isNew: true when the logged-in user has never taken an exam.
+  // Source of truth = exam_attempts count fetched on login.
+  // localStorage is only a cache so the UI doesn't flicker on re-render.
+  const [isNew, setIsNew] = useState(() => {
+    try {
+      // "1" = new user (no exams), "0" = has exams. Default true until login resolves.
+      return localStorage.getItem("quizbolt_is_new_user") !== "0";
+    } catch {
+      return true;
+    }
+  });
   const setQuestionType = useCallback(
     (nextQuestionType) => {
       setQuestionTypeState((previousQuestionType) => {
@@ -140,6 +152,16 @@ function App() {
       answered: total,
     });
     setLastTimeTaken(timeTaken ?? 0);
+
+    // Mark user as no longer new after their first exam
+    if (isNew) {
+      setIsNew(false);
+      try {
+        localStorage.setItem("quizbolt_is_new_user", "0");
+      } catch {
+        /* ignore */
+      }
+    }
   };
 
   // In App.js
@@ -190,6 +212,20 @@ function App() {
         setBookmarks(
           Array.isArray(profileData?.bookmarks) ? profileData.bookmarks : [],
         );
+
+        // Derive isNew: check if user has any exam attempts
+        try {
+          const { count } = await supabase
+            .from("exam_attempts")
+            .select("id", { count: "exact", head: true })
+            .eq("user_id", user.id);
+
+          const newUser = (count ?? 0) === 0;
+          setIsNew(newUser);
+          localStorage.setItem("quizbolt_is_new_user", newUser ? "1" : "0");
+        } catch {
+          // If the count fetch fails, fall back to the cached value — no-op
+        }
         setCoursesLoading(true);
         try {
           const params = new URLSearchParams();
@@ -495,6 +531,7 @@ function App() {
       setQuestions([]);
       setAnswers([]);
       setResults({ correct: 0, wrong: 0, answered: 0 });
+      setIsNew(true); // reset so next login re-derives from Supabase
 
       // Clear all localStorage data except bookmarked questions and visited status
       try {
@@ -633,10 +670,15 @@ function App() {
     questionType,
     setQuestionType,
     questionsContext,
+    isNew,
   };
 
   const withDesktop = (element) => (
-    <DesktopLayout isPremium={isPremium} userProfile={userProfile}>
+    <DesktopLayout
+      isPremium={isPremium}
+      userProfile={userProfile}
+      isNew={isNew}
+    >
       {element}
     </DesktopLayout>
   );

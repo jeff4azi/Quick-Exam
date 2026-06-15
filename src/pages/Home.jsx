@@ -150,6 +150,7 @@ const Home = ({
   courses,
   setQuestionType,
   setSelectedCourse,
+  isNew,
 }) => {
   const navigate = useNavigate();
   const cachedDashboard = useMemo(
@@ -954,6 +955,7 @@ const Home = ({
       <NavBar
         isPremium={isPremium}
         onLockedClick={() => setPremiumOverlayOpen(true)}
+        isNew={isNew}
       />
 
       {!isPremium && showAd && <BannerAd onAdClose={() => setShowAd(false)} />}
