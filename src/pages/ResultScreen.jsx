@@ -108,59 +108,114 @@ const ResultScreen = ({
     strokeDasharray - (scorePercentage / 100) * strokeDasharray;
 
   const getFeedback = () => {
-    const firstName = userProfile?.full_name.split(" ")[0];
+    const firstName = userProfile?.full_name?.split(" ")[0] ?? "";
+    const skipped = questions.length - answeredCount;
+    const skippedALot = skipped >= Math.ceil(questions.length * 0.2);
+    const secondsPerQuestion = timeTakenSafe / (answeredCount || 1);
+    const isRushed = timeTakenSafe > 0 && secondsPerQuestion < 8;
+    const isThorough = timeTakenSafe > 0 && secondsPerQuestion > 45;
 
-    const tiers = [
-      {
-        condition: scorePercentage >= 80,
-        color: "text-green-500",
-        messages: [
-          `Outstanding work, ${firstName}! You're clearly on top of this material.`,
-          `Excellent score, ${firstName}! Keep that momentum going.`,
-          `You nailed it, ${firstName}! That's a result to be proud of.`,
-          `Top-tier performance, ${firstName}. Well done!`,
-          `Impressive, ${firstName}! You've got a strong grasp of this topic.`,
-        ],
-      },
-      {
-        condition: scorePercentage >= 60,
-        color: "text-blue-500",
-        messages: [
-          `Great job, ${firstName}! You're on the right track.`,
-          `Solid effort, ${firstName}. A little more review and you'll ace it.`,
-          `Nice work, ${firstName}! You're making real progress.`,
-          `Good result, ${firstName}. Keep pushing and you'll get there.`,
-          `Well done, ${firstName}! You're building strong understanding.`,
-        ],
-      },
-      {
-        condition: scorePercentage >= 45,
-        color: "text-amber-500",
-        messages: [
-          `Not bad, ${firstName}. A focused review session will make a big difference.`,
-          `You're getting there, ${firstName}. Keep at it!`,
-          `Good effort, ${firstName}. There's room to grow and you can do it.`,
-          `Decent start, ${firstName}. Revisit the weak spots and try again.`,
-          `Keep going, ${firstName}. Consistency is how you improve.`,
-        ],
-      },
-      {
-        condition: true,
-        color: "text-red-500",
-        messages: [
-          `Don't give up, ${firstName}. Every attempt teaches you something new.`,
-          `It's a tough one, ${firstName}, but you'll get there with more practice.`,
-          `Keep your head up, ${firstName}. Review the material and come back stronger.`,
-          `This one didn't go your way, ${firstName}, but that's part of learning.`,
-          `Stay the course, ${firstName}. Progress takes time and effort.`,
-        ],
-      },
-    ];
+    // ── Tier helpers ──────────────────────────────────────────────
+    const tier =
+      scorePercentage >= 80
+        ? "high"
+        : scorePercentage >= 60
+          ? "mid"
+          : scorePercentage >= 45
+            ? "low"
+            : "fail";
 
-    const tier = tiers.find((t) => t.condition);
-    const msg = tier.messages[Math.floor(Math.random() * tier.messages.length)];
+    const color =
+      tier === "high"
+        ? "text-green-500"
+        : tier === "mid"
+          ? "text-blue-500"
+          : tier === "low"
+            ? "text-amber-500"
+            : "text-red-500";
 
-    return { msg, color: tier.color };
+    const pick = (msg) => ({ msg, color });
+
+    // ── 1. Retake signals (highest priority) ─────────────────────
+    if (hasRetaken) {
+      if (tier === "high")
+        return pick(
+          `That's the one, ${firstName}. You came back and got it done.`,
+        );
+      if (tier === "mid")
+        return pick(
+          `Progress, ${firstName}. You're moving in the right direction — one more push.`,
+        );
+      if (tier === "low")
+        return pick(
+          `Still grinding, ${firstName}. Break it down by section and attack the weak spots.`,
+        );
+      return pick(
+        `Don't let this one define you, ${firstName}. Look at where the marks went and go again.`,
+      );
+    }
+
+    // ── 2. Skipped too many ───────────────────────────────────────
+    if (skippedALot) {
+      if (tier === "high")
+        return pick(
+          `Strong score, ${firstName} — and you still left ${skipped} questions blank. Imagine the ceiling.`,
+        );
+      if (tier === "mid")
+        return pick(
+          `${skipped} questions skipped, ${firstName}. Attempt everything next time and this score climbs.`,
+        );
+      return pick(
+        `${skipped} unanswered questions hurt you here, ${firstName}. Always attempt — an educated guess beats a blank.`,
+      );
+    }
+
+    // ── 3. Rushed (< 8s per question) ────────────────────────────
+    if (isRushed) {
+      if (tier === "high")
+        return pick(
+          `Quick and accurate, ${firstName}. That's a rare combination.`,
+        );
+      if (tier === "mid")
+        return pick(
+          `You moved fast, ${firstName}. Slow down slightly and that score jumps.`,
+        );
+      return pick(
+        `Too fast, ${firstName}. Speed without accuracy costs marks — pace yourself next time.`,
+      );
+    }
+
+    // ── 4. Unusually thorough (> 45s per question) ───────────────
+    if (isThorough) {
+      if (tier === "high")
+        return pick(
+          `Careful and thorough, ${firstName}. That approach clearly paid off.`,
+        );
+      if (tier === "mid")
+        return pick(
+          `You took your time, ${firstName}. Trust your first instinct a little more — it's usually right.`,
+        );
+      return pick(
+        `You were methodical, ${firstName}, but the material needs more familiarity before speed matters.`,
+      );
+    }
+
+    // ── 5. Clean first attempt — score speaks for itself ─────────
+    if (tier === "high")
+      return pick(
+        `Excellent work, ${firstName}. You clearly know this material.`,
+      );
+    if (tier === "mid")
+      return pick(
+        `Solid result, ${firstName}. A focused review of the gaps and you'll be at the top.`,
+      );
+    if (tier === "low")
+      return pick(
+        `You're partway there, ${firstName}. Identify the weak sections and target them directly.`,
+      );
+    return pick(
+      `This one got away from you, ${firstName}. Review the material section by section and come back.`,
+    );
   };
 
   const feedback = getFeedback();
