@@ -112,7 +112,8 @@ const ResultScreen = ({
     const skipped = questions.length - answeredCount;
     const skippedALot = skipped >= Math.ceil(questions.length * 0.2);
     const secondsPerQuestion = timeTakenSafe / (answeredCount || 1);
-    const isRushed = timeTakenSafe > 0 && secondsPerQuestion < 8;
+    const isRushed = timeTakenSafe > 0 && secondsPerQuestion < 8; // < 4 mins for 30q
+    const isInsane = timeTakenSafe > 0 && secondsPerQuestion < 4; // < 2 mins for 30q ← new
     const isThorough = timeTakenSafe > 0 && secondsPerQuestion > 45;
 
     // ── Tier helpers ──────────────────────────────────────────────
@@ -170,7 +171,21 @@ const ResultScreen = ({
       );
     }
 
-    // ── 3. Rushed (< 8s per question) ────────────────────────────
+    // ── 3. Pace signals ───────────────────────────────────────────
+    if (isInsane) {
+      if (tier === "high")
+        return pick(
+          `${Math.round(secondsPerQuestion)}s per question and still accurate, ${firstName}? That's elite.`,
+        );
+      if (tier === "mid")
+        return pick(
+          `${Math.round(secondsPerQuestion)}s per question, ${firstName} — that pace is costing you marks. Trust the process.`,
+        );
+      return pick(
+        `${Math.round(secondsPerQuestion)}s per question, ${firstName}. Speed means nothing without accuracy.`,
+      );
+    }
+
     if (isRushed) {
       if (tier === "high")
         return pick(
@@ -216,7 +231,7 @@ const ResultScreen = ({
     return pick(
       `This one got away from you, ${firstName}. Review the material section by section and come back.`,
     );
-  };
+  };;
 
   const feedback = getFeedback();
 
