@@ -146,7 +146,7 @@ const ResultScreen = ({
         );
       if (tier === "mid")
         return pick(
-          `Progress, ${firstName}. You're moving in the right direction — one more push.`,
+          `Progress, ${firstName}. You're moving in the right direction, one more push.`,
         );
       if (tier === "low")
         return pick(
@@ -161,14 +161,14 @@ const ResultScreen = ({
     if (skippedALot) {
       if (tier === "high")
         return pick(
-          `Strong score, ${firstName} — and you still left ${skipped} questions blank. Imagine the ceiling.`,
+          `Strong score, ${firstName}, and you still left ${skipped} questions blank. Imagine the ceiling.`,
         );
       if (tier === "mid")
         return pick(
           `${skipped} questions skipped, ${firstName}. Attempt everything next time and this score climbs.`,
         );
       return pick(
-        `${skipped} unanswered questions hurt you here, ${firstName}. Always attempt — an educated guess beats a blank.`,
+        `${skipped} unanswered questions hurt you here, ${firstName}. Always attempt, an educated guess beats a blank.`,
       );
     }
 
@@ -180,7 +180,7 @@ const ResultScreen = ({
         );
       if (tier === "mid")
         return pick(
-          `${Math.round(secondsPerQuestion)}s per question, ${firstName} — that pace is costing you marks. Trust the process.`,
+          `${Math.round(secondsPerQuestion)}s per question, ${firstName}, that pace is costing you marks. Trust the process.`,
         );
       return pick(
         `${Math.round(secondsPerQuestion)}s per question, ${firstName}. Speed means nothing without accuracy.`,
@@ -197,7 +197,7 @@ const ResultScreen = ({
           `You moved fast, ${firstName}. Slow down slightly and that score jumps.`,
         );
       return pick(
-        `Too fast, ${firstName}. Speed without accuracy costs marks — pace yourself next time.`,
+        `Too fast, ${firstName}. Speed without accuracy costs marks, pace yourself next time.`,
       );
     }
 
@@ -209,7 +209,7 @@ const ResultScreen = ({
         );
       if (tier === "mid")
         return pick(
-          `You took your time, ${firstName}. Trust your first instinct a little more — it's usually right.`,
+          `You took your time, ${firstName}. Trust your first instinct a little more, it's usually right.`,
         );
       return pick(
         `You were methodical, ${firstName}, but the material needs more familiarity before speed matters.`,
