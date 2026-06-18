@@ -10,7 +10,7 @@ import {
 import BannerAd from "../components/BannerAd";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { FaCrown } from "react-icons/fa";
-import { FiRefreshCw, FiEye } from "react-icons/fi";
+import { FiRefreshCw, FiEye, FiChevronDown } from "react-icons/fi";
 import Avatar from "../components/Avatar";
 /* import NavBar from "../components/NavBar"; */
 import Logo from "../images/Logo";
@@ -47,6 +47,7 @@ const ResultScreen = ({
   const [sharing, setSharing] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [freeRetryAvailable, setFreeRetryAvailable] = useState(canUseFreeRetry);
+  const [sectionOpen, setSectionOpen] = useState(false);
 
   const shareRef = useRef(null);
 
@@ -348,53 +349,99 @@ const ResultScreen = ({
         </div>
 
         {/* ── Section breakdown ── */}
-        {sectionStats && (
-          <div className="w-full bg-white dark:bg-gray-900 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
-            <div className="px-5 pt-4 pb-2 border-b border-gray-100 dark:border-gray-800">
-              <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
-                Section Breakdown
-              </p>
-            </div>
-            <div className="divide-y divide-gray-100 dark:divide-gray-800">
-              {Object.entries(sectionStats).map(
-                ([section, { correct, total }]) => {
-                  const pct = Math.round((correct / total) * 100);
-                  const good = pct >= 60;
-                  return (
-                    <div
-                      key={section}
-                      className="flex items-center justify-between gap-3 px-5 py-3"
-                    >
-                      <div className="flex items-center gap-2 min-w-0">
-                        <span
-                          className={`shrink-0 size-2 rounded-full ${good ? "bg-green-500" : "bg-red-400"}`}
-                        />
-                        <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">
-                          {section}
-                        </span>
-                      </div>
-                      <div className="flex items-center gap-2 shrink-0">
-                        <span className="text-xs font-bold text-slate-400">
-                          {correct}/{total}
-                        </span>
-                        <span
-                          className={`text-[10px] font-black px-2 py-0.5 rounded-full ${
-                            good
-                              ? "bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400"
-                              : "bg-red-50 text-red-500 dark:bg-red-900/30 dark:text-red-400"
-                          }`}
-                        >
-                          {good ? "Good" : "Needs work"}
-                        </span>
-                      </div>
-                    </div>
-                  );
-                },
-              )}
-            </div>
-          </div>
-        )}
+        {sectionStats &&
+          (() => {
+            const sectionEntries = Object.entries(sectionStats);
+            const goodCount = sectionEntries.filter(
+              ([, { correct, total }]) =>
+                Math.round((correct / total) * 100) >= 60,
+            ).length;
 
+            return (
+              <div className="w-full bg-white dark:bg-gray-900 rounded-3xl border border-gray-100 dark:border-gray-800 overflow-hidden shadow-xl">
+                {/* Header — tappable */}
+                <button
+                  onClick={() => setSectionOpen((p) => !p)}
+                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                >
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
+                    Section Breakdown
+                  </p>
+                  <div className="flex items-center gap-2">
+                    {!sectionOpen && (
+                      <span className="text-[10px] font-bold text-slate-400 bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-full">
+                        {sectionEntries.length} sections · {goodCount} good
+                      </span>
+                    )}
+                    <FiChevronDown
+                      size={16}
+                      className={`text-slate-400 transition-transform duration-250 ${sectionOpen ? "rotate-180" : "rotate-0"}`}
+                    />
+                  </div>
+                </button>
+
+                {/* Collapsible body */}
+                <div
+                  className="grid transition-all duration-300 ease-in-out"
+                  style={{ gridTemplateRows: sectionOpen ? "1fr" : "0fr" }}
+                >
+                  <div className="overflow-hidden">
+                    <div className="border-t border-gray-100 dark:border-gray-800 divide-y divide-gray-100 dark:divide-gray-800">
+                      {sectionEntries.map(([section, { correct, total }]) => {
+                        const pct = Math.round((correct / total) * 100);
+                        const tier =
+                          pct >= 80 ? "great" : pct >= 60 ? "fair" : "weak";
+                        const dotColor =
+                          tier === "great"
+                            ? "bg-green-500"
+                            : tier === "fair"
+                              ? "bg-amber-400"
+                              : "bg-red-400";
+                        const badgeStyle =
+                          tier === "great"
+                            ? "bg-green-50 text-green-600 dark:bg-green-900/30 dark:text-green-400"
+                            : tier === "fair"
+                              ? "bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
+                              : "bg-red-50 text-red-500 dark:bg-red-900/30 dark:text-red-400";
+                        const badgeLabel =
+                          tier === "great"
+                            ? "Good"
+                            : tier === "fair"
+                              ? "Fair"
+                              : "Needs work";
+
+                        return (
+                          <div
+                            key={section}
+                            className="flex items-center justify-between gap-3 px-5 py-3"
+                          >
+                            <div className="flex items-center gap-2 min-w-0">
+                              <span
+                                className={`shrink-0 size-2 rounded-full ${dotColor}`}
+                              />
+                              <span className="text-xs font-semibold text-slate-700 dark:text-slate-300 truncate">
+                                {section}
+                              </span>
+                            </div>
+                            <div className="flex items-center gap-2 shrink-0">
+                              <span className="text-xs font-bold text-slate-400">
+                                {correct}/{total}
+                              </span>
+                              <span
+                                className={`text-[10px] font-black px-2 py-0.5 rounded-full ${badgeStyle}`}
+                              >
+                                {badgeLabel}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
         <div className="bg-white dark:bg-gray-900 w-full p-6 grid grid-cols-2 gap-4 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800">
           <StatItem
             label="Answered"
@@ -666,13 +713,15 @@ const ResultScreen = ({
 };
 
 const StatItem = ({ label, value, color, textColor }) => (
-  <div className="flex items-center gap-3 p-2">
-    <div className={`size-2 rounded-full ${color}`}></div>
-    <div className="flex flex-col">
-      <span className={`text-xl font-bold leading-none ${textColor}`}>
-        {value}
-      </span>
-      <span className="text-[10px] uppercase tracking-wider text-gray-400 dark:text-gray-500 font-semibold mt-1">
+  <div className="flex flex-col items-center justify-center gap-1.5 bg-gray-50 dark:bg-gray-800/60 rounded-2xl px-6 py-4 w-full">
+    <span
+      className={`text-3xl font-black leading-none tabular-nums ${textColor}`}
+    >
+      {value}
+    </span>
+    <div className="flex items-center gap-1.5">
+      <div className={`size-1.5 rounded-full ${color}`} />
+      <span className="text-[10px] uppercase tracking-widest text-gray-400 dark:text-gray-500 font-bold">
         {label}
       </span>
     </div>
