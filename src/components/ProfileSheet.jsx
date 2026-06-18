@@ -95,18 +95,58 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
             <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
               <FiZap className="mx-auto text-amber-500 mb-1" />
               <p className="text-xs font-bold text-slate-400 uppercase">Best</p>
-              <p className="font-black text-slate-900 dark:text-white">
-                {stats?.bestScore || "0%"}
-              </p>
+              <div className="flex items-start justify-center gap-4 mt-0.5">
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase">
+                    Score
+                  </p>
+                  <p className="font-black text-slate-900 dark:text-white text-base">
+                    {stats?.bestScore || "0%"}
+                  </p>
+                </div>
+                <div className="w-px self-stretch bg-gray-100 dark:bg-slate-700 mt-0.5" />
+                <div>
+                  <p className="text-[10px] font-bold text-slate-400 uppercase">
+                    Time
+                  </p>
+                  <p className="font-black text-slate-900 dark:text-white text-base">
+                    {stats?.bestTime &&
+                    Number.isFinite(stats.bestTime) &&
+                    stats.bestTime !== Infinity
+                      ? (() => {
+                          const mins = Math.floor(stats.bestTime / 60);
+                          const secs = stats.bestTime % 60;
+                          return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+                        })()
+                      : "—"}
+                  </p>
+                </div>
+              </div>
             </div>
             <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
               <FiShield className="mx-auto text-purple-500 mb-1" />
               <p className="text-xs font-bold text-slate-400 uppercase">
-                Level
+                Enrolled
               </p>
-              <p className="font-black text-slate-900 dark:text-white">
-                {userProfile?.year ? `${userProfile.year}00` : "—"}
-              </p>
+              <div className="flex items-center justify-center gap-4 mt-0.5">
+                <div className="text-center">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase mb-0.5">
+                    Year
+                  </p>
+                  <p className="font-black text-slate-900 dark:text-white text-base">
+                    {userProfile?.year ? `${userProfile.year}00` : "—"}
+                  </p>
+                </div>
+                <div className="w-px h-8 bg-gray-100 dark:bg-slate-700" />
+                <div className="text-center">
+                  <p className="text-[10px] font-bold text-slate-400 uppercase mb-0.5">
+                    Uni
+                  </p>
+                  <p className="font-black text-slate-900 dark:text-white text-base max-w-[60px]">
+                    {userProfile?.university || "—"}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -121,21 +161,6 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
               </p>
               <p className="font-bold text-slate-900 dark:text-white truncate">
                 {userProfile?.department}
-              </p>
-            </div>
-          </div>
-
-          {/* University Section */}
-          <div className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-gray-100 dark:border-slate-800 flex items-center gap-4 mt-3">
-            <div className="w-12 h-12 rounded-2xl bg-purple-50 dark:bg-purple-900/20 flex items-center justify-center flex-shrink-0">
-              <FiShield className="text-purple-600 dark:text-purple-400 text-xl" />
-            </div>
-            <div className="overflow-hidden">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                University
-              </p>
-              <p className="font-bold text-slate-900 dark:text-white truncate">
-                {userProfile?.university || "—"}
               </p>
             </div>
           </div>

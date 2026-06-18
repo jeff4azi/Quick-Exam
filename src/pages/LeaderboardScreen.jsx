@@ -501,6 +501,7 @@ const LeaderboardScreen = ({
                     setSheetStats({
                       rank: `#${index + 1}`,
                       bestScore: `${entry.bestPercent}%`,
+                      bestTime: entry.bestTimeSeconds,
                     });
                     setSheetIsPremium(entry.isPremium);
                     setIsSheetOpen(true);
