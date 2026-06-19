@@ -71,57 +71,109 @@ const FibPremiumGateOverlay = ({ onUpgrade, onQuit }) => (
 // ─── Pagination Strip ────────────────────────────────────────────────────────
 const PaginationStrip = ({ total, currentIndex, answers, onSelect }) => {
   const swiperRef = useRef(null);
+  const [isMaximized, setIsMaximized] = useState(false);
 
   useEffect(() => {
-    if (swiperRef.current) {
+    if (swiperRef.current && !isMaximized) {
       swiperRef.current.slideTo(currentIndex, 300);
     }
-  }, [currentIndex]);
+  }, [currentIndex, isMaximized]);
 
   return (
-    <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-slate-100 dark:border-slate-700/50 px-2 py-3 rounded-[1.75rem] shadow-[0_8px_30px_rgba(15,23,42,0.06)] dark:shadow-none overflow-hidden mt-5 mx-3">
-      {/* subtle top accent line so the strip reads as a distinct "navigator" module */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-slate-200/70 dark:bg-slate-600/50" />
-
-      <Swiper
-        onSwiper={(swiper) => (swiperRef.current = swiper)}
-        slidesPerView="auto"
-        spaceBetween={8}
-        slidesOffsetBefore={6}
-        slidesOffsetAfter={6}
-        slideToClickedSlide={true}
-        onSlideClick={(swiper) => onSelect(swiper.clickedIndex)}
-        className="!overflow-visible"
+    <div className="relative mt-5 mx-3">
+      {/* Toggle button */}
+      <button
+        onClick={() => setIsMaximized(!isMaximized)}
+        className="absolute -top-8 right-2 z-10 text-xs font-bold text-slate-500 dark:text-slate-400 bg-white/90 dark:bg-slate-800/90 px-2 py-1 rounded-full border border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all"
       >
-        {Array.from({ length: total }).map((_, idx) => {
-          const isActive = idx === currentIndex;
-          const isAnswered = answers[idx] != null && answers[idx] !== "";
+        {isMaximized ? "Minimize" : "Maximize"}
+      </button>
 
-          return (
-            <SwiperSlide key={idx} style={{ width: "auto" }}>
-              <button
-                onClick={() => onSelect(idx)}
-                aria-current={isActive}
-                aria-label={`Question ${idx + 1}${isAnswered ? ", answered" : ""}`}
-                className={`relative flex items-center justify-center rounded-xl font-bold text-[11px] shrink-0 select-none transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60
-                  ${
-                    isActive
-                      ? "size-9 bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30 scale-105"
-                      : isAnswered
-                        ? "size-8 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 ring-1 ring-blue-100 dark:ring-blue-800/40 hover:bg-blue-100 dark:hover:bg-blue-900/50"
-                        : "size-8 bg-slate-50 dark:bg-slate-700/60 text-slate-400 dark:text-slate-500 ring-1 ring-slate-100 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
-                  }`}
-              >
-                {idx + 1}
-                {/* tiny dot under answered (non-active) items — quieter than a full fill change */}
-                {isAnswered && !isActive && (
-                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 size-1 rounded-full bg-blue-500" />
-                )}
-              </button>
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
+      {/* Minimized state - original scrollable */}
+      {!isMaximized && (
+        <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-slate-100 dark:border-slate-700/50 px-2 py-3 rounded-[1.75rem] shadow-[0_8px_30px_rgba(15,23,42,0.06)] dark:shadow-none overflow-hidden">
+          {/* subtle top accent line so the strip reads as a distinct "navigator" module */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-slate-200/70 dark:bg-slate-600/50" />
+
+          <Swiper
+            onSwiper={(swiper) => (swiperRef.current = swiper)}
+            slidesPerView="auto"
+            spaceBetween={8}
+            slidesOffsetBefore={6}
+            slidesOffsetAfter={6}
+            slideToClickedSlide={true}
+            onSlideClick={(swiper) => onSelect(swiper.clickedIndex)}
+            className="!overflow-visible"
+          >
+            {Array.from({ length: total }).map((_, idx) => {
+              const isActive = idx === currentIndex;
+              const isAnswered = answers[idx] != null && answers[idx] !== "";
+
+              return (
+                <SwiperSlide key={idx} style={{ width: "auto" }}>
+                  <button
+                    onClick={() => onSelect(idx)}
+                    aria-current={isActive}
+                    aria-label={`Question ${idx + 1}${isAnswered ? ", answered" : ""}`}
+                    className={`relative flex items-center justify-center rounded-xl font-bold text-[11px] shrink-0 select-none transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60
+                      ${
+                        isActive
+                          ? "size-9 bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30 scale-105"
+                          : isAnswered
+                            ? "size-8 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 ring-1 ring-blue-100 dark:ring-blue-800/40 hover:bg-blue-100 dark:hover:bg-blue-900/50"
+                            : "size-8 bg-slate-50 dark:bg-slate-700/60 text-slate-400 dark:text-slate-500 ring-1 ring-slate-100 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+                      }`}
+                  >
+                    {idx + 1}
+                    {/* tiny dot under answered (non-active) items — quieter than a full fill change */}
+                    {isAnswered && !isActive && (
+                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 size-1 rounded-full bg-blue-500" />
+                    )}
+                  </button>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+        </div>
+      )}
+
+      {/* Maximized state - shows all squares at once */}
+      {isMaximized && (
+        <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-slate-100 dark:border-slate-700/50 px-4 py-4 rounded-[1.75rem] shadow-[0_8px_30px_rgba(15,23,42,0.06)] dark:shadow-none animate-in fade-in zoom-in-95 duration-200">
+          {/* subtle top accent line so the strip reads as a distinct "navigator" module */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-slate-200/70 dark:bg-slate-600/50" />
+
+          <div className="flex flex-wrap gap-2 justify-center">
+            {Array.from({ length: total }).map((_, idx) => {
+              const isActive = idx === currentIndex;
+              const isAnswered = answers[idx] != null && answers[idx] !== "";
+
+              return (
+                <button
+                  key={idx}
+                  onClick={() => onSelect(idx)}
+                  aria-current={isActive}
+                  aria-label={`Question ${idx + 1}${isAnswered ? ", answered" : ""}`}
+                  className={`relative flex items-center justify-center rounded-xl font-bold text-[11px] shrink-0 select-none transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60
+                    ${
+                      isActive
+                        ? "size-9 bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30 scale-105"
+                        : isAnswered
+                          ? "size-8 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 ring-1 ring-blue-100 dark:ring-blue-800/40 hover:bg-blue-100 dark:hover:bg-blue-900/50"
+                          : "size-8 bg-slate-50 dark:bg-slate-700/60 text-slate-400 dark:text-slate-500 ring-1 ring-slate-100 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+                    }`}
+                >
+                  {idx + 1}
+                  {/* tiny dot under answered (non-active) items — quieter than a full fill change */}
+                  {isAnswered && !isActive && (
+                    <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 size-1 rounded-full bg-blue-500" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
