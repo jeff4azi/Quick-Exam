@@ -230,6 +230,7 @@ const ExamScreen = ({
   isPremium,
   autoAdvance,
   shuffleOptions,
+  unlimitedHints,
   showPagination,
   userProfile,
   questionType,
@@ -717,9 +718,12 @@ const ExamScreen = ({
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
-  // Hint limit: 3 for 30–50 questions, 5 for more than 50
-  const hintLimit = totalQuestions > 50 ? 5 : 3;
-  const hintsRemaining = hintLimit - hintsUsed.size;
+  // Hint limit: 3 for 30–50 questions, 5 for more than 50.
+  // Premium users with unlimitedHints on have no cap.
+  const hintLimit =
+    isPremium && unlimitedHints ? Infinity : totalQuestions > 50 ? 5 : 3;
+  const hintsRemaining =
+    hintLimit === Infinity ? Infinity : hintLimit - hintsUsed.size;
   const currentQuestionHintRevealed = hintsUsed.has(currentQuestion?.id);
 
   // Collapse hint whenever the user moves to a different question
@@ -849,6 +853,7 @@ const ExamScreen = ({
                     <FiInfo className="size-5" />
                     {!currentQuestionHintRevealed &&
                       hintsRemaining > 0 &&
+                      hintsRemaining !== Infinity &&
                       !showHint && (
                         <span className="absolute -top-1 -right-1 size-4 rounded-full bg-amber-400 text-white text-[9px] font-black flex items-center justify-center">
                           {hintsRemaining}
@@ -941,8 +946,9 @@ const ExamScreen = ({
                       {currentQuestion.hint}
                     </p>
                     <p className="text-[10px] font-bold text-amber-500 dark:text-amber-600 mt-1.5 uppercase tracking-wider">
-                      {hintsRemaining} hint{hintsRemaining !== 1 ? "s" : ""}{" "}
-                      remaining
+                      {hintsRemaining === Infinity
+                        ? "Unlimited hints"
+                        : `${hintsRemaining} hint${hintsRemaining !== 1 ? "s" : ""} remaining`}
                     </p>
                   </div>
                 </div>

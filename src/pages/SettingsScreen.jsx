@@ -104,6 +104,8 @@ const SettingsScreen = ({
   toggleAutoAdvance,
   shuffleOptions,
   toggleShuffleOptions,
+  unlimitedHints,
+  toggleUnlimitedHints,
   showPagination,
   toggleShowPagination,
 }) => {
@@ -233,6 +235,30 @@ const SettingsScreen = ({
                   onClick={
                     isPremium
                       ? toggleShuffleOptions
+                      : () => setPremiumOverlayOpen(true)
+                  }
+                  disabled={!isPremium}
+                />
+                {!isPremium && (
+                  <span className="absolute -right-1 -top-2 rounded-full border-2 border-white bg-amber-400 p-1 dark:border-slate-900">
+                    <FaCrown className="text-[8px] text-white" />
+                  </span>
+                )}
+              </div>
+            </SettingRow>
+
+            <SettingRow
+              icon={FiInfo}
+              title="Unlimited hints"
+              description="Remove the per-exam hint limit."
+              tone={isPremium ? "default" : "warning"}
+            >
+              <div className="relative">
+                <Toggle
+                  checked={unlimitedHints && isPremium}
+                  onClick={
+                    isPremium
+                      ? toggleUnlimitedHints
                       : () => setPremiumOverlayOpen(true)
                   }
                   disabled={!isPremium}

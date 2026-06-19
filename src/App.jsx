@@ -96,6 +96,15 @@ function App() {
     }
   });
 
+  const [unlimitedHints, setUnlimitedHints] = useState(() => {
+    try {
+      const saved = localStorage.getItem("unlimitedHintsPreference");
+      return saved !== null ? JSON.parse(saved) : false; // Default: limits on
+    } catch {
+      return false;
+    }
+  });
+
   const [showPagination, setShowPagination] = useState(() => {
     try {
       const saved = localStorage.getItem("showPaginationPreference");
@@ -435,6 +444,17 @@ function App() {
   useEffect(() => {
     try {
       localStorage.setItem(
+        "unlimitedHintsPreference",
+        JSON.stringify(unlimitedHints),
+      );
+    } catch (err) {
+      console.error("Failed to save unlimited hints preference:", err);
+    }
+  }, [unlimitedHints]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
         "showPaginationPreference",
         JSON.stringify(showPagination),
       );
@@ -653,6 +673,8 @@ function App() {
     toggleAutoAdvance: () => setAutoAdvance((prev) => !prev),
     shuffleOptions,
     toggleShuffleOptions: () => setShuffleOptions((prev) => !prev),
+    unlimitedHints,
+    toggleUnlimitedHints: () => setUnlimitedHints((prev) => !prev),
     showPagination,
     toggleShowPagination: () => setShowPagination((prev) => !prev),
     selectedQuestionCount,
@@ -839,6 +861,10 @@ function App() {
                       shuffleOptions={shuffleOptions}
                       toggleShuffleOptions={() =>
                         setShuffleOptions((prev) => !prev)
+                      }
+                      unlimitedHints={unlimitedHints}
+                      toggleUnlimitedHints={() =>
+                        setUnlimitedHints((prev) => !prev)
                       }
                       showPagination={showPagination}
                       toggleShowPagination={() =>
