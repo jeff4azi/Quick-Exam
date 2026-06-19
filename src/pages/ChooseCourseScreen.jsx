@@ -37,6 +37,8 @@ const readCachedFavouriteIds = (userId) => {
 const ChooseCourseScreen = ({
   selectedQuestionCount,
   setSelectedQuestionCount,
+  selectedDifficulty,
+  setSelectedDifficulty,
   courses,
   selectedCourse,
   setSelectedCourse,
@@ -175,24 +177,30 @@ const ChooseCourseScreen = ({
       const theoryOptions = [3, 5, 7, 10];
       const count = course?.theoryQuestionCount || 0;
       const filtered = theoryOptions.filter((opt) => count >= opt);
-      return [...filtered, "All"];
+      return count > 0 ? [...filtered, "All"] : filtered;
     }
     if (questionType === "fib") {
       const fibOptions = [10, 15, 20, 30];
       const count = course?.fibQuestionCount || 0;
       const filtered = fibOptions.filter((opt) => count >= opt);
-      return [...filtered, "All"];
+      return count > 0 ? [...filtered, "All"] : filtered;
     }
     const options = [30, 50, 70, 100];
-    const filtered = options.filter(
-      (opt) => (course?.questionCount || 0) >= opt,
-    );
-    return [...filtered, "All"];
+    const hasDifficultyQuestions =
+      course?.difficultyCounts &&
+      Object.values(course.difficultyCounts).reduce((a, b) => a + b, 0) > 0;
+    const count =
+      hasDifficultyQuestions && selectedDifficulty
+        ? course?.difficultyCounts?.[selectedDifficulty] || 0
+        : course?.questionCount || 0;
+    const filtered = options.filter((opt) => count >= opt);
+    return count > 0 ? [...filtered, "All"] : filtered;
   };
 
   const handleSelectCourse = (course) => {
     setSelectedCourse(course);
     setSelectedQuestionCount(null);
+    setSelectedDifficulty(null);
     trackCourseSelected(course.id, course.name, questionType);
   };
 
@@ -258,6 +266,7 @@ const ChooseCourseScreen = ({
                     trackQuestionTypeSwitch(key);
                     setSelectedCourse(null);
                     setSelectedQuestionCount(null);
+                    setSelectedDifficulty(null);
                   }}
                   className={`relative px-5 py-2 rounded-xl text-xs font-black transition-all ${
                     questionType === key
@@ -385,6 +394,33 @@ const ChooseCourseScreen = ({
                                   : course.questionCount) || 0}{" "}
                               Questions
                             </div>
+
+                            {/* Difficulty counts */}
+                            {questionType === "objective" &&
+                              course.difficultyCounts &&
+                              Object.values(course.difficultyCounts).reduce(
+                                (a, b) => a + b,
+                                0,
+                              ) > 0 && (
+                                <div
+                                  className={`flex flex-wrap gap-1 mt-2 ${isSelected ? "text-white" : "text-slate-500 dark:text-slate-400"}`}
+                                >
+                                  {Object.entries(course.difficultyCounts).map(
+                                    ([diff, count]) => (
+                                      <span
+                                        key={diff}
+                                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                                          isSelected
+                                            ? "bg-white/20"
+                                            : "bg-slate-100 dark:bg-slate-700"
+                                        }`}
+                                      >
+                                        {diff}: {count}
+                                      </span>
+                                    ),
+                                  )}
+                                </div>
+                              )}
                           </div>
 
                           <div className="flex items-center gap-2">
@@ -506,6 +542,7 @@ const ChooseCourseScreen = ({
             >
               <FiX />
             </button>
+
             <div className="text-center">
               <h3 className="text-2xl font-black text-slate-900 dark:text-white">
                 {selectedCourse.name}
@@ -513,47 +550,135 @@ const ChooseCourseScreen = ({
               <p className="text-slate-500 text-sm mt-1 font-medium italic">
                 {selectedCourse.title}
               </p>
-              <div className="grid grid-cols-2 gap-3 mt-8">
-                {getAvailableQuestionOptions(selectedCourse).map((num) => {
-                  const isLocked =
-                    !isPremium &&
-                    (questionType === "fib"
-                      ? num !== 10
-                      : questionType === "theory"
-                        ? num !== 3
-                        : num !== 30);
 
-                  return (
-                    <button
-                      key={num}
-                      onClick={() => {
-                        if (isLocked) {
-                          setPremiumOverlayOpen(true);
-                          return;
-                        }
-                        setSelectedQuestionCount(num);
-                      }}
-                      className={`relative py-4 rounded-2xl font-black transition-all ${
-                        selectedQuestionCount === num
-                          ? "bg-blue-600 text-white shadow-lg shadow-blue-200"
-                          : "bg-gray-100 dark:bg-slate-700 text-slate-600 dark:text-slate-200"
-                      } ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`}
-                    >
-                      {num === "All" ? "Full Exam" : `${num} Qs`}
+              {/* DIFFICULTY — slim, secondary segmented control */}
+              {questionType === "objective" &&
+                selectedCourse.difficultyCounts &&
+                Object.values(selectedCourse.difficultyCounts).reduce(
+                  (a, b) => a + b,
+                  0,
+                ) > 0 && (
+                  <div className="mt-6">
+                    <div className="flex items-center justify-center gap-1.5 mb-2">
+                      <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500">
+                        Difficulty
+                      </span>
+                    </div>
+                    <div className="inline-flex bg-gray-100 dark:bg-slate-700/60 rounded-2xl p-1 gap-1">
+                      {[
+                        { key: null, label: "All" },
+                        { key: "Easy", label: "Easy" },
+                        { key: "Medium", label: "Medium" },
+                        { key: "Hard", label: "Hard" },
+                      ].map(({ key, label }) => (
+                        <button
+                          key={key ?? "all"}
+                          onClick={() => {
+                            setSelectedDifficulty(key);
+                            setSelectedQuestionCount(null);
+                          }}
+                          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                            selectedDifficulty === key
+                              ? "bg-white dark:bg-slate-600 text-blue-600 dark:text-blue-400 shadow-sm"
+                              : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
 
-                      {isLocked && (
-                        <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-                          <FaCrown className="text-[8px] text-white" />
-                        </div>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
+                    {/* Live availability hint — replaces the per-pill counts */}
+                    <p className="text-[11px] font-medium text-slate-400 dark:text-slate-500 mt-2">
+                      {(() => {
+                        const count = selectedDifficulty
+                          ? selectedCourse.difficultyCounts[
+                              selectedDifficulty
+                            ] || 0
+                          : selectedCourse.questionCount || 0;
+                        return `${count} question${count !== 1 ? "s" : ""} available`;
+                      })()}
+                    </p>
+                  </div>
+                )}
+
+              {/* Divider so the count grid reads as the primary action */}
+              <div className="mt-6 mb-5 h-px bg-gray-100 dark:bg-slate-700" />
+
+              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500 mb-3">
+                Number of Questions
+              </p>
+
+              {/* QUESTION COUNT — primary, larger, hero treatment */}
+              {getAvailableQuestionOptions(selectedCourse).length === 0 ? (
+                <div className="py-6 text-center">
+                  <p className="text-sm font-semibold text-slate-400 dark:text-slate-500">
+                    No questions available
+                    {selectedDifficulty ? ` for ${selectedDifficulty}` : ""}
+                  </p>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-3">
+                  {getAvailableQuestionOptions(selectedCourse).map((num) => {
+                    const isLocked =
+                      !isPremium &&
+                      (questionType === "fib"
+                        ? num !== 10
+                        : questionType === "theory"
+                          ? num !== 3
+                          : num !== 30);
+                    const isSelected = selectedQuestionCount === num;
+
+                    return (
+                      <button
+                        key={num}
+                        onClick={() => {
+                          if (isLocked) {
+                            setPremiumOverlayOpen(true);
+                            return;
+                          }
+                          setSelectedQuestionCount(num);
+                        }}
+                        className={`relative py-5 rounded-2xl transition-all duration-200 active:scale-[0.97] ${
+                          isSelected
+                            ? "bg-gradient-to-br from-blue-600 to-blue-500 shadow-lg shadow-blue-300/40 dark:shadow-blue-900/30 scale-[1.02]"
+                            : "bg-gray-50 dark:bg-slate-700/60 hover:bg-gray-100 dark:hover:bg-slate-700"
+                        } ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`}
+                      >
+                        <span
+                          className={`block text-2xl font-black leading-none ${
+                            isSelected
+                              ? "text-white"
+                              : "text-slate-800 dark:text-slate-100"
+                          }`}
+                        >
+                          {num === "All" ? "Full" : num}
+                        </span>
+                        <span
+                          className={`block text-[10px] font-bold uppercase tracking-wider mt-1 ${
+                            isSelected
+                              ? "text-blue-100"
+                              : "text-slate-400 dark:text-slate-500"
+                          }`}
+                        >
+                          {num === "All" ? "Exam" : "Questions"}
+                        </span>
+
+                        {isLocked && (
+                          <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                            <FaCrown className="text-[8px] text-white" />
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
+
               <button
                 onClick={handleStartExam}
                 disabled={!selectedQuestionCount}
-                className="w-full mt-6 py-4 rounded-2xl font-black bg-blue-600 text-white disabled:bg-gray-300 shadow-xl shadow-blue-100 dark:shadow-none"
+                className="w-full mt-6 py-4 rounded-2xl font-black bg-blue-600 text-white disabled:bg-gray-300 shadow-xl shadow-blue-100 dark:shadow-none transition-all active:scale-[0.98]"
               >
                 Start Exam
               </button>
