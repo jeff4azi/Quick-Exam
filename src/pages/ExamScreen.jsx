@@ -18,6 +18,7 @@ import {
   FiSend,
   FiChevronRight,
   FiX,
+  FiInfo,
 } from "react-icons/fi";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
@@ -288,6 +289,16 @@ const ExamScreen = ({
   const isSubmittingRef = useRef(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [isFibGateOpen, setFibGateOpen] = useState(false);
+  const [showHint, setShowHint] = useState(false);
+  // Set of question IDs whose hints have been revealed this session
+  const [hintsUsed, setHintsUsed] = useState(() => {
+    try {
+      const s = savedSession?.hintsUsed;
+      return Array.isArray(s) ? new Set(s) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
 
   const [kbHeight, setKbHeight] = useState(0);
 
@@ -372,6 +383,10 @@ const ExamScreen = ({
           setAnswers(savedSession.answers);
         }
 
+        if (Array.isArray(savedSession.hintsUsed)) {
+          setHintsUsed(new Set(savedSession.hintsUsed));
+        }
+
         const savedTimeLeft =
           typeof savedSession.timeLeft === "number" && savedSession.timeLeft > 0
             ? savedSession.timeLeft
@@ -445,7 +460,8 @@ const ExamScreen = ({
       answers,
       currentIndex,
       hasRetaken,
-      timeLeft: effectiveTimeLeft, // snapshot for quick restore + legacy consumers
+      timeLeft: effectiveTimeLeft,
+      hintsUsed: Array.from(hintsUsed),
     };
   }, [
     answers,
@@ -456,6 +472,7 @@ const ExamScreen = ({
     questionType,
     selectedCourse,
     shuffledQuestions,
+    hintsUsed,
   ]);
 
   const persistExamSessionThrottled = useCallback(
@@ -475,7 +492,7 @@ const ExamScreen = ({
   useEffect(() => {
     persistExamSessionThrottled({ force: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [answers, currentIndex, shuffledQuestions, selectedCourse]);
+  }, [answers, currentIndex, shuffledQuestions, selectedCourse, hintsUsed]);
 
   // Persist time periodically + on page hide/unload (reliable refresh resume, minimal drift).
   useEffect(() => {
@@ -700,6 +717,16 @@ const ExamScreen = ({
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100;
 
+  // Hint limit: 3 for 30–50 questions, 5 for more than 50
+  const hintLimit = totalQuestions > 50 ? 5 : 3;
+  const hintsRemaining = hintLimit - hintsUsed.size;
+  const currentQuestionHintRevealed = hintsUsed.has(currentQuestion?.id);
+
+  // Collapse hint whenever the user moves to a different question
+  useEffect(() => {
+    setShowHint(false);
+  }, [currentIndex]);
+
   // Show a loading screen while questions are being fetched or prepared
   if (
     questionsLoading ||
@@ -775,26 +802,81 @@ const ExamScreen = ({
                 {selectedCourse.name}{" "}
                 {isFibExam ? "· FIB" : isTheoryExam ? "· Theory" : ""}
               </div>
-              <button
-                onClick={
-                  isBookmarkLocked
-                    ? () => {
-                        setPremiumOverlayOpen(true);
-                        trackPremiumGateHit("bookmark");
+              <div className="flex items-center gap-2">
+                {currentQuestion?.hint && (
+                  <button
+                    onClick={() => {
+                      if (showHint) {
+                        // toggling off is always free
+                        setShowHint(false);
+                        return;
                       }
-                    : handleBookmarkClick
-                }
-                className={`relative p-2 rounded-xl transition-all ${isBookmarked ? "bg-yellow-100 text-yellow-600" : "bg-gray-50 dark:bg-slate-700 text-gray-400"} ${isBookmarkLocked ? "opacity-60 cursor-not-allowed" : ""}`}
-              >
-                <FiBookmark
-                  className={`size-5 ${isBookmarked ? "fill-current" : ""}`}
-                />
-                {isBookmarkLocked && (
-                  <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-                    <FaCrown className="text-[8px] text-white" />
-                  </div>
+                      // Already revealed this question's hint before — free re-open
+                      if (currentQuestionHintRevealed) {
+                        setShowHint(true);
+                        return;
+                      }
+                      // First reveal — consume a hint slot if available
+                      if (hintsRemaining <= 0) return;
+                      setHintsUsed(
+                        (prev) => new Set([...prev, currentQuestion.id]),
+                      );
+                      setShowHint(true);
+                    }}
+                    disabled={
+                      !showHint &&
+                      !currentQuestionHintRevealed &&
+                      hintsRemaining <= 0
+                    }
+                    className={`relative p-2 rounded-xl transition-all ${
+                      showHint
+                        ? "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
+                        : !currentQuestionHintRevealed && hintsRemaining <= 0
+                          ? "bg-gray-50 dark:bg-slate-700 text-gray-300 dark:text-slate-600 cursor-not-allowed"
+                          : "bg-gray-50 dark:bg-slate-700 text-gray-400"
+                    }`}
+                    aria-label={showHint ? "Hide hint" : "Show hint"}
+                    title={
+                      !showHint &&
+                      !currentQuestionHintRevealed &&
+                      hintsRemaining <= 0
+                        ? "No hints remaining"
+                        : showHint
+                          ? "Hide hint"
+                          : `Show hint (${hintsRemaining} remaining)`
+                    }
+                  >
+                    <FiInfo className="size-5" />
+                    {!currentQuestionHintRevealed &&
+                      hintsRemaining > 0 &&
+                      !showHint && (
+                        <span className="absolute -top-1 -right-1 size-4 rounded-full bg-amber-400 text-white text-[9px] font-black flex items-center justify-center">
+                          {hintsRemaining}
+                        </span>
+                      )}
+                  </button>
                 )}
-              </button>
+                <button
+                  onClick={
+                    isBookmarkLocked
+                      ? () => {
+                          setPremiumOverlayOpen(true);
+                          trackPremiumGateHit("bookmark");
+                        }
+                      : handleBookmarkClick
+                  }
+                  className={`relative p-2 rounded-xl transition-all ${isBookmarked ? "bg-yellow-100 text-yellow-600" : "bg-gray-50 dark:bg-slate-700 text-gray-400"} ${isBookmarkLocked ? "opacity-60 cursor-not-allowed" : ""}`}
+                >
+                  <FiBookmark
+                    className={`size-5 ${isBookmarked ? "fill-current" : ""}`}
+                  />
+                  {isBookmarkLocked && (
+                    <div className="absolute -top-1 -right-1 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                      <FaCrown className="text-[8px] text-white" />
+                    </div>
+                  )}
+                </button>
+              </div>
             </div>
 
             <div className="lg:text-xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-5">
@@ -847,6 +929,24 @@ const ExamScreen = ({
             </div>
 
             <div className="space-y-4">
+              {/* Hint panel — only for questions that have a hint */}
+              {currentQuestion?.hint && showHint && (
+                <div className="flex gap-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <FiInfo
+                    className="shrink-0 mt-0.5 text-amber-500 dark:text-amber-400"
+                    size={16}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-amber-800 dark:text-amber-300 leading-relaxed">
+                      {currentQuestion.hint}
+                    </p>
+                    <p className="text-[10px] font-bold text-amber-500 dark:text-amber-600 mt-1.5 uppercase tracking-wider">
+                      {hintsRemaining} hint{hintsRemaining !== 1 ? "s" : ""}{" "}
+                      remaining
+                    </p>
+                  </div>
+                </div>
+              )}
               {isTheoryQuestion(currentQuestion) ? (
                 <textarea
                   value={selectedOption ?? ""}
