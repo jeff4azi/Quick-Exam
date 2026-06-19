@@ -216,10 +216,10 @@ const ChooseCourseScreen = ({
     <div className="min-h-screen bg-gray-50 dark:bg-slate-900 transition-colors duration-500 pb-32">
       {/* HEADER */}
       <header
-        className={`sticky top-0 z-50 px-6 py-4 transition-all duration-300 ${
+        className={`sticky top-0 z-50 px-6 transition-all duration-300 ${
           isScrolled
-            ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg shadow-sm border-b border-gray-100 dark:border-slate-800"
-            : "bg-transparent"
+            ? "bg-white/80 dark:bg-slate-900/80 backdrop-blur-lg shadow-sm border-b border-gray-100 dark:border-slate-800 py-3"
+            : "bg-transparent py-4"
         }`}
       >
         <div className="max-w-2xl mx-auto flex items-center gap-4">
@@ -530,24 +530,24 @@ const ChooseCourseScreen = ({
 
       {/* QUESTION COUNT MODAL */}
       {selectedCourse && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 sm:p-6">
           <div
             className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in"
             onClick={() => setSelectedCourse(null)}
           />
-          <div className="relative bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl w-full max-w-sm p-8 animate-in zoom-in-95">
+          <div className="relative bg-white dark:bg-slate-800 rounded-[2rem] sm:rounded-[2.5rem] shadow-2xl w-full max-w-xs sm:max-w-sm p-5 sm:p-8 animate-in zoom-in-95">
             <button
               onClick={() => setSelectedCourse(null)}
-              className="absolute top-6 right-6 p-2 rounded-full text-gray-400 hover:bg-gray-100"
+              className="absolute top-4 right-4 sm:top-6 sm:right-6 p-2 rounded-full text-gray-400 hover:bg-gray-100"
             >
               <FiX />
             </button>
 
             <div className="text-center">
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white">
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
                 {selectedCourse.name}
               </h3>
-              <p className="text-slate-500 text-sm mt-1 font-medium italic">
+              <p className="text-slate-500 text-xs sm:text-sm mt-1 font-medium italic">
                 {selectedCourse.title}
               </p>
 
@@ -558,9 +558,9 @@ const ChooseCourseScreen = ({
                   (a, b) => a + b,
                   0,
                 ) > 0 && (
-                  <div className="mt-6">
+                  <div className="mt-4 sm:mt-6">
                     <div className="flex items-center justify-center gap-1.5 mb-2">
-                      <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500">
+                      <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500">
                         Difficulty
                       </span>
                     </div>
@@ -577,7 +577,7 @@ const ChooseCourseScreen = ({
                             setSelectedDifficulty(key);
                             setSelectedQuestionCount(null);
                           }}
-                          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all duration-200 ${
+                          className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition-all duration-200 ${
                             selectedDifficulty === key
                               ? "bg-white dark:bg-slate-600 text-blue-600 dark:text-blue-400 shadow-sm"
                               : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
@@ -589,7 +589,7 @@ const ChooseCourseScreen = ({
                     </div>
 
                     {/* Live availability hint — replaces the per-pill counts */}
-                    <p className="text-[11px] font-medium text-slate-400 dark:text-slate-500 mt-2">
+                    <p className="text-[10px] sm:text-[11px] font-medium text-slate-400 dark:text-slate-500 mt-2">
                       {(() => {
                         const count = selectedDifficulty
                           ? selectedCourse.difficultyCounts[
@@ -603,22 +603,22 @@ const ChooseCourseScreen = ({
                 )}
 
               {/* Divider so the count grid reads as the primary action */}
-              <div className="mt-6 mb-5 h-px bg-gray-100 dark:bg-slate-700" />
+              <div className="mt-4 sm:mt-6 mb-4 sm:mb-5 h-px bg-gray-100 dark:bg-slate-700" />
 
-              <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500 mb-3">
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500 mb-2 sm:mb-3">
                 Number of Questions
               </p>
 
               {/* QUESTION COUNT — primary, larger, hero treatment */}
               {getAvailableQuestionOptions(selectedCourse).length === 0 ? (
-                <div className="py-6 text-center">
-                  <p className="text-sm font-semibold text-slate-400 dark:text-slate-500">
+                <div className="py-4 sm:py-6 text-center">
+                  <p className="text-xs sm:text-sm font-semibold text-slate-400 dark:text-slate-500">
                     No questions available
                     {selectedDifficulty ? ` for ${selectedDifficulty}` : ""}
                   </p>
                 </div>
               ) : (
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   {getAvailableQuestionOptions(selectedCourse).map((num) => {
                     const isLocked =
                       !isPremium &&
@@ -639,14 +639,14 @@ const ChooseCourseScreen = ({
                           }
                           setSelectedQuestionCount(num);
                         }}
-                        className={`relative py-5 rounded-2xl transition-all duration-200 active:scale-[0.97] ${
+                        className={`relative py-4 sm:py-5 rounded-2xl transition-all duration-200 active:scale-[0.97] ${
                           isSelected
                             ? "bg-gradient-to-br from-blue-600 to-blue-500 shadow-lg shadow-blue-300/40 dark:shadow-blue-900/30 scale-[1.02]"
                             : "bg-gray-50 dark:bg-slate-700/60 hover:bg-gray-100 dark:hover:bg-slate-700"
                         } ${isLocked ? "opacity-60 cursor-not-allowed" : ""}`}
                       >
                         <span
-                          className={`block text-2xl font-black leading-none ${
+                          className={`block text-xl sm:text-2xl font-black leading-none ${
                             isSelected
                               ? "text-white"
                               : "text-slate-800 dark:text-slate-100"
@@ -655,7 +655,7 @@ const ChooseCourseScreen = ({
                           {num === "All" ? "Full" : num}
                         </span>
                         <span
-                          className={`block text-[10px] font-bold uppercase tracking-wider mt-1 ${
+                          className={`block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mt-0.5 sm:mt-1 ${
                             isSelected
                               ? "text-blue-100"
                               : "text-slate-400 dark:text-slate-500"
@@ -666,7 +666,7 @@ const ChooseCourseScreen = ({
 
                         {isLocked && (
                           <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-                            <FaCrown className="text-[8px] text-white" />
+                            <FaCrown className="text-[7px] sm:text-[8px] text-white" />
                           </div>
                         )}
                       </button>
@@ -678,7 +678,7 @@ const ChooseCourseScreen = ({
               <button
                 onClick={handleStartExam}
                 disabled={!selectedQuestionCount}
-                className="w-full mt-6 py-4 rounded-2xl font-black bg-blue-600 text-white disabled:bg-gray-300 shadow-xl shadow-blue-100 dark:shadow-none transition-all active:scale-[0.98]"
+                className="w-full mt-4 sm:mt-6 py-3 sm:py-4 rounded-2xl font-bold sm:font-black text-sm sm:text-base bg-blue-600 text-white disabled:bg-gray-300 shadow-xl shadow-blue-100 dark:shadow-none transition-all active:scale-[0.98]"
               >
                 Start Exam
               </button>
