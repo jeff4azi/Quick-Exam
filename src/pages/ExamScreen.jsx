@@ -69,11 +69,9 @@ const FibPremiumGateOverlay = ({ onUpgrade, onQuit }) => (
 );
 
 // ─── Pagination Strip ────────────────────────────────────────────────────────
-// ─── Pagination Strip ────────────────────────────────────────────────────────
 const PaginationStrip = ({ total, currentIndex, answers, onSelect }) => {
   const swiperRef = useRef(null);
 
-  // Keep active slide centred whenever currentIndex changes
   useEffect(() => {
     if (swiperRef.current) {
       swiperRef.current.slideTo(currentIndex, 300);
@@ -81,13 +79,16 @@ const PaginationStrip = ({ total, currentIndex, answers, onSelect }) => {
   }, [currentIndex]);
 
   return (
-    <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 px-1 py-2.5 rounded-[2rem] shadow-xl overflow-hidden mt-5 mx-3">
+    <div className="relative bg-white/90 dark:bg-slate-800/90 backdrop-blur-xl border border-slate-100 dark:border-slate-700/50 px-2 py-3 rounded-[1.75rem] shadow-[0_8px_30px_rgba(15,23,42,0.06)] dark:shadow-none overflow-hidden mt-5 mx-3">
+      {/* subtle top accent line so the strip reads as a distinct "navigator" module */}
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-1 rounded-full bg-slate-200/70 dark:bg-slate-600/50" />
+
       <Swiper
         onSwiper={(swiper) => (swiperRef.current = swiper)}
         slidesPerView="auto"
-        spaceBetween={6}
-        slidesOffsetBefore={4}
-        slidesOffsetAfter={4}
+        spaceBetween={8}
+        slidesOffsetBefore={6}
+        slidesOffsetAfter={6}
         slideToClickedSlide={true}
         onSlideClick={(swiper) => onSelect(swiper.clickedIndex)}
         className="!overflow-visible"
@@ -100,15 +101,22 @@ const PaginationStrip = ({ total, currentIndex, answers, onSelect }) => {
             <SwiperSlide key={idx} style={{ width: "auto" }}>
               <button
                 onClick={() => onSelect(idx)}
-                className={`flex items-center justify-center rounded-full font-bold text-[11px] shrink-0 focus:outline-none transition-all duration-200 ${
-                  isActive
-                    ? "size-8 bg-blue-600 text-white shadow-md shadow-blue-300/60 dark:shadow-blue-900/60 scale-110"
-                    : isAnswered
-                      ? "size-7 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400"
-                      : "size-7 bg-gray-100 dark:bg-slate-700 text-slate-400 dark:text-slate-500"
-                }`}
+                aria-current={isActive}
+                aria-label={`Question ${idx + 1}${isAnswered ? ", answered" : ""}`}
+                className={`relative flex items-center justify-center rounded-xl font-bold text-[11px] shrink-0 select-none transition-all duration-300 ease-out focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-400/60
+                  ${
+                    isActive
+                      ? "size-9 bg-gradient-to-br from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30 scale-105"
+                      : isAnswered
+                        ? "size-8 bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 ring-1 ring-blue-100 dark:ring-blue-800/40 hover:bg-blue-100 dark:hover:bg-blue-900/50"
+                        : "size-8 bg-slate-50 dark:bg-slate-700/60 text-slate-400 dark:text-slate-500 ring-1 ring-slate-100 dark:ring-slate-700 hover:bg-slate-100 dark:hover:bg-slate-700"
+                  }`}
               >
                 {idx + 1}
+                {/* tiny dot under answered (non-active) items — quieter than a full fill change */}
+                {isAnswered && !isActive && (
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 size-1 rounded-full bg-blue-500" />
+                )}
               </button>
             </SwiperSlide>
           );
