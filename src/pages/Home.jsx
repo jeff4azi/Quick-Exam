@@ -29,7 +29,7 @@ import {
   loadFavouriteCourseIds,
   decodeFavouriteKey,
 } from "../utils/favouriteCourses";
-import { FeedBoltBanner } from "../components/FeedBoltBanner";
+
 import {
   trackPWAInstallPrompt,
   trackPWAInstalled,
@@ -868,8 +868,7 @@ const Home = ({
           </button>
         )}
 
-        {/* FeedBolt CTA */}
-        <FeedBoltBanner />
+
 
 
 
