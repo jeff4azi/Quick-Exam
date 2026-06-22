@@ -652,7 +652,7 @@ const ChooseCourseScreen = ({
                               : "text-slate-800 dark:text-slate-100"
                           }`}
                         >
-                          {num === "All" ? "Full" : num}
+                          {num === "All" ? "All" : num}
                         </span>
                         <span
                           className={`block text-[9px] sm:text-[10px] font-bold uppercase tracking-wider mt-0.5 sm:mt-1 ${
@@ -661,7 +661,7 @@ const ChooseCourseScreen = ({
                               : "text-slate-400 dark:text-slate-500"
                           }`}
                         >
-                          {num === "All" ? "Exam" : "Questions"}
+                          Questions
                         </span>
 
                         {isLocked && (
