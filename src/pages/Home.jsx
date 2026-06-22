@@ -714,7 +714,9 @@ const Home = ({
             {
               title: "Flashcards",
               description: "Review and memorize",
-              bg: "bg-violet-50 dark:bg-violet-900/20",
+              gradient: "from-violet-500 to-purple-600",
+              bg: "bg-violet-50 dark:bg-violet-900/30",
+              border: "border-violet-200 dark:border-violet-800/40",
               icon: flashCardIcon,
               onClick: () => {
                 trackStudyModeClick("flashcards");
@@ -724,7 +726,9 @@ const Home = ({
             {
               title: "Test",
               description: "Check your understanding",
-              bg: "bg-sky-50 dark:bg-sky-900/20",
+              gradient: "from-sky-500 to-cyan-600",
+              bg: "bg-sky-50 dark:bg-sky-900/30",
+              border: "border-sky-200 dark:border-sky-800/40",
               icon: testIcon,
               onClick: () => {
                 trackStudyModeClick("test");
@@ -734,7 +738,9 @@ const Home = ({
             {
               title: "Match",
               description: "Click fast and score high",
-              bg: "bg-emerald-50 dark:bg-emerald-900/20",
+              gradient: "from-emerald-500 to-teal-600",
+              bg: "bg-emerald-50 dark:bg-emerald-900/30",
+              border: "border-emerald-200 dark:border-emerald-800/40",
               icon: matchIcon,
               onClick: () => {
                 trackStudyModeClick("match");
@@ -746,19 +752,32 @@ const Home = ({
               key={mode.title}
               type="button"
               onClick={mode.onClick}
-              className={`${mode.bg} p-6 rounded-2xl text-left cursor-pointer transition-all duration-200 hover:shadow-md hover:-translate-y-0.5 active:scale-[0.98]`}
+              className={`group relative overflow-hidden ${mode.bg} ${mode.border} border p-6 rounded-[1.75rem] text-left cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl active:scale-[0.97]`}
             >
-              <img
-                src={mode.icon}
-                alt={mode.title}
-                className="w-10 h-10 object-contain"
-              />
-              <p className="mt-3 font-black text-slate-800 dark:text-slate-100 text-base">
-                {mode.title}
-              </p>
-              <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                {mode.description}
-              </p>
+              {/* Gradient accent */}
+              <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${mode.gradient}`} />
+              <div className={`absolute -bottom-12 -right-12 w-36 h-36 bg-gradient-to-br ${mode.gradient} opacity-10 group-hover:opacity-15 transition-opacity blur-3xl`} />
+              
+              <div className="relative z-10">
+                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br ${mode.gradient} shadow-lg mb-4`}>
+                  <img
+                    src={mode.icon}
+                    alt={mode.title}
+                    className="w-6 h-6 object-contain"
+                  />
+                </div>
+                <p className="text-lg font-black text-slate-900 dark:text-slate-50">
+                  {mode.title}
+                </p>
+                <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-300">
+                  {mode.description}
+                </p>
+                
+                <div className="mt-4 flex items-center text-sm font-semibold text-slate-700 dark:text-slate-200 opacity-0 group-hover:opacity-100 transform translate-y-1 group-hover:translate-y-0 transition-all duration-300">
+                  Start
+                  <FiArrowRight size={16} className="ml-1.5" />
+                </div>
+              </div>
             </button>
           ))}
         </div>
