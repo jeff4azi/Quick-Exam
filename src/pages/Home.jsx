@@ -16,7 +16,13 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import { FreeMode } from "swiper/modules";
 
-import { FaCrown, FaFire, FaTrophy, FaUserFriends, FaBolt } from "react-icons/fa";
+import {
+  FaCrown,
+  FaFire,
+  FaTrophy,
+  FaUserFriends,
+  FaBolt,
+} from "react-icons/fa";
 import { FiArrowRight, FiZap, FiPlay, FiX } from "react-icons/fi";
 import { MdStar } from "react-icons/md";
 import {
@@ -133,9 +139,9 @@ const getHotCourse = (allAttempts, availableCourses) => {
   if (!Array.isArray(allAttempts) || !Array.isArray(availableCourses)) {
     return null;
   }
-  
+
   const MIN_HOT_THRESHOLD = 10;
-  
+
   // Count course frequency
   const courseCounts = new Map();
   for (const attempt of allAttempts) {
@@ -144,36 +150,29 @@ const getHotCourse = (allAttempts, availableCourses) => {
       courseCounts.set(attempt.course_id, count + 1);
     }
   }
-  
+
   // Find the most frequent available course that meets the threshold
   let maxCount = 0;
   let hotCourse = null;
-  const availableCourseIds = new Set(availableCourses.map((c) => c?.id).filter(Boolean));
-  
+  const availableCourseIds = new Set(
+    availableCourses.map((c) => c?.id).filter(Boolean),
+  );
+
   for (const [courseId, count] of courseCounts.entries()) {
-    if (count > maxCount && count >= MIN_HOT_THRESHOLD && availableCourseIds.has(courseId)) {
+    if (
+      count > maxCount &&
+      count >= MIN_HOT_THRESHOLD &&
+      availableCourseIds.has(courseId)
+    ) {
       maxCount = count;
       hotCourse = availableCourses.find((c) => c?.id === courseId);
     }
   }
-  
+
   return hotCourse ? { ...hotCourse, attemptCount: maxCount } : null;
 };
 
-const formatRecentCourses = (attempts) =>
-  attempts.map((r) => ({
-    id: r.id,
-    course: r.course_id,
-    date: new Date(r.date_taken).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    }),
-    score: r.score,
-    total: r.total_questions,
-    timeTaken: r.time_taken,
-    type: r.type,
-  }));
+
 
 const Home = ({
   userProfile,
@@ -300,12 +299,6 @@ const Home = ({
     setShowQuitConfirm(false);
   };
 
-  const [recentCourses, setRecentCourses] = useState(
-    () => cachedDashboard?.recentCourses || [],
-  );
-  const [recentCoursesLoading, setRecentCoursesLoading] = useState(
-    () => !cachedDashboard?.recentCourses,
-  );
   const [stats, setStats] = useState(
     () => cachedDashboard?.stats || DEFAULT_HOME_STATS,
   );
@@ -316,9 +309,7 @@ const Home = ({
   useEffect(() => {
     if (!cachedDashboard) return;
     setStats(cachedDashboard.stats || DEFAULT_HOME_STATS);
-    setRecentCourses(cachedDashboard.recentCourses || []);
     setFavouriteIds(cachedDashboard.favouriteIds || []);
-    setRecentCoursesLoading(false);
     setFavouritesLoading(false);
     setHotCourseLoading(false);
   }, [cachedDashboard, userProfile?.university]);
@@ -335,7 +326,6 @@ const Home = ({
   const fetchHomeDashboard = useCallback(async () => {
     const hasCachedDashboard = Boolean(cachedDashboard);
     if (!hasCachedDashboard) {
-      setRecentCoursesLoading(true);
       setFavouritesLoading(true);
       setHotCourseLoading(true);
     }
@@ -351,58 +341,49 @@ const Home = ({
       );
 
       if (userError || !user) {
-        setRecentCoursesLoading(false);
         setFavouritesLoading(false);
         setHotCourseLoading(false);
         return;
       }
 
       const weekStartIso = getCurrentWeekStartIso();
-      const [weeklyResult, streakResult, recentResult, allAttemptsResult, favouriteIdsResult] =
-        await Promise.all([
-          withTimeout(
-            supabase
-              .from("exam_attempts")
-              .select(
-                "user_id, score, total_questions, time_taken, date_taken, is_retake, university, type",
-              )
-              .eq("is_retake", false)
-              .gte("date_taken", weekStartIso),
-            15000,
-            "Loading your stats took too long.",
-          ),
-          withTimeout(
-            supabase
-              .from("exam_attempts")
-              .select("date_taken")
-              .eq("user_id", user.id)
-              .order("date_taken", { ascending: false }),
-            15000,
-            "Loading streak took too long.",
-          ),
-          withTimeout(
-            supabase
-              .from("exam_attempts")
-              .select(
-                "id, course_id, score, total_questions, time_taken, date_taken, type",
-              )
-              .eq("user_id", user.id)
-              .order("date_taken", { ascending: false })
-              .limit(7),
-            15000,
-            "Loading recent courses took too long.",
-          ),
-          withTimeout(
-            supabase
-              .from("exam_attempts")
-              .select("course_id, date_taken")
-              .eq("is_retake", false)
-              .gte("date_taken", weekStartIso),
-            15000,
-            "Loading hot courses took too long.",
-          ),
-          loadFavouriteCourseIds(user.id),
-        ]);
+      const [
+        weeklyResult,
+        streakResult,
+        allAttemptsResult,
+        favouriteIdsResult,
+      ] = await Promise.all([
+        withTimeout(
+          supabase
+            .from("exam_attempts")
+            .select(
+              "user_id, score, total_questions, time_taken, date_taken, is_retake, university, type",
+            )
+            .eq("is_retake", false)
+            .gte("date_taken", weekStartIso),
+          15000,
+          "Loading your stats took too long.",
+        ),
+        withTimeout(
+          supabase
+            .from("exam_attempts")
+            .select("date_taken")
+            .eq("user_id", user.id)
+            .order("date_taken", { ascending: false }),
+          15000,
+          "Loading streak took too long.",
+        ),
+        withTimeout(
+          supabase
+            .from("exam_attempts")
+            .select("course_id, date_taken")
+            .eq("is_retake", false)
+            .gte("date_taken", weekStartIso),
+          15000,
+          "Loading hot courses took too long.",
+        ),
+        loadFavouriteCourseIds(user.id),
+      ]);
 
       const hotCourse =
         allAttemptsResult.error || !allAttemptsResult.data
@@ -424,26 +405,19 @@ const Home = ({
             : getStreak(streakResult.data || []),
         hotCourse,
       };
-      const nextRecentCourses =
-        recentResult.error || !recentResult.data
-          ? []
-          : formatRecentCourses(recentResult.data || []);
       const nextFavouriteIds = Array.isArray(favouriteIdsResult)
         ? favouriteIdsResult
         : [];
 
       setStats(nextStats);
-      setRecentCourses(nextRecentCourses);
       setFavouriteIds(nextFavouriteIds);
       writeHomeDashboardCache(user.id, {
         stats: nextStats,
-        recentCourses: nextRecentCourses,
         favouriteIds: nextFavouriteIds,
       });
     } catch (err) {
       console.error("Failed to load home dashboard:", err);
     } finally {
-      setRecentCoursesLoading(false);
       setFavouritesLoading(false);
       setHotCourseLoading(false);
     }
@@ -752,112 +726,116 @@ const Home = ({
               key={mode.title}
               type="button"
               onClick={mode.onClick}
-              className={`group relative overflow-hidden ${mode.bg} ${mode.border} border p-6 rounded-[1.75rem] text-left cursor-pointer transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl active:scale-[0.97]`}
+              className={`group flex items-center gap-3 ${mode.bg} ${mode.border} border p-3.5 rounded-2xl text-left cursor-pointer transition-colors active:scale-[0.98]`}
             >
-              {/* Gradient accent */}
-              <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${mode.gradient}`} />
-              <div className={`absolute -bottom-12 -right-12 w-36 h-36 bg-gradient-to-br ${mode.gradient} opacity-10 group-hover:opacity-15 transition-opacity blur-3xl`} />
-              
-              <div className="relative z-10">
-                <div className={`inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-br ${mode.gradient} shadow-lg mb-4`}>
-                  <img
-                    src={mode.icon}
-                    alt={mode.title}
-                    className="w-6 h-6 object-contain"
-                  />
-                </div>
-                <p className="text-lg font-black text-slate-900 dark:text-slate-50">
+              {/* Icon */}
+              <div
+                className={`flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br ${mode.gradient}`}
+              >
+                <img
+                  src={mode.icon}
+                  alt={mode.title}
+                  className="w-4.5 h-4.5 object-contain"
+                />
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 min-w-0">
+                <p className="text-[15px] font-semibold tracking-tight text-slate-900 dark:text-slate-50">
                   {mode.title}
                 </p>
-                <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-300">
+                <p className="text-[13px] text-slate-600 dark:text-slate-400 line-clamp-1">
                   {mode.description}
                 </p>
-                
-                <div className="mt-4 flex items-center text-sm font-semibold text-slate-700 dark:text-slate-200 opacity-0 group-hover:opacity-100 transform translate-y-1 group-hover:translate-y-0 transition-all duration-300">
-                  Start
-                  <FiArrowRight size={16} className="ml-1.5" />
-                </div>
               </div>
+
+              <FiArrowRight
+                size={16}
+                className="flex-shrink-0 text-slate-400 group-hover:translate-x-0.5 transition-transform"
+              />
             </button>
           ))}
         </div>
 
         {/* Hot Course */}
-<div className="space-y-3">
-  <h3 className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-1">
-    Hot this week
-  </h3>
+        <div className="space-y-3">
+          <h3 className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-1">
+            Hot this week
+          </h3>
 
-  {hotCourseLoading ? (
-    <div className="bg-white dark:bg-slate-800/70 p-5 rounded-[1.25rem] border border-gray-200 dark:border-slate-700 animate-pulse">
-      <div className="flex items-center gap-3 mb-4">
-        <div className="size-10 rounded-xl bg-slate-200 dark:bg-slate-700" />
-        <div className="flex flex-col gap-2 flex-1">
-          <div className="h-2.5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full" />
-          <div className="h-3.5 w-40 bg-slate-200 dark:bg-slate-700 rounded-full" />
-        </div>
-      </div>
-      <div className="flex items-center justify-between">
-        <div className="h-3 w-32 bg-slate-200 dark:bg-slate-700 rounded-full" />
-        <div className="h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-lg" />
-      </div>
-    </div>
-  ) : stats.hotCourse ? (
-    <button
-      type="button"
-      onClick={() => {
-        if (setQuestionType) setQuestionType("objective");
-        navigate(`/choose-course?course=${stats.hotCourse.id}`);
-      }}
-      className="group w-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 rounded-[1.25rem] overflow-hidden text-left active:scale-[0.99] transition-all hover:-translate-y-0.5"
-    >
-      {/* Accent strip */}
-      <div className="h-[3px] w-full bg-amber-500 dark:bg-amber-400" />
-
-      <div className="p-5">
-        <div className="flex items-start gap-3.5 mb-4">
-          <div className="size-10 shrink-0 rounded-xl bg-amber-50 dark:bg-amber-950/60 flex items-center justify-center">
-            <FaFire className="text-amber-700 dark:text-amber-400 text-lg" />
-          </div>
-
-          <div className="flex-1 min-w-0">
-            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/60 mb-1.5">
-              <FaBolt className="text-[9px] text-amber-700 dark:text-amber-400" />
-              <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
-                Trending
-              </span>
+          {hotCourseLoading ? (
+            <div className="bg-white dark:bg-slate-800/70 p-5 rounded-[1.25rem] border border-gray-200 dark:border-slate-700 animate-pulse">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="size-10 rounded-xl bg-slate-200 dark:bg-slate-700" />
+                <div className="flex flex-col gap-2 flex-1">
+                  <div className="h-2.5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                  <div className="h-3.5 w-40 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                </div>
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="h-3 w-32 bg-slate-200 dark:bg-slate-700 rounded-full" />
+                <div className="h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-lg" />
+              </div>
             </div>
-            <h4 className="text-[17px] font-medium text-slate-900 dark:text-slate-100 truncate">
-              {stats.hotCourse.name}
-            </h4>
-            {stats.hotCourse.title && (
-              <p className="text-xs text-slate-400 dark:text-slate-500 truncate">
-                {stats.hotCourse.title}
-              </p>
-            )}
-          </div>
+          ) : stats.hotCourse ? (
+            <button
+              type="button"
+              onClick={() => {
+                if (setQuestionType) setQuestionType("objective");
+                navigate(`/choose-course?course=${stats.hotCourse.id}`);
+              }}
+              className="group w-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 rounded-[1.25rem] overflow-hidden text-left active:scale-[0.99] transition-all hover:-translate-y-0.5"
+            >
+              {/* Accent strip */}
+              <div className="h-[3px] w-full bg-amber-500 dark:bg-amber-400" />
+
+              <div className="p-5">
+                <div className="flex items-start gap-3.5 mb-4">
+                  <div className="size-10 shrink-0 rounded-xl bg-amber-50 dark:bg-amber-950/60 flex items-center justify-center">
+                    <FaFire className="text-amber-700 dark:text-amber-400 text-lg" />
+                  </div>
+
+                  <div className="flex-1 min-w-0">
+                    <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/60 mb-1.5">
+                      <FaBolt className="text-[9px] text-amber-700 dark:text-amber-400" />
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+                        Trending
+                      </span>
+                    </div>
+                    <h4 className="text-[17px] font-medium text-slate-900 dark:text-slate-100 truncate">
+                      {stats.hotCourse.name}
+                    </h4>
+                    {stats.hotCourse.title && (
+                      <p className="text-xs text-slate-400 dark:text-slate-500 truncate">
+                        {stats.hotCourse.title}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-4">
+                    <span className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+                      <span className="text-slate-300 dark:text-slate-600">
+                        ◆
+                      </span>
+                      {stats.hotCourse.questionCount || 0} questions
+                    </span>
+                    <span className="text-xs text-slate-400 dark:text-slate-500">
+                      {stats.hotCourse.attemptCount} attempts this week
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 text-sm font-medium transition-transform group-hover:translate-x-0.5">
+                    Start
+                    <FiArrowRight size={14} />
+                  </div>
+                </div>
+              </div>
+            </button>
+          ) : null}
         </div>
 
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-4">
-            <span className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
-              <span className="text-slate-300 dark:text-slate-600">◆</span>
-              {stats.hotCourse.questionCount || 0} questions
-            </span>
-            <span className="text-xs text-slate-400 dark:text-slate-500">
-              {stats.hotCourse.attemptCount} attempts this week
-            </span>
-          </div>
-
-          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 text-sm font-medium transition-transform group-hover:translate-x-0.5">
-            Start
-            <FiArrowRight size={14} />
-          </div>
-        </div>
-      </div>
-    </button>
-  ) : null}
-</div>
         {/* Referral CTA */}
         {!isPremium && (
           <button
@@ -893,118 +871,7 @@ const Home = ({
         {/* FeedBolt CTA */}
         <FeedBoltBanner />
 
-        {/* Recently done */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1">
-              Recently done
-            </h3>
-            <button
-              type="button"
-              onClick={() => navigate("/history")}
-              className="text-[11px] font-semibold text-blue-500 dark:text-blue-400"
-            >
-              View all
-            </button>
-          </div>
 
-          {recentCoursesLoading ? (
-            <div className="flex gap-3 overflow-hidden">
-              {[...Array(3)].map((_, i) => (
-                <div
-                  key={i}
-                  className="min-w-[200px] sm:min-w-64 min-h-[100px] sm:min-h-[120px] bg-white dark:bg-slate-800 p-3.5 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border border-gray-200 dark:border-slate-700 animate-pulse"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex flex-col gap-2 flex-1">
-                      <div className="h-2.5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full" />
-                      <div className="h-4 w-28 bg-slate-200 dark:bg-slate-700 rounded-full" />
-                    </div>
-                    <div className="size-8 sm:size-10 rounded-xl sm:rounded-2xl bg-slate-200 dark:bg-slate-700" />
-                  </div>
-                  <div className="mt-3 h-2.5 w-36 bg-slate-200 dark:bg-slate-700 rounded-full" />
-                </div>
-              ))}
-            </div>
-          ) : recentCourses.length === 0 ? (
-            <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-500/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
-              No recent attempts yet. Complete an exam to see it here.
-            </div>
-          ) : (
-            <Swiper
-              spaceBetween={12}
-              slidesPerView={"auto"}
-              freeMode={{
-                enabled: true,
-                momentum: true,
-                momentumVelocityRatio: 0.8,
-              }}
-              modules={[FreeMode]}
-              className="pb-2 pr-6"
-            >
-              {recentCourses.map((item) => (
-                <SwiperSlide
-                  key={`${item.id}-${item.date}`}
-                  className="!w-[200px] sm:!w-56 lg:!w-44 xl:!w-56"
-                >
-                  <button
-                    type="button"
-                    onClick={() => navigate("/history")}
-                    className="w-full min-h-[100px] sm:min-h-[120px] bg-white dark:bg-slate-800 p-3.5 sm:p-5 rounded-[1.5rem] sm:rounded-[2rem] border border-gray-200 dark:border-slate-700 text-left shadow-md active:scale-[0.98] transition-transform"
-                  >
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 truncate">
-                          {item?.date || "—"}
-                        </p>
-                        <p className="mt-0.5 text-base sm:text-lg font-black text-slate-900 dark:text-white truncate">
-                          {item?.course || "Course"}
-                        </p>
-                        {item?.type && (
-                          <span
-                            className={`mt-1 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
-                              item.type === "THY"
-                                ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
-                                : item.type === "FIB"
-                                  ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
-                                  : "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
-                            }`}
-                          >
-                            {item.type === "THY"
-                              ? "Theory"
-                              : item.type === "FIB"
-                                ? "Fill in Blanks"
-                                : "Objective"}
-                          </span>
-                        )}
-                      </div>
-                      <div className="size-8 sm:size-10 shrink-0 rounded-xl sm:rounded-2xl bg-slate-100 dark:bg-slate-700/40 text-blue-600 dark:text-blue-400 flex items-center justify-center font-semibold text-[10px] sm:text-xs">
-                        {parseFloat((Number(item?.score) || 0).toFixed(2))}/
-                        {item?.total ?? 0}
-                      </div>
-                    </div>
-
-                    <div className="mt-2.5 flex items-center gap-2 text-[10px] sm:text-[11px] font-medium text-slate-400 dark:text-slate-500">
-                      <span>
-                        Best:{" "}
-                        {item?.score != null && item?.total
-                          ? `${Math.round((item.score / item.total) * 100)}%`
-                          : "—"}
-                      </span>
-                      <span>•</span>
-                      <span>
-                        Time:{" "}
-                        {item?.timeTaken != null
-                          ? `${Math.floor(item.timeTaken / 60)}m ${item.timeTaken % 60}s`
-                          : "—"}
-                      </span>
-                    </div>
-                  </button>
-                </SwiperSlide>
-              ))}
-            </Swiper>
-          )}
-        </div>
 
         {/* Favourite courses */}
         <div className="space-y-3">
