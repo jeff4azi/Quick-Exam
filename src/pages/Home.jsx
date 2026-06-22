@@ -783,81 +783,81 @@ const Home = ({
         </div>
 
         {/* Hot Course */}
-        <div className="space-y-3">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1">
-            Hot this week
-          </h3>
-          
-          {hotCourseLoading ? (
-            <div className="bg-white dark:bg-slate-800/70 p-5 rounded-[1.75rem] border border-gray-200 dark:border-slate-700 animate-pulse">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="size-10 rounded-2xl bg-slate-200 dark:bg-slate-700" />
-                <div className="flex flex-col gap-2 flex-1">
-                  <div className="h-2.5 w-20 bg-slate-200 dark:bg-slate-700 rounded-full" />
-                  <div className="h-3.5 w-40 bg-slate-200 dark:bg-slate-700 rounded-full" />
-                </div>
-              </div>
-              <div className="flex items-center justify-between gap-3">
-                <div className="h-3.5 w-32 bg-slate-200 dark:bg-slate-700 rounded-full" />
-                <div className="h-9 w-24 bg-slate-200 dark:bg-slate-700 rounded-xl" />
-              </div>
-            </div>
-          ) : stats.hotCourse ? (
-            <button
-              type="button"
-              onClick={() => {
-                if (setQuestionType) setQuestionType("objective");
-                navigate(`/choose-course?course=${stats.hotCourse.id}`);
-              }}
-              className="group relative w-full bg-gradient-to-br from-orange-500 via-orange-600 to-rose-600 overflow-hidden p-5 rounded-[1.75rem] shadow-lg shadow-orange-200/60 dark:shadow-none active:scale-[0.98] transition-all hover:-translate-y-0.5 hover:shadow-xl"
-            >
-              <div className="absolute -top-10 -right-10 size-36 bg-white/15 rounded-full blur-3xl group-hover:bg-white/25 transition-colors" />
-              <div className="absolute -bottom-16 -left-10 size-40 bg-yellow-300/20 rounded-full blur-3xl" />
-              
-              <div className="relative z-10">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="size-10 shrink-0 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white">
-                    <FaFire className="text-xl" />
-                  </div>
-                  
-                  <div className="flex-1 min-w-0 text-left">
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="px-2 py-0.5 rounded-full bg-white/20 text-white text-[10px] font-black uppercase tracking-wider flex items-center gap-1">
-                        <FaBolt className="text-[10px]" />
-                        Trending
-                      </div>
-                      <span className="text-[10px] font-semibold text-orange-100">
-                        {stats.hotCourse.attemptCount} attempts this week
-                      </span>
-                    </div>
-                    <h4 className="text-lg font-black text-white truncate">
-                      {stats.hotCourse.name}
-                    </h4>
-                    {stats.hotCourse.title && (
-                      <p className="text-xs text-orange-100 truncate">
-                        {stats.hotCourse.title}
-                      </p>
-                    )}
-                  </div>
-                </div>
+<div className="space-y-3">
+  <h3 className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-1">
+    Hot this week
+  </h3>
 
-                <div className="flex items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="px-3 py-1 rounded-xl bg-white/20 text-white text-[11px] font-semibold">
-                      {stats.hotCourse.questionCount || 0} Questions
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white text-orange-600 text-sm font-black transition-transform group-hover:translate-x-1">
-                    Start quiz
-                    <FiArrowRight size={16} />
-                  </div>
-                </div>
-              </div>
-            </button>
-          ) : null}
+  {hotCourseLoading ? (
+    <div className="bg-white dark:bg-slate-800/70 p-5 rounded-[1.25rem] border border-gray-200 dark:border-slate-700 animate-pulse">
+      <div className="flex items-center gap-3 mb-4">
+        <div className="size-10 rounded-xl bg-slate-200 dark:bg-slate-700" />
+        <div className="flex flex-col gap-2 flex-1">
+          <div className="h-2.5 w-16 bg-slate-200 dark:bg-slate-700 rounded-full" />
+          <div className="h-3.5 w-40 bg-slate-200 dark:bg-slate-700 rounded-full" />
+        </div>
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="h-3 w-32 bg-slate-200 dark:bg-slate-700 rounded-full" />
+        <div className="h-8 w-20 bg-slate-200 dark:bg-slate-700 rounded-lg" />
+      </div>
+    </div>
+  ) : stats.hotCourse ? (
+    <button
+      type="button"
+      onClick={() => {
+        if (setQuestionType) setQuestionType("objective");
+        navigate(`/choose-course?course=${stats.hotCourse.id}`);
+      }}
+      className="group w-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 rounded-[1.25rem] overflow-hidden text-left active:scale-[0.99] transition-all hover:-translate-y-0.5"
+    >
+      {/* Accent strip */}
+      <div className="h-[3px] w-full bg-amber-500 dark:bg-amber-400" />
+
+      <div className="p-5">
+        <div className="flex items-start gap-3.5 mb-4">
+          <div className="size-10 shrink-0 rounded-xl bg-amber-50 dark:bg-amber-950/60 flex items-center justify-center">
+            <FaFire className="text-amber-700 dark:text-amber-400 text-lg" />
+          </div>
+
+          <div className="flex-1 min-w-0">
+            <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/60 mb-1.5">
+              <FaBolt className="text-[9px] text-amber-700 dark:text-amber-400" />
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+                Trending
+              </span>
+            </div>
+            <h4 className="text-[17px] font-medium text-slate-900 dark:text-slate-100 truncate">
+              {stats.hotCourse.name}
+            </h4>
+            {stats.hotCourse.title && (
+              <p className="text-xs text-slate-400 dark:text-slate-500 truncate">
+                {stats.hotCourse.title}
+              </p>
+            )}
+          </div>
         </div>
 
+        <div className="flex items-center justify-between gap-3">
+          <div className="flex items-center gap-4">
+            <span className="text-xs text-slate-400 dark:text-slate-500 flex items-center gap-1.5">
+              <span className="text-slate-300 dark:text-slate-600">◆</span>
+              {stats.hotCourse.questionCount || 0} questions
+            </span>
+            <span className="text-xs text-slate-400 dark:text-slate-500">
+              {stats.hotCourse.attemptCount} attempts this week
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 text-sm font-medium transition-transform group-hover:translate-x-0.5">
+            Start
+            <FiArrowRight size={14} />
+          </div>
+        </div>
+      </div>
+    </button>
+  ) : null}
+</div>
         {/* Referral CTA */}
         {!isPremium && (
           <button
