@@ -306,7 +306,7 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-4 sm:px-6 pt-2 pb-32">
+      <main className="px-4 sm:px-6 lg:px-10 pt-2 pb-32 flex-1 flex flex-col overflow-y-auto desktop-content-col">
         {loading ? (
           <SectionLoader text="Loading history..." />
         ) : totalExams === 0 ? (

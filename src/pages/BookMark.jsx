@@ -171,7 +171,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto px-6 pt-4 pb-32">
+      <main className="px-6 lg:px-10 pt-4 pb-32 flex-1 flex flex-col overflow-y-auto desktop-content-col">
         {loading ? (
           <SectionLoader text="Loading saved questions..." />
         ) : bookmarkedQuestions.length === 0 ? (

@@ -300,7 +300,7 @@ const ChooseCourseScreen = ({
       </header>
 
       {/* MAIN CONTENT AREA */}
-      <main className="max-w-2xl mx-auto px-6 mt-4 space-y-10">
+      <main className="px-6 lg:px-10 mt-4 space-y-10 flex-1 flex flex-col overflow-y-auto desktop-content-col">
         {loadingProfile || coursesLoading ? (
           <SectionLoader text="Fetching courses..." />
         ) : filteredCourses.length === 0 ? (
@@ -342,7 +342,7 @@ const ChooseCourseScreen = ({
                   </h3>
                 </div>
 
-                <div className="grid gap-2.5 sm:gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2.5 sm:gap-4">
                   {groupedCourses[group].map((course) => {
                     const isSelected = selectedCourse?.id === course.id;
                     const favKey = encodeFavouriteKey(course.id, questionType);
