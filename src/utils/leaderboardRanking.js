@@ -75,6 +75,7 @@ export const buildLeaderboardEntries = (attempts) => {
       bestPercent: Math.round(bestPercentRaw),
       bestTimeSeconds,
       bestDateMs,
+      bestCourseId: entry.bestAttempt?.course_id ?? null,
     };
   });
 };

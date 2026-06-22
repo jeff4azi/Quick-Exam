@@ -502,6 +502,7 @@ const LeaderboardScreen = ({
                       rank: `#${index + 1}`,
                       bestScore: `${entry.bestPercent}%`,
                       bestTime: entry.bestTimeSeconds,
+                      bestCourseId: entry.bestCourseId ?? null,
                     });
                     setSheetIsPremium(entry.isPremium);
                     setIsSheetOpen(true);

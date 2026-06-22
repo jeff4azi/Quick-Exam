@@ -1,179 +1,234 @@
-import React, { useState } from "react";
-import { FaCrown, FaTrophy } from "react-icons/fa";
-import { FiX, FiShield, FiZap } from "react-icons/fi";
+import React, { useState, useEffect } from "react";
+import { FaCrown } from "react-icons/fa";
+import {
+  FiX,
+  FiBook,
+  FiAward,
+  FiClock,
+  FiHash,
+  FiBookOpen,
+  FiHome,
+  FiLayers,
+  FiUser,
+} from "react-icons/fi";
 import Avatar from "./Avatar";
+import { supabase } from "../supabaseClient";
 
 const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
   const [isImageOverlayOpen, setIsImageOverlayOpen] = useState(false);
+  const [courseTitle, setCourseTitle] = useState(null);
+
+  useEffect(() => {
+    if (!isOpen || !stats?.bestCourseId) {
+      setCourseTitle(null);
+      return;
+    }
+    setCourseTitle(null);
+
+    supabase
+      .from("courses_meta")
+      .select("title")
+      .eq("course_code", stats.bestCourseId)
+      .maybeSingle()
+      .then(({ data }) => setCourseTitle(data?.title ?? null));
+  }, [isOpen, stats?.bestCourseId]);
 
   if (!isOpen) return null;
+
+  const formatBestTime = (t) => {
+    if (!t || !Number.isFinite(t) || t === Infinity) return "—";
+    const mins = Math.floor(t / 60);
+    const secs = t % 60;
+    return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+  };
+
+  const collegeLabel = ["TASUED", "BOUESTI"].includes(userProfile?.university)
+    ? "College"
+    : "Faculty";
+
   return (
     <div className="fixed inset-0 z-[100] flex flex-col justify-end">
-      {/* Backdrop - darkens the top part of the screen */}
       <div
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-300"
         onClick={onClose}
       />
 
-      {/* Sheet Content */}
-      <div className="relative w-full max-w-2xl mx-auto bg-gray-50 dark:bg-slate-900 rounded-t-[3rem] shadow-2xl animate-in slide-in-from-bottom-full duration-500 overflow-hidden lg:translate-x-30">
-        {/* Grabber Handle */}
-        <div className="flex justify-center pt-4 pb-2">
-          <div className="w-12 h-1.5 bg-gray-300 dark:bg-slate-700 rounded-full" />
+      <div className="relative w-full max-w-2xl mx-auto bg-gray-50 dark:bg-slate-900 rounded-t-[2rem] shadow-2xl animate-in slide-in-from-bottom-full duration-500 overflow-hidden lg:translate-x-30">
+        {/* Grabber */}
+        <div className="flex justify-center pt-3 pb-2">
+          <div className="w-9 h-1 bg-gray-300 dark:bg-slate-700 rounded-full" />
         </div>
 
-        {/* Header with Close Button */}
-        <div className="px-8 flex justify-between items-center mb-6">
-          <h2 className="text-xl font-black text-slate-900 dark:text-white">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-3">
+          <h2 className="text-base font-black text-slate-900 dark:text-white">
             Profile
           </h2>
           <button
             onClick={onClose}
-            className="p-2 bg-gray-100 dark:bg-slate-800 rounded-full text-slate-500"
+            className="size-8 rounded-full bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-500 dark:text-slate-400"
           >
-            <FiX size={20} />
+            <FiX size={14} />
           </button>
         </div>
 
-        <div className="px-8 pb-12 max-h-[80vh]">
-          {/* User Info Section */}
-          <div className="flex items-center gap-5 mb-8">
-            <div className="relative shrink-0">
-              <button
-                onClick={() => {
-                  setIsImageOverlayOpen(true);
-                }}
-                className="pl-4 pr-2 scale-150 relative focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-[2rem] transition-transform active:scale-95"
+        {/* Hero */}
+        <div className="flex items-center gap-4 px-5 pt-1 pb-5">
+          <button
+            onClick={() => setIsImageOverlayOpen(true)}
+            className="relative shrink-0 focus:outline-none"
+          >
+            <Avatar
+              avatarUrl={userProfile?.avatar_url}
+              size="lg"
+              className="rounded-[1.1rem] shadow-sm"
+            />
+            {isPremium && (
+              <div className="absolute -top-1.5 -right-1.5 bg-amber-400 p-1.5 rounded-lg border-2 border-gray-50 dark:border-slate-900">
+                <FaCrown className="text-white text-[12px]" />
+              </div>
+            )}
+          </button>
+
+          <div className="flex-1 min-w-0">
+            <h3 className="text-lg font-black text-slate-900 dark:text-white truncate leading-tight">
+              {userProfile?.full_name || "Scholar"}
+            </h3>
+            {userProfile?.user_name && (
+              <p className="text-xs text-slate-400 dark:text-slate-500 mb-1.5">
+                @{userProfile.user_name}
+              </p>
+            )}
+            <span
+              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold ${
+                isPremium
+                  ? "bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-300"
+                  : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400"
+              }`}
+            >
+              {isPremium && <FaCrown size={8} />}
+              {isPremium ? "Premium" : "Free tier"}
+            </span>
+          </div>
+        </div>
+
+        <div className="px-4 pb-10 space-y-3 max-h-[60vh] overflow-y-auto">
+          {/* Best Performance section */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 px-4 pt-3 pb-2">
+              Best performance
+            </p>
+
+            <div className="grid grid-cols-3 divide-x divide-slate-100 dark:divide-slate-700">
+              {[
+                { label: "Rank", value: stats?.rank || "—", icon: FiHash },
+                {
+                  label: "Score",
+                  value: stats?.bestScore || "—",
+                  icon: FiAward,
+                },
+                {
+                  label: "Time",
+                  value: formatBestTime(stats?.bestTime),
+                  icon: FiClock,
+                },
+              ].map(({ label, value }) => (
+                <div
+                  key={label}
+                  className="flex flex-col gap-0.5 px-4 pb-4 pt-1"
+                >
+                  <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold">
+                    {label}
+                  </span>
+                  <span className="text-[17px] font-black text-slate-900 dark:text-white">
+                    {value}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            {stats?.bestCourseId && (
+              <div className="flex items-center gap-3 px-4 py-3 border-t border-slate-100 dark:border-slate-700">
+                <div className="size-8 rounded-lg bg-amber-50 dark:bg-amber-900/30 flex items-center justify-center shrink-0">
+                  <FiBook
+                    size={14}
+                    className="text-amber-600 dark:text-amber-400"
+                  />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                    Best Course
+                  </p>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                    {stats.bestCourseId?.replace(/([A-Za-z]+)(\d+)/, "$1 $2")}
+                    {courseTitle && (
+                      <span className="font-normal text-slate-400 dark:text-slate-500">
+                        {" "}
+                        — {courseTitle}
+                      </span>
+                    )}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Academic info section */}
+          <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+            <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 px-4 pt-3 pb-2">
+              Academic info
+            </p>
+
+            {[
+              {
+                label: "University",
+                value: userProfile?.university,
+                icon: FiHome,
+              },
+              {
+                label: collegeLabel,
+                value: userProfile?.college,
+                icon: FiBookOpen,
+              },
+              {
+                label: "Department",
+                value: userProfile?.department,
+                icon: FiLayers,
+              },
+              {
+                label: "Level",
+                value: userProfile?.year ? `${userProfile.year}00` : null,
+                icon: FiUser,
+              },
+            ].map(({ label, value, icon: Icon }, i, arr) => (
+              <div
+                key={label}
+                className={`flex items-center justify-between px-4 py-3 ${
+                  i < arr.length - 1
+                    ? "border-b border-slate-100 dark:border-slate-700"
+                    : ""
+                }`}
               >
-                <Avatar
-                  avatarUrl={userProfile?.avatar_url}
-                  size="md"
-                  className="rounded-[2rem] shadow-xl shadow-blue-200 dark:shadow-none"
-                />
-                {isPremium && (
-                  <div className="absolute -top-2 -right-1 bg-amber-400 p-1 rounded-2xl border-3 border-gray-50 dark:border-slate-900 shadow-lg">
-                    <FaCrown className="text-white text-xs" />
-                  </div>
-                )}
-              </button>
-            </div>
-            <div>
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-tight">
-                {userProfile?.full_name || "Scholar Name"}
-              </h3>
-              {userProfile?.user_name ? (
-                <p className="text-slate-400 dark:text-slate-500 font-bold text-xs tracking-wider">
-                  @{userProfile.user_name}
-                </p>
-              ) : null}
-              <p className="text-slate-500 font-bold text-sm uppercase tracking-wider">
-                {isPremium ? "Premium Member" : "Free Tier"}
-              </p>
-            </div>
-          </div>
-
-          {/* Stats Row */}
-          <div className="grid grid-cols-2 gap-3 mb-8">
-            <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
-              <FaTrophy className="mx-auto text-blue-500 mb-1" />
-              <p className="text-xs font-bold text-slate-400 uppercase">Rank</p>
-              <p className="font-black text-slate-900 dark:text-white">
-                {stats?.rank || "#0"}
-              </p>
-            </div>
-            <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
-              <FiShield className="mx-auto text-orange-500 mb-1" />
-              <p className="text-xs font-bold text-slate-400 uppercase">
-                {["TASUED", "BOUESTI"].includes(userProfile?.university)
-                  ? "College"
-                  : "Faculty"}
-              </p>
-              <p className="font-black text-slate-900 dark:text-white">
-                {userProfile?.college || "—"}
-              </p>
-            </div>
-            <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
-              <FiZap className="mx-auto text-amber-500 mb-1" />
-              <p className="text-xs font-bold text-slate-400 uppercase">Best</p>
-              <div className="flex items-start justify-center gap-4 mt-0.5">
-                <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase">
-                    Score
-                  </p>
-                  <p className="font-black text-slate-900 dark:text-white text-base">
-                    {stats?.bestScore || "0%"}
-                  </p>
-                </div>
-                <div className="w-px self-stretch bg-gray-100 dark:bg-slate-700 mt-0.5" />
-                <div>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase">
-                    Time
-                  </p>
-                  <p className="font-black text-slate-900 dark:text-white text-base">
-                    {stats?.bestTime &&
-                    Number.isFinite(stats.bestTime) &&
-                    stats.bestTime !== Infinity
-                      ? (() => {
-                          const mins = Math.floor(stats.bestTime / 60);
-                          const secs = stats.bestTime % 60;
-                          return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
-                        })()
-                      : "—"}
-                  </p>
-                </div>
+                <span className="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+                  <Icon
+                    size={14}
+                    className="text-slate-400 dark:text-slate-500 shrink-0"
+                  />
+                  {label}
+                </span>
+                <span className="text-sm font-bold text-slate-900 dark:text-white max-w-[55%] truncate text-right">
+                  {value || "—"}
+                </span>
               </div>
-            </div>
-            <div className="bg-white dark:bg-slate-800 p-4 rounded-3xl border border-gray-100 dark:border-slate-800 text-center">
-              <FiShield className="mx-auto text-purple-500 mb-1" />
-              <p className="text-xs font-bold text-slate-400 uppercase">
-                Enrolled
-              </p>
-              <div className="flex items-center justify-center gap-4 mt-0.5">
-                <div className="text-center">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase mb-0.5">
-                    Year
-                  </p>
-                  <p className="font-black text-slate-900 dark:text-white text-base">
-                    {userProfile?.year ? `${userProfile.year}00` : "—"}
-                  </p>
-                </div>
-                <div className="w-px h-8 bg-gray-100 dark:bg-slate-700" />
-                <div className="text-center">
-                  <p className="text-[10px] font-bold text-slate-400 uppercase mb-0.5">
-                    Uni
-                  </p>
-                  <p className="font-black text-slate-900 dark:text-white text-base max-w-[60px]">
-                    {userProfile?.university || "—"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Department Section */}
-          <div className="bg-white dark:bg-slate-800 p-5 rounded-3xl border border-gray-100 dark:border-slate-800 flex items-center gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
-              <FiShield className="text-blue-600 dark:text-blue-400 text-xl" />
-            </div>
-            <div className="overflow-hidden">
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Department
-              </p>
-              <p className="font-bold text-slate-900 dark:text-white truncate">
-                {userProfile?.department}
-              </p>
-            </div>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Full Image Overlay */}
       {isImageOverlayOpen && (
         <div
           className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-in fade-in duration-300"
-          onClick={() => {
-            setIsImageOverlayOpen(false);
-          }}
+          onClick={() => setIsImageOverlayOpen(false)}
         >
           <div className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center">
             <img
@@ -183,7 +238,7 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
                   : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
               }
               alt={`${userProfile?.full_name || "User"}'s profile picture`}
-              className="max-w-full max-h-full object-contain rounded-2xl shadow-2xl"
+              className="max-w-full max-h-full object-contain rounded-2xl"
               onClick={(e) => e.stopPropagation()}
               onError={(e) => {
                 e.target.src =
@@ -192,9 +247,9 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
             />
             <button
               onClick={() => setIsImageOverlayOpen(false)}
-              className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-md rounded-full text-white hover:bg-white/30 transition-colors"
+              className="absolute top-4 right-4 p-2 bg-white/20 backdrop-blur-md rounded-full text-white"
             >
-              <FiX size={24} />
+              <FiX size={20} />
             </button>
           </div>
         </div>
