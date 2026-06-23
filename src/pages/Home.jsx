@@ -463,8 +463,8 @@ const Home = ({
           >
             <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
             {isPremium && (
-              <div className="absolute -top-2 -right-2 bg-slate-700 dark:bg-slate-600 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-                <FaCrown className="text-[8px] text-amber-400" />
+              <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                <FaCrown className="text-[8px] text-white" />
               </div>
             )}
           </button>
