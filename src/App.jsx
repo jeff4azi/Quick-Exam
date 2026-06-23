@@ -255,8 +255,16 @@ function App() {
             params.append("university", profile.university.trim());
           }
 
+          // Get the current session token from Supabase
+          const { data: { session } } = await supabase.auth.getSession();
+          const headers = {};
+          if (session?.access_token) {
+            headers["Authorization"] = `Bearer ${session.access_token}`;
+          }
+
           const res = await fetch(
             `${API_BASE_URL}/courses?${params.toString()}`,
+            { headers }
           );
           const data = await res.json();
 
