@@ -32,6 +32,8 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [premiumAccess, setPremiumAccess] = useState(null);
+  const [rerunCourses, setRerunCourses] = useState([]);
+  const [rerunCoursesLoading, setRerunCoursesLoading] = useState(false);
   const [formData, setFormData] = useState({
     full_name: userProfile?.full_name || "",
     user_name: userProfile?.user_name || "",
@@ -78,6 +80,56 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
       }
     })();
   }, []);
+
+  // Fetch rerun courses for 200 level students
+  useEffect(() => {
+    const fetchRerunCourses = async () => {
+      const level = formatLevel(userProfile?.year);
+      if (level !== "200") {
+        setRerunCourses([]);
+        return;
+      }
+
+      try {
+        setRerunCoursesLoading(true);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+
+        // Fetch course codes from course_enrollments_override
+        const { data: overrideData, error: overrideError } = await supabase
+          .from("course_enrollments_override")
+          .select("course_code")
+          .eq("user_id", user.id);
+
+        if (overrideError || !overrideData || overrideData.length === 0) {
+          setRerunCourses([]);
+          return;
+        }
+
+        // Fetch course details from courses_meta
+        const courseCodes = overrideData.map(item => item.course_code);
+        const { data: coursesData, error: coursesError } = await supabase
+          .from("courses_meta")
+          .select("*")
+          .in("course_code", courseCodes)
+          .ilike("university", userProfile?.university || "");
+
+        if (!coursesError && coursesData) {
+          // Map course_group to group
+          setRerunCourses(coursesData.map(course => ({
+            ...course,
+            group: course.course_group
+          })));
+        }
+      } catch (err) {
+        console.error("Failed to fetch rerun courses:", err);
+      } finally {
+        setRerunCoursesLoading(false);
+      }
+    };
+
+    fetchRerunCourses();
+  }, [userProfile]);
 
   const premiumStatus = useMemo(() => {
     if (premiumAccess === null) {
@@ -503,6 +555,67 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
                 )}
               </div>
             </section>
+
+            {/* Rerun Courses Section - Only for 200 level students */}
+            {formatLevel(userProfile?.year) === "200" && (
+              <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm">
+                <div className="border-b border-slate-100 dark:border-slate-800 px-5 py-4">
+                  <h3 className="font-black">Rerun Courses</h3>
+                  <p className="text-xs font-semibold text-slate-400">
+                    Courses you need to retake.
+                  </p>
+                </div>
+
+                <div className="p-5">
+                  {rerunCoursesLoading ? (
+                    <div className="space-y-3">
+                      {[1, 2].map((i) => (
+                        <div
+                          key={i}
+                          className="h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 animate-pulse"
+                        />
+                      ))}
+                    </div>
+                  ) : rerunCourses.length > 0 ? (
+                    <div className="space-y-3">
+                      {rerunCourses.map((course) => (
+                        <div
+                          key={course.course_code}
+                          className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700"
+                        >
+                          <div className="min-w-0">
+                            <p className="text-base font-black text-slate-900 dark:text-white truncate">
+                              {course.name}
+                            </p>
+                            <p className="text-xs font-semibold text-slate-400 truncate">
+                              {course.title}
+                            </p>
+                          </div>
+                          <span className="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-300 text-[10px] font-bold">
+                            {course.course_code}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <p className="text-sm font-semibold text-slate-400 mb-4">
+                        You don't have any rerun courses yet.
+                      </p>
+                      <a
+                        href={`https://wa.me/2347015585397?text=Hello%2C%20I%20would%20like%20to%20request%20a%20rerun%20course%20on%20QuizBolt.%0A%0AUser%20Name%3A%20${encodeURIComponent(userProfile?.user_name || "")}%0AUniversity%3A%20${encodeURIComponent(userProfile?.university || "")}%0ACourse%20Request%3A%20_____%0A%0AThank%20you.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-[#25D366] text-white font-black text-sm shadow-lg shadow-green-200 dark:shadow-none active:scale-[0.98] transition-all"
+                      >
+                        <FaWhatsapp size={18} />
+                        Request Rerun Course
+                      </a>
+                    </div>
+                  )}
+                </div>
+              </section>
+            )}
           </div>
         </section>
       </main>
