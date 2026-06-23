@@ -675,6 +675,13 @@ const ChooseCourseScreen = ({
                 </div>
               )}
 
+              <p
+                className={`${!selectedQuestionCount ? "hidden": ""} mt-3 text-[10px] text-slate-400 dark:text-slate-500 leading-relaxed px-1`}
+              >
+                Practice questions based on course materials. Not guaranteed to
+                appear in your examination.
+              </p>
+
               <button
                 onClick={handleStartExam}
                 disabled={!selectedQuestionCount}
