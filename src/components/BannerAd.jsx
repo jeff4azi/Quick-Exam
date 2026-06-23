@@ -21,11 +21,11 @@ const AD_DATABASE = [
   },
   {
     type: "image",
-    url: "https://res.cloudinary.com/dn5h1cghb/image/upload/v1777905619/BackgroundEraser_20260208_141707632_sk6ng9_aqz2yp.jpg",
+    url: "https://res.cloudinary.com/dn5h1cghb/image/upload/v1782200330/2_20260623_054442_0001_utwiar.png",
     duration: 5,
-    whatsapp: "2348159767554",
+    whatsapp: "2349118907839",
     message:
-      "Hi, I saw your flyer and wanted to connect. Can you tell me more about what you do?",
+      "I’d like to stay informed with updates from Odunaike Olabode Mustapha (PKA Speed Bolt).",
   },
   {
     type: "image",
