@@ -709,14 +709,12 @@ const Home = ({
               onClick={mode.onClick}
               className="group flex items-center gap-3 bg-white dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700 p-3.5 rounded-2xl text-left cursor-pointer transition-colors hover:border-blue-200 dark:hover:border-blue-800/50 active:scale-[0.98]"
             >
-              {/* Icon */}
-              <div className="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl bg-blue-600">
+              {/* Icon */}          
                 <img
                   src={mode.icon}
                   alt={mode.title}
-                  className="w-4.5 h-4.5 object-contain"
+                  className="size-8 lg:size-10 object-contain"
                 />
-              </div>
 
               {/* Content */}
               <div className="flex-1 min-w-0">
