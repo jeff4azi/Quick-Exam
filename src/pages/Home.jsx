@@ -172,8 +172,6 @@ const getHotCourse = (allAttempts, availableCourses) => {
   return hotCourse ? { ...hotCourse, attemptCount: maxCount } : null;
 };
 
-
-
 const Home = ({
   userProfile,
   loadingProfile,
@@ -465,8 +463,8 @@ const Home = ({
           >
             <Avatar avatarUrl={userProfile?.avatar_url} size="sm" />
             {isPremium && (
-              <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
-                <FaCrown className="text-[8px] text-white" />
+              <div className="absolute -top-2 -right-2 bg-slate-700 dark:bg-slate-600 rounded-full p-1 border-2 border-gray-50 dark:border-slate-900 shadow-sm flex items-center justify-center">
+                <FaCrown className="text-[8px] text-amber-400" />
               </div>
             )}
           </button>
@@ -505,7 +503,7 @@ const Home = ({
               {/* Header */}
               <div className="pr-8">
                 <div className="flex items-center gap-2 mb-2">
-                  <div className="size-6 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
+                  <div className="size-6 rounded-lg bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center">
                     <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
                       ▶
                     </span>
@@ -555,7 +553,7 @@ const Home = ({
                 {/* Time Remaining */}
                 {(examSession.timeLeft != null ||
                   examSession.endsAtMs != null) && (
-                  <div className="bg-blue-50 dark:bg-blue-900/20 p-3 lg:p-4 rounded-xl border border-blue-200 dark:border-blue-800/50">
+                  <div className="bg-blue-50 dark:bg-blue-900/20 p-3 lg:p-4 rounded-xl border border-blue-100 dark:border-blue-800/50">
                     <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-1">
                       Time Left
                     </p>
@@ -610,38 +608,30 @@ const Home = ({
           </div>
         )}
 
-        {/* Stats Grid */}
+        {/* Stats Grid — unified neutral surface, accent reserved for the value itself */}
         <div className="grid grid-cols-3 gap-3">
           {[
             {
               label: "Best Score",
               value: stats.bestScore,
               icon: <MdStar />,
-              color: "text-amber-500",
-              bg: "bg-amber-50 dark:bg-amber-900/20",
             },
             {
               label: "Position",
               value: stats.position || "--",
               icon: <FaTrophy />,
-              color: "text-blue-500",
-              bg: "bg-blue-50 dark:bg-blue-900/20",
             },
             {
               label: "Streak",
               value: stats.streak || 0,
               icon: <FaFire />,
-              color: "text-orange-500",
-              bg: "bg-orange-50 dark:bg-orange-900/20",
             },
           ].map((stat, index) => (
             <div
               key={index}
-              className="bg-white dark:bg-slate-800/50 p-3 rounded-[1.6rem] border border-gray-500/40 dark:border-slate-700 flex flex-col items-center text-center"
+              className="bg-white dark:bg-slate-800/50 p-3 rounded-[1.6rem] border border-gray-200 dark:border-slate-700 flex flex-col items-center text-center"
             >
-              <div
-                className={`size-8 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center mb-2`}
-              >
+              <div className="size-8 bg-slate-100 dark:bg-slate-700/60 text-slate-500 dark:text-slate-300 rounded-xl flex items-center justify-center mb-2 text-sm">
                 {stat.icon}
               </div>
               <span className="text-base font-semibold text-slate-700 dark:text-slate-300 leading-none">
@@ -654,17 +644,17 @@ const Home = ({
           ))}
         </div>
 
-        {/* Premium CTA */}
+        {/* Premium CTA — the one place we spend a saturated color */}
         {!isPremium && (
           <div
             onClick={() => navigate("/premium")}
-            className="group relative overflow-hidden bg-gradient-to-br from-indigo-600 to-blue-700 p-5 rounded-[2.25rem] shadow-xl shadow-blue-200 dark:shadow-none cursor-pointer active:scale-[0.98] transition-all"
+            className="group relative overflow-hidden bg-blue-700 dark:bg-blue-700 p-5 rounded-[2.25rem] shadow-lg shadow-blue-200/60 dark:shadow-none cursor-pointer active:scale-[0.98] transition-all"
           >
             <div className="absolute -right-6 -top-6 size-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors" />
             <div className="relative z-10 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 <div className="size-11 bg-white/15 rounded-2xl flex items-center justify-center backdrop-blur-md">
-                  <FiZap className="text-yellow-300 text-xl" />
+                  <FiZap className="text-white text-xl" />
                 </div>
                 <div>
                   <h4 className="text-white font-black text-lg leading-tight">
@@ -679,7 +669,7 @@ const Home = ({
           </div>
         )}
 
-        {/* Study Modes */}
+        {/* Study Modes — neutral cards, color lives only in the small icon chip */}
         <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-500 ml-1 -mb-3">
           Study Modes
         </h3>
@@ -688,9 +678,6 @@ const Home = ({
             {
               title: "Flashcards",
               description: "Review and memorize",
-              gradient: "from-violet-500 to-purple-600",
-              bg: "bg-violet-50 dark:bg-violet-900/30",
-              border: "border-violet-200 dark:border-violet-800/40",
               icon: flashCardIcon,
               onClick: () => {
                 trackStudyModeClick("flashcards");
@@ -700,9 +687,6 @@ const Home = ({
             {
               title: "Test",
               description: "Check your understanding",
-              gradient: "from-sky-500 to-cyan-600",
-              bg: "bg-sky-50 dark:bg-sky-900/30",
-              border: "border-sky-200 dark:border-sky-800/40",
               icon: testIcon,
               onClick: () => {
                 trackStudyModeClick("test");
@@ -712,9 +696,6 @@ const Home = ({
             {
               title: "Match",
               description: "Click fast and score high",
-              gradient: "from-emerald-500 to-teal-600",
-              bg: "bg-emerald-50 dark:bg-emerald-900/30",
-              border: "border-emerald-200 dark:border-emerald-800/40",
               icon: matchIcon,
               onClick: () => {
                 trackStudyModeClick("match");
@@ -726,12 +707,10 @@ const Home = ({
               key={mode.title}
               type="button"
               onClick={mode.onClick}
-              className={`group flex items-center gap-3 ${mode.bg} ${mode.border} border p-3.5 rounded-2xl text-left cursor-pointer transition-colors active:scale-[0.98]`}
+              className="group flex items-center gap-3 bg-white dark:bg-slate-800/60 border border-gray-200 dark:border-slate-700 p-3.5 rounded-2xl text-left cursor-pointer transition-colors hover:border-blue-200 dark:hover:border-blue-800/50 active:scale-[0.98]"
             >
               {/* Icon */}
-              <div
-                className={`flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-br ${mode.gradient}`}
-              >
+              <div className="flex-shrink-0 inline-flex items-center justify-center w-9 h-9 rounded-xl bg-blue-600">
                 <img
                   src={mode.icon}
                   alt={mode.title}
@@ -757,7 +736,7 @@ const Home = ({
           ))}
         </div>
 
-        {/* Hot Course */}
+        {/* Hot Course — neutral card, accent reduced to a thin rule + tag */}
         <div className="space-y-3">
           <h3 className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-1">
             Hot this week
@@ -787,18 +766,18 @@ const Home = ({
               className="group w-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 rounded-[1.25rem] overflow-hidden text-left active:scale-[0.99] transition-all hover:-translate-y-0.5"
             >
               {/* Accent strip */}
-              <div className="h-[3px] w-full bg-amber-500 dark:bg-amber-400" />
+              <div className="h-[3px] w-full bg-blue-600" />
 
               <div className="p-5">
                 <div className="flex items-start gap-3.5 mb-4">
-                  <div className="size-10 shrink-0 rounded-xl bg-amber-50 dark:bg-amber-950/60 flex items-center justify-center">
-                    <FaFire className="text-amber-700 dark:text-amber-400 text-lg" />
+                  <div className="size-10 shrink-0 rounded-xl bg-slate-100 dark:bg-slate-700/60 flex items-center justify-center">
+                    <FaFire className="text-slate-500 dark:text-slate-300 text-lg" />
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/60 mb-1.5">
-                      <FaBolt className="text-[9px] text-amber-700 dark:text-amber-400" />
-                      <span className="text-[10px] font-semibold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+                    <div className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-900/30 mb-1.5">
+                      <FaBolt className="text-[9px] text-blue-600 dark:text-blue-400" />
+                      <span className="text-[10px] font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
                         Trending
                       </span>
                     </div>
@@ -826,7 +805,7 @@ const Home = ({
                     </span>
                   </div>
 
-                  <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-amber-50 dark:bg-amber-950/60 text-amber-700 dark:text-amber-400 text-sm font-medium transition-transform group-hover:translate-x-0.5">
+                  <div className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium transition-transform group-hover:translate-x-0.5">
                     Start
                     <FiArrowRight size={14} />
                   </div>
@@ -836,21 +815,20 @@ const Home = ({
           ) : null}
         </div>
 
-        {/* Referral CTA */}
+        {/* Referral CTA — neutral card matching the rest of the page */}
         {!isPremium && (
           <button
             type="button"
             onClick={() => navigate("/referral-dashboard")}
-            className="group relative overflow-hidden rounded-[1.75rem] border border-emerald-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] dark:border-emerald-500/20 dark:bg-slate-800/70"
+            className="group relative overflow-hidden rounded-[1.75rem] border border-gray-200 bg-white p-5 text-left shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md active:scale-[0.98] dark:border-slate-700 dark:bg-slate-800/70"
           >
-            <div className="absolute right-0 top-0 h-full w-28 bg-emerald-100/70 dark:bg-emerald-400/10" />
             <div className="relative z-10 flex items-center justify-between gap-4">
               <div className="flex min-w-0 items-center gap-3">
-                <div className="size-12 shrink-0 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center dark:bg-emerald-400/15 dark:text-emerald-300">
+                <div className="size-12 shrink-0 rounded-2xl bg-slate-100 text-slate-500 flex items-center justify-center dark:bg-slate-700/60 dark:text-slate-300">
                   <FaUserFriends className="text-xl" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-[11px] font-black uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-300">
+                  <p className="text-[11px] font-black uppercase tracking-[0.16em] text-blue-600 dark:text-blue-400">
                     Free premium offer
                   </p>
                   <h4 className="mt-1 text-base font-black leading-tight text-slate-900 dark:text-white">
@@ -867,10 +845,6 @@ const Home = ({
             </div>
           </button>
         )}
-
-
-
-
 
         {/* Favourite courses */}
         <div className="space-y-3">
@@ -896,7 +870,7 @@ const Home = ({
               ))}
             </div>
           ) : favouriteCourses.length === 0 ? (
-            <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-500/40 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
+            <div className="bg-gray-100 dark:bg-slate-800/50 p-5 rounded-[2rem] border border-gray-200 dark:border-slate-700 text-sm text-slate-500 dark:text-slate-400 font-medium">
               You haven't favourited any courses yet. Tap the heart on the
               Courses screen.
             </div>
@@ -934,15 +908,7 @@ const Home = ({
                         <p className="text-xs sm:text-sm mt-0.5 leading-snug text-slate-500 dark:text-slate-400 truncate">
                           {course.title}
                         </p>
-                        <span
-                          className={`mt-1.5 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md ${
-                            course._questionType === "theory"
-                              ? "bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400"
-                              : course._questionType === "fib"
-                                ? "bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400"
-                                : "bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400"
-                          }`}
-                        >
+                        <span className="mt-1.5 inline-block text-[9px] font-black uppercase tracking-wider px-1.5 py-0.5 rounded-md bg-slate-100 text-slate-500 dark:bg-slate-700/60 dark:text-slate-300">
                           {course._questionType === "theory"
                             ? "Theory"
                             : course._questionType === "fib"
