@@ -1003,8 +1003,11 @@ const ExamScreen = ({
                   />
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-amber-800 dark:text-amber-300 leading-relaxed">
-                      {currentQuestion.hint}
-                    </p>
+                    <RenderMathText
+                      text={currentQuestion.hint}
+                      courseId={selectedCourse?.id}
+                    />
+                  </p>
                     <p className="text-[10px] font-bold text-amber-500 dark:text-amber-600 mt-1.5 uppercase tracking-wider">
                       {hintsRemaining === Infinity
                         ? "Unlimited hints"

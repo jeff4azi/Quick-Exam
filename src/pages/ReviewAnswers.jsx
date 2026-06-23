@@ -104,8 +104,11 @@ const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
                       Model Answer
                     </div>
                     <div className="text-sm text-gray-600 dark:text-gray-300">
-                      {question.model_answer}
-                    </div>
+                    <RenderMathText
+                      text={question.model_answer}
+                      courseId={selectedCourse.id}
+                    />
+                  </div>
                   </div>
                 )}
                 <div className="mt-3 flex justify-end">
