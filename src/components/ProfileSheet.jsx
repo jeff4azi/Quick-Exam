@@ -10,6 +10,7 @@ import {
   FiHome,
   FiLayers,
   FiUser,
+  FiList,
 } from "react-icons/fi";
 import Avatar from "./Avatar";
 import { supabase } from "../supabaseClient";
@@ -41,6 +42,13 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
     const secs = t % 60;
     return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
   };
+
+  const rankNum = stats?.rank
+    ? parseInt(stats.rank.replace("#", ""), 10)
+    : null;
+  const isTop1 = rankNum === 1;
+  const isTop2 = rankNum === 2;
+  const isTop3 = rankNum === 3;
 
   const collegeLabel = ["TASUED", "BOUESTI"].includes(userProfile?.university)
     ? "College"
@@ -89,7 +97,6 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
               </div>
             )}
           </button>
-
           <div className="flex-1 min-w-0">
             <h3 className="text-lg font-black text-slate-900 dark:text-white truncate leading-tight">
               {userProfile?.full_name || "Scholar"}
@@ -110,6 +117,77 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
               {isPremium ? "Premium" : "Free tier"}
             </span>
           </div>
+
+          {stats?.rank && (
+            <div className="shrink-0 flex flex-col items-center justify-center min-w-[72px]">
+              <div
+                className="relative flex flex-col items-center justify-center rounded-[1.4rem] px-4 py-3.5 overflow-hidden"
+                style={{
+                  background: isTop1
+                    ? "linear-gradient(145deg, #f59e0b, #d97706, #b45309)"
+                    : isTop2
+                      ? "linear-gradient(145deg, #94a3b8, #64748b, #475569)"
+                      : isTop3
+                        ? "linear-gradient(145deg, #fb923c, #ea580c, #c2410c)"
+                        : "linear-gradient(145deg, #3b82f6, #2563eb, #1d4ed8)",
+                  boxShadow: isTop1
+                    ? "0 0 20px rgba(245,158,11,0.55), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.25)"
+                    : isTop2
+                      ? "0 0 20px rgba(148,163,184,0.4), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)"
+                      : isTop3
+                        ? "0 0 20px rgba(251,146,60,0.5), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)"
+                        : "0 0 20px rgba(59,130,246,0.45), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)",
+                }}
+              >
+                {/* Shine overlay */}
+                <div
+                  className="absolute inset-0 rounded-[1.4rem] pointer-events-none"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%)",
+                  }}
+                />
+
+                {(isTop1 || isTop2 || isTop3) && (
+                  <FaCrown
+                    size={12}
+                    className="mb-1 relative z-10"
+                    style={{
+                      color: isTop1
+                        ? "#fef3c7"
+                        : isTop2
+                          ? "#f1f5f9"
+                          : "#ffedd5",
+                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
+                    }}
+                  />
+                )}
+
+                <span
+                  className="relative z-10 font-black leading-none tracking-tight"
+                  style={{
+                    fontSize: stats.rank.length > 3 ? "1.2rem" : "1.6rem",
+                    color: "#ffffff",
+                    textShadow: "0 2px 6px rgba(0,0,0,0.35)",
+                    letterSpacing: "-0.02em",
+                  }}
+                >
+                  {stats.rank}
+                </span>
+
+                <span
+                  className="relative z-10 text-[9px] font-black uppercase tracking-[0.2em] mt-1"
+                  style={{
+                    color: "rgba(255,255,255,0.75)",
+                    letterSpacing: "0.18em",
+                  }}
+                >
+                  RANK
+                </span>
+              </div>
+            </div>
+          )}
+          
         </div>
 
         <div className="px-4 pb-10 space-y-3 max-h-[60vh] overflow-y-auto">
@@ -121,7 +199,6 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
 
             <div className="grid grid-cols-3 divide-x divide-slate-100 dark:divide-slate-700">
               {[
-                { label: "Rank", value: stats?.rank || "—", icon: FiHash },
                 {
                   label: "Score",
                   value: stats?.bestScore || "—",
@@ -131,6 +208,11 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
                   label: "Time",
                   value: formatBestTime(stats?.bestTime),
                   icon: FiClock,
+                },
+                {
+                  label: "Questions",
+                  value: stats?.bestTotalQuestions ?? "—",
+                  icon: FiList,
                 },
               ].map(({ label, value }) => (
                 <div

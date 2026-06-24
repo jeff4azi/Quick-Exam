@@ -76,6 +76,7 @@ export const buildLeaderboardEntries = (attempts) => {
       bestTimeSeconds,
       bestDateMs,
       bestCourseId: entry.bestAttempt?.course_id ?? null,
+      bestTotalQuestions: entry.bestAttempt?.total_questions ?? 0,
     };
   });
 };
