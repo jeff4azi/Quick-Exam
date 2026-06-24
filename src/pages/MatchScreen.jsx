@@ -266,6 +266,7 @@ const MatchScreen = ({ courses, coursesLoading }) => {
         onBack={() => navigate("/")}
         title="Match Game"
         subtitle="Pick a course to play"
+        mode="match"
       />
     );
   }

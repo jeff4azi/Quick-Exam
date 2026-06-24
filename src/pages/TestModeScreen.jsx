@@ -529,6 +529,7 @@ const TestModeScreen = ({
         onBack={() => navigate("/")}
         title="Test Mode"
         subtitle="Pick a course to test yourself"
+        mode="test"
       />
     );
   }

@@ -1,8 +1,40 @@
 import { FiSearch, FiChevronLeft } from "react-icons/fi";
 import { useState } from "react";
 
-const CoursePicker = ({ courses, loading, onSelect, onBack, title = "Study", subtitle = "Pick a course to study" }) => {
+const CoursePicker = ({ 
+  courses, 
+  loading, 
+  onSelect, 
+  onBack, 
+  title = "Study", 
+  subtitle = "Pick a course to study",
+  mode = "flashcard"
+}) => {
   const [query, setQuery] = useState("");
+
+  // Define color schemes based on mode
+  const colors = {
+    flashcard: {
+      border: "hover:border-violet-300 dark:hover:border-violet-600",
+      badgeBg: "bg-violet-50 dark:bg-violet-900/30",
+      badgeText: "text-violet-600 dark:text-violet-400",
+      searchFocus: "focus:border-violet-400 dark:focus:border-violet-500"
+    },
+    test: {
+      border: "hover:border-blue-300 dark:hover:border-blue-600",
+      badgeBg: "bg-blue-50 dark:bg-blue-900/30",
+      badgeText: "text-blue-600 dark:text-blue-400",
+      searchFocus: "focus:border-blue-400 dark:focus:border-blue-500"
+    },
+    match: {
+      border: "hover:border-green-300 dark:hover:border-green-600",
+      badgeBg: "bg-green-50 dark:bg-green-900/30",
+      badgeText: "text-green-600 dark:text-green-400",
+      searchFocus: "focus:border-green-400 dark:focus:border-green-500"
+    }
+  };
+
+  const currentColors = colors[mode] || colors.flashcard;
 
   const filtered = (courses || []).filter(
     (c) =>
@@ -36,7 +68,7 @@ const CoursePicker = ({ courses, loading, onSelect, onBack, title = "Study", sub
               placeholder="Search courses..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:border-blue-400 dark:focus:border-blue-500 transition-colors"
+              className={`w-full pl-10 pr-4 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 text-sm text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none ${currentColors.searchFocus} transition-colors`}
             />
           </div>
         </div>
@@ -60,7 +92,7 @@ const CoursePicker = ({ courses, loading, onSelect, onBack, title = "Study", sub
                 key={course.id}
                 type="button"
                 onClick={() => onSelect(course)}
-                className="w-full text-left p-5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 hover:border-violet-300 dark:hover:border-violet-600 hover:shadow-md transition-all active:scale-[0.98] group"
+                className={`w-full text-left p-5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 ${currentColors.border} hover:shadow-md transition-all active:scale-[0.98] group`}
               >
                 <div className="flex items-center justify-between gap-3">
                   <div className="min-w-0">
@@ -71,7 +103,7 @@ const CoursePicker = ({ courses, loading, onSelect, onBack, title = "Study", sub
                       {course.title}
                     </p>
                   </div>
-                  <span className="shrink-0 px-3 py-1 rounded-full bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-400 text-[10px] font-bold tracking-wider">
+                  <span className={`shrink-0 px-3 py-1 rounded-full ${currentColors.badgeBg} ${currentColors.badgeText} text-[10px] font-bold tracking-wider`}>
                     {(course.questionCount || 0) + (course.theoryQuestionCount || 0) + (course.fibQuestionCount || 0)} Qs
                   </span>
                 </div>
