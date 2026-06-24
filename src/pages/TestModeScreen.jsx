@@ -142,57 +142,151 @@ const FeedbackBadge = ({ result }) => {
 };
 
 // ─── QuestionCountPicker ──────────────────────────────────────────────────────
-const QuestionCountPicker = ({ isPremium, onSelect, onBack, courseName }) => (
-  <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col">
-    <div className="sticky top-0 z-10 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-6 pb-4 border-b border-gray-100 dark:border-slate-800">
-      <div className="max-w-lg mx-auto flex items-center gap-3">
-        <button
-          onClick={onBack}
-          className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm active:scale-90 transition-all"
-        >
-          <FiChevronLeft className="size-5 text-slate-600 dark:text-slate-300" />
-        </button>
-        <div>
-          <h1 className="text-xl font-black text-slate-900 dark:text-white">
-            Test Mode
-          </h1>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            {courseName} · How many questions?
-          </p>
+const QuestionCountPicker = ({
+  isPremium,
+  onSelect,
+  onBack,
+  courseName,
+  course,
+  selectedQuestionType,
+  onSelectQuestionType,
+}) => {
+  const getAvailableQuestions = () => {
+    switch (selectedQuestionType) {
+      case "all":
+        return (
+          (course?.questionCount || 0) +
+          (course?.theoryQuestionCount || 0) +
+          (course?.fibQuestionCount || 0)
+        );
+      case "objective":
+        return course?.questionCount || 0;
+      case "theory":
+        return course?.theoryQuestionCount || 0;
+      case "fib":
+        return course?.fibQuestionCount || 0;
+      default:
+        return course?.questionCount || 0;
+    }
+  };
+
+  const availableQuestions = getAvailableQuestions();
+  const availableQuestionCounts = QUESTION_COUNTS.filter(
+    (count) => count <= availableQuestions
+  );
+  if (availableQuestions > 0 && !availableQuestionCounts.includes("All")) {
+    availableQuestionCounts.push("All");
+  }
+
+  return (
+    <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col">
+      <div className="sticky top-0 z-10 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-6 pb-4 border-b border-gray-100 dark:border-slate-800">
+        <div className="max-w-lg mx-auto flex items-center gap-3">
+          <button
+            onClick={onBack}
+            className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm active:scale-90 transition-all"
+          >
+            <FiChevronLeft className="size-5 text-slate-600 dark:text-slate-300" />
+          </button>
+          <div>
+            <h1 className="text-xl font-black text-slate-900 dark:text-white">
+              Test Mode
+            </h1>
+            <p className="text-xs text-slate-500 dark:text-slate-400">
+              {courseName}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="flex-1 px-5 py-8 flex flex-col items-center justify-center">
+        <div className="w-full max-w-lg space-y-6">
+          {/* Question Type Selector */}
+          <div className="space-y-2">
+            <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">
+              Question Type
+            </p>
+            <div className="inline-flex bg-gray-200 dark:bg-slate-700 rounded-2xl p-1 gap-1 w-full">
+              {[
+                { key: "all", label: "All / Mixed" },
+                { key: "objective", label: "Objective" },
+                { key: "fib", label: "FIB" },
+                { key: "theory", label: "Theory" },
+              ].map(({ key, label }) => {
+                const isLocked = key === "theory" && !isPremium;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => {
+                      if (isLocked) return;
+                      onSelectQuestionType(key);
+                    }}
+                    className={`relative flex-1 px-3 py-2 rounded-xl text-xs font-black transition-all ${
+                      selectedQuestionType === key
+                        ? "bg-slate-900 dark:bg-slate-600 text-white shadow-md"
+                        : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                    } ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}
+                  >
+                    {label}
+                    {isLocked && (
+                      <div className="absolute -top-2 -right-1 bg-amber-500 dark:bg-amber-400 rounded-full px-1 py-0.5 flex items-center justify-center shadow-sm">
+                        <FaCrown className="text-[6px] text-white" />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Question Count Selector */}
+          <div className="space-y-2">
+            <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">
+              How many questions? · {availableQuestions} available
+            </p>
+            <div className="grid grid-cols-2 gap-3">
+              {availableQuestionCounts.map((count) => {
+                const isAll = count === "All";
+                const num = isAll ? availableQuestions : count;
+                const locked = !isPremium && num > 10;
+                return (
+                  <button
+                    key={count}
+                    onClick={() => (locked ? null : onSelect(num))}
+                    className={`flex flex-col items-center justify-center px-4 py-4 rounded-[1.8rem] border-2 transition-all active:scale-[0.98] ${
+                      locked
+                        ? "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 opacity-60 cursor-not-allowed"
+                        : "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 shadow-sm"
+                    }`}
+                  >
+                    <span className="text-xl font-black text-slate-900 dark:text-white">
+                      {isAll ? "All" : count}
+                    </span>
+                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">
+                      Questions
+                    </span>
+                    {locked && (
+                      <span className="mt-2 flex items-center gap-1 text-xs font-black text-amber-500 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 rounded-full">
+                        <FaCrown size={10} /> PRO
+                      </span>
+                    )}
+                  </button>
+                );
+              })}
+              {availableQuestionCounts.length === 0 && (
+                <div className="col-span-2 py-8 text-center">
+                  <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
+                    No questions available for this type
+                  </p>
+                </div>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div className="flex-1 px-5 py-8 flex flex-col items-center justify-center">
-      <div className="w-full max-w-lg space-y-3">
-        {QUESTION_COUNTS.map((count) => {
-          const locked = !isPremium && count > 10;
-          return (
-            <button
-              key={count}
-              onClick={() => (locked ? null : onSelect(count))}
-              className={`w-full flex items-center justify-between px-6 py-5 rounded-[1.8rem] border-2 transition-all active:scale-[0.98] ${
-                locked
-                  ? "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 opacity-60 cursor-not-allowed"
-                  : "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 shadow-sm"
-              }`}
-            >
-              <span className="text-lg font-black text-slate-900 dark:text-white">
-                {count} Questions
-              </span>
-              {locked ? (
-                <span className="flex items-center gap-1 text-xs font-black text-amber-500 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 rounded-full">
-                  <FaCrown size={10} /> PRO
-                </span>
-              ) : (
-                <FiChevronRight className="size-5 text-slate-400" />
-              )}
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  </div>
-);
+  );
+};
 
 // ─── Main component ───────────────────────────────────────────────────────────
 const TestModeScreen = ({
@@ -207,6 +301,7 @@ const TestModeScreen = ({
   const [phase, setPhase] = useState("pick");
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [questionCount, setQuestionCount] = useState(null); // eslint-disable-line no-unused-vars
+  const [questionType, setQuestionType] = useState("all"); // "all" | "objective" | "theory" | "fib"
 
   const [questions, setQuestions] = useState([]);
   const [loadingQ, setLoadingQ] = useState(false);
@@ -239,31 +334,60 @@ const TestModeScreen = ({
   }, []);
 
   // ── fetch questions ──
-  const fetchQuestions = useCallback(async (course, count) => {
+  const fetchQuestions = useCallback(async (course, count, type) => {
     setLoadingQ(true);
     setErrorQ(null);
     try {
       const base = `${API_BASE_URL}${course.questionsEndpoint || `/courses/${course.id}/questions`}`;
-      const [objRes, thyRes, fibRes] = await Promise.all([
-        fetch(base),
-        fetch(`${base}?type=theory`),
-        fetch(`${base}?type=fib`),
-      ]);
-      const [objData, thyData, fibData] = await Promise.all([
-        objRes.json(),
-        thyRes.json(),
-        fibRes.json(),
-      ]);
-      const objective = objRes.ok && Array.isArray(objData) ? objData : [];
-      const theory =
-        thyRes.ok && Array.isArray(thyData)
-          ? thyData.map((q) => ({ ...q, type: "theory" }))
-          : [];
-      const fib =
-        fibRes.ok && Array.isArray(fibData)
-          ? fibData.map((q) => ({ ...q, type: "fib" }))
-          : [];
-      const all = shuffle([...objective, ...theory, ...fib]);
+      let questionsData = [];
+
+      if (type === "all") {
+        // Fetch all types
+        const [objRes, thyRes, fibRes] = await Promise.all([
+          fetch(base),
+          fetch(`${base}?type=theory`),
+          fetch(`${base}?type=fib`),
+        ]);
+        const [objData, thyData, fibData] = await Promise.all([
+          objRes.json(),
+          thyRes.json(),
+          fibRes.json(),
+        ]);
+        const objective = objRes.ok && Array.isArray(objData) ? objData : [];
+        const theory =
+          thyRes.ok && Array.isArray(thyData)
+            ? thyData.map((q) => ({ ...q, type: "theory" }))
+            : [];
+        const fib =
+          fibRes.ok && Array.isArray(fibData)
+            ? fibData.map((q) => ({ ...q, type: "fib" }))
+            : [];
+        questionsData = [...objective, ...theory, ...fib];
+      } else if (type === "objective") {
+        const res = await fetch(base);
+        if (res.ok) {
+          const data = await res.json();
+          questionsData = Array.isArray(data) ? data : [];
+        }
+      } else if (type === "theory") {
+        const res = await fetch(`${base}?type=theory`);
+        if (res.ok) {
+          const data = await res.json();
+          questionsData = Array.isArray(data)
+            ? data.map((q) => ({ ...q, type: "theory" }))
+            : [];
+        }
+      } else if (type === "fib") {
+        const res = await fetch(`${base}?type=fib`);
+        if (res.ok) {
+          const data = await res.json();
+          questionsData = Array.isArray(data)
+            ? data.map((q) => ({ ...q, type: "fib" }))
+            : [];
+        }
+      }
+
+      const all = shuffle([...questionsData]);
       if (all.length === 0)
         throw new Error("No questions found for this course.");
       const picked = all.slice(0, count).map((q) => ({
@@ -290,7 +414,7 @@ const TestModeScreen = ({
   const handleCountSelect = (count) => {
     setQuestionCount(count);
     setPhase("test");
-    fetchQuestions(selectedCourse, count);
+    fetchQuestions(selectedCourse, count, questionType);
   };
 
   // ── answer submission for current question ──
@@ -417,6 +541,9 @@ const TestModeScreen = ({
         onSelect={handleCountSelect}
         onBack={() => setPhase("pick")}
         courseName={selectedCourse?.name}
+        course={selectedCourse}
+        selectedQuestionType={questionType}
+        onSelectQuestionType={setQuestionType}
       />
     );
   }
