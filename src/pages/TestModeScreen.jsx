@@ -791,9 +791,8 @@ const TestModeScreen = ({
                   Correct Answer
                 </p>
                 {isThyQ ? (
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
                     {currentQuestion.model_answer ||
-                      currentQuestion.explanation ||
                       `Key points: ${parseKeywords(currentQuestion.keywords)
                         .map((group) =>
                           Array.isArray(group) ? group[0] : group,
@@ -801,12 +800,26 @@ const TestModeScreen = ({
                         .join(", ")}`}
                   </p>
                 ) : (
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
                     {(currentQuestion.answers || [])
                       .map((g) => (Array.isArray(g) ? g[0] : g))
                       .join(" / ")}
                   </p>
                 )}
+              </div>
+            )}
+            {/* Reason for objective questions (when incorrect) */}
+            {isAnswered && isObjQ && result !== "correct" && currentQuestion.reason && (
+              <div className="mt-4 p-4 rounded-2xl border-2 border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20">
+                <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+                  Reason
+                </p>
+                <div className="text-sm text-slate-700 dark:text-slate-200">
+                  <RenderMathText
+                    text={currentQuestion.reason}
+                    courseId={selectedCourse?.id}
+                  />
+                </div>
               </div>
             )}
           </div>
