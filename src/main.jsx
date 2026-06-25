@@ -1,7 +1,8 @@
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App";
-import { StrictMode } from "react";
+import { StrictMode, useCallback, useEffect } from "react";
+import { useRegisterSW } from "virtual:pwa-register/react";
 
 // gtag is initialised in index.html <head> — no setup needed here.
 
@@ -14,19 +15,37 @@ window.addEventListener("beforeinstallprompt", (e) => {
   window.__pwaInstallPrompt = e;
 });
 
-// Unregister any stale manually-registered service workers from old builds
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.getRegistrations().then((registrations) => {
-    registrations.forEach((reg) => {
-      if (reg.active?.scriptURL?.includes("/sw.js")) {
-        reg.unregister();
-      }
-    });
+function PWAUpdater() {
+  const {
+    needRefresh: [needRefresh, setNeedRefresh],
+    updateServiceWorker,
+  } = useRegisterSW({
+    immediate: true,
+    onRegistered(r) {
+      console.log("SW Registered:", r);
+    },
+    onRegisterError(error) {
+      console.log("SW registration error", error);
+    },
   });
+
+  const close = useCallback(() => {
+    setNeedRefresh(false);
+  }, [setNeedRefresh]);
+
+  useEffect(() => {
+    if (needRefresh) {
+      // Auto-update when a new version is available
+      updateServiceWorker(true);
+    }
+  }, [needRefresh, updateServiceWorker]);
+
+  return null;
 }
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
+    <PWAUpdater />
     <App />
   </StrictMode>,
 );
