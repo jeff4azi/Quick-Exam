@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FiAlertTriangle,
   FiArrowLeft,
+  FiBell,
   FiChevronRight,
   FiGrid,
   FiInfo,
@@ -19,6 +20,11 @@ import ConfirmOverlay from "../components/ConfirmOverlay";
 import { API_BASE_URL } from "../apiConfig";
 import { supabase } from "../supabaseClient";
 import { clearExamSession } from "../utils/examSessionStorage";
+import {
+  subscribeToPush,
+  isSubscribedToPush,
+  unsubscribeFromPush,
+} from "../lib/push";
 
 const Toggle = ({ checked, onClick, disabled }) => (
   <button
@@ -95,6 +101,19 @@ const SettingRow = ({
   );
 };
 
+const SectionLabel = ({ title, description }) => (
+  <div className="px-1 pt-6 pb-2">
+    <h2 className="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-400">
+      {title}
+    </h2>
+    {description && (
+      <p className="text-xs font-semibold text-slate-400 mt-0.5">
+        {description}
+      </p>
+    )}
+  </div>
+);
+
 const SettingsScreen = ({
   isPremium,
   onLogout,
@@ -113,6 +132,40 @@ const SettingsScreen = ({
   const [isDeleteOverlayOpen, setDeleteOverlayOpen] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [pushNotificationsEnabled, setPushNotificationsEnabled] =
+    useState(false);
+  const [isUpdatingPush, setIsUpdatingPush] = useState(false);
+
+  useEffect(() => {
+    async function checkSubscription() {
+      const subscribed = await isSubscribedToPush();
+      setPushNotificationsEnabled(subscribed);
+    }
+    checkSubscription();
+  }, []);
+
+  const handlePushToggle = async () => {
+    if (isUpdatingPush) return;
+
+    try {
+      setIsUpdatingPush(true);
+
+      if (pushNotificationsEnabled) {
+        await unsubscribeFromPush();
+        setPushNotificationsEnabled(false);
+      } else {
+        await subscribeToPush();
+        setPushNotificationsEnabled(true);
+      }
+    } catch (err) {
+      console.error("Push toggle failed:", err);
+      window.alert(
+        "Failed to update notification preferences. Please try again.",
+      );
+    } finally {
+      setIsUpdatingPush(false);
+    }
+  };
 
   const handleDeleteAccount = async () => {
     if (isDeleting) return;
@@ -176,20 +229,14 @@ const SettingsScreen = ({
               Preferences & account
             </p>
           </div>
-          <div className="size-11" />{" "}
-          {/* Placeholder for spacing - matches back button size */}
+          <div className="size-11" />
         </div>
       </header>
 
-      <main className="mx-auto grid max-w-5xl gap-6 px-5 pb-28 pt-6 lg:grid-cols-[1fr_1fr] lg:px-8">
+      <main className="mx-auto max-w-2xl px-5 pb-28 pt-2 lg:px-8">
+        {/* ── Appearance ── */}
+        <SectionLabel title="Appearance" />
         <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-          <div className="border-b border-slate-100 dark:border-slate-800 px-5 py-4">
-            <h2 className="font-black">Exam preferences</h2>
-            <p className="text-xs font-semibold text-slate-400">
-              Controls that shape how exams feel.
-            </p>
-          </div>
-
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
             <SettingRow
               icon={FiMoon}
@@ -199,6 +246,20 @@ const SettingsScreen = ({
               <Toggle checked={isDarkMode} onClick={toggleDarkMode} />
             </SettingRow>
 
+            <SettingRow
+              icon={FiGrid}
+              title="Show pagination"
+              description="Display question bubbles during exams."
+            >
+              <Toggle checked={showPagination} onClick={toggleShowPagination} />
+            </SettingRow>
+          </div>
+        </section>
+
+        {/* ── Quiz Behaviour ── */}
+        <SectionLabel title="Quiz behaviour" />
+        <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             <SettingRow
               icon={FiZap}
               title="Auto advance"
@@ -270,25 +331,30 @@ const SettingsScreen = ({
                 )}
               </div>
             </SettingRow>
+          </div>
+        </section>
 
+        {/* ── Notifications ── */}
+        <SectionLabel title="Notifications" />
+        <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
             <SettingRow
-              icon={FiGrid}
-              title="Pagination"
-              description="Show question bubbles during exams."
+              icon={FiBell}
+              title="Daily test reminders"
+              description="Get notified when you haven't taken a test today."
             >
-              <Toggle checked={showPagination} onClick={toggleShowPagination} />
+              <Toggle
+                checked={pushNotificationsEnabled}
+                onClick={handlePushToggle}
+                disabled={isUpdatingPush}
+              />
             </SettingRow>
           </div>
         </section>
 
+        {/* ── Account ── */}
+        <SectionLabel title="Account" />
         <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
-          <div className="border-b border-slate-100 dark:border-slate-800 px-5 py-4">
-            <h2 className="font-black">Support & account</h2>
-            <p className="text-xs font-semibold text-slate-400">
-              Product info, help, and account controls.
-            </p>
-          </div>
-
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
             <SettingRow
               icon={FiInfo}
@@ -301,7 +367,7 @@ const SettingsScreen = ({
 
             <SettingRow
               icon={FiAlertTriangle}
-              title="Report problem"
+              title="Report a problem"
               description="Send a message to support."
               tone="warning"
               onClick={() =>
@@ -316,8 +382,8 @@ const SettingsScreen = ({
 
             <SettingRow
               icon={FiLogOut}
-              title="Logout"
-              description="Sign out of this device."
+              title="Sign out"
+              description="Log out of this device."
               tone="danger"
               onClick={onLogout}
             >
@@ -327,7 +393,7 @@ const SettingsScreen = ({
             <SettingRow
               icon={isDeleting ? FiLoader : FiTrash2}
               title="Delete account"
-              description="Permanently remove your account."
+              description="Permanently remove your account and data."
               tone="danger"
               onClick={() => setDeleteOverlayOpen(true)}
             >

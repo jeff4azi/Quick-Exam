@@ -45,3 +45,42 @@ export async function subscribeToPush() {
   if (error) throw error
   return subscription
 }
+
+export async function isSubscribedToPush() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    return false
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.ready
+    const subscription = await registration.pushManager.getSubscription()
+    return !!subscription
+  } catch {
+    return false
+  }
+}
+
+export async function unsubscribeFromPush() {
+  if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+    return
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.ready
+    const subscription = await registration.pushManager.getSubscription()
+
+    if (subscription) {
+      // Delete from Supabase
+      const { data: userData } = await supabase.auth.getUser()
+      if (userData.user) {
+        const subJson = subscription.toJSON()
+        await supabase.from('push_subscriptions').delete().eq('endpoint', subJson.endpoint)
+      }
+
+      // Unsubscribe from push service
+      await subscription.unsubscribe()
+    }
+  } catch (err) {
+    console.error('Unsubscribe failed:', err)
+  }
+}

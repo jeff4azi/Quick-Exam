@@ -10,7 +10,6 @@ import {
   FiSettings,
   FiShield,
   FiUser,
-  FiBell,
 } from "react-icons/fi";
 import { FaCrown, FaTelegramPlane, FaWhatsapp, FaCamera } from "react-icons/fa";
 import Avatar from "../components/Avatar";
@@ -20,7 +19,6 @@ import {
   WHATSAPP_CHANNEL_URL,
 } from "../components/WhatsAppCard";
 import { supabase } from "../supabaseClient";
-import { subscribeToPush } from "../lib/push";
 
 const formatLevel = (year) => {
   const value = String(year ?? "").trim();
@@ -405,14 +403,6 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
                   Referral Dashboard
                 </button>
               )}
-              <button
-                type="button"
-                onClick={() => subscribeToPush().catch(console.error)}
-                className="mt-3 w-full rounded-2xl bg-slate-900 dark:bg-slate-700 px-4 py-3 text-sm font-black text-white shadow-lg shadow-slate-200 dark:shadow-none transition-all active:scale-[0.98] flex items-center justify-center gap-2"
-              >
-                <FiBell size={18} />
-                Enable Test Reminders
-              </button>
             </div>
           </aside>
 
