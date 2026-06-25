@@ -46,6 +46,31 @@ export default defineConfig({
           },
         ],
       },
+      workbox: {
+        globPatterns: ["**/*.{js,css,html,ico,png,jpg,jpeg,webp,svg,woff2}"],
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        navigateFallback: "/index.html",
+        navigateFallbackDenylist: [/^\/api/, /supabase/],
+        runtimeCaching: [
+          {
+            urlPattern: /supabase\.co/,
+            handler: "NetworkOnly",
+          },
+          {
+            urlPattern: /\.(?:png|jpg|jpeg|webp|svg|ico)$/,
+            handler: "CacheFirst",
+            options: {
+              cacheName: "quizbolt-images",
+              expiration: { maxEntries: 60, maxAgeSeconds: 30 * 24 * 60 * 60 },
+            },
+          },
+          {
+            urlPattern: /\.(?:js|css)$/,
+            handler: "StaleWhileRevalidate",
+            options: { cacheName: "quizbolt-assets" },
+          },
+        ],
+      },
     }),
   ],
   server: {
