@@ -8,6 +8,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
     VitePWA({
+      strategies: "injectManifest",
+      srcDir: "src",
+      filename: "sw.js",
       registerType: "autoUpdate",
       injectRegister: "script",
       devOptions: { enabled: true },
@@ -40,36 +43,6 @@ export default defineConfig({
             src: "/apple-touch-icon.png",
             sizes: "180x180",
             type: "image/png",
-          },
-        ],
-      },
-      workbox: {
-        // Cache app shell + static assets
-        globPatterns: ["**/*.{js,css,html,ico,png,jpg,jpeg,webp,svg,woff2}"],
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
-        // Skip Supabase and other external calls
-        navigateFallback: "/index.html",
-        navigateFallbackDenylist: [/^\/api/, /supabase/],
-        runtimeCaching: [
-          {
-            // Supabase API: network only, never cache
-            urlPattern: /supabase\.co/,
-            handler: "NetworkOnly",
-          },
-          {
-            // Images: cache first
-            urlPattern: /\.(?:png|jpg|jpeg|webp|svg|ico)$/,
-            handler: "CacheFirst",
-            options: {
-              cacheName: "quizbolt-images",
-              expiration: { maxEntries: 60, maxAgeSeconds: 30 * 24 * 60 * 60 },
-            },
-          },
-          {
-            // JS/CSS: stale while revalidate
-            urlPattern: /\.(?:js|css)$/,
-            handler: "StaleWhileRevalidate",
-            options: { cacheName: "quizbolt-assets" },
           },
         ],
       },
