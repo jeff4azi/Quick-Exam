@@ -360,13 +360,14 @@ const ChooseCourseScreen = ({
                             handleSelectCourse(course);
                           }
                         }}
-                        className={`group w-full text-left p-3.5 sm:p-5 rounded-2xl sm:rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${
+                        className={`group w-full flex flex-col justify-between min-h-[128px] sm:min-h-[152px] md:min-h-[160px] p-3.5 sm:p-5 rounded-2xl sm:rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${
                           isSelected
                             ? "bg-blue-600 border-blue-600 shadow-xl shadow-blue-200"
                             : "bg-white dark:bg-slate-800 border-white dark:border-slate-800 hover:border-blue-100 shadow-sm"
                         }`}
                       >
-                        <div className="flex justify-between items-center">
+                        {/* TOP ROW: title + heart, always aligned at the top */}
+                        <div className="flex justify-between items-start">
                           <div className="max-w-[80%]">
                             <h2
                               className={`text-base sm:text-xl font-black leading-tight ${isSelected ? "text-white" : "text-slate-900 dark:text-white"}`}
@@ -378,145 +379,149 @@ const ChooseCourseScreen = ({
                             >
                               {course.title}
                             </p>
-
-                            <div
-                              className={`inline-flex items-center gap-1 mt-2 sm:mt-3 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] font-bold ${
-                                isSelected
-                                  ? "bg-white/20 text-white"
-                                  : "bg-blue-50 dark:bg-blue-900/30 text-blue-600"
-                              }`}
-                            >
-                              <FiBookOpen />
-                              {(questionType === "theory"
-                                ? course.theoryQuestionCount
-                                : questionType === "fib"
-                                  ? course.fibQuestionCount
-                                  : course.questionCount) || 0}{" "}
-                              Questions
-                            </div>
-
-                            {/* Difficulty counts */}
-                            {questionType === "objective" &&
-                              course.difficultyCounts &&
-                              Object.values(course.difficultyCounts).reduce(
-                                (a, b) => a + b,
-                                0,
-                              ) > 0 && (
-                                <div
-                                  className={`flex flex-wrap gap-1 mt-2 ${isSelected ? "text-white" : "text-slate-500 dark:text-slate-400"}`}
-                                >
-                                  {Object.entries(course.difficultyCounts).map(
-                                    ([diff, count]) => (
-                                      <span
-                                        key={diff}
-                                        className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                                          isSelected
-                                            ? "bg-white/20"
-                                            : "bg-slate-100 dark:bg-slate-700"
-                                        }`}
-                                      >
-                                        {diff}: {count}
-                                      </span>
-                                    ),
-                                  )}
-                                </div>
-                              )}
                           </div>
 
-                          <div className="flex items-center gap-2">
-                            <button
-                              type="button"
-                              disabled={isPending}
-                              onClick={(e) => {
-                                e.stopPropagation();
-
-                                // Optimistically flip the heart immediately
-                                const wasF = isFavourite;
-                                setFavouriteIds((prev) =>
-                                  wasF
-                                    ? prev.filter((id) => id !== favKey)
-                                    : [...prev, favKey],
-                                );
-
-                                // Lock button to prevent double-tap
-                                setPendingFavourites((prev) => {
-                                  const next = new Set(prev);
-                                  next.add(favKey);
-                                  return next;
-                                });
-
-                                toggleFavouriteCourseId(
-                                  course.id,
-                                  // Pass the pre-toggle list so the server logic is correct
-                                  wasF
-                                    ? favouriteIds
-                                    : favouriteIds.filter(
-                                        (id) => id !== favKey,
-                                      ),
-                                  questionType,
-                                )
-                                  .then((updated) => {
-                                    // Reconcile with server result
-                                    setFavouriteIds(updated);
-                                    trackFavouriteToggle(course.id, !wasF);
-                                  })
-                                  .finally(() => {
-                                    // Unlock button
-                                    setPendingFavourites((prev) => {
-                                      const next = new Set(prev);
-                                      next.delete(favKey);
-                                      return next;
-                                    });
+                          <button
+                            type="button"
+                            disabled={isPending}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              const wasF = isFavourite;
+                              setFavouriteIds((prev) =>
+                                wasF
+                                  ? prev.filter((id) => id !== favKey)
+                                  : [...prev, favKey],
+                              );
+                              setPendingFavourites((prev) => {
+                                const next = new Set(prev);
+                                next.add(favKey);
+                                return next;
+                              });
+                              toggleFavouriteCourseId(
+                                course.id,
+                                wasF
+                                  ? favouriteIds
+                                  : favouriteIds.filter((id) => id !== favKey),
+                                questionType,
+                              )
+                                .then((updated) => {
+                                  setFavouriteIds(updated);
+                                  trackFavouriteToggle(course.id, !wasF);
+                                })
+                                .finally(() => {
+                                  setPendingFavourites((prev) => {
+                                    const next = new Set(prev);
+                                    next.delete(favKey);
+                                    return next;
                                   });
-                              }}
-                              className={`size-8 sm:size-10 shrink-0 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all active:scale-90 ${
-                                isPending ? "opacity-50 cursor-not-allowed" : ""
-                              } ${
-                                isSelected
-                                  ? "bg-white/20 text-white"
-                                  : "bg-gray-50 dark:bg-slate-700 text-slate-400 dark:text-slate-300"
-                              }`}
-                              title={
-                                isFavourite
-                                  ? "Remove from favourites"
-                                  : "Add to favourites"
-                              }
-                              aria-pressed={isFavourite}
-                              aria-busy={isPending}
-                            >
-                              {isPending ? (
-                                <svg
-                                  className={`size-4 animate-spin ${isSelected ? "text-white" : "text-rose-400"}`}
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <circle
-                                    className="opacity-25"
-                                    cx="12"
-                                    cy="12"
-                                    r="10"
-                                    stroke="currentColor"
-                                    strokeWidth="4"
-                                  />
-                                  <path
-                                    className="opacity-75"
-                                    fill="currentColor"
-                                    d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-                                  />
-                                </svg>
-                              ) : isFavourite ? (
-                                <IoHeart
-                                  className={
-                                    isSelected ? "text-white" : "text-rose-500"
-                                  }
-                                  size={18}
+                                });
+                            }}
+                            className={`size-8 sm:size-10 shrink-0 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all active:scale-90 ${
+                              isPending ? "opacity-50 cursor-not-allowed" : ""
+                            } ${
+                              isSelected
+                                ? "bg-white/20 text-white"
+                                : "bg-gray-50 dark:bg-slate-700 text-slate-400 dark:text-slate-300"
+                            }`}
+                            title={
+                              isFavourite
+                                ? "Remove from favourites"
+                                : "Add to favourites"
+                            }
+                            aria-pressed={isFavourite}
+                            aria-busy={isPending}
+                          >
+                            {isPending ? (
+                              <svg
+                                className={`size-4 animate-spin ${isSelected ? "text-white" : "text-rose-400"}`}
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                              >
+                                <circle
+                                  className="opacity-25"
+                                  cx="12"
+                                  cy="12"
+                                  r="10"
+                                  stroke="currentColor"
+                                  strokeWidth="4"
                                 />
-                              ) : (
-                                <IoHeartOutline size={18} />
-                              )}
-                            </button>
+                                <path
+                                  className="opacity-75"
+                                  fill="currentColor"
+                                  d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                                />
+                              </svg>
+                            ) : isFavourite ? (
+                              <IoHeart
+                                className={
+                                  isSelected ? "text-white" : "text-rose-500"
+                                }
+                                size={18}
+                              />
+                            ) : (
+                              <IoHeartOutline size={18} />
+                            )}
+                          </button>
+                        </div>
+
+                        {/* BOTTOM BLOCK: badge + difficulty pills (real or skeleton), anchored to card bottom */}
+                        <div className="mt-2 sm:mt-3">
+                          <div
+                            className={`inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] font-bold ${
+                              isSelected
+                                ? "bg-white/20 text-white"
+                                : "bg-blue-50 dark:bg-blue-900/30 text-blue-600"
+                            }`}
+                          >
+                            <FiBookOpen />
+                            {(questionType === "theory"
+                              ? course.theoryQuestionCount
+                              : questionType === "fib"
+                                ? course.fibQuestionCount
+                                : course.questionCount) || 0}{" "}
+                            Questions
                           </div>
+
+                          {questionType === "objective" &&
+                            (() => {
+                              const hasDifficulty =
+                                course.difficultyCounts &&
+                                Object.values(course.difficultyCounts).reduce(
+                                  (a, b) => a + b,
+                                  0,
+                                ) > 0;
+
+                              return (
+                                <div className="flex flex-wrap gap-1 mt-2">
+                                  {hasDifficulty
+                                    ? Object.entries(
+                                        course.difficultyCounts,
+                                      ).map(([diff, count]) => (
+                                        <span
+                                          key={diff}
+                                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
+                                            isSelected
+                                              ? "bg-white/20 text-white"
+                                              : "bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
+                                          }`}
+                                        >
+                                          {diff}: {count}
+                                        </span>
+                                      ))
+                                    : ["Easy", "Medium", "Hard"].map((diff) => (
+                                        <span
+                                          key={diff}
+                                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full w-12 h-[18px] animate-pulse ${
+                                            isSelected
+                                              ? "bg-white/10"
+                                              : "bg-slate-100 dark:bg-slate-700/60"
+                                          }`}
+                                        />
+                                      ))}
+                                </div>
+                              );
+                            })()}
                         </div>
                       </div>
                     );
@@ -676,7 +681,7 @@ const ChooseCourseScreen = ({
               )}
 
               <p
-                className={`${!selectedQuestionCount ? "hidden": ""} mt-3 text-[10px] text-slate-400 dark:text-slate-500 leading-relaxed px-1`}
+                className={`${!selectedQuestionCount ? "hidden" : ""} mt-3 text-[10px] text-slate-400 dark:text-slate-500 leading-relaxed px-1`}
               >
                 Practice questions based on course materials. Not guaranteed to
                 appear in your examination.
