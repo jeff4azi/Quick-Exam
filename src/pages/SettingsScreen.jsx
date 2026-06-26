@@ -12,10 +12,14 @@ import {
   FiMoon,
   FiSettings,
   FiShuffle,
+  FiSmartphone,
   FiTrash2,
   FiZap,
 } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
+
+const IOS_TUTORIAL_URL =
+  "https://youtube.com/shorts/ndcyOO3Xbog?si=Un0wo2qmTGSgxYf9";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import { API_BASE_URL } from "../apiConfig";
 import { supabase } from "../supabaseClient";
@@ -138,6 +142,42 @@ const SettingsScreen = ({
   const [isUpdatingPush, setIsUpdatingPush] = useState(false);
   const [highlightNotifications, setHighlightNotifications] = useState(false);
   const notificationsSectionRef = useRef(null);
+
+  const [installPrompt, setInstallPrompt] = useState(null);
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isInStandaloneMode =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true;
+
+  useEffect(() => {
+    // Get install prompt if available
+    if (window.__pwaInstallPrompt) {
+      setInstallPrompt(window.__pwaInstallPrompt);
+    }
+    const handler = (e) => {
+      e.preventDefault();
+      window.__pwaInstallPrompt = e;
+      setInstallPrompt(e);
+    };
+    window.addEventListener("beforeinstallprompt", handler);
+    return () => window.removeEventListener("beforeinstallprompt", handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if (isIOS) {
+      window.open(IOS_TUTORIAL_URL, "_blank", "noopener,noreferrer");
+      return;
+    }
+    if (installPrompt) {
+      await installPrompt.prompt();
+      const { outcome } = await installPrompt.userChoice;
+      if (outcome === "accepted") {
+        localStorage.setItem("pwaInstalled", "true");
+      }
+      window.__pwaInstallPrompt = null;
+      setInstallPrompt(null);
+    }
+  };
 
   useEffect(() => {
     async function checkSubscription() {
@@ -382,6 +422,25 @@ const SettingsScreen = ({
             </SettingRow>
           </div>
         </section>
+
+        {/* ── App ── */}
+        {!isInStandaloneMode && (
+          <>
+            <SectionLabel title="App" />
+            <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+                <SettingRow
+                  icon={FiSmartphone}
+                  title="Install App"
+                  description="Add to home screen for faster access"
+                  onClick={handleInstall}
+                >
+                  <FiChevronRight className="text-slate-300" />
+                </SettingRow>
+              </div>
+            </section>
+          </>
+        )}
 
         {/* ── Account ── */}
         <SectionLabel title="Account" />
