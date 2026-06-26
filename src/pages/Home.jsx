@@ -42,6 +42,20 @@ import {
   compareLeaderboardEntries,
 } from "../utils/leaderboardRanking";
 
+const getCurrentDayStartIso = () => {
+  const now = new Date();
+  const dayStart = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+    0,
+    0,
+    0,
+    0,
+  );
+  return dayStart.toISOString();
+};
+
 const getCurrentWeekStartIso = () => {
   const now = new Date();
   const day = now.getDay();
@@ -140,7 +154,7 @@ const getHotCourse = (allAttempts, availableCourses) => {
     return null;
   }
 
-  const MIN_HOT_THRESHOLD = 10;
+  const MIN_HOT_THRESHOLD = 5;
 
   // Count course frequency
   const courseCounts = new Map();
@@ -344,6 +358,7 @@ const Home = ({
         return;
       }
 
+      const dayStartIso = getCurrentDayStartIso();
       const weekStartIso = getCurrentWeekStartIso();
       const [
         weeklyResult,
@@ -376,7 +391,7 @@ const Home = ({
             .from("exam_attempts")
             .select("course_id, date_taken")
             .eq("is_retake", false)
-            .gte("date_taken", weekStartIso),
+            .gte("date_taken", dayStartIso),
           15000,
           "Loading hot courses took too long.",
         ),
@@ -737,7 +752,7 @@ const Home = ({
         {/* Hot Course — neutral card, accent reduced to a thin rule + tag */}
         <div className="space-y-3">
           <h3 className="text-[11px] font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-1">
-            Hot this week
+            Hot today
           </h3>
 
           {hotCourseLoading ? (
@@ -799,7 +814,7 @@ const Home = ({
                       {stats.hotCourse.questionCount || 0} questions
                     </span>
                     <span className="text-xs text-slate-400 dark:text-slate-500">
-                      {stats.hotCourse.attemptCount} attempts this week
+                      {stats.hotCourse.attemptCount} attempts today
                     </span>
                   </div>
 
