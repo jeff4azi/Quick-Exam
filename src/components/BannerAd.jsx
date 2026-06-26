@@ -21,6 +21,19 @@ const AD_DATABASE = [
   },
   {
     type: "image",
+    url: "https://res.cloudinary.com/dn5h1cghb/image/upload/v1782482362/3_wq6dmi.png",
+    duration: 5,
+    whatsapp: "2347015585397",
+    message:
+      "Hello QuizBolt Team,\n\n" +
+      "I would like to request access to a rerun/carryover course.\n\n" +
+      "Your Username: _____\n" +
+      "University: _____\n" +
+      "Rerun Course(s): _____\n\n" +
+      "Thank you.",
+  },
+  {
+    type: "image",
     url: "https://res.cloudinary.com/dn5h1cghb/image/upload/v1782200330/2_20260623_054442_0001_utwiar.png",
     duration: 5,
     whatsapp: "2349118907839",
