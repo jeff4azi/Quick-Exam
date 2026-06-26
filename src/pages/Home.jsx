@@ -23,7 +23,7 @@ import {
   FaUserFriends,
   FaBolt,
 } from "react-icons/fa";
-import { FiArrowRight, FiZap, FiPlay, FiX } from "react-icons/fi";
+import { FiArrowRight, FiZap, FiPlay, FiX, FiBell } from "react-icons/fi";
 import { MdStar } from "react-icons/md";
 import {
   loadFavouriteCourseIds,
@@ -41,6 +41,7 @@ import {
   buildLeaderboardEntries,
   compareLeaderboardEntries,
 } from "../utils/leaderboardRanking";
+import { isSubscribedToPush } from "../lib/push";
 
 const getCurrentDayStartIso = () => {
   const now = new Date();
@@ -218,6 +219,10 @@ const Home = ({
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true;
 
+  // Notification reminder card state
+  const [showNotificationCard, setShowNotificationCard] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+
   useEffect(() => {
     if (isInStandaloneMode) return;
     if (localStorage.getItem("pwaInstalled")) return;
@@ -266,6 +271,25 @@ const Home = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Check notification subscription and dismissal status
+  useEffect(() => {
+    async function checkNotificationStatus() {
+      const subscribed = await isSubscribedToPush();
+      setNotificationsEnabled(subscribed);
+
+      if (!subscribed) {
+        const dismissedUntil = parseInt(
+          localStorage.getItem("notificationCardDismissedUntil") || "0",
+          10,
+        );
+        if (Date.now() >= dismissedUntil) {
+          setShowNotificationCard(true);
+        }
+      }
+    }
+    checkNotificationStatus();
+  }, []);
+
   useEffect(() => {
     setSelectedCourse(null);
   }, [setSelectedCourse]);
@@ -309,6 +333,19 @@ const Home = ({
     clearExamSession();
     setExamSession(null);
     setShowQuitConfirm(false);
+  };
+
+  // Notification card handlers
+  const handleEnableNotifications = () => {
+    navigate("/settings?highlight=notifications");
+  };
+
+  const handleDismissNotificationCard = () => {
+    localStorage.setItem(
+      "notificationCardDismissedUntil",
+      String(Date.now() + 6 * 60 * 60 * 1000),
+    );
+    setShowNotificationCard(false);
   };
 
   const [stats, setStats] = useState(
@@ -500,6 +537,38 @@ const Home = ({
             Ready for your next challenge?
           </p>
         </div>
+
+        {/* Notification Reminder Card */}
+        {showNotificationCard && !notificationsEnabled && (
+          <div className="relative bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 p-4 rounded-[1.75rem] shadow-sm flex items-center gap-4">
+            <div className="size-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center shrink-0">
+              <FiBell className="text-blue-600 dark:text-blue-400 text-lg" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-bold text-slate-900 dark:text-white">
+                Stay on your streak!
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+                Enable notifications to get daily reminders.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleEnableNotifications}
+              className="px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition-colors active:scale-95"
+            >
+              Enable
+            </button>
+            <button
+              type="button"
+              onClick={handleDismissNotificationCard}
+              className="p-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors active:scale-95"
+              aria-label="Dismiss notification reminder"
+            >
+              <FiX size={18} className="text-slate-400" />
+            </button>
+          </div>
+        )}
 
         {/* Resume Exam Section */}
         {examSession && (

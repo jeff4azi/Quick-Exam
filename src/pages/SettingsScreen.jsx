@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect, useRef } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import {
   FiAlertTriangle,
   FiArrowLeft,
@@ -129,12 +129,15 @@ const SettingsScreen = ({
   toggleShowPagination,
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isDeleteOverlayOpen, setDeleteOverlayOpen] = useState(false);
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [pushNotificationsEnabled, setPushNotificationsEnabled] =
     useState(false);
   const [isUpdatingPush, setIsUpdatingPush] = useState(false);
+  const [highlightNotifications, setHighlightNotifications] = useState(false);
+  const notificationsSectionRef = useRef(null);
 
   useEffect(() => {
     async function checkSubscription() {
@@ -143,6 +146,27 @@ const SettingsScreen = ({
     }
     checkSubscription();
   }, []);
+
+  // Handle highlight from query param
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    if (params.get("highlight") === "notifications") {
+      // Scroll to the section
+      if (notificationsSectionRef.current) {
+        notificationsSectionRef.current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+      // Start highlight animation
+      setHighlightNotifications(true);
+      // Stop highlight after 3 seconds
+      const timer = setTimeout(() => {
+        setHighlightNotifications(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [location.search]);
 
   const handlePushToggle = async () => {
     if (isUpdatingPush) return;
@@ -336,7 +360,14 @@ const SettingsScreen = ({
 
         {/* ── Notifications ── */}
         <SectionLabel title="Notifications" />
-        <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+        <section
+          ref={notificationsSectionRef}
+          className={`rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden transition-all duration-500 ${
+            highlightNotifications
+              ? "ring-4 ring-blue-400/50 dark:ring-blue-500/50 animate-pulse"
+              : ""
+          }`}
+        >
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
             <SettingRow
               icon={FiBell}

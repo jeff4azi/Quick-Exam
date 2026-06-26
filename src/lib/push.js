@@ -54,7 +54,34 @@ export async function isSubscribedToPush() {
   try {
     const registration = await navigator.serviceWorker.ready
     const subscription = await registration.pushManager.getSubscription()
-    return !!subscription
+    
+    if (!subscription) {
+      return false
+    }
+
+    // Check Supabase to make sure the subscription exists there
+    const { data: userData } = await supabase.auth.getUser()
+    if (!userData.user) {
+      // No user logged in, unsubscribe from browser
+      await subscription.unsubscribe()
+      return false
+    }
+
+    const subJson = subscription.toJSON()
+    const { data } = await supabase
+      .from('push_subscriptions')
+      .select('*')
+      .eq('user_id', userData.user.id)
+      .eq('endpoint', subJson.endpoint)
+      .single()
+
+    if (!data) {
+      // Subscription exists in browser but not in Supabase — clean it up
+      await subscription.unsubscribe()
+      return false
+    }
+
+    return true
   } catch {
     return false
   }
