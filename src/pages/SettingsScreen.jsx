@@ -78,7 +78,7 @@ const SettingRow = ({
           )}
         </span>
       </div>
-      {children}
+      <div className="shrink-0">{children}</div>
     </>
   );
 
