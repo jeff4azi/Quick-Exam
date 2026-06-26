@@ -397,7 +397,7 @@ I understand I need to provide correct details.`;
           {/* Referral code */}
           <div className="group">
             <label className="text-[11px] font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 ml-4 mb-1 block">
-              Referral code (optional)
+              Referral code (leave blank if none)
             </label>
             <div className="relative">
               <input
