@@ -46,6 +46,7 @@ import TestResultScreen from "./pages/TestResultScreen";
 import ReferralDashboard from "./pages/ReferralDashboard";
 import RouteStateFallback from "./components/RouteStateFallback";
 import LoadingScreen from "./components/LoadingScreen";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   const REFERRAL_STORAGE_KEY = "quizbolt_referral_code";
@@ -1017,6 +1018,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            {/* Catch-all 404 route */}
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </AuthProvider>
       )}
