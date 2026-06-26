@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FiArrowLeft,
@@ -9,10 +9,12 @@ import {
   FiLoader,
   FiSettings,
   FiShield,
+  FiTrash2,
   FiUser,
 } from "react-icons/fi";
 import { FaCrown, FaTelegramPlane, FaWhatsapp, FaCamera } from "react-icons/fa";
 import Avatar from "../components/Avatar";
+import ConfirmOverlay from "../components/ConfirmOverlay";
 import whatsappChannelIcon from "../images/whatsappchannelicon.webp";
 import {
   getWhatsAppCommunityUrl,
@@ -39,6 +41,9 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
     user_name: userProfile?.user_name || "",
     department: userProfile?.department || "",
   });
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (!userProfile || isEditing || isSaving) return;
@@ -82,54 +87,86 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
   }, []);
 
   // Fetch rerun courses for 200 level students
-  useEffect(() => {
-    const fetchRerunCourses = async () => {
-      const level = formatLevel(userProfile?.year);
-      if (level !== "200") {
+  const fetchRerunCourses = useCallback(async () => {
+    const level = formatLevel(userProfile?.year);
+    if (level !== "200") {
+      setRerunCourses([]);
+      return;
+    }
+
+    try {
+      setRerunCoursesLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Fetch course codes from course_enrollments_override
+      const { data: overrideData, error: overrideError } = await supabase
+        .from("course_enrollments_override")
+        .select("course_code")
+        .eq("user_id", user.id);
+
+      if (overrideError || !overrideData || overrideData.length === 0) {
         setRerunCourses([]);
         return;
       }
 
-      try {
-        setRerunCoursesLoading(true);
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) return;
+      // Fetch course details from courses_meta
+      const courseCodes = overrideData.map(item => item.course_code);
+      const { data: coursesData, error: coursesError } = await supabase
+        .from("courses_meta")
+        .select("*")
+        .in("course_code", courseCodes)
+        .ilike("university", userProfile?.university || "");
 
-        // Fetch course codes from course_enrollments_override
-        const { data: overrideData, error: overrideError } = await supabase
-          .from("course_enrollments_override")
-          .select("course_code")
-          .eq("user_id", user.id);
-
-        if (overrideError || !overrideData || overrideData.length === 0) {
-          setRerunCourses([]);
-          return;
-        }
-
-        // Fetch course details from courses_meta
-        const courseCodes = overrideData.map(item => item.course_code);
-        const { data: coursesData, error: coursesError } = await supabase
-          .from("courses_meta")
-          .select("*")
-          .in("course_code", courseCodes)
-          .ilike("university", userProfile?.university || "");
-
-        if (!coursesError && coursesData) {
-          // Map course_group to group
-          setRerunCourses(coursesData.map(course => ({
-            ...course,
-            group: course.course_group
-          })));
-        }
-      } catch (err) {
-        console.error("Failed to fetch rerun courses:", err);
-      } finally {
-        setRerunCoursesLoading(false);
+      if (!coursesError && coursesData) {
+        // Map course_group to group
+        setRerunCourses(coursesData.map(course => ({
+          ...course,
+          group: course.course_group
+        })));
       }
-    };
-
-    fetchRerunCourses();
+    } catch (err) {
+      console.error("Failed to fetch rerun courses:", err);
+    } finally {
+      setRerunCoursesLoading(false);
+    }
   }, [userProfile]);
+
+  useEffect(() => {
+    fetchRerunCourses();
+  }, [fetchRerunCourses]);
+
+  // Delete rerun course
+  const handleDeleteCourse = async () => {
+    if (!courseToDelete) return;
+
+    try {
+      setIsDeleting(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Delete from course_enrollments_override
+      const { error } = await supabase
+        .from("course_enrollments_override")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("course_code", courseToDelete.course_code);
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      // Refresh the list
+      await fetchRerunCourses();
+      setShowDeleteConfirm(false);
+      setCourseToDelete(null);
+    } catch (err) {
+      console.error("Failed to delete course:", err);
+      window.alert("Failed to remove course. Please try again.");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   const premiumStatus = useMemo(() => {
     if (premiumAccess === null) {
@@ -583,7 +620,7 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
                           key={course.course_code}
                           className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700"
                         >
-                          <div className="min-w-0">
+                          <div className="min-w-0 flex-1">
                             <p className="text-base font-black text-slate-900 dark:text-white truncate">
                               {course.name}
                             </p>
@@ -591,9 +628,22 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
                               {course.title}
                             </p>
                           </div>
-                          <span className="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-300 text-[10px] font-bold">
-                            {course.course_code}
-                          </span>
+                          <div className="flex items-center gap-3">
+                            <span className="px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-300 text-[10px] font-bold">
+                              {course.course_code}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setCourseToDelete(course);
+                                setShowDeleteConfirm(true);
+                              }}
+                              className="size-9 rounded-xl border border-red-200 dark:border-red-900/50 bg-red-50 dark:bg-red-900/20 flex items-center justify-center text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors active:scale-[0.95]"
+                              aria-label={`Remove ${course.name}`}
+                            >
+                              <FiTrash2 size={16} />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -619,6 +669,20 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
           </div>
         </section>
       </main>
+
+      <ConfirmOverlay
+        isOpen={showDeleteConfirm}
+        onClose={() => {
+          setShowDeleteConfirm(false);
+          setCourseToDelete(null);
+        }}
+        onConfirm={handleDeleteCourse}
+        title="Remove Rerun Course?"
+        message={`Are you sure you want to remove ${courseToDelete?.name} from your rerun courses?`}
+        confirmText={isDeleting ? "Removing..." : "Yes, remove it"}
+        cancelText="Cancel"
+        danger={true}
+      />
     </div>
   );
 };
