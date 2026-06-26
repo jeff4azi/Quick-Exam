@@ -160,7 +160,11 @@ const OnboardingScreen = ({ onProfileReady }) => {
         .trim();
 
       // 3. Save onboarding data + create user_name from full_name
-      const referralCode = formData.referralCode?.trim() || "";
+      const referralCodeRaw = formData.referralCode?.trim() || "";
+      // Only accept referral codes in format QB-XXXX (QB- followed by 4 uppercase alphanumeric characters)
+      const referralCodeRegex = /^QB-[A-Z0-9]{4}$/;
+      const referralCode = referralCodeRegex.test(referralCodeRaw) ? referralCodeRaw : null;
+      
       const { error: upsertError } = await supabase.from("profiles").upsert({
         id: user.id,
         full_name: fullName,
@@ -169,7 +173,7 @@ const OnboardingScreen = ({ onProfileReady }) => {
         college: formData.college,
         department: formData.department,
         year: parseInt(formData.year, 10) || null,
-        referred_by: referralCode || null,
+        referred_by: referralCode,
         onboarding_complete: true,
         is_premium: false,
         avatar_url: avatarUrl,
