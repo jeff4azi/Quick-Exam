@@ -5,8 +5,11 @@ import {
   FaHome,
   FaArrowLeft,
   FaGamepad,
-  FaBrain,
 } from "react-icons/fa";
+import {
+  FiCheckCircle,
+  FiXCircle,
+} from "react-icons/fi";
 import Logo from "../images/Logo";
 
 const NotFoundPage = () => {
@@ -28,14 +31,36 @@ const NotFoundPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleAnswerClick = (index) => {
-    setSelectedAnswer(index);
-    if (index === sampleQuestion.correct) {
+  const handleAnswerClick = (option, idx) => {
+    setSelectedAnswer(option);
+    if (idx === sampleQuestion.correct) {
       setQuizScore("Correct! +10 Scholar Points ⚡️");
     } else {
       setQuizScore("Incorrect! Try studying the error logs.");
     }
   };
+
+  // FeedbackBadge component (from TestModeScreen
+  const FeedbackBadge = ({ result }) => {
+    if (result === "correct")
+      return (
+        <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 font-black text-sm animate-in fade-in zoom-in-95 duration-300">
+          <FiCheckCircle className="size-4" /> Correct!
+        </div>
+      );
+    return (
+      <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 font-black text-sm animate-in fade-in zoom-in-95 duration-300">
+        <FiXCircle className="size-4" /> Wrong
+      </div>
+    );
+  };
+
+  const isAnswered = selectedAnswer !== null;
+  const result = isAnswered
+    ? (sampleQuestion.options.indexOf(selectedAnswer) === sampleQuestion.correct
+      ? "correct"
+      : "wrong")
+    : null;
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-gray-950 text-slate-900 dark:text-gray-100 selection:bg-blue-100 dark:selection:bg-blue-900/30 transition-colors duration-300 flex flex-col justify-between">
@@ -100,7 +125,7 @@ const NotFoundPage = () => {
               </button>
               <button
                 onClick={() => navigate(-1)}
-                className="flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-black text-lg border-2 border-slate-200 dark:border-gray-800 hover:bg-slate-50 dark:hover:bg-gray-900 transition-all"
+                className="flex items-center justify-center gap-3 px-8 py-4 rounded-2xl font-black text-lg border-2 border-slate-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 transition-all"
               >
                 <FaArrowLeft className="text-sm" /> Previous Page
               </button>
@@ -111,15 +136,15 @@ const NotFoundPage = () => {
           <div className="relative">
             <div className="absolute -inset-4 bg-gradient-to-tr from-blue-500/20 to-red-500/10 blur-3xl rounded-full" />
 
-            <div className="relative bg-white dark:bg-gray-900 border border-slate-100 dark:border-gray-800 p-8 rounded-[2.5rem] shadow-2xl transition-transform duration-500">
+            <div className="relative bg-white dark:bg-slate-800 border border-gray-50 dark:border-slate-800 p-6 rounded-[2.5rem] shadow-xl shadow-slate-200/50 dark:shadow-none">
               {/* Card Header */}
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-100 dark:border-gray-800">
+              <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className="size-10 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center text-blue-600">
+                  <div className="size-10 bg-blue-100 dark:bg-blue-900/20 rounded-xl flex items-center justify-center text-blue-600">
                     <FaGamepad />
                   </div>
                   <div>
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
                       Pop Quiz Challenge
                     </p>
                     <p className="text-sm font-black text-slate-800 dark:text-white">
@@ -127,43 +152,60 @@ const NotFoundPage = () => {
                     </p>
                   </div>
                 </div>
-                <span className="text-xs font-black bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full uppercase tracking-tighter">
-                  CBT Mode
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-black bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 px-3 py-1 rounded-full uppercase tracking-tighter">
+                    CBT Mode
+                  </span>
+                  {isAnswered && <FeedbackBadge result={result} />}
+                </div>
               </div>
 
               {/* Question Context */}
-              <p className="text-base font-bold text-slate-800 dark:text-slate-200 mb-6 leading-relaxed">
+              <div className="text-lg font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-5">
                 {sampleQuestion.q}
-              </p>
+              </div>
 
-              {/* Multiple Choice Blocks */}
+              {/* Answer area (Matching TestModeScreen objective UI */}
               <div className="space-y-3">
                 {sampleQuestion.options.map((option, idx) => {
-                  let btnStyle =
-                    "border-slate-100 dark:border-gray-800 bg-slate-50 dark:bg-gray-800/40 hover:bg-blue-50 dark:hover:bg-blue-900/10";
-                  if (selectedAnswer !== null) {
-                    if (idx === sampleQuestion.correct) {
-                      btnStyle =
-                        "border-green-500 bg-green-50 dark:bg-green-900/20 text-green-600";
-                    } else if (selectedAnswer === idx) {
-                      btnStyle =
-                        "border-red-500 bg-red-50 dark:bg-red-900/20 text-red-600";
-                    }
-                  }
+                  const label = String.fromCharCode(65 + idx);
+                  const isSelected = selectedAnswer === option;
+                  const isRight = isAnswered && idx === sampleQuestion.correct;
+                  const isWrong = isAnswered && isSelected && idx !== sampleQuestion.correct;
 
                   return (
                     <button
                       key={idx}
-                      disabled={selectedAnswer !== null}
-                      onClick={() => handleAnswerClick(idx)}
-                      className={`w-full text-left px-5 py-3.5 rounded-2xl font-bold text-sm border transition-all flex items-center justify-between ${btnStyle}`}
+                      disabled={isAnswered}
+                      onClick={() => handleAnswerClick(option, idx)}
+                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${
+                        isRight
+                          ? "border-green-500 bg-green-50 dark:bg-green-900/20"
+                          : isWrong
+                            ? "border-red-400 bg-red-50 dark:bg-red-900/20"
+                            : isSelected
+                              ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
+                              : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
+                      }`}
                     >
-                      <span>{option}</span>
-                      {selectedAnswer === idx &&
-                        idx === sampleQuestion.correct && (
-                          <span className="text-xs">⚡️</span>
-                        )}
+                      <div
+                        className={`size-10 shrink-0 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                          isRight
+                            ? "bg-green-500 text-white"
+                            : isWrong
+                              ? "bg-red-400 text-white"
+                              : isSelected
+                                ? "bg-blue-600 text-white"
+                                : "bg-gray-100 dark:bg-slate-700 text-slate-500"
+                        }`}
+                      >
+                        {label}
+                      </div>
+                      <div
+                        className={`min-w-0 flex-1 text-left font-semibold ${isRight ? "text-green-700 dark:text-green-400" : isWrong ? "text-red-600 dark:text-red-400" : isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
+                      >
+                        {option}
+                      </div>
                     </button>
                   );
                 })}
@@ -172,13 +214,18 @@ const NotFoundPage = () => {
               {/* Score Answer Alert Banner */}
               {quizScore && (
                 <div
-                  className={`mt-6 p-4 rounded-xl text-center text-sm font-black border ${
-                    selectedAnswer === sampleQuestion.correct
-                      ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/10 dark:text-green-400 dark:border-green-900/30"
-                      : "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/10 dark:text-red-400 dark:border-red-900/30"
+                  className={`mt-4 p-4 rounded-2xl border-2 ${
+                    result === "correct"
+                      ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20"
+                      : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"
                   }`}
                 >
-                  {quizScore}
+                  <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+                    {result === "correct" ? "Great Job!" : "Not Quite!"}
+                  </p>
+                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+                    {quizScore}
+                  </p>
                 </div>
               )}
             </div>
@@ -187,7 +234,7 @@ const NotFoundPage = () => {
       </section>
 
       {/* MINIMAL FOOTER */}
-      <footer className="py-8 border-t border-slate-100 dark:border-gray-800 text-center">
+      <footer className="py-8 border-t border-gray-100 dark:border-gray-800 text-center">
         <p className="text-xs text-slate-400 font-medium">
           © {new Date().getFullYear()} QuizBolt. Lost, but still learning. Built
           with ❤️ for Nigerian university students.
