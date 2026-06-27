@@ -427,7 +427,7 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
                     {chartTab === "score" ? (
                       <LineChart
                         data={chartData}
-                        margin={{ top: 8, right: 12, left: -10, bottom: 0 }}
+                        margin={{ top: 8, right: 12, left: -20, bottom: 0 }}
                       >
                         <CartesianGrid
                           strokeDasharray="3 3"
