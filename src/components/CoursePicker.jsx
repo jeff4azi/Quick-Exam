@@ -8,7 +8,8 @@ const CoursePicker = ({
   onBack, 
   title = "Study", 
   subtitle = "Pick a course to study",
-  mode = "flashcard"
+  mode = "flashcard",
+  rightButton
 }) => {
   const [query, setQuery] = useState("");
 
@@ -47,17 +48,20 @@ const CoursePicker = ({
       {/* Header */}
       <div className="sticky top-0 z-10 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-6 pb-4 border-b border-gray-100 dark:border-slate-800">
         <div className="max-w-2xl mx-auto">
-          <div className="flex items-center gap-3 mb-4">
-            <button
-              onClick={onBack}
-              className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm active:scale-90 transition-all"
-            >
-              <FiChevronLeft className="size-5 text-slate-600 dark:text-slate-300" />
-            </button>
-            <div>
-              <h1 className="text-xl font-black text-slate-900 dark:text-white">{title}</h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>
+          <div className="flex items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-3">
+              <button
+                onClick={onBack}
+                className="p-2.5 rounded-2xl bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 shadow-sm active:scale-90 transition-all"
+              >
+                <FiChevronLeft className="size-5 text-slate-600 dark:text-slate-300" />
+              </button>
+              <div>
+                <h1 className="text-xl font-black text-slate-900 dark:text-white">{title}</h1>
+                <p className="text-xs text-slate-500 dark:text-slate-400">{subtitle}</p>
+              </div>
             </div>
+            {rightButton}
           </div>
 
           {/* Search */}

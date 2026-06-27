@@ -15,7 +15,7 @@ import {
   FiX,
   FiInfo,
 } from "react-icons/fi";
-import { FaCrown } from "react-icons/fa";
+import { FaCrown, FaTrophy } from "react-icons/fa";
 import { withTimeout } from "../utils/withTimeout";
 
 const FREE_QUESTION_LIMIT = 10;
@@ -641,6 +641,17 @@ const TestModeScreen = ({
         title="Test Mode"
         subtitle="Pick a course to test yourself"
         mode="test"
+        rightButton={
+          <button
+            type="button"
+            onClick={() => navigate("/test-leaderboard")}
+            className="p-2.5 rounded-2xl bg-amber-50 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 border border-amber-200 dark:border-amber-800/50 shadow-sm active:scale-90 transition-all"
+            aria-label="View Test Leaderboard"
+            title="View Test Leaderboard"
+          >
+            <FaTrophy className="size-5" />
+          </button>
+        }
       />
     );
   }

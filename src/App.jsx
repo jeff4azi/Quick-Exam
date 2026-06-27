@@ -43,6 +43,7 @@ import MatchScreen from "./pages/MatchScreen";
 import MatchResultScreen from "./pages/MatchResultScreen";
 import TestModeScreen from "./pages/TestModeScreen";
 import TestResultScreen from "./pages/TestResultScreen";
+import TestLeaderboardScreen from "./pages/TestLeaderboardScreen";
 import ReferralDashboard from "./pages/ReferralDashboard";
 import RouteStateFallback from "./components/RouteStateFallback";
 import LoadingScreen from "./components/LoadingScreen";
@@ -1001,6 +1002,20 @@ function App() {
                     <TestModeScreen
                       courses={availableCourses}
                       coursesLoading={coursesLoading}
+                      isPremium={isPremium}
+                      userProfile={userProfile}
+                    />,
+                  )}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/test-leaderboard"
+              element={
+                <ProtectedRoute>
+                  {withDesktop(
+                    <TestLeaderboardScreen
+                      courses={availableCourses}
                       isPremium={isPremium}
                       userProfile={userProfile}
                     />,
