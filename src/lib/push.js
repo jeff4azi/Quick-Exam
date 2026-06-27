@@ -1,5 +1,24 @@
 import { supabase } from '../supabaseClient'
 
+const NOTIFICATIONS_ENABLED_KEY = 'quizbolt_notifications_enabled'
+
+export function getCachedNotificationsEnabled() {
+  try {
+    const cached = localStorage.getItem(NOTIFICATIONS_ENABLED_KEY)
+    return cached === 'true'
+  } catch {
+    return false
+  }
+}
+
+export function setCachedNotificationsEnabled(enabled) {
+  try {
+    localStorage.setItem(NOTIFICATIONS_ENABLED_KEY, String(enabled))
+  } catch {
+    // ignore
+  }
+}
+
 function urlBase64ToUint8Array(base64String) {
   const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
   const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
@@ -43,6 +62,8 @@ export async function subscribeToPush() {
   )
 
   if (error) throw error
+  
+  setCachedNotificationsEnabled(true)
   return subscription
 }
 
@@ -56,6 +77,7 @@ export async function isSubscribedToPush() {
     const subscription = await registration.pushManager.getSubscription()
     
     if (!subscription) {
+      setCachedNotificationsEnabled(false)
       return false
     }
 
@@ -64,6 +86,7 @@ export async function isSubscribedToPush() {
     if (!userData.user) {
       // No user logged in, unsubscribe from browser
       await subscription.unsubscribe()
+      setCachedNotificationsEnabled(false)
       return false
     }
 
@@ -78,12 +101,14 @@ export async function isSubscribedToPush() {
     if (!data) {
       // Subscription exists in browser but not in Supabase — clean it up
       await subscription.unsubscribe()
+      setCachedNotificationsEnabled(false)
       return false
     }
 
+    setCachedNotificationsEnabled(true)
     return true
   } catch {
-    return false
+    return getCachedNotificationsEnabled()
   }
 }
 
@@ -107,7 +132,10 @@ export async function unsubscribeFromPush() {
       // Unsubscribe from push service
       await subscription.unsubscribe()
     }
+    
+    setCachedNotificationsEnabled(false)
   } catch (err) {
     console.error('Unsubscribe failed:', err)
+    setCachedNotificationsEnabled(false)
   }
 }

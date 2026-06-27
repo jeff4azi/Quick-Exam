@@ -28,6 +28,7 @@ import {
   subscribeToPush,
   isSubscribedToPush,
   unsubscribeFromPush,
+  getCachedNotificationsEnabled,
 } from "../lib/push";
 
 const Toggle = ({ checked, onClick, disabled }) => (
@@ -138,7 +139,7 @@ const SettingsScreen = ({
   const [isPremiumOverlayOpen, setPremiumOverlayOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [pushNotificationsEnabled, setPushNotificationsEnabled] =
-    useState(false);
+    useState(() => getCachedNotificationsEnabled());
   const [isUpdatingPush, setIsUpdatingPush] = useState(false);
   const [highlightNotifications, setHighlightNotifications] = useState(false);
   const notificationsSectionRef = useRef(null);

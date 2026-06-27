@@ -570,6 +570,7 @@ function App() {
       try {
         // Save certain items temporarily
         const visitedStatus = localStorage.getItem("visited");
+        const notificationsEnabled = localStorage.getItem("quizbolt_notifications_enabled");
 
         // Clear all localStorage
         localStorage.clear();
@@ -577,6 +578,9 @@ function App() {
         // Restore saved items
         if (visitedStatus) {
           localStorage.setItem("visited", visitedStatus);
+        }
+        if (notificationsEnabled) {
+          localStorage.setItem("quizbolt_notifications_enabled", notificationsEnabled);
         }
       } catch (err) {
         console.error("Failed to clear localStorage on logout:", err);

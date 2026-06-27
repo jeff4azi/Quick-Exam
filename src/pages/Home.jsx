@@ -41,7 +41,7 @@ import {
   buildLeaderboardEntries,
   compareLeaderboardEntries,
 } from "../utils/leaderboardRanking";
-import { isSubscribedToPush } from "../lib/push";
+import { isSubscribedToPush, getCachedNotificationsEnabled } from "../lib/push";
 
 const getCurrentDayStartIso = () => {
   const now = new Date();
@@ -221,7 +221,7 @@ const Home = ({
 
   // Notification reminder card state
   const [showNotificationCard, setShowNotificationCard] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(false);
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() => getCachedNotificationsEnabled());
 
   useEffect(() => {
     if (isInStandaloneMode) return;
