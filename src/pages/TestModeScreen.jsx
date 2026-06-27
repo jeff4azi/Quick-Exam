@@ -150,17 +150,19 @@ const QuestionCountPicker = ({
   course,
   selectedQuestionType,
   onSelectQuestionType,
+  selectedDifficulty,
+  onSelectDifficulty,
 }) => {
   const getAvailableQuestions = () => {
     switch (selectedQuestionType) {
       case "all":
         return (
-          (course?.questionCount || 0) +
+          (selectedDifficulty ? (course?.difficultyCounts?.[selectedDifficulty] || 0) : (course?.questionCount || 0)) +
           (course?.theoryQuestionCount || 0) +
           (course?.fibQuestionCount || 0)
         );
       case "objective":
-        return course?.questionCount || 0;
+        return selectedDifficulty ? (course?.difficultyCounts?.[selectedDifficulty] || 0) : (course?.questionCount || 0);
       case "theory":
         return course?.theoryQuestionCount || 0;
       case "fib":
@@ -169,6 +171,8 @@ const QuestionCountPicker = ({
         return course?.questionCount || 0;
     }
   };
+  
+  const hasDifficultyQuestions = course?.difficultyCounts && Object.values(course.difficultyCounts).reduce((a, b) => a + b, 0) > 0;
 
   const availableQuestions = getAvailableQuestions();
   const availableQuestionCounts = QUESTION_COUNTS.filter(
@@ -220,6 +224,9 @@ const QuestionCountPicker = ({
                     onClick={() => {
                       if (isLocked) return;
                       onSelectQuestionType(key);
+                      if (key !== "all" && key !== "objective") {
+                        onSelectDifficulty(null);
+                      }
                     }}
                     className={`relative flex-1 px-3 py-2 rounded-xl text-xs font-black transition-all ${
                       selectedQuestionType === key
@@ -238,6 +245,44 @@ const QuestionCountPicker = ({
               })}
             </div>
           </div>
+
+          {/* Difficulty Selector */}
+          {hasDifficultyQuestions && (selectedQuestionType === "all" || selectedQuestionType === "objective") && (
+            <div className="space-y-2">
+              <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">
+                Difficulty
+              </p>
+              <div className="inline-flex bg-gray-200 dark:bg-slate-700 rounded-2xl p-1 gap-1 w-full">
+                {[
+                  { key: null, label: "All" },
+                  { key: "Easy", label: "Easy" },
+                  { key: "Medium", label: "Medium" },
+                  { key: "Hard", label: "Hard" },
+                ].map(({ key, label }) => (
+                  <button
+                    key={key ?? "all"}
+                    type="button"
+                    onClick={() => onSelectDifficulty(key)}
+                    className={`flex-1 px-3 py-2 rounded-xl text-xs font-black transition-all ${
+                      selectedDifficulty === key
+                        ? "bg-blue-600 text-white shadow-md"
+                        : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
+                    }`}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+              <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 px-2">
+                {(() => {
+                  const count = selectedDifficulty
+                    ? course.difficultyCounts[selectedDifficulty] || 0
+                    : course.questionCount || 0;
+                  return `${count} objective question${count !== 1 ? "s" : ""} available`;
+                })()}
+              </p>
+            </div>
+          )}
 
           {/* Question Count Selector */}
           <div className="space-y-2">
@@ -302,6 +347,7 @@ const TestModeScreen = ({
   const [selectedCourse, setSelectedCourse] = useState(null);
   const [questionCount, setQuestionCount] = useState(null); // eslint-disable-line no-unused-vars
   const [questionType, setQuestionType] = useState("all"); // "all" | "objective" | "theory" | "fib"
+  const [selectedDifficulty, setSelectedDifficulty] = useState(null); // null (all) | "Easy" | "Medium" | "Hard"
 
   const [questions, setQuestions] = useState([]);
   const [loadingQ, setLoadingQ] = useState(false);
@@ -334,19 +380,30 @@ const TestModeScreen = ({
   }, []);
 
   // ── fetch questions ──
-  const fetchQuestions = useCallback(async (course, count, type) => {
+  const fetchQuestions = useCallback(async (course, count, type, difficulty) => {
     setLoadingQ(true);
     setErrorQ(null);
     try {
       const base = `${API_BASE_URL}${course.questionsEndpoint || `/courses/${course.id}/questions`}`;
       let questionsData = [];
+      
+      // Build query params helper
+      const buildUrl = (baseUrl, params = {}) => {
+        const url = new URL(baseUrl, window.location.origin);
+        Object.entries(params).forEach(([key, value]) => {
+          if (value !== undefined && value !== null) {
+            url.searchParams.append(key, value);
+          }
+        });
+        return url.toString();
+      };
 
       if (type === "all") {
-        // Fetch all types
+        // Fetch all types, only apply difficulty to objective
         const [objRes, thyRes, fibRes] = await Promise.all([
-          fetch(base),
-          fetch(`${base}?type=theory`),
-          fetch(`${base}?type=fib`),
+          fetch(buildUrl(base, { difficulty })),
+          fetch(buildUrl(base, { type: "theory" })),
+          fetch(buildUrl(base, { type: "fib" })),
         ]);
         const [objData, thyData, fibData] = await Promise.all([
           objRes.json(),
@@ -364,13 +421,13 @@ const TestModeScreen = ({
             : [];
         questionsData = [...objective, ...theory, ...fib];
       } else if (type === "objective") {
-        const res = await fetch(base);
+        const res = await fetch(buildUrl(base, { difficulty }));
         if (res.ok) {
           const data = await res.json();
           questionsData = Array.isArray(data) ? data : [];
         }
       } else if (type === "theory") {
-        const res = await fetch(`${base}?type=theory`);
+        const res = await fetch(buildUrl(base, { type: "theory" }));
         if (res.ok) {
           const data = await res.json();
           questionsData = Array.isArray(data)
@@ -378,7 +435,7 @@ const TestModeScreen = ({
             : [];
         }
       } else if (type === "fib") {
-        const res = await fetch(`${base}?type=fib`);
+        const res = await fetch(buildUrl(base, { type: "fib" }));
         if (res.ok) {
           const data = await res.json();
           questionsData = Array.isArray(data)
@@ -408,13 +465,14 @@ const TestModeScreen = ({
 
   const handleCourseSelect = (course) => {
     setSelectedCourse(course);
+    setSelectedDifficulty(null);
     setPhase("count");
   };
 
   const handleCountSelect = (count) => {
     setQuestionCount(count);
     setPhase("test");
-    fetchQuestions(selectedCourse, count, questionType);
+    fetchQuestions(selectedCourse, count, questionType, selectedDifficulty);
   };
 
   // ── answer submission for current question ──
@@ -545,6 +603,8 @@ const TestModeScreen = ({
         course={selectedCourse}
         selectedQuestionType={questionType}
         onSelectQuestionType={setQuestionType}
+        selectedDifficulty={selectedDifficulty}
+        onSelectDifficulty={setSelectedDifficulty}
       />
     );
   }
