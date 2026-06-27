@@ -37,8 +37,6 @@ const readCachedFavouriteIds = (userId) => {
 const ChooseCourseScreen = ({
   selectedQuestionCount,
   setSelectedQuestionCount,
-  selectedDifficulty,
-  setSelectedDifficulty,
   courses,
   selectedCourse,
   setSelectedCourse,
@@ -186,13 +184,7 @@ const ChooseCourseScreen = ({
       return count > 0 ? [...filtered, "All"] : filtered;
     }
     const options = [30, 50, 70, 100];
-    const hasDifficultyQuestions =
-      course?.difficultyCounts &&
-      Object.values(course.difficultyCounts).reduce((a, b) => a + b, 0) > 0;
-    const count =
-      hasDifficultyQuestions && selectedDifficulty
-        ? course?.difficultyCounts?.[selectedDifficulty] || 0
-        : course?.questionCount || 0;
+    const count = course?.questionCount || 0;
     const filtered = options.filter((opt) => count >= opt);
     return count > 0 ? [...filtered, "All"] : filtered;
   };
@@ -200,7 +192,6 @@ const ChooseCourseScreen = ({
   const handleSelectCourse = (course) => {
     setSelectedCourse(course);
     setSelectedQuestionCount(null);
-    setSelectedDifficulty(null);
     trackCourseSelected(course.id, course.name, questionType);
   };
 
@@ -266,7 +257,6 @@ const ChooseCourseScreen = ({
                     trackQuestionTypeSwitch(key);
                     setSelectedCourse(null);
                     setSelectedQuestionCount(null);
-                    setSelectedDifficulty(null);
                   }}
                   className={`relative px-5 py-2 rounded-xl text-xs font-black transition-all ${
                     questionType === key
@@ -465,7 +455,7 @@ const ChooseCourseScreen = ({
                           </button>
                         </div>
 
-                        {/* BOTTOM BLOCK: badge + difficulty pills (real or skeleton), anchored to card bottom */}
+                        {/* BOTTOM BLOCK: badge */}
                         <div className="mt-2 sm:mt-3">
                           <div
                             className={`inline-flex items-center gap-1 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[10px] font-bold ${
@@ -482,46 +472,6 @@ const ChooseCourseScreen = ({
                                 : course.questionCount) || 0}{" "}
                             Questions
                           </div>
-
-                          {questionType === "objective" &&
-                            (() => {
-                              const hasDifficulty =
-                                course.difficultyCounts &&
-                                Object.values(course.difficultyCounts).reduce(
-                                  (a, b) => a + b,
-                                  0,
-                                ) > 0;
-
-                              return (
-                                <div className="flex flex-wrap gap-1 mt-2">
-                                  {hasDifficulty
-                                    ? Object.entries(
-                                        course.difficultyCounts,
-                                      ).map(([diff, count]) => (
-                                        <span
-                                          key={diff}
-                                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${
-                                            isSelected
-                                              ? "bg-white/20 text-white"
-                                              : "bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-400"
-                                          }`}
-                                        >
-                                          {diff}: {count}
-                                        </span>
-                                      ))
-                                    : ["Easy", "Medium", "Hard"].map((diff) => (
-                                        <span
-                                          key={diff}
-                                          className={`text-[10px] font-semibold px-2 py-0.5 rounded-full w-12 h-[18px] animate-pulse ${
-                                            isSelected
-                                              ? "bg-white/10"
-                                              : "bg-slate-100 dark:bg-slate-700/60"
-                                          }`}
-                                        />
-                                      ))}
-                                </div>
-                              );
-                            })()}
                         </div>
                       </div>
                     );
@@ -556,57 +506,6 @@ const ChooseCourseScreen = ({
                 {selectedCourse.title}
               </p>
 
-              {/* DIFFICULTY — slim, secondary segmented control */}
-              {questionType === "objective" &&
-                selectedCourse.difficultyCounts &&
-                Object.values(selectedCourse.difficultyCounts).reduce(
-                  (a, b) => a + b,
-                  0,
-                ) > 0 && (
-                  <div className="mt-4 sm:mt-6">
-                    <div className="flex items-center justify-center gap-1.5 mb-2">
-                      <span className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.15em] text-slate-400 dark:text-slate-500">
-                        Difficulty
-                      </span>
-                    </div>
-                    <div className="inline-flex bg-gray-100 dark:bg-slate-700/60 rounded-2xl p-1 gap-1">
-                      {[
-                        { key: null, label: "All" },
-                        { key: "Easy", label: "Easy" },
-                        { key: "Medium", label: "Medium" },
-                        { key: "Hard", label: "Hard" },
-                      ].map(({ key, label }) => (
-                        <button
-                          key={key ?? "all"}
-                          onClick={() => {
-                            setSelectedDifficulty(key);
-                            setSelectedQuestionCount(null);
-                          }}
-                          className={`px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-xl text-[10px] sm:text-xs font-bold transition-all duration-200 ${
-                            selectedDifficulty === key
-                              ? "bg-white dark:bg-slate-600 text-blue-600 dark:text-blue-400 shadow-sm"
-                              : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                          }`}
-                        >
-                          {label}
-                        </button>
-                      ))}
-                    </div>
-
-                    {/* Live availability hint — replaces the per-pill counts */}
-                    <p className="text-[10px] sm:text-[11px] font-medium text-slate-400 dark:text-slate-500 mt-2">
-                      {(() => {
-                        const count = selectedDifficulty
-                          ? selectedCourse.difficultyCounts[
-                              selectedDifficulty
-                            ] || 0
-                          : selectedCourse.questionCount || 0;
-                        return `${count} question${count !== 1 ? "s" : ""} available`;
-                      })()}
-                    </p>
-                  </div>
-                )}
-
               {/* Divider so the count grid reads as the primary action */}
               <div className="mt-4 sm:mt-6 mb-4 sm:mb-5 h-px bg-gray-100 dark:bg-slate-700" />
 
@@ -619,7 +518,6 @@ const ChooseCourseScreen = ({
                 <div className="py-4 sm:py-6 text-center">
                   <p className="text-xs sm:text-sm font-semibold text-slate-400 dark:text-slate-500">
                     No questions available
-                    {selectedDifficulty ? ` for ${selectedDifficulty}` : ""}
                   </p>
                 </div>
               ) : (

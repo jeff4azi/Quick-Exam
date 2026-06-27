@@ -119,7 +119,6 @@ function App() {
   const [results, setResults] = useState({ correct: 0, wrong: 0, answered: 0 });
   const [lastTimeTaken, setLastTimeTaken] = useState(0);
   const [selectedQuestionCount, setSelectedQuestionCount] = useState(null);
-  const [selectedDifficulty, setSelectedDifficulty] = useState(null);
   const [questionsLoading, setQuestionsLoading] = useState(false);
   const [questionType, setQuestionTypeState] = useState("objective");
   const [questionsContext, setQuestionsContext] = useState(null);
@@ -507,9 +506,6 @@ function App() {
         } else if (requestQuestionType === "fib") {
           url.searchParams.set("type", "fib");
         }
-        if (selectedDifficulty && requestQuestionType === "objective") {
-          url.searchParams.set("difficulty", selectedDifficulty);
-        }
 
         const res = await fetch(url.toString());
         const data = await res.json();
@@ -551,7 +547,7 @@ function App() {
     };
 
     loadQuestionsForSelectedCourse();
-  }, [selectedCourse, selectedQuestionCount, questionType, selectedDifficulty]);
+  }, [selectedCourse, selectedQuestionCount, questionType]);
 
   // Bookmarks are now loaded from Supabase via getProfile below
 
@@ -696,8 +692,6 @@ function App() {
     toggleShowPagination: () => setShowPagination((prev) => !prev),
     selectedQuestionCount,
     setSelectedQuestionCount,
-    selectedDifficulty,
-    setSelectedDifficulty,
     userProfile,
     setUserProfile,
     loadingProfile: loading,
