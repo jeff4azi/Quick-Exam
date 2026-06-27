@@ -13,6 +13,7 @@ import {
   FiCheckCircle,
   FiXCircle,
   FiX,
+  FiInfo,
 } from "react-icons/fi";
 import { FaCrown } from "react-icons/fa";
 import { withTimeout } from "../utils/withTimeout";
@@ -363,6 +364,42 @@ const TestModeScreen = ({
   const isSubmittingRef = useRef(false);
   const [showPremiumGate, setShowPremiumGate] = useState(false);
   const [kbHeight, setKbHeight] = useState(0);
+  
+  // Hint state (no limits!)
+  const [showHint, setShowHint] = useState(false);
+  const [hintsUsed, setHintsUsed] = useState(new Set());
+  
+  // Viewport tier for dynamic option text sizes
+  const getViewportTier = () => {
+    if (typeof window === "undefined") return "mobile";
+    if (window.matchMedia("(min-width: 1024px)").matches) return "desktop";
+    if (window.matchMedia("(min-width: 640px)").matches) return "tablet";
+    return "mobile";
+  };
+  const [viewportTier, setViewportTier] = useState(getViewportTier);
+  
+  // Helper function to get plain text length of options
+  const getOptionPlainLength = (option) => {
+    const text = typeof option === "string" ? option : String(option ?? "");
+    return text
+      .replace(/\$[^$]*\$/g, " ")
+      .replace(/\s+/g, " ")
+      .trim().length;
+  };
+  
+  // Updated getOptionTextSizeClass that uses viewport tier
+  const getOptionTextSizeClass = (option) => {
+    const len = getOptionPlainLength(option);
+    const limits = {
+      mobile: { compact: 60, relaxed: 45 },
+      tablet: { compact: 100, relaxed: 72 },
+      desktop: { compact: 120, relaxed: 92 },
+    };
+    const { compact, relaxed } = limits[viewportTier] ?? limits.mobile;
+    if (len >= compact) return "text-xs leading-snug";
+    if (len >= relaxed) return "text-sm leading-snug";
+    return "";
+  };
 
   useEffect(() => {
     const vv = window.visualViewport;
@@ -378,6 +415,20 @@ const TestModeScreen = ({
       vv.removeEventListener("scroll", handler);
     };
   }, []);
+
+  // Update viewport tier on resize
+  useEffect(() => {
+    const desktopQuery = window.matchMedia("(min-width: 640px), (min-width: 1024px)");
+    const handleChange = () => setViewportTier(getViewportTier());
+    setViewportTier(getViewportTier());
+    desktopQuery.addEventListener("change", handleChange);
+    return () => desktopQuery.removeEventListener("change", handleChange);
+  }, []);
+
+  // Reset showHint when moving to a new question
+  useEffect(() => {
+    setShowHint(false);
+  }, [currentIndex]);
 
   // ── fetch questions ──
   const fetchQuestions = useCallback(async (course, count, type, difficulty) => {
@@ -507,6 +558,8 @@ const TestModeScreen = ({
   }, [currentIndex]);
 
   const currentQuestion = questions[currentIndex];
+  const currentQuestionHintRevealed = hintsUsed.has(currentQuestion?.id);
+  const hintsRemaining = Infinity;
   const isAnswered = answered[currentIndex];
   const totalQuestions = questions.length;
   const progress = totalQuestions
@@ -669,21 +722,6 @@ const TestModeScreen = ({
         ? typeof currentInput === "string" && currentInput.trim().length > 0
         : fibBlanks.some((b) => (b || "").trim().length > 0);
 
-  const getOptionPlainLength = (option) => {
-    const text = typeof option === "string" ? option : String(option ?? "");
-    return text
-      .replace(/\$[^$]*\$/g, " ")
-      .replace(/\s+/g, " ")
-      .trim().length;
-  };
-
-  const getOptionTextSizeClass = (option) => {
-    const len = getOptionPlainLength(option);
-    if (len >= 120) return "text-xs leading-snug";
-    if (len >= 72) return "text-sm leading-snug";
-    return "";
-  };
-
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col transition-colors duration-500">
       {/* Premium gate overlay */}
@@ -734,154 +772,210 @@ const TestModeScreen = ({
                 {selectedCourse?.name}
                 {isThyQ ? " · Theory" : isFibQ ? " · FIB" : ""}
               </div>
-              {isAnswered && <FeedbackBadge result={result} />}
+              <div className="flex items-center gap-2">
+                {/* Hint button */}
+                {currentQuestion?.hint && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (showHint) {
+                        setShowHint(false);
+                        return;
+                      }
+                      if (currentQuestionHintRevealed) {
+                        setShowHint(true);
+                        return;
+                      }
+                      setHintsUsed(
+                        (prev) => new Set([...prev, currentQuestion.id]),
+                      );
+                      setShowHint(true);
+                    }}
+                    className={`relative p-2 rounded-xl transition-all ${
+                      showHint
+                        ? "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
+                        : "bg-gray-50 dark:bg-slate-700 text-gray-400"
+                    }`}
+                    aria-label={showHint ? "Hide hint" : "Show hint"}
+                    title={
+                      showHint ? "Hide hint" : "Show hint (unlimited hints available)"
+                    }
+                  >
+                    <FiInfo className="size-5" />
+                  </button>
+                )}
+                {isAnswered && <FeedbackBadge result={result} />}
+              </div>
             </div>
 
-            {/* Question text */}
-            <div className="lg:text-xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed mb-5">
-              {isFibQ ? (
-                <span className="leading-[2.4]">
-                  {fibParts.map((part, i, arr) => (
-                    <span key={i}>
+            <div className="space-y-4">
+              {/* Hint panel — only for questions that have a hint */}
+              {currentQuestion?.hint && showHint && (
+                <div className="flex gap-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50 rounded-2xl p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                  <FiInfo
+                    className="shrink-0 mt-0.5 text-amber-500 dark:text-amber-400"
+                    size={16}
+                  />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-amber-800 dark:text-amber-300 leading-relaxed">
                       <RenderMathText
-                        text={part}
+                        text={currentQuestion.hint}
                         courseId={selectedCourse?.id}
                       />
-                      {i < arr.length - 1 && (
-                        <input
-                          type="text"
-                          value={fibBlanks[i] ?? ""}
-                          disabled={isAnswered}
-                          size={Math.max(6, (fibBlanks[i] ?? "").length + 2)}
-                          onChange={(e) => {
-                            const val = e.target.value;
-                            setCurrentInput((prev) => {
-                              const cur = Array.isArray(prev) ? [...prev] : [];
-                              cur[i] = val;
-                              return cur;
-                            });
-                          }}
-                          className="inline mx-1 bg-transparent border-b-2 border-blue-500 dark:border-blue-400 text-blue-700 dark:text-blue-300 font-bold text-base focus:outline-none focus:border-blue-700 transition-colors text-center disabled:opacity-70"
-                        />
-                      )}
-                    </span>
-                  ))}
-                </span>
-              ) : (
-                <RenderMathText
-                  text={currentQuestion?.question ?? ""}
-                  courseId={selectedCourse?.id}
-                />
+                    </p>
+                    <p className="text-[10px] font-bold text-amber-500 dark:text-amber-600 mt-1.5 uppercase tracking-wider">
+                      Unlimited hints
+                    </p>
+                  </div>
+                </div>
               )}
-            </div>
 
-            {/* Answer area */}
-            <div className="space-y-3">
-              {isThyQ ? (
-                <textarea
-                  value={typeof currentInput === "string" ? currentInput : ""}
-                  disabled={isAnswered}
-                  onChange={(e) => setCurrentInput(e.target.value)}
-                  placeholder="Type your answer here..."
-                  rows={5}
-                  className="w-full rounded-2xl border-2 border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-medium p-4 text-sm resize-none focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-70"
-                />
-              ) : isObjQ ? (
-                (currentQuestion?.options ?? []).map((option, idx) => {
-                  const label = String.fromCharCode(65 + idx);
-                  const optionSizeClass = getOptionTextSizeClass(option);
-                  const isSelected =
-                    currentInput === option ||
-                    (isAnswered && answers[currentIndex] === option);
-                  const isRight =
-                    isAnswered && option === currentQuestion.correct;
-                  const isWrong =
-                    isAnswered &&
-                    isSelected &&
-                    option !== currentQuestion.correct;
-
-                  return (
-                    <button
-                      key={idx}
-                      disabled={isAnswered}
-                      onClick={() => !isAnswered && setCurrentInput(option)}
-                      className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${
-                        isRight
-                          ? "border-green-500 bg-green-50 dark:bg-green-900/20"
-                          : isWrong
-                            ? "border-red-400 bg-red-50 dark:bg-red-900/20"
-                            : isSelected
-                              ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
-                              : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                      }`}
-                    >
-                      <div
-                        className={`size-10 shrink-0 rounded-2xl flex items-center justify-center font-black transition-colors ${
-                          isRight
-                            ? "bg-green-500 text-white"
-                            : isWrong
-                              ? "bg-red-400 text-white"
-                              : isSelected
-                                ? "bg-blue-600 text-white"
-                                : "bg-gray-100 dark:bg-slate-700 text-slate-500"
-                        }`}
-                      >
-                        {label}
-                      </div>
-                      <div
-                        className={`min-w-0 flex-1 text-left font-semibold ${optionSizeClass} ${isRight ? "text-green-700 dark:text-green-400" : isWrong ? "text-red-600 dark:text-red-400" : isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
-                      >
+              {/* Question text */}
+              <div className="lg:text-xl font-bold text-slate-800 dark:text-slate-100 leading-relaxed">
+                {isFibQ ? (
+                  <span className="leading-[2.4]">
+                    {fibParts.map((part, i, arr) => (
+                      <span key={i}>
                         <RenderMathText
-                          text={option}
+                          text={part}
                           courseId={selectedCourse?.id}
                         />
-                      </div>
-                    </button>
-                  );
-                })
-              ) : null}
-            </div>
-
-            {/* Theory/FIB correct answer reveal */}
-            {isAnswered && (isThyQ || isFibQ) && (
-              <div
-                className={`mt-4 p-4 rounded-2xl border-2 ${result === "correct" ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20" : result === "partial" ? "border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20" : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"}`}
-              >
-                <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
-                  Correct Answer
-                </p>
-                {isThyQ ? (
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
-                    {currentQuestion.model_answer ||
-                      `Key points: ${parseKeywords(currentQuestion.keywords)
-                        .map((group) =>
-                          Array.isArray(group) ? group[0] : group,
-                        )
-                        .join(", ")}`}
-                  </p>
+                        {i < arr.length - 1 && (
+                          <input
+                            type="text"
+                            value={fibBlanks[i] ?? ""}
+                            disabled={isAnswered}
+                            size={Math.max(6, (fibBlanks[i] ?? "").length + 2)}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              setCurrentInput((prev) => {
+                                const cur = Array.isArray(prev) ? [...prev] : [];
+                                cur[i] = val;
+                                return cur;
+                              });
+                            }}
+                            className="inline mx-1 bg-transparent border-b-2 border-blue-500 dark:border-blue-400 text-blue-700 dark:text-blue-300 font-bold text-base focus:outline-none focus:border-blue-700 transition-colors text-center disabled:opacity-70"
+                          />
+                        )}
+                      </span>
+                    ))}
+                  </span>
                 ) : (
-                  <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
-                    {(currentQuestion.answers || [])
-                      .map((g) => (Array.isArray(g) ? g[0] : g))
-                      .join(" / ")}
-                  </p>
-                )}
-              </div>
-            )}
-            {/* Reason for objective questions (when incorrect) */}
-            {isAnswered && isObjQ && result !== "correct" && currentQuestion.reason && (
-              <div className="mt-4 p-4 rounded-2xl border-2 border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20">
-                <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
-                  Reason
-                </p>
-                <div className="text-sm text-slate-700 dark:text-slate-200">
                   <RenderMathText
-                    text={currentQuestion.reason}
+                    text={currentQuestion?.question ?? ""}
                     courseId={selectedCourse?.id}
                   />
-                </div>
+                )}
               </div>
-            )}
+
+              {/* Answer area */}
+              <div className="space-y-3">
+                {isThyQ ? (
+                  <textarea
+                    value={typeof currentInput === "string" ? currentInput : ""}
+                    disabled={isAnswered}
+                    onChange={(e) => setCurrentInput(e.target.value)}
+                    placeholder="Type your answer here..."
+                    rows={5}
+                    className="w-full rounded-2xl border-2 border-gray-100 dark:border-slate-700 bg-gray-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-medium p-4 text-sm resize-none focus:outline-none focus:border-blue-500 transition-colors disabled:opacity-70"
+                  />
+                ) : isObjQ ? (
+                  (currentQuestion?.options ?? []).map((option, idx) => {
+                    const label = String.fromCharCode(65 + idx);
+                    const optionSizeClass = getOptionTextSizeClass(option);
+                    const isSelected =
+                      currentInput === option ||
+                      (isAnswered && answers[currentIndex] === option);
+                    const isRight =
+                      isAnswered && option === currentQuestion.correct;
+                    const isWrong =
+                      isAnswered &&
+                      isSelected &&
+                      option !== currentQuestion.correct;
+
+                    return (
+                      <button
+                        key={idx}
+                        disabled={isAnswered}
+                        onClick={() => !isAnswered && setCurrentInput(option)}
+                        className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${
+                          isRight
+                            ? "border-green-500 bg-green-50 dark:bg-green-900/20"
+                            : isWrong
+                              ? "border-red-400 bg-red-50 dark:bg-red-900/20"
+                              : isSelected
+                                ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
+                                : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
+                        }`}
+                      >
+                        <div
+                          className={`size-10 shrink-0 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                            isRight
+                              ? "bg-green-500 text-white"
+                              : isWrong
+                                ? "bg-red-400 text-white"
+                                : isSelected
+                                  ? "bg-blue-600 text-white"
+                                  : "bg-gray-100 dark:bg-slate-700 text-slate-500"
+                          }`}
+                        >
+                          {label}
+                        </div>
+                        <div
+                          className={`min-w-0 flex-1 text-left font-semibold ${optionSizeClass} ${isRight ? "text-green-700 dark:text-green-400" : isWrong ? "text-red-600 dark:text-red-400" : isSelected ? "text-blue-700 dark:text-blue-400" : "text-slate-600 dark:text-slate-300"}`}
+                        >
+                          <RenderMathText
+                            text={option}
+                            courseId={selectedCourse?.id}
+                          />
+                        </div>
+                      </button>
+                    );
+                  })
+                ) : null}
+              </div>
+
+              {/* Theory/FIB correct answer reveal */}
+              {isAnswered && (isThyQ || isFibQ) && (
+                <div
+                  className={`p-4 rounded-2xl border-2 ${result === "correct" ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20" : result === "partial" ? "border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20" : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"}`}
+                >
+                  <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+                    Correct Answer
+                  </p>
+                  {isThyQ ? (
+                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
+                      {currentQuestion.model_answer ||
+                        `Key points: ${parseKeywords(currentQuestion.keywords)
+                          .map((group) =>
+                            Array.isArray(group) ? group[0] : group,
+                          )
+                          .join(", ")}`}
+                    </p>
+                  ) : (
+                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-200 mb-2">
+                      {(currentQuestion.answers || [])
+                        .map((g) => (Array.isArray(g) ? g[0] : g))
+                        .join(" / ")}
+                    </p>
+                  )}
+                </div>
+              )}
+              {/* Reason for objective questions (when incorrect) */}
+              {isAnswered && isObjQ && result !== "correct" && currentQuestion.reason && (
+                <div className="p-4 rounded-2xl border-2 border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20">
+                  <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+                    Reason
+                  </p>
+                  <div className="text-sm text-slate-700 dark:text-slate-200">
+                    <RenderMathText
+                      text={currentQuestion.reason}
+                      courseId={selectedCourse?.id}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
