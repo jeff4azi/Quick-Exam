@@ -46,7 +46,7 @@ const CoursePicker = ({
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-6 pb-4 border-b border-gray-100 dark:border-slate-800">
+      <div className="sticky top-0 z-10 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-6 pt-6 pb-4 border-b border-gray-100 dark:border-slate-800">
         <div className="max-w-2xl mx-auto">
           <div className="flex items-center justify-between gap-3 mb-4">
             <div className="flex items-center gap-3">
@@ -79,7 +79,7 @@ const CoursePicker = ({
       </div>
 
       {/* Course list */}
-      <div className="flex-1 px-5 py-4 overflow-y-auto">
+      <div className="flex-1 px-6 py-4 overflow-y-auto">
         <div className="max-w-2xl mx-auto space-y-3">
           {loading ? (
             [...Array(6)].map((_, i) => (
