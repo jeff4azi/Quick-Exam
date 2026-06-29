@@ -294,7 +294,7 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
             : "bg-transparent"
         }`}
       >
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
           <h1 className="text-xl font-black tracking-tight">Activity Log</h1>
           {totalExams > 0 && (
             <button

@@ -147,7 +147,7 @@ const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
             : "bg-transparent"
         }`}
       >
-        <div className="max-w-2xl mx-auto flex items-center justify-between">
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <h1 className="text-xl font-black tracking-tight">Saved Items</h1>
           </div>

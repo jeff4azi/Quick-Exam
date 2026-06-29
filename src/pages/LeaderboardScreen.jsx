@@ -386,7 +386,7 @@ const LeaderboardScreen = ({
     <div className="min-h-screen bg-[#F8FAFC] dark:bg-[#0F172A] text-slate-900 dark:text-slate-100 transition-colors duration-500">
       {/* Header */}
       <header className="sticky top-0 z-50 px-6 py-4 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-xl shadow-slate-200/50 dark:shadow-none border-b border-slate-100 dark:border-slate-800">
-        <div className="max-w-2xl mx-auto flex items-center justify-between gap-3">
+        <div className="max-w-5xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-4">
             <div>
               <h1 className="text-xl font-black tracking-tight flex items-center gap-2">
@@ -409,8 +409,8 @@ const LeaderboardScreen = ({
       <main className="px-6 lg:px-10 pt-4 pb-32 flex-1 flex flex-col overflow-y-auto desktop-content-col">
         {/* Exam type toggle */}
         <section className="mb-4">
-          <div className="flex justify-between items-center gap-5">
-            <div className="flex min-w-0 max-w-xl flex-1 bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
+          <div className="flex justify-between items-center gap-5 max-w-5xl mx-auto px-2">
+            <div className="flex min-w-0 max-w-2xl flex-1 bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
               {[
                 { key: "OBJ", label: "Objective" },
                 { key: "FIB", label: "Fill in Blank" },
@@ -441,7 +441,7 @@ const LeaderboardScreen = ({
             </button>
           </div>
         </section>
-      
+
         {/* Content */}
         {loading ? (
           <SectionLoader text="Loading leaderboard..." />

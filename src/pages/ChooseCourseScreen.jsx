@@ -214,7 +214,7 @@ const ChooseCourseScreen = ({
             : "bg-transparent py-4"
         }`}
       >
-        <div className="max-w-2xl mx-auto flex items-center gap-4">
+        <div className="max-w-5xl mx-auto flex items-center gap-4">
           <div>
             <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">
               Select Course
