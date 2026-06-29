@@ -118,75 +118,79 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
             </span>
           </div>
 
-          {stats?.rank && (
-            <div className="shrink-0 flex flex-col items-center justify-center min-w-[72px]">
-              <div
-                className="relative flex flex-col items-center justify-center rounded-[1.4rem] px-4 py-3.5 overflow-hidden"
-                style={{
-                  background: isTop1
-                    ? "linear-gradient(145deg, #f59e0b, #d97706, #b45309)"
-                    : isTop2
-                      ? "linear-gradient(145deg, #94a3b8, #64748b, #475569)"
-                      : isTop3
-                        ? "linear-gradient(145deg, #fb923c, #ea580c, #c2410c)"
-                        : "linear-gradient(145deg, #3b82f6, #2563eb, #1d4ed8)",
-                  boxShadow: isTop1
-                    ? "0 0 20px rgba(245,158,11,0.55), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.25)"
-                    : isTop2
-                      ? "0 0 20px rgba(148,163,184,0.4), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)"
-                      : isTop3
-                        ? "0 0 20px rgba(251,146,60,0.5), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)"
-                        : "0 0 20px rgba(59,130,246,0.45), 0 4px 16px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.2)",
-                }}
-              >
-                {/* Shine overlay */}
-                <div
-                  className="absolute inset-0 rounded-[1.4rem] pointer-events-none"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%)",
-                  }}
-                />
+          {stats?.rank &&
+            (() => {
+              // Config map to cleanly separate styles without nested ternary hell
+              const rankConfigs = {
+                top1: {
+                  gradient: "from-amber-500 via-amber-600 to-amber-800",
+                  shadow:
+                    "shadow-[0_0_20px_rgba(245,158,11,0.45),_0_4px_12px_rgba(0,0,0,0.25),_inset_0_1px_0_rgba(255,255,255,0.3)]",
+                  crownColor: "text-amber-100",
+                },
+                top2: {
+                  gradient: "from-slate-400 via-slate-500 to-slate-600",
+                  shadow:
+                    "shadow-[0_0_20px_rgba(148,163,184,0.35),_0_4px_12px_rgba(0,0,0,0.25),_inset_0_1px_0_rgba(255,255,255,0.25)]",
+                  crownColor: "text-slate-100",
+                },
+                top3: {
+                  gradient: "from-orange-400 via-orange-500 to-orange-700",
+                  shadow:
+                    "shadow-[0_0_20px_rgba(251,146,60,0.4),_0_4px_12px_rgba(0,0,0,0.25),_inset_0_1px_0_rgba(255,255,255,0.25)]",
+                  crownColor: "text-orange-100",
+                },
+                default: {
+                  gradient: "from-blue-500 via-blue-600 to-blue-700",
+                  shadow:
+                    "shadow-[0_0_20px_rgba(59,130,246,0.35),_0_4px_12px_rgba(0,0,0,0.25),_inset_0_1px_0_rgba(255,255,255,0.25)]",
+                  crownColor: "",
+                },
+              };
 
-                {(isTop1 || isTop2 || isTop3) && (
-                  <FaCrown
-                    size={12}
-                    className="mb-1 relative z-10"
-                    style={{
-                      color: isTop1
-                        ? "#fef3c7"
-                        : isTop2
-                          ? "#f1f5f9"
-                          : "#ffedd5",
-                      filter: "drop-shadow(0 1px 2px rgba(0,0,0,0.3))",
-                    }}
-                  />
-                )}
+              const currentKey = isTop1
+                ? "top1"
+                : isTop2
+                  ? "top2"
+                  : isTop3
+                    ? "top3"
+                    : "default";
+              const config = rankConfigs[currentKey];
+              const hasCrown = isTop1 || isTop2 || isTop3;
 
-                <span
-                  className="relative z-10 font-black leading-none tracking-tight"
-                  style={{
-                    fontSize: stats.rank.length > 3 ? "1.2rem" : "1.6rem",
-                    color: "#ffffff",
-                    textShadow: "0 2px 6px rgba(0,0,0,0.35)",
-                    letterSpacing: "-0.02em",
-                  }}
-                >
-                  {stats.rank}
-                </span>
+              return (
+                <div className="shrink-0 flex items-center justify-center">
+                  <div
+                    className={`relative flex flex-col items-center justify-center size-20 rounded-2xl bg-gradient-to-br ${config.gradient} ${config.shadow} overflow-hidden transition-all duration-300`}
+                  >
+                    {/* Modern Glassy Shine Arc */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-white/5 to-transparent pointer-events-none" />
 
-                <span
-                  className="relative z-10 text-[9px] font-black uppercase tracking-[0.2em] mt-1"
-                  style={{
-                    color: "rgba(255,255,255,0.75)",
-                    letterSpacing: "0.18em",
-                  }}
-                >
-                  RANK
-                </span>
-              </div>
-            </div>
-          )}
+                    {/* Vertical Align Centered Flex Wrapper */}
+                    <div className="flex flex-col items-center justify-center relative z-10 select-none">
+                      {hasCrown && (
+                        <FaCrown
+                          size={13}
+                          className={`${config.crownColor} filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.25)] mb-0.5`}
+                        />
+                      )}
+
+                      <span
+                        className={`font-black text-white leading-none tracking-tight text-center drop-shadow-[0_2px_4px_rgba(0,0,0,0.3)] ${
+                          stats.rank.length > 3 ? "text-lg" : "text-2xl"
+                        }`}
+                      >
+                        {stats.rank}
+                      </span>
+
+                      <span className="text-[8px] font-black tracking-[0.18em] text-white/70 mt-1 uppercase">
+                        Rank
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              );
+            })()}
         </div>
 
         <div className="px-4 pb-10 space-y-3 max-h-[60vh] overflow-y-auto">
