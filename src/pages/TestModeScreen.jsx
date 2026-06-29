@@ -18,7 +18,7 @@ import {
 import { FaCrown, FaTrophy } from "react-icons/fa";
 import { withTimeout } from "../utils/withTimeout";
 
-const FREE_QUESTION_LIMIT = 10;
+const FREE_QUESTION_LIMIT = 11;
 
 // ─── Premium gate overlay ─────────────────────────────────────────────────────
 const PremiumGateOverlay = ({ onUpgrade, onQuit }) => (
