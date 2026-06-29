@@ -234,49 +234,49 @@ const ChooseCourseScreen = ({
             Request Course
           </button>
         </div>
-
-        {/* TABS */}
-        <div className="max-w-2xl mx-auto mt-3">
-          <div className="inline-flex bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
-            {[
-              { key: "objective", label: "Objective" },
-              { key: "fib", label: "Fill in Blank" },
-              { key: "theory", label: "Theory" },
-            ].map(({ key, label }) => {
-              const isLocked = key === "theory" && !isPremium;
-              return (
-                <button
-                  key={key}
-                  type="button"
-                  onClick={() => {
-                    if (isLocked) {
-                      setTheoryOverlayOpen(true);
-                      trackPremiumGateHit("theory_mode");
-                      return;
-                    }
-                    setQuestionType(key);
-                    trackQuestionTypeSwitch(key);
-                    setSelectedCourse(null);
-                    setSelectedQuestionCount(null);
-                  }}
-                  className={`relative px-5 py-2 rounded-xl text-xs font-black transition-all ${
-                    questionType === key
-                      ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
-                      : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
-                  }`}
-                >
-                  {label}
-                  {isLocked && (
-                    <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-100 dark:border-slate-800 shadow-sm flex items-center justify-center">
-                      <FaCrown className="text-[7px] text-white" />
-                    </div>
-                  )}
-                </button>
-              );
-            })}
+        <div className="max-w-2xl mx-auto lg:flex lg:justify-center">
+          {/* TABS */}
+          <div className="max-w-2xl mx-auto mt-3">
+            <div className="inline-flex bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
+              {[
+                { key: "objective", label: "Objective" },
+                { key: "fib", label: "Fill in Blank" },
+                { key: "theory", label: "Theory" },
+              ].map(({ key, label }) => {
+                const isLocked = key === "theory" && !isPremium;
+                return (
+                  <button
+                    key={key}
+                    type="button"
+                    onClick={() => {
+                      if (isLocked) {
+                        setTheoryOverlayOpen(true);
+                        trackPremiumGateHit("theory_mode");
+                        return;
+                      }
+                      setQuestionType(key);
+                      trackQuestionTypeSwitch(key);
+                      setSelectedCourse(null);
+                      setSelectedQuestionCount(null);
+                    }}
+                    className={`relative px-5 py-2 rounded-xl text-xs font-black transition-all ${
+                      questionType === key
+                        ? "bg-white dark:bg-slate-700 text-blue-600 dark:text-blue-400 shadow-sm"
+                        : "text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                    }`}
+                  >
+                    {label}
+                    {isLocked && (
+                      <div className="absolute -top-2 -right-2 bg-amber-400 dark:bg-yellow-500 rounded-full p-1 border-2 border-gray-100 dark:border-slate-800 shadow-sm flex items-center justify-center">
+                        <FaCrown className="text-[7px] text-white" />
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
-
         {/* SEARCH */}
         <div className="max-w-2xl mx-auto mt-3 relative">
           <FiSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 size-4 pointer-events-none" />
