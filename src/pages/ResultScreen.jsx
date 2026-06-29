@@ -254,7 +254,7 @@ const ResultScreen = ({
 
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-gray-950 p-6 lg:p-10 pb-16 lg:pb-32 flex flex-col lg:max-w-2xl mx-auto transition-colors duration-300">
-      <header className="flex justify-between items-center mb-8 lg:px-16">
+      <header className="flex justify-between items-center md:mb-8 lg:px-16">
         <div className="flex items-center gap-2 bg-white dark:bg-gray-900 py-2 px-4 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800">
           <span className="text-gray-400 dark:text-gray-500 text-xs uppercase tracking-wider font-bold">
             Time
@@ -287,7 +287,7 @@ const ResultScreen = ({
         </div>
       </header>
 
-      <main className="flex-grow flex flex-col items-center justify-center space-y-8 lg:px-16">
+      <main className="flex-grow flex flex-col items-center justify-center space-y-4 md:space-y-8 lg:px-16">
         <div
           onClick={() => navigate("/history")}
           className="relative flex items-center justify-center cursor-pointer group"
@@ -339,11 +339,11 @@ const ResultScreen = ({
                 : "Objectives"}
           </p>
           {hasRetaken && (
-            <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1 text-[10px] font-black uppercase tracking-[0.18em] text-purple-600 dark:bg-purple-900/30 dark:text-purple-300">
+            <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1 text-[8px] md:text-[10px] font-black uppercase tracking-[0.18em] text-purple-600 dark:bg-purple-900/30 dark:text-purple-300">
               <FiRefreshCw size={12} /> Retake Attempt
             </div>
           )}
-          <p className={`text-sm mt-2 font-bold ${feedback.color}`}>
+          <p className={`text-xs md:text-sm mt-2 font-bold ${feedback.color}`}>
             {feedback.msg}
           </p>
         </div>
@@ -442,7 +442,7 @@ const ResultScreen = ({
               </div>
             );
           })()}
-        <div className="bg-white dark:bg-gray-900 w-full p-6 grid grid-cols-2 gap-4 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800">
+        <div className="mt-2 bg-white dark:bg-gray-900 w-full p-4 md:p-6 grid grid-cols-2 gap-4 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800">
           <StatItem
             label="Answered"
             value={formatNum(answeredCount)}
@@ -470,7 +470,7 @@ const ResultScreen = ({
         </div>
       </main>
 
-      <footer className="mt-10 flex justify-evenly items-center bg-white dark:bg-gray-900 py-4 lg:mx-64 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm gap-2">
+      <footer className="mt-10 flex justify-evenly items-center bg-white dark:bg-gray-900 py-3.5 md:py-4 lg:mx-64 rounded-3xl border border-gray-100 dark:border-gray-800 shadow-sm gap-2">
         {/* Home Button - Most Important */}
         <ActionButton
           label="Home"
@@ -713,9 +713,9 @@ const ResultScreen = ({
 };
 
 const StatItem = ({ label, value, color, textColor }) => (
-  <div className="flex flex-col items-center justify-center gap-1.5 bg-gray-50 dark:bg-gray-800/60 rounded-2xl px-6 py-4 w-full">
+  <div className="flex flex-col items-center justify-center gap-1.5 bg-gray-50 dark:bg-gray-800/60 rounded-2xl px-6 py-3 md:py-4 w-full">
     <span
-      className={`text-3xl font-black leading-none tabular-nums ${textColor}`}
+      className={`text-2xl md:text-3xl font-black leading-none tabular-nums ${textColor}`}
     >
       {value}
     </span>
@@ -742,7 +742,7 @@ const ActionButton = ({
     className={`relative flex flex-col items-center gap-2 group ${disabled ? "cursor-not-allowed opacity-60" : ""}`}
   >
     <div
-      className={`p-3 rounded-2xl transition-all duration-200 ${!disabled && "group-hover:scale-110 group-active:scale-95"} ${color}`}
+      className={`p-2.5 md:p-3 rounded-2xl transition-all duration-200 ${!disabled && "group-hover:scale-110 group-active:scale-95"} ${color}`}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -750,7 +750,7 @@ const ActionButton = ({
         viewBox="0 0 24 24"
         strokeWidth="2"
         stroke="currentColor"
-        className="size-6"
+        className="size-5 md:size-6"
       >
         {icon}
       </svg>
@@ -760,7 +760,7 @@ const ActionButton = ({
         </div>
       )}
     </div>
-    <span className="text-[10px] font-bold uppercase tracking-tighter text-gray-500 dark:text-gray-400">
+    <span className="text-[8px] md:text-[10px] font-bold uppercase tracking-tighter text-gray-500 dark:text-gray-400">
       {label}
     </span>
   </button>
