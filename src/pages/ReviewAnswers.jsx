@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { RenderMathText } from "../utils/RenderMathText";
 import { FiLock, FiAlertTriangle, FiChevronLeft } from "react-icons/fi";
 
 const ReviewAnswers = ({ questions, answers, selectedCourse, isPremium }) => {
+  const courseCode = selectedCourse?.id || selectedCourse?.code;
+  useDocumentTitle(courseCode ? `Review Answers – ${courseCode} | QuizBolt` : "Review Answers | QuizBolt");
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
 

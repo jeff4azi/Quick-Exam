@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../apiConfig";
 import CoursePicker from "../components/CoursePicker";
@@ -90,6 +91,7 @@ const FlashcardsScreen = ({ courses, coursesLoading, isPremium }) => {
   // ── phase: "pick" | "study" ──
   const [phase, setPhase] = useState("pick");
   const [selectedCourse, setSelectedCourse] = useState(null);
+  useDocumentTitle(selectedCourse?.id || selectedCourse?.code ? `${selectedCourse.id || selectedCourse.code} Flashcards | QuizBolt` : "Flashcards | QuizBolt");
 
   // ── questions ──
   const [questions, setQuestions] = useState([]);

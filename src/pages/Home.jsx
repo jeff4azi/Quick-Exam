@@ -11,6 +11,7 @@ import { useVisibilityRefresh } from "../hooks/useVisibilityRefresh";
 import flashCardIcon from "../images/flash-card.webp";
 import testIcon from "../images/test.webp";
 import matchIcon from "../images/match.webp";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
@@ -196,6 +197,7 @@ const Home = ({
   setSelectedCourse,
   isNew,
 }) => {
+  useDocumentTitle("Home | QuizBolt");
   const navigate = useNavigate();
   const cachedDashboard = useMemo(
     () => readHomeDashboardCache(userProfile?.id),

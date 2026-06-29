@@ -133,6 +133,7 @@ const SettingsScreen = ({
   showPagination,
   toggleShowPagination,
 }) => {
+  useDocumentTitle("Settings | QuizBolt");
   const navigate = useNavigate();
   const location = useLocation();
   const [isDeleteOverlayOpen, setDeleteOverlayOpen] = useState(false);
@@ -519,3 +520,5 @@ const SettingsScreen = ({
 };
 
 export default SettingsScreen;
+
+import useDocumentTitle from "../hooks/useDocumentTitle";

@@ -59,6 +59,7 @@ const cropToSquare = (file) => {
 };
 
 const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
+  useDocumentTitle("Upload Profile Picture | QuizBolt");
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
 
@@ -478,3 +479,5 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
 };
 
 export default UploadProfilePic;
+
+import useDocumentTitle from "../hooks/useDocumentTitle";

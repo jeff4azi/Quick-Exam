@@ -5,6 +5,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { supabase } from "../supabaseClient";
 import { useAuth } from "../context/AuthContext";
 import LoadingScreen from "../components/LoadingScreen";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const TARGET_FRIENDS = 5;
 const PREMIUM_DAYS = 7;
@@ -22,6 +23,7 @@ const formatShortDate = (dateValue) => {
 };
 
 const ReferralDashboard = ({ isPremium }) => {
+  useDocumentTitle("Referral Dashboard | QuizBolt");
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
 

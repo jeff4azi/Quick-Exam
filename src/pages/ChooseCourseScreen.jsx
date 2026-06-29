@@ -48,6 +48,7 @@ const ChooseCourseScreen = ({
   questionType,
   setQuestionType,
 }) => {
+  useDocumentTitle("Choose a Course | QuizBolt");
   const navigate = useNavigate();
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
@@ -659,3 +660,5 @@ const ChooseCourseScreen = ({
 };
 
 export default ChooseCourseScreen;
+
+import useDocumentTitle from "../hooks/useDocumentTitle";

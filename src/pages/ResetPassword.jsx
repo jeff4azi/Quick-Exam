@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import { FiMail, FiArrowLeft } from "react-icons/fi";
 import { useAuth } from "../context/AuthContext";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const ResetPassword = () => {
+  useDocumentTitle("Reset Password | QuizBolt");
   const navigate = useNavigate();
   const { resetPassword } = useAuth();
 

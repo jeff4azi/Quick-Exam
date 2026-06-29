@@ -14,6 +14,7 @@ import { withTimeout } from "../utils/withTimeout";
 import { API_BASE_URL } from "../apiConfig";
 
 const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
+  useDocumentTitle("Go Premium | QuizBolt");
   const navigate = useNavigate();
   const [premiumCode, setPremiumCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -404,3 +405,5 @@ const PremiumPage = ({ userProfile, onActivatePremium, isPremium }) => {
 };
 
 export default PremiumPage;
+
+import useDocumentTitle from "../hooks/useDocumentTitle";

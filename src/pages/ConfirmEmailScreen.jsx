@@ -252,6 +252,7 @@ const MAIL_APPS = [
 ];
 
 const ConfirmEmailScreen = () => {
+  useDocumentTitle("Confirm Email | QuizBolt");
   const navigate = useNavigate();
   const location = useLocation();
   const [loading, setLoading] = useState(false);
@@ -395,3 +396,5 @@ const ConfirmEmailScreen = () => {
 };
 
 export default ConfirmEmailScreen;
+
+import useDocumentTitle from "../hooks/useDocumentTitle";

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useUniversities } from "../hooks/useUniversities";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {
   FaBolt,
   FaRocket,
@@ -37,6 +38,7 @@ const PREMIUM_FEATURES = [
 ];
 
 const AboutPage = () => {
+  useDocumentTitle("About QuizBolt");
   const navigate = useNavigate();
   const location = useLocation();
   const { universities } = useUniversities();

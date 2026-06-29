@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import "swiper/css";
 import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
@@ -296,6 +297,8 @@ const ExamScreen = ({
   questionType,
   questionsContext,
 }) => {
+  const courseCode = selectedCourse?.id || selectedCourse?.code;
+  useDocumentTitle(courseCode ? `${courseCode} Exam | QuizBolt` : "Exam | QuizBolt");
   const isMathCourse = selectedCourse?.id === "MTH101";
   const isTheoryExam = questionType === "theory";
   const isFibExam = questionType === "fib";

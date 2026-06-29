@@ -1,3 +1,4 @@
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../apiConfig";
@@ -510,6 +511,7 @@ const TestModeScreen = ({
   // phase: "pick" | "count" | "test" | "done"
   const [phase, setPhase] = useState("pick");
   const [selectedCourse, setSelectedCourse] = useState(null);
+  useDocumentTitle(selectedCourse?.id || selectedCourse?.code ? `${selectedCourse.id || selectedCourse.code} Weekly Test | QuizBolt` : "Weekly Test | QuizBolt");
   const [questionCount, setQuestionCount] = useState(null); // eslint-disable-line no-unused-vars
   const [questionType, setQuestionType] = useState("all"); // "all" | "objective" | "theory" | "fib"
   const [selectedDifficulty, setSelectedDifficulty] = useState(null); // null (all) | "Easy" | "Medium" | "Hard"

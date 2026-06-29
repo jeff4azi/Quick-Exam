@@ -6,6 +6,7 @@ import CoursePicker from "../components/CoursePicker";
 import MatchBox from "../components/MatchBox";
 import { FiChevronLeft, FiRefreshCw, FiClock } from "react-icons/fi";
 import matchIcon from "../images/match.webp";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 // ─── constants ───────────────────────────────────────────────────────────────
 const MATCH_COUNT = 6;
@@ -57,6 +58,7 @@ const MatchScreen = ({ courses, coursesLoading }) => {
   // ── phase: "pick" | "play" | "done" ──
   const [phase, setPhase] = useState("pick");
   const [selectedCourse, setSelectedCourse] = useState(null);
+  useDocumentTitle(selectedCourse?.id || selectedCourse?.code ? `${selectedCourse.id || selectedCourse.code} Match Mode | QuizBolt` : "Match Mode | QuizBolt");
 
   // ── questions pool ──
   const [allQuestions, setAllQuestions] = useState([]);

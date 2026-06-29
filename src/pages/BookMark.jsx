@@ -8,8 +8,10 @@ import { API_BASE_URL } from "../apiConfig";
 import NavBar from "../components/NavBar";
 import { supabase } from "../supabaseClient";
 import SectionLoader from "../components/SectionLoader";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const BookMark = ({ bookmarks, setBookmarks, isPremium, userProfile }) => {
+  useDocumentTitle("Bookmarks | QuizBolt");
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false); // New state for overlay

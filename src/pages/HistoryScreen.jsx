@@ -57,6 +57,7 @@ const CHART_TABS = [
 /*  MAIN SCREEN                                                                 */
 /* -------------------------------------------------------------------------- */
 const HistoryScreen = ({ isPremium, setQuestionType }) => {
+  useDocumentTitle("Study History | QuizBolt");
   const [historyData, setHistoryData] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false);
@@ -926,3 +927,5 @@ const HistoryItem = ({ exam, onDelete, setQuestionType }) => {
 };
 
 export default HistoryScreen;
+
+import useDocumentTitle from "../hooks/useDocumentTitle";

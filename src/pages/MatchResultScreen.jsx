@@ -5,6 +5,7 @@ import { FiChevronLeft, FiClock, FiRefreshCw, FiZap } from "react-icons/fi";
 import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import Avatar from "../components/Avatar";
 import matchIcon from "../images/match.webp";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const formatTime = (ms) => `${(ms / 1000).toFixed(2)}s`;
 
@@ -31,6 +32,7 @@ const rankBadge = (rank) => {
 };
 
 const MatchResultScreen = () => {
+  useDocumentTitle("Match Results | QuizBolt");
   const navigate = useNavigate();
   const location = useLocation();
   const { timeMs, attempts, courseId, courseName } = location.state || {};

@@ -29,6 +29,7 @@ const formatLevel = (year) => {
 };
 
 const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
+  useDocumentTitle("Your Profile | QuizBolt");
   const navigate = useNavigate();
   const telegramGroupUrl = "";
   const [isEditing, setIsEditing] = useState(false);
@@ -688,3 +689,5 @@ const Profile = ({ userProfile, isPremium, onUpdateProfile }) => {
 };
 
 export default Profile;
+
+import useDocumentTitle from "../hooks/useDocumentTitle";

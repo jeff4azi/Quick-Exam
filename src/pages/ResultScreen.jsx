@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import WhatsAppCard from "../components/WhatsAppCard";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import { useEffect, useState, useRef } from "react";
 import {
   trackResultShare,
@@ -104,6 +105,9 @@ const ResultScreen = ({
   const scorePercentage = Math.round(
     (results.correct / (results.answered || questions.length)) * 100,
   );
+  const courseCode = selectedCourse?.id || selectedCourse?.code;
+  const scorePercent = typeof scorePercentage === "number" ? ` (${scorePercentage}%)` : "";
+  useDocumentTitle(courseCode ? `${courseCode} Results${scorePercent} | QuizBolt` : "Results | QuizBolt");
   const strokeDasharray = 2 * Math.PI * 90;
   const strokeDashoffset =
     strokeDasharray - (scorePercentage / 100) * strokeDasharray;

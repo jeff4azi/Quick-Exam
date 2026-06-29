@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Navigate, useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {
   FiUser,
   FiBookOpen,
@@ -16,6 +17,7 @@ import { useUniversities } from "../hooks/useUniversities";
 import { useColleges } from "../hooks/useColleges";
 
 const OnboardingScreen = ({ onProfileReady }) => {
+  useDocumentTitle("Welcome to QuizBolt");
   const navigate = useNavigate();
   const [checking, setChecking] = useState(true);
   const {

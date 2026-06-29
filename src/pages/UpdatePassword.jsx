@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../images/Logo";
 import { FiLock, FiEye, FiEyeOff, FiArrowLeft, FiCheckCircle } from "react-icons/fi";
 import { supabase } from "../supabaseClient";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const UpdatePassword = () => {
+  useDocumentTitle("Update Password | QuizBolt");
   const navigate = useNavigate();
 
   const [password, setPassword] = useState("");

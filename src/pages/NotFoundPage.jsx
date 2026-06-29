@@ -13,6 +13,7 @@ import {
 import Logo from "../images/Logo";
 
 const NotFoundPage = () => {
+  useDocumentTitle("Page Not Found | QuizBolt");
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [quizScore, setQuizScore] = useState(null);
@@ -245,3 +246,4 @@ const NotFoundPage = () => {
 };
 
 export default NotFoundPage;
+import useDocumentTitle from "../hooks/useDocumentTitle";

@@ -118,6 +118,7 @@ const TestLeaderboardScreen = ({
   courses,
   userProfile,
 }) => {
+  useDocumentTitle("Weekly Test Leaderboard | QuizBolt");
   const [attempts, setAttempts] = useState([]);
   const [profiles, setProfiles] = useState({});
   const [selectedCourseId, setSelectedCourseId] = useState("all");
@@ -692,3 +693,5 @@ const TestLeaderboardRow = ({
 };
 
 export default TestLeaderboardScreen;
+
+import useDocumentTitle from "../hooks/useDocumentTitle";

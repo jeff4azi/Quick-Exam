@@ -5,6 +5,7 @@ import { FiChevronLeft, FiRefreshCw } from "react-icons/fi";
 import { FaCrown, FaMedal, FaTrophy } from "react-icons/fa";
 import Avatar from "../components/Avatar";
 import testIcon from "../images/test.webp";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 // ─── helpers ─────────────────────────────────────────────────────────────────
 const rankBadge = (rank) => {
@@ -53,6 +54,7 @@ const cardColor = (pct) => {
 };
 
 const TestResultScreen = () => {
+  useDocumentTitle("Weekly Test Results | QuizBolt");
   const navigate = useNavigate();
   const location = useLocation();
   const { score, totalQuestions, courseId, courseName } = location.state || {};

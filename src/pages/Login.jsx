@@ -5,6 +5,7 @@ import { FiMail, FiLock, FiEye, FiEyeOff, FiArrowRight } from "react-icons/fi";
 import { FcGoogle } from "react-icons/fc";
 import { supabase } from "../supabaseClient";
 import { trackLogin, trackSignUp } from "../utils/analytics";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 
 const LoginScreen = () => {
   const navigate = useNavigate();

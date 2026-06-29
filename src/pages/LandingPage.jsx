@@ -23,6 +23,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FiCheckCircle, FiShuffle, FiZap } from "react-icons/fi";
 import { supabase } from "../supabaseClient";
 import { useUniversities } from "../hooks/useUniversities";
+import useDocumentTitle from "../hooks/useDocumentTitle";
 import {
   buildLeaderboardEntries,
   compareLeaderboardEntries,
@@ -41,6 +42,7 @@ const PREMIUM_FEATURES = [
 ];
 
 const LandingPage = () => {
+  useDocumentTitle("QuizBolt | University CBT Past Questions & Exam Practice");
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const { universities } = useUniversities();

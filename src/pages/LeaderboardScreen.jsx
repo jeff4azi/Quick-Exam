@@ -126,6 +126,7 @@ const LeaderboardScreen = ({
   isPremium: isUserPremium,
   userProfile,
 }) => {
+  useDocumentTitle("Leaderboard | QuizBolt");
   const [attempts, setAttempts] = useState([]);
   const [profiles, setProfiles] = useState({});
   const [selectedCourseId, setSelectedCourseId] = useState("all");
@@ -905,3 +906,5 @@ const LeaderboardRow = ({
 };
 
 export default LeaderboardScreen;
+
+import useDocumentTitle from "../hooks/useDocumentTitle";
