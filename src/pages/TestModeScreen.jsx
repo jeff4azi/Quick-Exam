@@ -8,16 +8,22 @@ import ProgressBar from "../components/ProgressBar";
 import {
   FiChevronLeft,
   FiChevronRight,
+  FiChevronDown,
   FiSend,
   FiLoader,
   FiCheckCircle,
   FiXCircle,
   FiX,
   FiInfo,
+    FiCheck,
+  FiZap,
+  FiBookOpen,
+  FiTarget,
+  FiRepeat,
+  FiLayers,
 } from "react-icons/fi";
 import { FaCrown, FaTrophy } from "react-icons/fa";
 import { withTimeout } from "../utils/withTimeout";
-
 const FREE_QUESTION_LIMIT = 11;
 
 // ─── Premium gate overlay ─────────────────────────────────────────────────────
@@ -142,6 +148,70 @@ const FeedbackBadge = ({ result }) => {
   );
 };
 
+// ─── SectionDropdown ──────────────────────────────────────────────────────────
+const SectionDropdown = ({ sections, selected, onSelect }) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClick = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  const options = [{ key: null, label: "All Sections" }, ...sections];
+  const current = options.find((o) => o.key === selected) ?? options[0];
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        type="button"
+        onClick={() => setOpen((p) => !p)}
+        className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-colors hover:border-blue-300 dark:hover:border-slate-600"
+      >
+        <div className="size-8 shrink-0 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center">
+          <FiLayers className="size-4 text-blue-600 dark:text-blue-400" />
+        </div>
+        <span className="flex-1 text-left text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
+          {current.label}
+        </span>
+        <FiChevronDown
+          className={`size-4 text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <div className="absolute z-20 mt-2 w-full max-h-64 overflow-y-auto rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl shadow-slate-900/10 py-1.5 animate-in fade-in slide-in-from-top-1 duration-150">
+          {options.map((opt) => {
+            const isActive = selected === opt.key;
+            return (
+              <button
+                key={opt.key ?? "all"}
+                type="button"
+                onClick={() => {
+                  onSelect(opt.key);
+                  setOpen(false);
+                }}
+                className={`w-full flex items-center justify-between gap-2 px-4 py-2.5 text-sm font-semibold text-left transition-colors ${
+                  isActive
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10"
+                    : "text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700/50"
+                }`}
+              >
+                <span className="truncate">{opt.label}</span>
+                {isActive && <FiCheck className="size-4 shrink-0" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
+
 // ─── QuestionCountPicker ──────────────────────────────────────────────────────
 const QuestionCountPicker = ({
   isPremium,
@@ -153,38 +223,62 @@ const QuestionCountPicker = ({
   onSelectQuestionType,
   selectedDifficulty,
   onSelectDifficulty,
+  selectedSection,
+  onSelectSection,
 }) => {
   const getAvailableQuestions = () => {
+    let objectiveBase = course?.questionCount || 0;
+    if (selectedDifficulty) {
+      objectiveBase = course?.difficultyCounts?.[selectedDifficulty] || 0;
+    }
+    if (selectedSection) {
+      objectiveBase = course?.sectionCounts?.[selectedSection] || 0;
+    }
+
     switch (selectedQuestionType) {
       case "all":
         return (
-          (selectedDifficulty ? (course?.difficultyCounts?.[selectedDifficulty] || 0) : (course?.questionCount || 0)) +
+          objectiveBase +
           (course?.theoryQuestionCount || 0) +
           (course?.fibQuestionCount || 0)
         );
       case "objective":
-        return selectedDifficulty ? (course?.difficultyCounts?.[selectedDifficulty] || 0) : (course?.questionCount || 0);
+        return objectiveBase;
       case "theory":
         return course?.theoryQuestionCount || 0;
       case "fib":
         return course?.fibQuestionCount || 0;
       default:
-        return course?.questionCount || 0;
+        return objectiveBase;
     }
   };
-  
-  const hasDifficultyQuestions = course?.difficultyCounts && Object.values(course.difficultyCounts).reduce((a, b) => a + b, 0) > 0;
+
+  const hasDifficultyQuestions =
+    course?.difficultyCounts &&
+    Object.values(course.difficultyCounts).reduce((a, b) => a + b, 0) > 0;
+  const hasSectionQuestions =
+    course?.sectionCounts &&
+    Object.values(course.sectionCounts).reduce((a, b) => a + b, 0) > 0;
 
   const availableQuestions = getAvailableQuestions();
   const availableQuestionCounts = QUESTION_COUNTS.filter(
-    (count) => count <= availableQuestions
+    (count) => count <= availableQuestions,
   );
   if (availableQuestions > 0 && !availableQuestionCounts.includes("All")) {
     availableQuestionCounts.push("All");
   }
 
+  const countIcons = {
+    10: FiZap,
+    20: FiBookOpen,
+    30: FiTarget,
+    50: FaTrophy,
+    All: FiRepeat,
+  };
+
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col">
+      {/* Header */}
       <div className="sticky top-0 z-10 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-6 pb-4 border-b border-gray-100 dark:border-slate-800">
         <div className="max-w-lg mx-auto flex items-center gap-3">
           <button
@@ -203,21 +297,23 @@ const QuestionCountPicker = ({
           </div>
         </div>
       </div>
-      <div className="flex-1 px-5 py-8 flex flex-col items-center justify-center">
-        <div className="w-full max-w-lg space-y-6">
+
+      <div className="flex-1 px-5 py-8 flex flex-col items-center">
+        <div className="w-full max-w-lg space-y-7">
           {/* Question Type Selector */}
-          <div className="space-y-2">
-            <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">
+          <div className="space-y-2.5">
+            <p className="text-[11px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1">
               Question Type
             </p>
-            <div className="inline-flex bg-gray-200 dark:bg-slate-700 rounded-2xl p-1 gap-1 w-full">
+            <div className="grid grid-cols-4 gap-1.5 bg-white dark:bg-slate-800/60 border border-gray-100 dark:border-slate-700/60 rounded-2xl p-1.5 shadow-sm">
               {[
-                { key: "all", label: "All / Mixed" },
+                { key: "all", label: "All" },
                 { key: "objective", label: "Objective" },
                 { key: "fib", label: "FIB" },
                 { key: "theory", label: "Theory" },
               ].map(({ key, label }) => {
                 const isLocked = key === "theory" && !isPremium;
+                const isActive = selectedQuestionType === key;
                 return (
                   <button
                     key={key}
@@ -227,17 +323,18 @@ const QuestionCountPicker = ({
                       onSelectQuestionType(key);
                       if (key !== "all" && key !== "objective") {
                         onSelectDifficulty(null);
+                        onSelectSection(null);
                       }
                     }}
-                    className={`relative flex-1 px-3 py-2 rounded-xl text-xs font-black transition-all ${
-                      selectedQuestionType === key
-                        ? "bg-slate-900 dark:bg-slate-600 text-white shadow-md"
-                        : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-                    } ${isLocked ? "opacity-50 cursor-not-allowed" : ""}`}
+                    className={`relative py-2.5 rounded-xl text-[11px] sm:text-xs font-bold transition-all duration-200 ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                        : "text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700/50"
+                    } ${isLocked ? "opacity-40 cursor-not-allowed" : ""}`}
                   >
                     {label}
                     {isLocked && (
-                      <div className="absolute -top-2 -right-1 bg-amber-500 dark:bg-amber-400 rounded-full px-1 py-0.5 flex items-center justify-center shadow-sm">
+                      <div className="absolute -top-1.5 -right-1 bg-amber-500 rounded-full p-1 shadow-sm">
                         <FaCrown className="text-[6px] text-white" />
                       </div>
                     )}
@@ -248,79 +345,136 @@ const QuestionCountPicker = ({
           </div>
 
           {/* Difficulty Selector */}
-          {hasDifficultyQuestions && (selectedQuestionType === "all" || selectedQuestionType === "objective") && (
-            <div className="space-y-2">
-              <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">
-                Difficulty
-              </p>
-              <div className="inline-flex bg-gray-200 dark:bg-slate-700 rounded-2xl p-1 gap-1 w-full">
-                {[
-                  { key: null, label: "All" },
-                  { key: "Easy", label: "Easy" },
-                  { key: "Medium", label: "Medium" },
-                  { key: "Hard", label: "Hard" },
-                ].map(({ key, label }) => (
-                  <button
-                    key={key ?? "all"}
-                    type="button"
-                    onClick={() => onSelectDifficulty(key)}
-                    className={`flex-1 px-3 py-2 rounded-xl text-xs font-black transition-all ${
-                      selectedDifficulty === key
-                        ? "bg-blue-600 text-white shadow-md"
-                        : "text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-                    }`}
-                  >
-                    {label}
-                  </button>
-                ))}
+          {hasDifficultyQuestions &&
+            (selectedQuestionType === "all" ||
+              selectedQuestionType === "objective") && (
+              <div className="space-y-2.5">
+                <p className="text-[11px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1">
+                  Difficulty
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { key: null, label: "All" },
+                    { key: "Easy", label: "Easy" },
+                    { key: "Medium", label: "Medium" },
+                    { key: "Hard", label: "Hard" },
+                  ].map(({ key, label }) => {
+                    const isActive = selectedDifficulty === key;
+                    return (
+                      <button
+                        key={key ?? "all"}
+                        type="button"
+                        onClick={() => onSelectDifficulty(key)}
+                        className={`px-4 py-2 rounded-full text-xs font-bold border transition-all duration-200 ${
+                          isActive
+                            ? "bg-blue-600 border-blue-600 text-white shadow-sm shadow-blue-600/20"
+                            : "bg-white dark:bg-slate-800/60 border-gray-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-blue-300 dark:hover:border-slate-600"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+                <p className="text-[11px] font-medium text-slate-400 dark:text-slate-500 px-1">
+                  {(() => {
+                    const count = selectedDifficulty
+                      ? course.difficultyCounts[selectedDifficulty] || 0
+                      : course.questionCount || 0;
+                    return `${count} objective question${count !== 1 ? "s" : ""} available`;
+                  })()}
+                </p>
               </div>
-              <p className="text-[10px] font-medium text-slate-400 dark:text-slate-500 px-2">
-                {(() => {
-                  const count = selectedDifficulty
-                    ? course.difficultyCounts[selectedDifficulty] || 0
-                    : course.questionCount || 0;
-                  return `${count} objective question${count !== 1 ? "s" : ""} available`;
-                })()}
-              </p>
-            </div>
-          )}
+            )}
+
+          {/* Section Selector — dropdown, scales to any number of sections */}
+          {hasSectionQuestions &&
+            (selectedQuestionType === "all" ||
+              selectedQuestionType === "objective") && (
+              <div className="space-y-2.5">
+                <p className="text-[11px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500 px-1">
+                  Section
+                </p>
+                <SectionDropdown
+                  sections={Object.keys(course.sectionCounts).map((s) => ({
+                    key: s,
+                    label: s,
+                  }))}
+                  selected={selectedSection}
+                  onSelect={onSelectSection}
+                />
+                <p className="text-[11px] font-medium text-slate-400 dark:text-slate-500 px-1">
+                  {(() => {
+                    const count = selectedSection
+                      ? course.sectionCounts[selectedSection] || 0
+                      : course.questionCount || 0;
+                    return `${count} objective question${count !== 1 ? "s" : ""} available`;
+                  })()}
+                </p>
+              </div>
+            )}
 
           {/* Question Count Selector */}
-          <div className="space-y-2">
-            <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 px-2">
-              How many questions? · {availableQuestions} available
-            </p>
+          <div className="space-y-2.5">
+            <div className="flex items-baseline justify-between px-1">
+              <p className="text-[11px] font-black uppercase tracking-widest text-slate-400 dark:text-slate-500">
+                How many questions?
+              </p>
+              <p className="text-[11px] font-bold text-blue-600 dark:text-blue-400">
+                {availableQuestions} available
+              </p>
+            </div>
             <div className="grid grid-cols-2 gap-3">
               {availableQuestionCounts.map((count) => {
                 const isAll = count === "All";
                 const num = isAll ? availableQuestions : count;
                 const locked = !isPremium && num > 10;
+                const Icon = countIcons[count] ?? FiBookOpen;
                 return (
                   <button
                     key={count}
                     onClick={() => (locked ? null : onSelect(num))}
-                    className={`flex flex-col items-center justify-center px-4 py-4 rounded-[1.8rem] border-2 transition-all active:scale-[0.98] ${
+                    disabled={locked}
+                    className={`group relative flex items-center gap-3 px-5 py-4 rounded-2xl border transition-all duration-200 active:scale-[0.97] ${
+                      isAll ? "col-span-2" : ""
+                    } ${
                       locked
-                        ? "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 opacity-60 cursor-not-allowed"
-                        : "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-300 dark:hover:border-blue-600 shadow-sm"
+                        ? "border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/40 opacity-60 cursor-not-allowed"
+                        : "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/5"
                     }`}
                   >
-                    <span className="text-xl font-black text-slate-900 dark:text-white">
-                      {isAll ? "All" : count}
-                    </span>
-                    <span className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-1">
-                      Questions
-                    </span>
-                    {locked && (
-                      <span className="mt-2 flex items-center gap-1 text-xs font-black text-amber-500 bg-amber-50 dark:bg-amber-900/30 px-2.5 py-1 rounded-full">
-                        <FaCrown size={10} /> PRO
+                    <div
+                      className={`size-10 shrink-0 rounded-xl flex items-center justify-center ${
+                        locked
+                          ? "bg-gray-100 dark:bg-slate-700"
+                          : "bg-blue-50 dark:bg-blue-500/10"
+                      }`}
+                    >
+                      <Icon
+                        className={`size-5 ${locked ? "text-slate-400" : "text-blue-600 dark:text-blue-400"}`}
+                      />
+                    </div>
+                    <div className="flex flex-col items-start min-w-0">
+                      <span className="text-lg font-black text-slate-900 dark:text-white leading-none">
+                        {isAll ? "All" : count}
                       </span>
+                      <span className="text-[11px] font-semibold text-slate-400 dark:text-slate-500 mt-0.5">
+                        {isAll ? `${num} questions` : "Questions"}
+                      </span>
+                    </div>
+                    {locked && (
+                      <span className="ml-auto flex items-center gap-1 text-[10px] font-black text-amber-500 bg-amber-50 dark:bg-amber-900/30 px-2 py-1 rounded-full shrink-0">
+                        <FaCrown size={9} /> PRO
+                      </span>
+                    )}
+                    {!locked && (
+                      <FiChevronRight className="ml-auto text-slate-300 dark:text-slate-600 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all shrink-0" />
                     )}
                   </button>
                 );
               })}
               {availableQuestionCounts.length === 0 && (
-                <div className="col-span-2 py-8 text-center">
+                <div className="col-span-2 py-10 text-center rounded-2xl border border-dashed border-gray-200 dark:border-slate-700">
                   <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">
                     No questions available for this type
                   </p>
@@ -349,6 +503,7 @@ const TestModeScreen = ({
   const [questionCount, setQuestionCount] = useState(null); // eslint-disable-line no-unused-vars
   const [questionType, setQuestionType] = useState("all"); // "all" | "objective" | "theory" | "fib"
   const [selectedDifficulty, setSelectedDifficulty] = useState(null); // null (all) | "Easy" | "Medium" | "Hard"
+  const [selectedSection, setSelectedSection] = useState(null); // null (all) | section name
 
   const [questions, setQuestions] = useState([]);
   const [loadingQ, setLoadingQ] = useState(false);
@@ -431,7 +586,7 @@ const TestModeScreen = ({
   }, [currentIndex]);
 
   // ── fetch questions ──
-  const fetchQuestions = useCallback(async (course, count, type, difficulty) => {
+  const fetchQuestions = useCallback(async (course, count, type, difficulty, section) => {
     setLoadingQ(true);
     setErrorQ(null);
     try {
@@ -450,9 +605,9 @@ const TestModeScreen = ({
       };
 
       if (type === "all") {
-        // Fetch all types, only apply difficulty to objective
+        // Fetch all types, only apply difficulty/section to objective
         const [objRes, thyRes, fibRes] = await Promise.all([
-          fetch(buildUrl(base, { difficulty })),
+          fetch(buildUrl(base, { difficulty, section })),
           fetch(buildUrl(base, { type: "theory" })),
           fetch(buildUrl(base, { type: "fib" })),
         ]);
@@ -472,7 +627,7 @@ const TestModeScreen = ({
             : [];
         questionsData = [...objective, ...theory, ...fib];
       } else if (type === "objective") {
-        const res = await fetch(buildUrl(base, { difficulty }));
+        const res = await fetch(buildUrl(base, { difficulty, section }));
         if (res.ok) {
           const data = await res.json();
           questionsData = Array.isArray(data) ? data : [];
@@ -517,13 +672,14 @@ const TestModeScreen = ({
   const handleCourseSelect = (course) => {
     setSelectedCourse(course);
     setSelectedDifficulty(null);
+    setSelectedSection(null);
     setPhase("count");
   };
 
   const handleCountSelect = (count) => {
     setQuestionCount(count);
     setPhase("test");
-    fetchQuestions(selectedCourse, count, questionType, selectedDifficulty);
+    fetchQuestions(selectedCourse, count, questionType, selectedDifficulty, selectedSection);
   };
 
   // ── answer submission for current question ──
@@ -669,6 +825,8 @@ const TestModeScreen = ({
         onSelectQuestionType={setQuestionType}
         selectedDifficulty={selectedDifficulty}
         onSelectDifficulty={setSelectedDifficulty}
+        selectedSection={selectedSection}
+        onSelectSection={setSelectedSection}
       />
     );
   }
