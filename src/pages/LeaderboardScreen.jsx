@@ -409,8 +409,8 @@ const LeaderboardScreen = ({
       <main className="px-6 lg:px-10 pt-4 pb-32 flex-1 flex flex-col overflow-y-auto desktop-content-col">
         {/* Exam type toggle */}
         <section className="mb-4">
-          <div className="flex items-center gap-5">
-            <div className="flex min-w-0 flex-1 bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
+          <div className="flex justify-between items-center gap-5">
+            <div className="flex min-w-0 max-w-xl flex-1 bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
               {[
                 { key: "OBJ", label: "Objective" },
                 { key: "FIB", label: "Fill in Blank" },
@@ -441,97 +441,7 @@ const LeaderboardScreen = ({
             </button>
           </div>
         </section>
-
-        {/* Collapsible filters */}
-        <section className="hidden">
-          <button
-            type="button"
-            onClick={() => setFiltersOpen((prev) => !prev)}
-            className="flex items-center gap-2 text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2"
-          >
-            <span>Filters</span>
-            <span className="text-[10px]">{filtersOpen ? "▲" : "▼"}</span>
-          </button>
-
-          {filtersOpen && (
-            <div className="flex flex-col gap-4">
-              {/* Leaderboard Scope */}
-              <div>
-                <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
-                  Leaderboard Scope
-                </label>
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setUniversityFilter("mine")}
-                    className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
-                      universityFilter === "mine"
-                        ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
-                        : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-                    }`}
-                  >
-                    🏫 My University
-                  </button>
-                  <button
-                    onClick={() => setUniversityFilter("all")}
-                    className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
-                      universityFilter === "all"
-                        ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
-                        : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-                    }`}
-                  >
-                    🌍 Global
-                  </button>
-                </div>
-              </div>
-
-              {/* Question count filter */}
-              <div>
-                <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
-                  Questions
-                </label>
-                <div className="flex gap-2">
-                  {questionCountOptions.map((count) => (
-                    <button
-                      key={count}
-                      onClick={() => setQuestionCountFilter(count)}
-                      className={`flex-1 py-2.5 rounded-2xl text-xs font-black transition-all ${
-                        questionCountFilter === count
-                          ? "bg-blue-600 text-white shadow-lg shadow-blue-200 dark:shadow-none"
-                          : "bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300"
-                      }`}
-                    >
-                      {count === "all" ? "All" : count}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {/* Course filter */}
-              <div>
-                <label className="block text-[11px] font-black uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500 mb-2">
-                  Filter by course
-                </label>
-                <div className="relative">
-                  <select
-                    value={selectedCourseId}
-                    onChange={(e) => setSelectedCourseId(e.target.value)}
-                    className="w-full appearance-none bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {courseOptions.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.label}
-                      </option>
-                    ))}
-                  </select>
-                  <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-4 text-slate-400">
-                    <span className="text-xs">▼</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-        </section>
-
+      
         {/* Content */}
         {loading ? (
           <SectionLoader text="Loading leaderboard..." />
