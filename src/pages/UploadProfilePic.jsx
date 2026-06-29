@@ -120,8 +120,8 @@ const UploadProfilePic = ({ userProfile, setUserProfile, deleteImage }) => {
       // 2️⃣ Compress image
       console.log("Compressing image...");
       const compressed = await imageCompression(file, {
-        maxSizeMB: 0.2,
-        maxWidthOrHeight: 300,
+        maxSizeMB: 0.5,
+        maxWidthOrHeight: 600,
         useWebWorker: true,
       });
       console.log("Image compressed successfully");
