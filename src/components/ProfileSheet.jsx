@@ -187,7 +187,6 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
               </div>
             </div>
           )}
-          
         </div>
 
         <div className="px-4 pb-10 space-y-3 max-h-[60vh] overflow-y-auto">
@@ -312,7 +311,7 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
           className="fixed inset-0 z-[110] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-in fade-in duration-300"
           onClick={() => setIsImageOverlayOpen(false)}
         >
-          <div className="relative max-w-[90vw] max-h-[90vh] flex items-center justify-center">
+          <div className="relative w-[80vmin] h-[80vmin]">
             <img
               src={
                 userProfile?.avatar_url && userProfile.avatar_url !== "NULL"
@@ -320,7 +319,7 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
                   : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
               }
               alt={`${userProfile?.full_name || "User"}'s profile picture`}
-              className="max-w-full max-h-full object-contain rounded-2xl"
+              className="w-full h-full object-cover rounded-2xl"
               onClick={(e) => e.stopPropagation()}
               onError={(e) => {
                 e.target.src =
