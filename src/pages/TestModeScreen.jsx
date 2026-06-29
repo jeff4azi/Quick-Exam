@@ -279,7 +279,7 @@ const QuestionCountPicker = ({
   return (
     <div className="min-h-[100dvh] bg-gray-50 dark:bg-slate-900 flex flex-col">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md px-5 pt-6 pb-4 border-b border-gray-100 dark:border-slate-800">
+      <div className="sticky top-0 z-10 bg-gray-50/90 dark:bg-slate-900/90 backdrop-blur-md pt-6 pb-4 border-b border-gray-100 dark:border-slate-800">
         <div className="max-w-lg mx-auto flex items-center gap-3">
           <button
             onClick={onBack}
@@ -298,7 +298,7 @@ const QuestionCountPicker = ({
         </div>
       </div>
 
-      <div className="flex-1 px-5 py-8 flex flex-col items-center">
+      <div className="flex-1 py-8 flex flex-col items-center">
         <div className="w-full max-w-lg space-y-7">
           {/* Question Type Selector */}
           <div className="space-y-2.5">
