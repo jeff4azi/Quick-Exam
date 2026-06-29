@@ -151,7 +151,9 @@ const FeedbackBadge = ({ result }) => {
 // ─── SectionDropdown ──────────────────────────────────────────────────────────
 const SectionDropdown = ({ sections, selected, onSelect }) => {
   const [open, setOpen] = useState(false);
+  const [dropUp, setDropUp] = useState(false);
   const ref = useRef(null);
+  const buttonRef = useRef(null);
 
   useEffect(() => {
     if (!open) return;
@@ -162,12 +164,21 @@ const SectionDropdown = ({ sections, selected, onSelect }) => {
     return () => document.removeEventListener("mousedown", handleClick);
   }, [open]);
 
+  useEffect(() => {
+    if (!open || !buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceNeeded = 256; // max-h-64 is 256px
+    setDropUp(spaceBelow < spaceNeeded && rect.top > spaceNeeded);
+  }, [open]);
+
   const options = [{ key: null, label: "All Sections" }, ...sections];
   const current = options.find((o) => o.key === selected) ?? options[0];
 
   return (
     <div className="relative" ref={ref}>
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen((p) => !p)}
         className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-sm transition-colors hover:border-blue-300 dark:hover:border-slate-600"
@@ -184,7 +195,13 @@ const SectionDropdown = ({ sections, selected, onSelect }) => {
       </button>
 
       {open && (
-        <div className="absolute z-20 mt-2 w-full max-h-64 overflow-y-auto rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl shadow-slate-900/10 py-1.5 animate-in fade-in slide-in-from-top-1 duration-150">
+        <div
+          className={`absolute z-[80] w-full max-h-64 overflow-y-auto rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl shadow-slate-900/10 py-1.5 animate-in fade-in ${
+            dropUp 
+              ? "bottom-full mb-2 slide-in-from-bottom-1" 
+              : "top-full mt-2 slide-in-from-top-1"
+          } duration-150`}
+        >
           {options.map((opt) => {
             const isActive = selected === opt.key;
             return (

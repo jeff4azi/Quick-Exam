@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState, useCallback } from "react";
+import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import {
   FaChevronDown,
   FaCrown,
@@ -8,11 +8,93 @@ import {
   FaTimes,
   FaTrophy,
   FaUniversity,
+  FaBook,
 } from "react-icons/fa";
+import { FiCheck } from "react-icons/fi";
 import { supabase } from "../supabaseClient";
 import { withTimeout } from "../utils/withTimeout";
 import ProfileSheet from "../components/ProfileSheet";
 import Avatar from "../components/Avatar";
+
+// ─── CourseDropdown ──────────────────────────────────────────────────────────
+const CourseDropdown = ({ options, selected, onSelect }) => {
+  const [open, setOpen] = useState(false);
+  const [dropUp, setDropUp] = useState(false);
+  const ref = useRef(null);
+  const buttonRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const handleClick = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [open]);
+
+  useEffect(() => {
+    if (!open || !buttonRef.current) return;
+    const rect = buttonRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceNeeded = 256; // max-h-64 is 256px
+    setDropUp(spaceBelow < spaceNeeded && rect.top > spaceNeeded);
+  }, [open]);
+
+  const current = options.find((o) => o.id === selected) ?? options[0];
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        ref={buttonRef}
+        type="button"
+        onClick={() => setOpen((p) => !p)}
+        className="w-full h-12 flex items-center gap-3 px-4 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/70 shadow-sm transition-colors hover:border-blue-300 dark:hover:border-slate-600"
+      >
+        <div className="size-8 shrink-0 rounded-lg bg-blue-50 dark:bg-blue-500/10 flex items-center justify-center">
+          <FaBook className="size-4 text-blue-600 dark:text-blue-400" />
+        </div>
+        <span className="flex-1 text-left text-sm font-bold text-slate-800 dark:text-slate-100 truncate">
+          {current.label}
+        </span>
+        <FaChevronDown
+          className={`size-4 text-slate-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <div
+          className={`absolute z-[80] w-full max-h-64 overflow-y-auto rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl shadow-slate-900/10 py-1.5 animate-in fade-in ${
+            dropUp 
+              ? "bottom-full mb-2 slide-in-from-bottom-1" 
+              : "top-full mt-2 slide-in-from-top-1"
+          } duration-150`}
+        >
+          {options.map((opt) => {
+            const isActive = selected === opt.id;
+            return (
+              <button
+                key={opt.id}
+                type="button"
+                onClick={() => {
+                  onSelect(opt.id);
+                  setOpen(false);
+                }}
+                className={`w-full flex items-center justify-between gap-2 px-4 py-2.5 text-sm font-semibold text-left transition-colors ${
+                  isActive
+                    ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10"
+                    : "text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700/50"
+                }`}
+              >
+                <span className="truncate">{opt.label}</span>
+                {isActive && <FiCheck className="size-4 shrink-0" />}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+};
 import { useNavigate } from "react-router-dom";
 import ConfirmOverlay from "../components/ConfirmOverlay";
 import NavBar from "../components/NavBar";
@@ -524,7 +606,7 @@ const LeaderboardScreen = ({
           onClick={() => setFiltersOpen(false)}
         >
           <div
-            className="w-full max-w-md rounded-[1.5rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl shadow-slate-950/20 overflow-hidden"
+            className="w-full max-w-md rounded-[1.5rem] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl shadow-slate-950/20"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-slate-800">
@@ -631,21 +713,11 @@ const LeaderboardScreen = ({
                 >
                   Course
                 </label>
-                <div className="relative">
-                  <select
-                    id="leaderboard-course-filter"
-                    value={selectedCourseId}
-                    onChange={(e) => setSelectedCourseId(e.target.value)}
-                    className="w-full h-12 appearance-none bg-slate-50 dark:bg-slate-800/70 border border-slate-200 dark:border-slate-700 rounded-2xl pl-4 pr-11 text-sm font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    {courseOptions.map((c) => (
-                      <option key={c.id} value={c.id}>
-                        {c.label}
-                      </option>
-                    ))}
-                  </select>
-                  <FaChevronDown className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-xs text-slate-400" />
-                </div>
+                <CourseDropdown
+                  options={courseOptions}
+                  selected={selectedCourseId}
+                  onSelect={setSelectedCourseId}
+                />
               </div>
             </div>
 
