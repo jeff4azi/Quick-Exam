@@ -15,7 +15,7 @@ import {
   FiXCircle,
   FiX,
   FiInfo,
-    FiCheck,
+  FiCheck,
   FiZap,
   FiBookOpen,
   FiTarget,
@@ -196,11 +196,10 @@ const SectionDropdown = ({ sections, selected, onSelect }) => {
 
       {open && (
         <div
-          className={`absolute z-[80] w-full max-h-64 overflow-y-auto rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl shadow-slate-900/10 py-1.5 animate-in fade-in ${
-            dropUp 
-              ? "bottom-full mb-2 slide-in-from-bottom-1" 
+          className={`absolute z-[80] w-full max-h-64 overflow-y-auto rounded-2xl border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl shadow-slate-900/10 py-1.5 animate-in fade-in ${dropUp
+              ? "bottom-full mb-2 slide-in-from-bottom-1"
               : "top-full mt-2 slide-in-from-top-1"
-          } duration-150`}
+            } duration-150`}
         >
           {options.map((opt) => {
             const isActive = selected === opt.key;
@@ -212,11 +211,10 @@ const SectionDropdown = ({ sections, selected, onSelect }) => {
                   onSelect(opt.key);
                   setOpen(false);
                 }}
-                className={`w-full flex items-center justify-between gap-2 px-4 py-2.5 text-sm font-semibold text-left transition-colors ${
-                  isActive
+                className={`w-full flex items-center justify-between gap-2 px-4 py-2.5 text-sm font-semibold text-left transition-colors ${isActive
                     ? "text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-500/10"
                     : "text-slate-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700/50"
-                }`}
+                  }`}
               >
                 <span className="truncate">{opt.label}</span>
                 {isActive && <FiCheck className="size-4 shrink-0" />}
@@ -343,11 +341,10 @@ const QuestionCountPicker = ({
                         onSelectSection(null);
                       }
                     }}
-                    className={`relative py-2.5 rounded-xl text-[11px] sm:text-xs font-bold transition-all duration-200 ${
-                      isActive
+                    className={`relative py-2.5 rounded-xl text-[11px] sm:text-xs font-bold transition-all duration-200 ${isActive
                         ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
                         : "text-slate-500 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700/50"
-                    } ${isLocked ? "opacity-40 cursor-not-allowed" : ""}`}
+                      } ${isLocked ? "opacity-40 cursor-not-allowed" : ""}`}
                   >
                     {label}
                     {isLocked && (
@@ -382,11 +379,10 @@ const QuestionCountPicker = ({
                         key={key ?? "all"}
                         type="button"
                         onClick={() => onSelectDifficulty(key)}
-                        className={`px-4 py-2 rounded-full text-xs font-bold border transition-all duration-200 ${
-                          isActive
+                        className={`px-4 py-2 rounded-full text-xs font-bold border transition-all duration-200 ${isActive
                             ? "bg-blue-600 border-blue-600 text-white shadow-sm shadow-blue-600/20"
                             : "bg-white dark:bg-slate-800/60 border-gray-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:border-blue-300 dark:hover:border-slate-600"
-                        }`}
+                          }`}
                       >
                         {label}
                       </button>
@@ -452,20 +448,17 @@ const QuestionCountPicker = ({
                     key={count}
                     onClick={() => (locked ? null : onSelect(num))}
                     disabled={locked}
-                    className={`group relative flex items-center gap-3 px-5 py-4 rounded-2xl border transition-all duration-200 active:scale-[0.97] ${
-                      isAll ? "col-span-2" : ""
-                    } ${
-                      locked
+                    className={`group relative flex items-center gap-3 px-5 py-4 rounded-2xl border transition-all duration-200 active:scale-[0.97] ${isAll ? "col-span-2" : ""
+                      } ${locked
                         ? "border-gray-100 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/40 opacity-60 cursor-not-allowed"
                         : "border-gray-100 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/5"
-                    }`}
+                      }`}
                   >
                     <div
-                      className={`size-10 shrink-0 rounded-xl flex items-center justify-center ${
-                        locked
+                      className={`size-10 shrink-0 rounded-xl flex items-center justify-center ${locked
                           ? "bg-gray-100 dark:bg-slate-700"
                           : "bg-blue-50 dark:bg-blue-500/10"
-                      }`}
+                        }`}
                     >
                       <Icon
                         className={`size-5 ${locked ? "text-slate-400" : "text-blue-600 dark:text-blue-400"}`}
@@ -536,11 +529,11 @@ const TestModeScreen = ({
   const isSubmittingRef = useRef(false);
   const [showPremiumGate, setShowPremiumGate] = useState(false);
   const [kbHeight, setKbHeight] = useState(0);
-  
+
   // Hint state (no limits!)
   const [showHint, setShowHint] = useState(false);
   const [hintsUsed, setHintsUsed] = useState(new Set());
-  
+
   // Viewport tier for dynamic option text sizes
   const getViewportTier = () => {
     if (typeof window === "undefined") return "mobile";
@@ -549,7 +542,7 @@ const TestModeScreen = ({
     return "mobile";
   };
   const [viewportTier, setViewportTier] = useState(getViewportTier);
-  
+
   // Helper function to get plain text length of options
   const getOptionPlainLength = (option) => {
     const text = typeof option === "string" ? option : String(option ?? "");
@@ -558,7 +551,7 @@ const TestModeScreen = ({
       .replace(/\s+/g, " ")
       .trim().length;
   };
-  
+
   // Updated getOptionTextSizeClass that uses viewport tier
   const getOptionTextSizeClass = (option) => {
     const len = getOptionPlainLength(option);
@@ -609,7 +602,7 @@ const TestModeScreen = ({
     try {
       const base = `${API_BASE_URL}${course.questionsEndpoint || `/courses/${course.id}/questions`}`;
       let questionsData = [];
-      
+
       // Build query params helper
       const buildUrl = (baseUrl, params = {}) => {
         const url = new URL(baseUrl, window.location.origin);
@@ -739,6 +732,37 @@ const TestModeScreen = ({
     ? ((currentIndex + 1) / totalQuestions) * 100
     : 0;
   const allAnswered = answered.every(Boolean);
+
+  const answeredIndices = answered
+    .map((a, i) => (a ? i : null))
+    .filter((i) => i !== null);
+
+  const accuracyPercent =
+    answeredIndices.length === 0
+      ? null
+      : Math.round(
+        (answeredIndices.reduce(
+          (acc, i) => acc + gradeQuestion(questions[i], answers[i]),
+          0,
+        ) /
+          answeredIndices.length) *
+        100,
+      );
+
+  const ringColor =
+    accuracyPercent === null
+      ? "text-slate-300 dark:text-slate-600"
+      : accuracyPercent >= 80
+        ? "text-green-500"
+        : accuracyPercent >= 50
+          ? "text-amber-500"
+          : "text-red-400";
+
+  const RING_RADIUS = 16;
+  const RING_CIRCUMFERENCE = 2 * Math.PI * RING_RADIUS;
+  const ringDashoffset =
+    RING_CIRCUMFERENCE -
+    ((accuracyPercent ?? 0) / 100) * RING_CIRCUMFERENCE;
 
   // ── save result and navigate ──
   const handleFinish = async () => {
@@ -940,8 +964,37 @@ const TestModeScreen = ({
               </span>
             </div>
           </div>
-          <div className="bg-white dark:bg-slate-800 px-4 py-2 rounded-2xl shadow-sm border border-gray-100 dark:border-slate-700 text-sm font-black text-slate-700 dark:text-slate-200">
-            {answered.filter(Boolean).length}/{totalQuestions}
+          <div className="relative size-11 shrink-0">
+            <svg
+              viewBox="0 0 40 40"
+              className="size-11 -rotate-90"
+            >
+              <circle
+                cx="20"
+                cy="20"
+                r={RING_RADIUS}
+                fill="none"
+                strokeWidth="4"
+                className="stroke-gray-100 dark:stroke-slate-700"
+              />
+              <circle
+                cx="20"
+                cy="20"
+                r={RING_RADIUS}
+                fill="none"
+                strokeWidth="4"
+                strokeLinecap="round"
+                stroke="currentColor"
+                strokeDasharray={RING_CIRCUMFERENCE}
+                strokeDashoffset={ringDashoffset}
+                className={`${ringColor} transition-all duration-500 ease-out`}
+              />
+            </svg>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <span className="text-[10px] font-black text-slate-700 dark:text-slate-200">
+                {accuracyPercent === null ? "—" : `${accuracyPercent}%`}
+              </span>
+            </div>
           </div>
         </div>
         <div className="max-w-2xl mx-auto">
@@ -977,11 +1030,10 @@ const TestModeScreen = ({
                       );
                       setShowHint(true);
                     }}
-                    className={`relative p-2 rounded-xl transition-all ${
-                      showHint
+                    className={`relative p-2 rounded-xl transition-all ${showHint
                         ? "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
                         : "bg-gray-50 dark:bg-slate-700 text-gray-400"
-                    }`}
+                      }`}
                     aria-label={showHint ? "Hide hint" : "Show hint"}
                     title={
                       showHint ? "Hide hint" : "Show hint (unlimited hints available)"
@@ -1084,26 +1136,24 @@ const TestModeScreen = ({
                         key={idx}
                         disabled={isAnswered}
                         onClick={() => !isAnswered && setCurrentInput(option)}
-                        className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${
-                          isRight
+                        className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${isRight
                             ? "border-green-500 bg-green-50 dark:bg-green-900/20"
                             : isWrong
                               ? "border-red-400 bg-red-50 dark:bg-red-900/20"
                               : isSelected
                                 ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
                                 : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                        }`}
+                          }`}
                       >
                         <div
-                          className={`size-10 shrink-0 rounded-2xl flex items-center justify-center font-black transition-colors ${
-                            isRight
+                          className={`size-10 shrink-0 rounded-2xl flex items-center justify-center font-black transition-colors ${isRight
                               ? "bg-green-500 text-white"
                               : isWrong
                                 ? "bg-red-400 text-white"
                                 : isSelected
                                   ? "bg-blue-600 text-white"
                                   : "bg-gray-100 dark:bg-slate-700 text-slate-500"
-                          }`}
+                            }`}
                         >
                           {label}
                         </div>
