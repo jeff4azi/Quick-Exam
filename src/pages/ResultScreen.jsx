@@ -291,12 +291,16 @@ const ResultScreen = ({
         </div>
       </header>
 
-      <main className="flex-grow flex flex-col items-center justify-center space-y-4 md:space-y-8 lg:px-16">
+      <main className="flex-grow flex flex-col items-center justify-start pt-6 space-y-6 md:space-y-8 lg:px-16">
+        {/* Responsive SVG circle */}
         <div
           onClick={() => navigate("/history")}
-          className="relative flex items-center justify-center cursor-pointer group"
+          className="relative flex items-center justify-center cursor-pointer group w-45 h-45 sm:w-65 sm:h-65"
         >
-          <svg className="size-56 transform -rotate-90">
+          <svg
+            viewBox="0 0 224 224"
+            className="w-full h-full transform -rotate-90"
+          >
             <circle
               cx="112"
               cy="112"
@@ -321,26 +325,26 @@ const ResultScreen = ({
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <span className="text-5xl font-black text-gray-800 dark:text-white">
+            <span className="text-3xl sm:text-5xl font-black text-gray-800 dark:text-white">
               {scorePercentage}
-              <span className="text-2xl">%</span>
+              <span className="text-xl sm:text-2xl">%</span>
             </span>
-            <span className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-widest">
+            <span className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 mt-1 uppercase tracking-widest">
               Score
             </span>
           </div>
         </div>
 
         <div className="text-center px-4">
-          <h1 className="text-2xl font-black text-gray-800 dark:text-white tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black text-gray-800 dark:text-white tracking-tight">
             {selectedCourse.name}
           </h1>
-          <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-1">
+          <p className="text-[12px] sm:text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mt-1">
             {questionType === "theory"
               ? "Theory"
               : questionType === "fib"
                 ? "Fill in the Blanks"
-                : "Objectives"}
+                : "Objective"}
           </p>
           {hasRetaken && (
             <div className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-purple-100 px-3 py-1 text-[8px] md:text-[10px] font-black uppercase tracking-[0.18em] text-purple-600 dark:bg-purple-900/30 dark:text-purple-300">
@@ -446,7 +450,7 @@ const ResultScreen = ({
               </div>
             );
           })()}
-        <div className="mt-2 bg-white dark:bg-gray-900 w-full p-4 md:p-6 grid grid-cols-2 gap-4 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800">
+        <div className="mt-5 sm:mt-2 bg-white dark:bg-gray-900 w-full p-4 md:p-6 grid grid-cols-2 gap-4 rounded-3xl shadow-xl border border-gray-100 dark:border-gray-800">
           <StatItem
             label="Answered"
             value={formatNum(answeredCount)}
