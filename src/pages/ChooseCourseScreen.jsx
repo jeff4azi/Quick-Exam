@@ -350,7 +350,7 @@ const ChooseCourseScreen = ({
                             handleSelectCourse(course);
                           }
                         }}
-                        className={`group w-full flex flex-col justify-between min-h-[128px] sm:min-h-[152px] md:min-h-[160px] p-3.5 sm:p-5 rounded-2xl sm:rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${
+                        className={`group w-full flex flex-col justify-between min-h-[100px] sm:min-h-[120px] md:min-h-[130px] p-3.5 sm:p-5 rounded-2xl sm:rounded-[2rem] border-2 transition-all active:scale-[0.98] cursor-pointer ${
                           isSelected
                             ? "bg-blue-600 border-blue-600 shadow-xl shadow-blue-200"
                             : "bg-white dark:bg-slate-800 border-white dark:border-slate-800 hover:border-blue-100 shadow-sm"
