@@ -24,7 +24,7 @@ import {
   FaUserFriends,
   FaBolt,
 } from "react-icons/fa";
-import { FiArrowRight, FiZap, FiPlay, FiX, FiBell } from "react-icons/fi";
+import { FiArrowRight, FiZap, FiPlay, FiX, FiBell, FiClock } from "react-icons/fi";
 import { MdStar } from "react-icons/md";
 import {
   loadFavouriteCourseIds,
