@@ -409,7 +409,7 @@ const LeaderboardScreen = ({
       <main className="px-6 lg:px-10 pt-4 pb-32 flex-1 flex flex-col overflow-y-auto desktop-content-col">
         {/* Exam type toggle */}
         <section className="mb-4">
-          <div className="flex justify-between items-center gap-5 max-w-5xl mx-auto px-2">
+          <div className="flex justify-between items-center gap-5 max-w-5xl mx-auto">
             <div className="flex min-w-0 max-w-2xl flex-1 bg-gray-100 dark:bg-slate-800 rounded-2xl p-1 gap-1">
               {[
                 { key: "OBJ", label: "Objective" },
