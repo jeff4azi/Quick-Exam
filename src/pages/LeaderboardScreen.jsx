@@ -228,7 +228,7 @@ const LeaderboardScreen = ({
           supabase
             .from("profiles")
             .select(
-              "id, full_name, user_name, year, college, is_premium, avatar_url, department",
+              "id, full_name, user_name, year, college, is_premium, avatar_url, department, current_streak, best_streak, last_study_date",
             )
             .in("id", userIds),
           15000,
@@ -253,6 +253,9 @@ const LeaderboardScreen = ({
               isPremium: p.is_premium === true,
               department: p.department || "General Studies",
               university: p.university?.trim(),
+              currentStreak: p.current_streak || 0,
+              bestStreak: p.best_streak || 0,
+              lastStudyDate: p.last_study_date || null,
             };
           });
           setProfiles(profileMap);
@@ -490,6 +493,9 @@ const LeaderboardScreen = ({
                       department: entry.department,
                       university: entry.university,
                       year: entry.year,
+                      current_streak: profile.currentStreak,
+                      best_streak: profile.bestStreak,
+                      last_study_date: profile.lastStudyDate,
                     });
                     setSheetStats({
                       rank: `#${index + 1}`,

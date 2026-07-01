@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaCrown } from "react-icons/fa";
+import { FaCrown, FaFire } from "react-icons/fa";
 import {
   FiX,
   FiBook,
@@ -14,6 +14,43 @@ import {
 } from "react-icons/fi";
 import Avatar from "./Avatar";
 import { supabase } from "../supabaseClient";
+
+const getRelativeStudyLabel = (dateStr) => {
+  if (!dateStr) return null;
+  const date = new Date(dateStr);
+  const now = new Date();
+  const startOfDay = (d) => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = Math.round(
+    (startOfDay(now) - startOfDay(date)) / (1000 * 60 * 60 * 24),
+  );
+
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "Yesterday";
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < 14) return "1 week ago";
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+  if (diffDays < 60) return "1 month ago";
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+const isValidStreak = (lastStudyDate, currentStreak) => {
+  if (!lastStudyDate || !currentStreak) return 0;
+  const today = new Date();
+  const todayStr = today.toLocaleDateString("en-CA");
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const yesterdayStr = yesterday.toLocaleDateString("en-CA");
+  const lastStudyStr = new Date(lastStudyDate).toLocaleDateString("en-CA");
+
+  if (lastStudyStr === todayStr || lastStudyStr === yesterdayStr) {
+    return currentStreak;
+  }
+  return 0;
+};
 
 const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
   const [isImageOverlayOpen, setIsImageOverlayOpen] = useState(false);
@@ -257,6 +294,47 @@ const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
               </div>
             )}
           </div>
+
+          {/* Study activity section */}
+          {(userProfile?.current_streak != null || userProfile?.last_study_date) && (
+            <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
+              <p className="text-[10px] font-black uppercase tracking-[0.12em] text-slate-400 dark:text-slate-500 px-4 pt-3 pb-2">
+                Study activity
+              </p>
+
+              <div className="grid grid-cols-3 divide-x divide-slate-100 dark:divide-slate-700">
+                {[
+                  {
+                    label: "Current streak",
+                    value: isValidStreak(
+                      userProfile?.last_study_date,
+                      userProfile?.current_streak,
+                    ),
+                    icon: FaFire,
+                  },
+                  {
+                    label: "Best streak",
+                    value: userProfile?.best_streak || 0,
+                    icon: FiAward,
+                  },
+                  {
+                    label: "Last studied",
+                    value: getRelativeStudyLabel(userProfile?.last_study_date) || "—",
+                    icon: FiClock,
+                  },
+                ].map(({ label, value }) => (
+                  <div key={label} className="flex flex-col gap-0.5 px-4 pb-4 pt-1">
+                    <span className="text-[10px] text-slate-400 dark:text-slate-500 font-semibold">
+                      {label}
+                    </span>
+                    <span className="text-[17px] font-black text-slate-900 dark:text-white truncate">
+                      {value}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Academic info section */}
           <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 overflow-hidden">
