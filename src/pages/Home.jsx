@@ -183,6 +183,29 @@ const getHotCourse = (allAttempts, availableCourses) => {
   return hotCourse ? { ...hotCourse, attemptCount: maxCount } : null;
 };
 
+const getRelativeStudyLabel = (dateStr) => {
+  const date = new Date(dateStr);
+  const now = new Date();
+
+  const startOfDay = (d) =>
+    new Date(d.getFullYear(), d.getMonth(), d.getDate());
+  const diffDays = Math.round(
+    (startOfDay(now) - startOfDay(date)) / (1000 * 60 * 60 * 24),
+  );
+
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "Yesterday";
+  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays < 14) return "1 week ago";
+  if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+  if (diffDays < 60) return "1 month ago";
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
 const Home = ({
   userProfile,
   loadingProfile,
@@ -508,6 +531,31 @@ const Home = ({
         </div>
 
         <div className="flex items-center gap-3">
+          {stats.lastStudyDate && (
+            <div className="flex items-center gap-1 px-2 py-1 rounded-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 text-slate-400 dark:text-slate-500">
+              <FiClock size={11} />
+              <span className="text-[10px] font-semibold">
+                {(() => {
+                  const today = new Date().toLocaleDateString("en-CA");
+                  const yesterday = new Date(
+                    Date.now() - 86400000,
+                  ).toLocaleDateString("en-CA");
+                  const last = new Date(stats.lastStudyDate).toLocaleDateString(
+                    "en-CA",
+                  );
+                  if (last === today) return "Today";
+                  if (last === yesterday) return "Yesterday";
+                  return new Date(stats.lastStudyDate).toLocaleDateString(
+                    "en-US",
+                    {
+                      weekday: "short",
+                    },
+                  );
+                })()}
+              </span>
+            </div>
+          )}
+
           <button
             type="button"
             onClick={() => navigate("/profile")}
@@ -526,16 +574,35 @@ const Home = ({
       {/* Main Content */}
       <div className="flex-1 px-6 lg:px-10 pb-32 pt-2 lg:pt-6 flex flex-col gap-6 overflow-y-auto animate-in fade-in slide-in-from-bottom-4 duration-700 desktop-content-col">
         {/* Greeting */}
-        <div>
-          <h1 className="mt-1 text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
-            Hello, {firstName}!{" "}
-            <span role="img" aria-label="wave">
-              👋
-            </span>
-          </h1>
-          <p className="mt-3 text-sm text-slate-500 dark:text-slate-400 max-w-md">
-            Ready for your next challenge?
-          </p>
+        <div className="lg:flex lg:items-center lg:justify-between lg:gap-4">
+          <div>
+            <h1 className="mt-1 text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
+              Hello, {firstName}!{" "}
+              <span role="img" aria-label="wave">
+                👋
+              </span>
+            </h1>
+            <p className="mt-3 text-sm text-slate-500 dark:text-slate-400 max-w-md">
+              Ready for your next challenge?
+            </p>
+          </div>
+
+          {/* Last Study Date — desktop only */}
+          {stats.lastStudyDate && (
+            <div className="hidden lg:flex items-center gap-3 bg-white dark:bg-slate-800/50 p-4 rounded-[1.75rem] border border-gray-200 dark:border-slate-700 w-fit">
+              <div className="size-9 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center shrink-0">
+                <FiClock size={18} />
+              </div>
+              <div>
+                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                  Last studied
+                </p>
+                <p className="text-sm font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
+                  {getRelativeStudyLabel(stats.lastStudyDate)}
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Notification Reminder Card */}
@@ -727,26 +794,6 @@ const Home = ({
             </div>
           ))}
         </div>
-
-        {/* Last Study Date */}
-        {stats.lastStudyDate && (
-          <div className="bg-white dark:bg-slate-800/50 p-4 rounded-[1.75rem] border border-gray-200 dark:border-slate-700 flex items-center gap-3">
-            <div className="size-9 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center">
-              <FiClock size={18} />
-            </div>
-            <div>
-              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Last studied</p>
-              <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
-                {new Date(stats.lastStudyDate).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  month: "short",
-                  day: "numeric",
-                  year: "numeric",
-                })}
-              </p>
-            </div>
-          </div>
-        )}
 
         {/* Premium CTA — the one place we spend a saturated color */}
         {!isPremium && (
