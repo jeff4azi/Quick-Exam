@@ -130,25 +130,20 @@ const getWeeklyStats = (attempts, userId, userUniversity) => {
   };
 };
 
-const getStreak = (attempts) => {
-  const dateSet = new Set(
-    attempts.map((r) => new Date(r.date_taken).toLocaleDateString("en-CA")),
-  );
-  let streak = 0;
+const isValidStreak = (lastStudyDate, currentStreak) => {
+  if (!lastStudyDate || currentStreak === 0) return 0;
+
   const today = new Date();
+  const todayStr = today.toLocaleDateString("en-CA");
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const yesterdayStr = yesterday.toLocaleDateString("en-CA");
+  const lastStudyStr = new Date(lastStudyDate).toLocaleDateString("en-CA");
 
-  for (let offset = 0; ; offset++) {
-    const d = new Date(today);
-    d.setDate(today.getDate() - offset);
-    const key = d.toLocaleDateString("en-CA");
-    if (dateSet.has(key)) {
-      streak += 1;
-    } else {
-      break;
-    }
+  if (lastStudyStr === todayStr || lastStudyStr === yesterdayStr) {
+    return currentStreak;
   }
-
-  return streak;
+  return 0;
 };
 
 const getHotCourse = (allAttempts, availableCourses) => {
@@ -401,7 +396,7 @@ const Home = ({
       const weekStartIso = getCurrentWeekStartIso();
       const [
         weeklyResult,
-        streakResult,
+        profileResult,
         allAttemptsResult,
         favouriteIdsResult,
       ] = await Promise.all([
@@ -418,12 +413,12 @@ const Home = ({
         ),
         withTimeout(
           supabase
-            .from("exam_attempts")
-            .select("date_taken")
-            .eq("user_id", user.id)
-            .order("date_taken", { ascending: false }),
+            .from("profiles")
+            .select("current_streak, best_streak, last_study_date")
+            .eq("id", user.id)
+            .single(),
           15000,
-          "Loading streak took too long.",
+          "Loading streak data took too long.",
         ),
         withTimeout(
           supabase
@@ -442,6 +437,10 @@ const Home = ({
           ? null
           : getHotCourse(allAttemptsResult.data || [], courses);
 
+      const streak = profileResult.error || !profileResult.data
+        ? 0
+        : isValidStreak(profileResult.data.last_study_date, profileResult.data.current_streak);
+
       const nextStats = {
         ...DEFAULT_HOME_STATS,
         ...(weeklyResult.error || !weeklyResult.data
@@ -451,10 +450,9 @@ const Home = ({
               user.id,
               userProfile?.university,
             )),
-        streak:
-          streakResult.error || !streakResult.data
-            ? 0
-            : getStreak(streakResult.data || []),
+        streak,
+        lastStudyDate: profileResult.data?.last_study_date,
+        bestStreak: profileResult.data?.best_streak,
         hotCourse,
       };
       const nextFavouriteIds = Array.isArray(favouriteIdsResult)
@@ -729,6 +727,26 @@ const Home = ({
             </div>
           ))}
         </div>
+
+        {/* Last Study Date */}
+        {stats.lastStudyDate && (
+          <div className="bg-white dark:bg-slate-800/50 p-4 rounded-[1.75rem] border border-gray-200 dark:border-slate-700 flex items-center gap-3">
+            <div className="size-9 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center">
+              <FiClock size={18} />
+            </div>
+            <div>
+              <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">Last studied</p>
+              <p className="text-sm font-bold text-slate-700 dark:text-slate-300">
+                {new Date(stats.lastStudyDate).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Premium CTA — the one place we spend a saturated color */}
         {!isPremium && (

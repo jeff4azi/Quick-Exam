@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { useProfile } from "../hooks/useProfile";
 import {
   FaHistory,
   FaChevronRight,
@@ -56,9 +57,27 @@ const CHART_TABS = [
 /* -------------------------------------------------------------------------- */
 /*  MAIN SCREEN                                                                 */
 /* -------------------------------------------------------------------------- */
+const isValidStreak = (lastStudyDate, currentStreak) => {
+  if (!lastStudyDate || currentStreak === 0) return 0;
+
+  const today = new Date();
+  const todayStr = today.toLocaleDateString("en-CA");
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const yesterdayStr = yesterday.toLocaleDateString("en-CA");
+  const lastStudyStr = new Date(lastStudyDate).toLocaleDateString("en-CA");
+
+  if (lastStudyStr === todayStr || lastStudyStr === yesterdayStr) {
+    return currentStreak;
+  }
+  return 0;
+};
+
 const HistoryScreen = ({ isPremium, setQuestionType }) => {
   useDocumentTitle("Study History | QuizBolt");
+  const { profile, loading: profileLoading } = useProfile();
   const [historyData, setHistoryData] = useState([]);
+  const [allAttempts, setAllAttempts] = useState([]);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOverlayOpen, setOverlayOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -84,24 +103,55 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
       return;
     }
 
-    const { data, error } = await withTimeout(
-      supabase
-        .from("exam_attempts")
-        .select(
-          `id, course_id, score, total_questions, date_taken, time_taken, is_retake, type`,
-        )
-        .eq("user_id", user.id)
-        .order("date_taken", { ascending: false }),
-      15000,
-      "Loading your history took too long. Please try again.",
-    );
+    // Fetch all three attempt types in parallel
+    const [examResult, testResult, matchResult] = await Promise.all([
+      withTimeout(
+        supabase
+          .from("exam_attempts")
+          .select(
+            `id, course_id, score, total_questions, date_taken, time_taken, is_retake, type`,
+          )
+          .eq("user_id", user.id)
+          .order("date_taken", { ascending: false }),
+        15000,
+        "Loading your exam history took too long. Please try again.",
+      ),
+      withTimeout(
+        supabase
+          .from("test_attempts")
+          .select(`id, course_id, created_at`)
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false }),
+        15000,
+        "Loading your test history took too long. Please try again.",
+      ),
+      withTimeout(
+        supabase
+          .from("match_attempts")
+          .select(`id, course_id, created_at`)
+          .eq("user_id", user.id)
+          .order("created_at", { ascending: false }),
+        15000,
+        "Loading your match history took too long. Please try again.",
+      ),
+    ]);
 
-    if (error) {
-      console.error("Failed to fetch history:", error.message);
+    // Set historyData to just exam_attempts as before (for other parts of UI)
+    if (examResult.error) {
+      console.error("Failed to fetch exam history:", examResult.error.message);
       setHistoryData([]);
     } else {
-      setHistoryData(data || []);
+      setHistoryData(examResult.data || []);
     }
+
+    // Store all attempts for weekly activity calculation
+    const allAttempts = [
+      ...(examResult.data || []).map(a => ({ ...a, type: 'exam' })),
+      ...(testResult.data || []).map(a => ({ ...a, type: 'test' })),
+      ...(matchResult.data || []).map(a => ({ ...a, type: 'match' })),
+    ];
+
+    setAllAttempts(allAttempts);
 
     setLoading(false);
   }, []);
@@ -168,22 +218,11 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
 
   /* ----------------------------- STREAK ------------------------------------ */
   const streak = useMemo(() => {
-    if (!historyData.length) return 0;
-    const dateSet = new Set(
-      historyData.map((r) =>
-        new Date(r.date_taken).toLocaleDateString("en-CA"),
-      ),
-    );
-    let count = 0;
-    const today = new Date();
-    for (let offset = 0; ; offset++) {
-      const d = new Date(today);
-      d.setDate(today.getDate() - offset);
-      if (dateSet.has(d.toLocaleDateString("en-CA"))) count++;
-      else break;
-    }
-    return count;
-  }, [historyData]);
+    if (!profile) return 0;
+    return isValidStreak(profile.last_study_date, profile.current_streak);
+  }, [profile]);
+
+  const bestStreak = profile?.best_streak || 0;
 
   /* ----------------------- INSIGHTS: top + worst course ------------------- */
   const courseInsights = useMemo(() => {
@@ -247,12 +286,13 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
       const d = new Date(today);
       d.setDate(today.getDate() - (6 - i));
       const key = d.toLocaleDateString("en-CA");
-      const active = historyData.some(
-        (h) => new Date(h.date_taken).toLocaleDateString("en-CA") === key,
-      );
+      const active = allAttempts.some((h) => {
+        const dateStr = h.date_taken ? new Date(h.date_taken) : new Date(h.created_at);
+        return dateStr.toLocaleDateString("en-CA") === key;
+      });
       return { day: days[d.getDay()], active };
     });
-  }, [historyData]);
+  }, [allAttempts]);
 
   /* ----------------------- DELETE ----------------------------------------- */
   const deleteExam = async (id) => {
@@ -586,40 +626,53 @@ const HistoryScreen = ({ isPremium, setQuestionType }) => {
               </p>
               <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
                 {/* Streak */}
-                <div className="col-span-2 bg-white dark:bg-slate-900 rounded-[1.75rem] border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
-                  <div className="flex items-start gap-3 mb-4">
-                    <div className="size-11 rounded-3xl bg-orange-100 dark:bg-orange-900/20 text-orange-600 dark:text-orange-300 grid place-items-center">
-                      <FaFire size={16} />
-                    </div>
-                    <div>
-                      <p className="text-[11px] uppercase tracking-[0.18em] font-black text-slate-400 dark:text-slate-500 mb-1">
-                        Daily streak
-                      </p>
-                      <p className="text-2xl font-black text-slate-900 dark:text-white">
-                        {streak} {streak === 1 ? "day" : "days"}
-                      </p>
-                    </div>
+            <div className="col-span-2 bg-white dark:bg-slate-900 rounded-[1.75rem] border border-slate-200 dark:border-slate-700 p-4 shadow-sm">
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex items-start gap-3">
+                  <div className="size-11 rounded-3xl bg-orange-100 dark:bg-orange-900/20 text-orange-600 dark:text-orange-300 grid place-items-center">
+                    <FaFire size={16} />
                   </div>
-                  <div className="grid grid-cols-7 gap-2 mb-4">
-                    {weeklyActivity.map((d, i) => (
-                      <div
-                        key={i}
-                        className={`aspect-square rounded-2xl flex items-center justify-center text-sm font-black transition-all ${
-                          d.active
-                            ? "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-200"
-                            : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500"
-                        }`}
-                      >
-                        {d.day}
-                      </div>
-                    ))}
+                  <div>
+                    <p className="text-[11px] uppercase tracking-[0.18em] font-black text-slate-400 dark:text-slate-500 mb-1">
+                      Daily streak
+                    </p>
+                    <p className="text-2xl font-black text-slate-900 dark:text-white">
+                      {streak} {streak === 1 ? "day" : "days"}
+                    </p>
                   </div>
-                  <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-                    {streak > 0
-                      ? `Keep it up! You've studied ${streak} day${streak > 1 ? "s" : ""} in a row.`
-                      : "Start a streak — take an exam today!"}
-                  </p>
                 </div>
+                <div className="text-right">
+                  <p className="text-[11px] uppercase tracking-[0.18em] font-black text-slate-400 dark:text-slate-500 mb-1">
+                    Best streak
+                  </p>
+                  <div className="flex items-center gap-1">
+                    <FaTrophy size={14} className="text-amber-500" />
+                    <p className="text-xl font-black text-slate-900 dark:text-white">
+                      {bestStreak} {bestStreak === 1 ? "day" : "days"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="grid grid-cols-7 gap-2 mb-4">
+                {weeklyActivity.map((d, i) => (
+                  <div
+                    key={i}
+                    className={`aspect-square rounded-2xl flex items-center justify-center text-sm font-black transition-all ${
+                      d.active
+                        ? "bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-200"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500"
+                    }`}
+                  >
+                    {d.day}
+                  </div>
+                ))}
+              </div>
+              <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
+                {streak > 0
+                  ? `Keep it up! You've studied ${streak} day${streak > 1 ? "s" : ""} in a row.`
+                  : "Start a streak — take an exam today!"}
+              </p>
+            </div>
 
                 {/* Top course */}
                 {courseInsights.top && (
