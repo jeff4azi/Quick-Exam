@@ -22,6 +22,7 @@ import {
   FiTarget,
   FiRepeat,
   FiLayers,
+  FiLock,
 } from "react-icons/fi";
 import { FaCrown, FaTrophy } from "react-icons/fa";
 import { withTimeout } from "../utils/withTimeout";
@@ -967,10 +968,7 @@ const TestModeScreen = ({
             </div>
           </div>
           <div className="relative size-11 shrink-0">
-            <svg
-              viewBox="0 0 40 40"
-              className="size-11 -rotate-90"
-            >
+            <svg viewBox="0 0 40 40" className="size-11 -rotate-90">
               <circle
                 cx="20"
                 cy="20"
@@ -1032,13 +1030,16 @@ const TestModeScreen = ({
                       );
                       setShowHint(true);
                     }}
-                    className={`relative p-2 rounded-xl transition-all ${showHint
+                    className={`relative p-2 rounded-xl transition-all ${
+                      showHint
                         ? "bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400"
                         : "bg-gray-50 dark:bg-slate-700 text-gray-400"
-                      }`}
+                    }`}
                     aria-label={showHint ? "Hide hint" : "Show hint"}
                     title={
-                      showHint ? "Hide hint" : "Show hint (unlimited hints available)"
+                      showHint
+                        ? "Hide hint"
+                        : "Show hint (unlimited hints available)"
                     }
                   >
                     <FiInfo className="size-5" />
@@ -1089,7 +1090,9 @@ const TestModeScreen = ({
                             onChange={(e) => {
                               const val = e.target.value;
                               setCurrentInput((prev) => {
-                                const cur = Array.isArray(prev) ? [...prev] : [];
+                                const cur = Array.isArray(prev)
+                                  ? [...prev]
+                                  : [];
                                 cur[i] = val;
                                 return cur;
                               });
@@ -1138,24 +1141,26 @@ const TestModeScreen = ({
                         key={idx}
                         disabled={isAnswered}
                         onClick={() => !isAnswered && setCurrentInput(option)}
-                        className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${isRight
+                        className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${
+                          isRight
                             ? "border-green-500 bg-green-50 dark:bg-green-900/20"
                             : isWrong
                               ? "border-red-400 bg-red-50 dark:bg-red-900/20"
                               : isSelected
                                 ? "border-blue-600 bg-blue-50/50 dark:bg-blue-600/10"
                                 : "border-gray-100 dark:border-slate-700 hover:border-blue-200 dark:hover:border-slate-600"
-                          }`}
+                        }`}
                       >
                         <div
-                          className={`size-10 shrink-0 rounded-2xl flex items-center justify-center font-black transition-colors ${isRight
+                          className={`size-10 shrink-0 rounded-2xl flex items-center justify-center font-black transition-colors ${
+                            isRight
                               ? "bg-green-500 text-white"
                               : isWrong
                                 ? "bg-red-400 text-white"
                                 : isSelected
                                   ? "bg-blue-600 text-white"
                                   : "bg-gray-100 dark:bg-slate-700 text-slate-500"
-                            }`}
+                          }`}
                         >
                           {label}
                         </div>
@@ -1199,20 +1204,49 @@ const TestModeScreen = ({
                   )}
                 </div>
               )}
-              {/* Reason for objective questions (when incorrect) */}
-              {isAnswered && isObjQ && result !== "correct" && currentQuestion.reason && (
-                <div className="p-4 rounded-2xl border-2 border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20">
-                  <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
-                    Reason
-                  </p>
-                  <div className="text-sm text-slate-700 dark:text-slate-200">
-                    <RenderMathText
-                      text={currentQuestion.reason}
-                      courseId={selectedCourse?.id}
-                    />
+              {/* Reason for objective questions (when incorrect) — premium-gated */}
+              {isAnswered &&
+                isObjQ &&
+                result !== "correct" &&
+                currentQuestion.reason && (
+                  <div className="relative rounded-2xl border-2 border-amber-200 dark:border-amber-800 overflow-hidden">
+                    <div
+                      className={`p-4 bg-amber-50 dark:bg-amber-900/20 transition-all duration-300 ${
+                        !isPremium
+                          ? "blur-sm select-none pointer-events-none"
+                          : ""
+                      }`}
+                    >
+                      <p className="text-xs font-black uppercase tracking-widest text-slate-500 dark:text-slate-400 mb-1">
+                        Reason
+                      </p>
+                      <div className="text-sm text-slate-700 dark:text-slate-200">
+                        <RenderMathText
+                          text={currentQuestion.reason}
+                          courseId={selectedCourse?.id}
+                        />
+                      </div>
+                    </div>
+
+                    {!isPremium && (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-white/40 dark:bg-slate-900/40 backdrop-blur-[1px] px-4">
+                        <div className="size-9 rounded-2xl bg-amber-100 dark:bg-amber-900/40 flex items-center justify-center shadow-sm">
+                          <FiLock className="size-4 text-amber-600 dark:text-amber-400" />
+                        </div>
+                        <p className="text-xs font-bold text-slate-700 dark:text-slate-200 text-center">
+                          Explanation locked
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => navigate("/premium")}
+                          className="px-4 py-1.5 rounded-full bg-amber-500 hover:bg-amber-600 text-white text-[11px] font-black uppercase tracking-wider shadow-sm active:scale-95 transition-all"
+                        >
+                          Go Premium to view
+                        </button>
+                      </div>
+                    )}
                   </div>
-                </div>
-              )}
+                )}
             </div>
           </div>
         </div>
