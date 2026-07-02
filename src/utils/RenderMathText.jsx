@@ -13,6 +13,7 @@ export const RenderMathText = ({ text, courseId }) => {
       !courseId.toUpperCase().startsWith("CHM") &&
       !courseId.toUpperCase().startsWith("MAT") &&
       !courseId.toUpperCase().startsWith("BED122") &&
+      !courseId.toUpperCase().startsWith("AMS102") &&
       !courseId.toUpperCase().startsWith("ECO"))
   ) {
     return <span>{text}</span>;
