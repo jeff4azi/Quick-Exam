@@ -116,6 +116,27 @@ function App() {
     }
   });
 
+  const [testModeOneTap, setTestModeOneTap] = useState(() => {
+    try {
+      const saved = localStorage.getItem("testModeOneTapPreference");
+      return saved !== null ? JSON.parse(saved) : false; // Default to false
+    } catch {
+      return false;
+    }
+  });
+
+  const toggleTestModeOneTap = () => {
+    setTestModeOneTap(prev => {
+      const next = !prev;
+      try {
+        localStorage.setItem("testModeOneTapPreference", JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
   // FIX: Initialize results logic
   const [results, setResults] = useState({ correct: 0, wrong: 0, answered: 0 });
   const [lastTimeTaken, setLastTimeTaken] = useState(0);
@@ -884,6 +905,8 @@ function App() {
                       toggleShowPagination={() =>
                         setShowPagination((prev) => !prev)
                       }
+                      testModeOneTap={testModeOneTap}
+                      toggleTestModeOneTap={toggleTestModeOneTap}
                       deleteImage={deleteImage}
                     />,
                   )}
@@ -1004,6 +1027,7 @@ function App() {
                       coursesLoading={coursesLoading}
                       isPremium={isPremium}
                       userProfile={userProfile}
+                      testModeOneTap={testModeOneTap}
                     />,
                   )}
                 </ProtectedRoute>

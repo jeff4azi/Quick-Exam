@@ -506,6 +506,7 @@ const TestModeScreen = ({
   coursesLoading,
   isPremium,
   userProfile,
+  testModeOneTap,
 }) => {
   const navigate = useNavigate();
 
@@ -1140,7 +1141,14 @@ const TestModeScreen = ({
                       <button
                         key={idx}
                         disabled={isAnswered}
-                        onClick={() => !isAnswered && setCurrentInput(option)}
+                        onClick={() => {
+                          if (!isAnswered) {
+                            setCurrentInput(option);
+                            if (testModeOneTap) {
+                              setTimeout(() => handleAnswerSubmit(), 0);
+                            }
+                          }
+                        }}
                         className={`group w-full flex items-center gap-2 p-2 rounded-3xl border-2 transition-all duration-300 active:scale-[0.98] disabled:cursor-default ${
                           isRight
                             ? "border-green-500 bg-green-50 dark:bg-green-900/20"
