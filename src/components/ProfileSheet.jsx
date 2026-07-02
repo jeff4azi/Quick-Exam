@@ -39,10 +39,17 @@ const getRelativeStudyLabel = (dateStr) => {
 
 const isValidStreak = (lastStudyDate, currentStreak) => {
   if (!lastStudyDate || !currentStreak) return 0;
-  const todayStr = new Date().toLocaleDateString("en-CA");
+  const today = new Date();
+  const todayStr = today.toLocaleDateString("en-CA");
+  const yesterday = new Date(today);
+  yesterday.setDate(today.getDate() - 1);
+  const yesterdayStr = yesterday.toLocaleDateString("en-CA");
   const lastStudyStr = new Date(lastStudyDate).toLocaleDateString("en-CA");
 
-  return lastStudyStr === todayStr ? currentStreak : 0;
+  if (lastStudyStr === todayStr || lastStudyStr === yesterdayStr) {
+    return currentStreak;
+  }
+  return 0;
 };
 
 const ProfileSheet = ({ isOpen, onClose, userProfile, isPremium, stats }) => {
