@@ -536,9 +536,9 @@ const Home = ({
   return (
     <div className="max-w-2xl mx-auto lg:max-w-full relative min-h-[100dvh] flex flex-col bg-gray-50 dark:bg-slate-900 transition-colors duration-500 overflow-x-hidden">
       {/* Top Navigation Bar */}
-      <div className="px-6 pt-4 pb-7 flex items-center justify-between z-50 lg:hidden">
+      <div className="px-6 pt-4 pb-3 flex items-center justify-between z-50 lg:hidden">
         <div className="flex items-center gap-2">
-          <Logo className="w-14 lg:w-16 h-auto text-slate-800 dark:text-slate-100" />
+          <Logo className="w-10 h-auto text-slate-800 dark:text-slate-100" />
           <p className="text-sm font-bold tracking-[0.2em] uppercase mt-2 text-slate-400">
             Quiz Bolt
           </p>
@@ -603,7 +603,7 @@ const Home = ({
 
           {/* Last Study Date — desktop only */}
           {stats.lastStudyDate && (
-            <div className="hidden lgflex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 shadow-sm w-fit">
+            <div className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 shadow-sm w-fit">
               <FiClock
                 size={16}
                 className="text-slate-400 dark:text-slate-500"
