@@ -589,7 +589,7 @@ const Home = ({
 
           {/* Last Study Date — desktop only */}
           {stats.lastStudyDate && (
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 shadow-sm w-fit">
+            <div className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 shadow-sm w-fit">
               <FiClock
                 size={16}
                 className="text-slate-400 dark:text-slate-500"
