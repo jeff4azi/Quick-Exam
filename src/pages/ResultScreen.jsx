@@ -370,20 +370,20 @@ const ResultScreen = ({
                 {/* Header — tappable */}
                 <button
                   onClick={() => setSectionOpen((p) => !p)}
-                  className="w-full flex items-center justify-between px-5 py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
+                  className="w-full flex items-center justify-between gap-2 px-4 sm:px-5 py-2.5 lg:py-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                 >
-                  <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-slate-400 shrink-0">
                     Section Breakdown
                   </p>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 min-w-0">
                     {!sectionOpen && (
-                      <span className="text-[10px] font-bold text-slate-400 bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-full">
+                      <span className="text-[10px] font-bold text-slate-400 bg-gray-100 dark:bg-gray-800 px-2.5 py-1 rounded-full truncate">
                         {sectionEntries.length} sections · {goodCount} good
                       </span>
                     )}
                     <FiChevronDown
                       size={16}
-                      className={`text-slate-400 transition-transform duration-250 ${sectionOpen ? "rotate-180" : "rotate-0"}`}
+                      className={`shrink-0 text-slate-400 transition-transform duration-250 ${sectionOpen ? "rotate-180" : "rotate-0"}`}
                     />
                   </div>
                 </button>
@@ -421,7 +421,7 @@ const ResultScreen = ({
                         return (
                           <div
                             key={section}
-                            className="flex items-center justify-between gap-3 px-5 py-3"
+                            className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1.5 sm:gap-3 px-4 sm:px-5 py-3"
                           >
                             <div className="flex items-center gap-2 min-w-0">
                               <span
@@ -431,12 +431,12 @@ const ResultScreen = ({
                                 {section}
                               </span>
                             </div>
-                            <div className="flex items-center gap-2 shrink-0">
-                              <span className="text-xs font-bold text-slate-400">
+                            <div className="flex items-center gap-2 shrink-0 pl-4 sm:pl-0">
+                              <span className="text-xs font-bold text-slate-400 whitespace-nowrap">
                                 {correct}/{total}
                               </span>
                               <span
-                                className={`text-[10px] font-black px-2 py-0.5 rounded-full ${badgeStyle}`}
+                                className={`text-[10px] font-black px-2 py-0.5 rounded-full whitespace-nowrap ${badgeStyle}`}
                               >
                                 {badgeLabel}
                               </span>
