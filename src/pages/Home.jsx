@@ -31,6 +31,7 @@ import {
   FiX,
   FiBell,
   FiClock,
+  FiChevronRight,
 } from "react-icons/fi";
 import { MdStar } from "react-icons/md";
 import {
@@ -826,24 +827,16 @@ const Home = ({
         {!isPremium && (
           <div
             onClick={() => navigate("/premium")}
-            className="lg:hidden group relative overflow-hidden bg-blue-700 dark:bg-blue-700 p-5 rounded-[2.25rem] shadow-lg shadow-blue-200/60 dark:shadow-none cursor-pointer active:scale-[0.98] transition-all"
+            className="lg:hidden flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 bg-transparent cursor-pointer active:scale-[0.99] transition-all group"
           >
-            <div className="absolute -right-6 -top-6 size-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors" />
-            <div className="relative z-10 flex items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <div className="size-11 bg-white/15 rounded-2xl flex items-center justify-center backdrop-blur-md">
-                  <FiZap className="text-white text-xl" />
-                </div>
-                <div>
-                  <h4 className="text-white font-black text-lg leading-tight">
-                    Go Premium
-                  </h4>
-                  <p className="text-blue-100 text-[11px] font-medium">
-                    Unlock Unlimited Questions & Remove all Ads
-                  </p>
-                </div>
-              </div>
+            <div className="flex items-center gap-2">
+              <FaCrown className="text-amber-600 dark:text-amber-300 text-sm shrink-0" />
+              <span className="text-slate-900 dark:text-slate-100 font-semibold text-xs tracking-tight">
+                Go pro for unlimited questions
+              </span>
             </div>
+
+            <FiChevronRight className="text-slate-400 dark:text-slate-600 text-sm group-hover:translate-x-0.5 transition-transform" />
           </div>
         )}
 
