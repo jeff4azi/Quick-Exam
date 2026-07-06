@@ -133,8 +133,6 @@ const SettingsScreen = ({
   toggleUnlimitedHints,
   showPagination,
   toggleShowPagination,
-  testModeOneTap,
-  toggleTestModeOneTap,
 }) => {
   useDocumentTitle("Settings | QuizBolt");
   const navigate = useNavigate();
@@ -401,16 +399,7 @@ const SettingsScreen = ({
               </div>
             </SettingRow>
 
-            <SettingRow
-              icon={FiCheckSquare}
-              title="Test mode one-tap"
-              description="Select answer and submit immediately in test mode."
-            >
-              <Toggle
-                checked={testModeOneTap}
-                onClick={toggleTestModeOneTap}
-              />
-            </SettingRow>
+
           </div>
         </section>
 
