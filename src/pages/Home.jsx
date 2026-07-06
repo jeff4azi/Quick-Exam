@@ -589,18 +589,32 @@ const Home = ({
 
           {/* Last Study Date — desktop only */}
           {stats.lastStudyDate && (
-            <div className="hidden lg:flex items-center gap-3 bg-white dark:bg-slate-800/50 p-4 rounded-[1.75rem] border border-gray-200 dark:border-slate-700 w-fit">
-              <div className="size-9 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-2xl flex items-center justify-center shrink-0">
-                <FiClock size={18} />
-              </div>
-              <div>
-                <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Last studied
-                </p>
-                <p className="text-sm font-bold text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                  {getRelativeStudyLabel(stats.lastStudyDate)}
-                </p>
-              </div>
+            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 shadow-sm w-fit">
+              <FiClock
+                size={16}
+                className="text-slate-400 dark:text-slate-500"
+              />
+              <span className="text-sm font-medium tracking-wide">
+                {(() => {
+                  const today = new Date().toLocaleDateString("en-CA");
+                  const yesterday = new Date(
+                    Date.now() - 86400000,
+                  ).toLocaleDateString("en-CA");
+                  const last = new Date(stats.lastStudyDate).toLocaleDateString(
+                    "en-CA",
+                  );
+                  if (last === today) return "Today";
+                  if (last === yesterday) return "Yesterday";
+                  return new Date(stats.lastStudyDate).toLocaleDateString(
+                    "en-US",
+                    {
+                      weekday: "short",
+                      month: "short",
+                      day: "numeric",
+                    },
+                  );
+                })()}
+              </span>
             </div>
           )}
         </div>
