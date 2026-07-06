@@ -24,7 +24,14 @@ import {
   FaUserFriends,
   FaBolt,
 } from "react-icons/fa";
-import { FiArrowRight, FiZap, FiPlay, FiX, FiBell, FiClock } from "react-icons/fi";
+import {
+  FiArrowRight,
+  FiZap,
+  FiPlay,
+  FiX,
+  FiBell,
+  FiClock,
+} from "react-icons/fi";
 import { MdStar } from "react-icons/md";
 import {
   loadFavouriteCourseIds,
@@ -241,7 +248,9 @@ const Home = ({
 
   // Notification reminder card state
   const [showNotificationCard, setShowNotificationCard] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(() => getCachedNotificationsEnabled());
+  const [notificationsEnabled, setNotificationsEnabled] = useState(() =>
+    getCachedNotificationsEnabled(),
+  );
 
   useEffect(() => {
     if (isInStandaloneMode) return;
@@ -460,9 +469,13 @@ const Home = ({
           ? null
           : getHotCourse(allAttemptsResult.data || [], courses);
 
-      const streak = profileResult.error || !profileResult.data
-        ? 0
-        : isValidStreak(profileResult.data.last_study_date, profileResult.data.current_streak);
+      const streak =
+        profileResult.error || !profileResult.data
+          ? 0
+          : isValidStreak(
+              profileResult.data.last_study_date,
+              profileResult.data.current_streak,
+            );
 
       const nextStats = {
         ...DEFAULT_HOME_STATS,
@@ -589,7 +602,7 @@ const Home = ({
 
           {/* Last Study Date — desktop only */}
           {stats.lastStudyDate && (
-            <div className="hidden lg:flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 shadow-sm w-fit">
+            <div className="hidden lgflex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white dark:bg-slate-800/70 border border-gray-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 shadow-sm w-fit">
               <FiClock
                 size={16}
                 className="text-slate-400 dark:text-slate-500"
@@ -813,7 +826,7 @@ const Home = ({
         {!isPremium && (
           <div
             onClick={() => navigate("/premium")}
-            className="group relative overflow-hidden bg-blue-700 dark:bg-blue-700 p-5 rounded-[2.25rem] shadow-lg shadow-blue-200/60 dark:shadow-none cursor-pointer active:scale-[0.98] transition-all"
+            className="lg:hidden group relative overflow-hidden bg-blue-700 dark:bg-blue-700 p-5 rounded-[2.25rem] shadow-lg shadow-blue-200/60 dark:shadow-none cursor-pointer active:scale-[0.98] transition-all"
           >
             <div className="absolute -right-6 -top-6 size-24 bg-white/10 rounded-full blur-2xl group-hover:bg-white/20 transition-colors" />
             <div className="relative z-10 flex items-center justify-between gap-4">

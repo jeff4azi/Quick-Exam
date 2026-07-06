@@ -165,6 +165,33 @@ const DesktopLayout = ({ children, isPremium, userProfile, isNew }) => {
           )}
         </nav>
 
+        {/* Compact Premium Upgrade Card for non-premium users */}
+        {!isPremium && (
+          <div className="px-3 py-3 dark:border-slate-800">
+            <div className="p-3 rounded-xl border border-gray-200 dark:border-slate-700 bg-gray-50 dark:bg-slate-800/50">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="shrink-0 flex items-center justify-center w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-700/70">
+                  <FaCrown className="text-amber-600 dark:text-amber-300" size={16} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-bold text-slate-900 dark:text-slate-100 truncate">
+                    Go pro
+                  </p>
+                  <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                    Unlimited questions, no ads
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setPremiumOverlayOpen(true)}
+                className="w-full py-2 text-xs font-bold rounded-lg border border-slate-300 dark:border-slate-600 text-slate-900 dark:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700/60 transition-colors"
+              >
+                Upgrade
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Profile shortcut — also locked during exam */}
         <div
           className={`px-3 py-4 border-t border-gray-100 dark:border-slate-800 ${isExamActive ? "pointer-events-none select-none opacity-40" : ""}`}
