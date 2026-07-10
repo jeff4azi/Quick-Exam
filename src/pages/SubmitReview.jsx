@@ -110,7 +110,7 @@ const SubmitReview = ({ userProfile }) => {
                 Name
               </p>
               <p className="text-sm font-semibold text-slate-800 dark:text-slate-100 truncate">
-                {userProfile?.full_name || userProfile?.user_name || "Scholar"}
+                {userProfile?.full_name?.split(" ")[0] || userProfile?.user_name || "Scholar"}
               </p>
             </div>
             <div className="px-5 py-4">
