@@ -104,7 +104,7 @@ const SubmitReview = ({ userProfile }) => {
                   Name
                 </p>
                 <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
-                  {userProfile?.user_name || userProfile?.full_name || "Scholar"}
+                  {userProfile?.full_name || userProfile?.user_name || "Scholar"}
                 </p>
               </div>
               <div>

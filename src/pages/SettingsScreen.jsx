@@ -10,6 +10,7 @@ import {
   FiInfo,
   FiLoader,
   FiLogOut,
+  FiMessageCircle,
   FiMoon,
   FiSettings,
   FiShuffle,
@@ -456,6 +457,15 @@ const SettingsScreen = ({
               title="About"
               description="Learn more about QuizBolt."
               onClick={() => navigate("/about")}
+            >
+              <FiChevronRight className="text-slate-300" />
+            </SettingRow>
+
+            <SettingRow
+              icon={FiMessageCircle}
+              title="Submit a review"
+              description="Share your feedback about QuizBolt."
+              onClick={() => navigate("/submit-review")}
             >
               <FiChevronRight className="text-slate-300" />
             </SettingRow>

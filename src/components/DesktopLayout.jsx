@@ -12,8 +12,6 @@ import {
   IoTimeOutline,
   IoTrophy,
   IoTrophyOutline,
-  IoChatboxEllipses,
-  IoChatboxEllipsesOutline,
 } from "react-icons/io5";
 import { FaCrown } from "react-icons/fa";
 import Logo from "../images/Logo";
@@ -57,7 +55,6 @@ const DesktopLayout = ({ children, isPremium, userProfile, isNew }) => {
   const historyActive = isActivePath(pathname, "/history");
   const savedActive = isActivePath(pathname, "/bookmarks");
   const leadersActive = isActivePath(pathname, "/leaderboard");
-  const submitReviewActive = isActivePath(pathname, "/submit-review");
   const profileActive = isActivePath(pathname, "/profile");
 
   const navItems = [
@@ -101,16 +98,6 @@ const DesktopLayout = ({ children, isPremium, userProfile, isNew }) => {
         <IoTrophy size={20} />
       ) : (
         <IoTrophyOutline size={20} />
-      ),
-    },
-    {
-      label: "Submit a Review",
-      active: submitReviewActive,
-      onClick: () => go("/submit-review"),
-      icon: submitReviewActive ? (
-        <IoChatboxEllipses size={20} />
-      ) : (
-        <IoChatboxEllipsesOutline size={20} />
       ),
     },
   ];
