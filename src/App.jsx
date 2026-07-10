@@ -48,6 +48,7 @@ import ReferralDashboard from "./pages/ReferralDashboard";
 import RouteStateFallback from "./components/RouteStateFallback";
 import LoadingScreen from "./components/LoadingScreen";
 import NotFoundPage from "./pages/NotFoundPage";
+import SubmitReview from "./pages/SubmitReview";
 
 function App() {
   const REFERRAL_STORAGE_KEY = "quizbolt_referral_code";
@@ -858,6 +859,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   {withDesktop(<ReferralDashboard isPremium={isPremium} />)}
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/submit-review"
+              element={
+                <ProtectedRoute>
+                  {withDesktop(<SubmitReview userProfile={userProfile} />)}
                 </ProtectedRoute>
               }
             />

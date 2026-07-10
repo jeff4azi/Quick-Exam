@@ -24,6 +24,7 @@ import { FiCheckCircle, FiShuffle, FiZap } from "react-icons/fi";
 import { supabase } from "../supabaseClient";
 import { useUniversities } from "../hooks/useUniversities";
 import useDocumentTitle from "../hooks/useDocumentTitle";
+import Avatar from "../components/Avatar";
 import {
   buildLeaderboardEntries,
   compareLeaderboardEntries,
@@ -46,6 +47,7 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const { universities } = useUniversities();
+  const [reviews, setReviews] = useState([]);
 
   const [stats, setStats] = useState([
     { label: "Quizzes Taken", value: "..." },
@@ -77,6 +79,84 @@ const LandingPage = () => {
   useEffect(() => {
     fetchStats();
   }, [fetchStats]);
+
+  const fetchReviews = useCallback(async () => {
+    try {
+      console.log("Fetching reviews...");
+      // First try to fetch with profiles join
+      let { data, error } = await supabase
+        .from("reviews")
+        .select(`
+          id,
+          review_text,
+          created_at,
+          user_id
+        `)
+        .eq("approved", true)
+        .order("created_at", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching reviews (without profiles):", error);
+        throw error;
+      }
+
+      if (data && data.length > 0) {
+        console.log("Fetched reviews without profiles:", data);
+        // Now try to fetch profiles separately
+        const userIds = [...new Set(data.map(r => r.user_id))];
+        const { data: profilesData, error: profilesError } = await supabase
+          .from("profiles")
+          .select("id, full_name, user_name, university, year, avatar_url")
+          .in("id", userIds);
+
+        if (profilesError) {
+          console.warn("Error fetching profiles for reviews:", profilesError);
+        }
+
+        const profileMap = {};
+        (profilesData || []).forEach((p) => {
+          profileMap[p.id] = p;
+        });
+
+        // Function to extract first name
+        const getFirstName = (fullName, userName) => {
+          const name = fullName || userName || "Scholar";
+          return name.split(" ")[0];
+        };
+
+        // Format reviews for display
+        const formattedReviews = data.map((review) => {
+          const profile = profileMap[review.user_id] || {};
+          const name = profile.user_name || profile.full_name || "Scholar";
+          const firstName = getFirstName(profile.full_name, profile.user_name);
+          return {
+            id: review.id,
+            name: name,
+            firstName: firstName,
+            role: `${profile.university || "University"} · Year ${profile.year || "1"}`,
+            comment: review.review_text,
+            avatarUrl: profile.avatar_url || null,
+            color: ["bg-blue-600", "bg-slate-900", "bg-violet-600", "bg-green-600"][
+              Math.floor(Math.random() * 4)
+            ],
+          };
+        });
+
+        console.log("Formatted reviews:", formattedReviews);
+        setReviews(formattedReviews);
+      } else {
+        console.log("No approved reviews found");
+        setReviews([]);
+      }
+    } catch (err) {
+      console.error("Error fetching reviews:", err);
+      setReviews([]);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [fetchReviews]);
 
   const [topPlayers, setTopPlayers] = useState([]);
 
@@ -143,33 +223,42 @@ const LandingPage = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const testimonials = [
+  // Fallback static testimonials if no approved reviews yet
+  const fallbackTestimonials = [
     {
       name: "Tolu A.",
+      firstName: "Tolu",
       role: "TASUED · Year 2",
       comment:
         "QuizBolt helped me ace my CBT exams. The theory mode is a game changer!",
+      avatarUrl: null,
       color: "bg-blue-600",
     },
     {
       name: "Emeka R.",
+      firstName: "Emeka",
       role: "LASU · Year 3",
       comment:
         "I love competing on the leaderboard. Flashcards make revision so much faster.",
+      avatarUrl: null,
       color: "bg-slate-900",
     },
     {
       name: "Fatima K.",
+      firstName: "Fatima",
       role: "TASUED · Year 1",
       comment:
         "The bookmark feature saves me so much time during revision week.",
+      avatarUrl: null,
       color: "bg-violet-600",
     },
     {
       name: "David O.",
+      firstName: "David",
       role: "LASU · Year 4",
       comment:
         "Retaking exams and reviewing my failures helped me improve by 30%.",
+      avatarUrl: null,
       color: "bg-green-600",
     },
   ];
@@ -563,7 +652,7 @@ const LandingPage = () => {
             What Our Users Say
           </h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {testimonials.map((t, i) => (
+            {(reviews.length > 0 ? reviews : fallbackTestimonials).map((t, i) => (
               <div
                 key={i}
                 className="bg-white dark:bg-gray-900 p-8 rounded-[2.5rem] border border-slate-100 dark:border-gray-800 shadow-sm relative flex flex-col justify-between"
@@ -575,14 +664,13 @@ const LandingPage = () => {
                   "{t.comment}"
                 </p>
                 <div className="flex items-center gap-3">
-                  <div
-                    className={`size-9 ${t.color} rounded-full flex items-center justify-center text-white font-black text-xs`}
-                  >
-                    {t.name[0]}
-                  </div>
+                  <Avatar 
+                    avatarUrl={t.avatarUrl} 
+                    size="sm" 
+                  />
                   <div>
                     <p className="font-black text-sm text-slate-800 dark:text-white">
-                      {t.name}
+                      {t.firstName}
                     </p>
                     <p className="text-[10px] text-slate-400 font-medium">
                       {t.role}
