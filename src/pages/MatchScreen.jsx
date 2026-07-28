@@ -100,7 +100,8 @@ const MatchScreen = ({ courses, coursesLoading }) => {
     setErrorQ(null);
     try {
       const endpoint =
-        course.questionsEndpoint || `/courses/${course.id}/questions`;
+        course.questionsEndpoint ||
+        `/courses/${course.id}/questions?use_match_prompt=true`;
       const res = await fetch(`${API_BASE_URL}${endpoint}`);
       const data = await res.json();
       if (!res.ok) throw new Error(data?.msg || "Failed to load questions");
