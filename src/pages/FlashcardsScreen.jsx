@@ -559,7 +559,7 @@ const StudySession = ({
       )}
 
       {/* Header */}
-      {!focusMode && (
+      {!focusMode ? (
         <div className="sticky top-0 z-30 bg-gray-50/80 dark:bg-slate-900/80 backdrop-blur-md px-5 pt-6 pb-2">
           <div className="max-w-2xl mx-auto flex justify-between items-center mb-4">
             <button
@@ -599,8 +599,8 @@ const StudySession = ({
               />
             </div>
           </div>
-        </div>
-      )}
+        </div>) : <div className="h-30" />
+      }
 
       {/* Focus mode exit button */}
       {focusMode && (
@@ -690,7 +690,7 @@ const StudySession = ({
       </div>
 
       {/* Bottom navigation */}
-      <div className="fixed bottom-0 inset-x-0 px-6 py-3 z-40">
+      <div className="fixed bottom-0 inset-x-0 px-6 py-3 z-40 lg:translate-x-31">
         <div className="max-w-2xl mx-auto">
           <div className="bg-white/85 dark:bg-slate-800/85 backdrop-blur-xl border border-white/20 dark:border-slate-700/50 p-3 rounded-[2.5rem] shadow-2xl flex items-center justify-between gap-3">
             <button
