@@ -228,13 +228,21 @@ const SignUpScreen = () => {
 
           <p className="text-[11px] text-slate-500 dark:text-slate-400 px-2 leading-relaxed">
             By signing up, you agree to our{" "}
-            <span className="text-blue-600 font-bold hover:underline cursor-pointer">
+            <button
+              type="button"
+              onClick={() => navigate("/terms")}
+              className="text-blue-600 font-bold hover:underline inline"
+            >
               Terms
-            </span>{" "}
+            </button>{" "}
             and{" "}
-            <span className="text-blue-600 font-bold hover:underline cursor-pointer">
+            <button
+              type="button"
+              onClick={() => navigate("/privacy")}
+              className="text-blue-600 font-bold hover:underline inline"
+            >
               Privacy Policy
-            </span>
+            </button>
             .
           </p>
 

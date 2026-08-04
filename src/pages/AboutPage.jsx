@@ -423,9 +423,20 @@ const AboutPage = () => {
                 </button>
               </li>
               <li>
-                <a href="#" className="hover:text-blue-600">
+                <button
+                  onClick={() => navigate("/terms")}
+                  className="hover:text-blue-600"
+                >
+                  Terms of Service
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigate("/privacy")}
+                  className="hover:text-blue-600"
+                >
                   Privacy Policy
-                </a>
+                </button>
               </li>
             </ul>
           </div>

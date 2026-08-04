@@ -14,6 +14,9 @@ export default defineConfig({
       registerType: "autoUpdate",
       injectRegister: "script",
       devOptions: { enabled: true },
+      injectManifest: {
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+      },
       manifest: {
         name: "QuizBolt - University CBT Exam Practice",
         short_name: "QuizBolt",
