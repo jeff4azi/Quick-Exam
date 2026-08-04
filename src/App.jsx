@@ -16,6 +16,7 @@ import OnboardingScreen from "./pages/OnboardingScreen";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import AboutPage from "./pages/AboutPage";
+import FAQPage from "./pages/FAQPage";
 import ResetPassword from "./pages/ResetPassword";
 import ConfirmEmailScreen from "./pages/ConfirmEmailScreen";
 import HistoryScreen from "./pages/HistoryScreen.jsx";
@@ -758,6 +759,7 @@ function App() {
             />
             <Route path="/landing" element={<LandingPage />} />
             <Route path="/about" element={<AboutPage />} />
+            <Route path="/faq" element={<FAQPage />} />
             <Route
               path="/reset-password"
               element={

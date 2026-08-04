@@ -415,9 +415,12 @@ const AboutPage = () => {
                 </button>
               </li>
               <li>
-                <a href="#" className="hover:text-blue-600">
+                <button
+                  onClick={() => navigate("/faq")}
+                  className="hover:text-blue-600"
+                >
                   FAQ
-                </a>
+                </button>
               </li>
               <li>
                 <a href="#" className="hover:text-blue-600">
