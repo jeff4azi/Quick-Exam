@@ -18,6 +18,7 @@ import SignUp from "./pages/SignUp";
 import AboutPage from "./pages/AboutPage";
 import FAQPage from "./pages/FAQPage";
 import TermsPage from "./pages/TermsPage";
+import PrivacyPage from "./pages/PrivacyPage";
 import ResetPassword from "./pages/ResetPassword";
 import ConfirmEmailScreen from "./pages/ConfirmEmailScreen";
 import HistoryScreen from "./pages/HistoryScreen.jsx";
@@ -762,6 +763,7 @@ function App() {
             <Route path="/about" element={<AboutPage />} />
             <Route path="/faq" element={<FAQPage />} />
             <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
             <Route
               path="/reset-password"
               element={
