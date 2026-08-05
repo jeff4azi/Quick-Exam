@@ -6,10 +6,14 @@ import {
   FiBell,
   FiChevronRight,
   FiCheckSquare,
+  FiFileText,
   FiGrid,
+  FiHeadphones,
+  FiHelpCircle,
   FiInfo,
   FiLoader,
   FiLogOut,
+  FiLock,
   FiMessageCircle,
   FiMoon,
   FiSettings,
@@ -448,31 +452,45 @@ const SettingsScreen = ({
           </>
         )}
 
-        {/* ── Account ── */}
-        <SectionLabel title="Account" />
+        {/* ── Support ── */}
+        <SectionLabel title="Support" />
         <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
           <div className="divide-y divide-slate-100 dark:divide-slate-800">
             <SettingRow
+              icon={FiHelpCircle}
+              title="FAQ"
+              description="Browse frequently asked questions."
+              onClick={() => navigate("/faq")}
+            >
+              <FiChevronRight className="text-slate-300" />
+            </SettingRow>
+
+            <SettingRow
               icon={FiInfo}
-              title="About"
-              description="Learn more about QuizBolt."
+              title="About QuizBolt"
+              description="Learn more about the platform."
               onClick={() => navigate("/about")}
             >
               <FiChevronRight className="text-slate-300" />
             </SettingRow>
 
             <SettingRow
-              icon={FiMessageCircle}
-              title="Submit a review"
-              description="Share your feedback about QuizBolt."
-              onClick={() => navigate("/submit-review")}
+              icon={FiHeadphones}
+              title="Contact Support"
+              description="Chat with us on WhatsApp."
+              onClick={() =>
+                window.open(
+                  "https://wa.me/2347015585397",
+                  "_blank",
+                )
+              }
             >
               <FiChevronRight className="text-slate-300" />
             </SettingRow>
 
             <SettingRow
               icon={FiAlertTriangle}
-              title="Report a problem"
+              title="Report a Problem"
               description="Send a message to support."
               tone="warning"
               onClick={() =>
@@ -486,8 +504,41 @@ const SettingsScreen = ({
             </SettingRow>
 
             <SettingRow
+              icon={FiMessageCircle}
+              title="Submit a Review"
+              description="Share your feedback about QuizBolt."
+              onClick={() => navigate("/submit-review")}
+            >
+              <FiChevronRight className="text-slate-300" />
+            </SettingRow>
+          </div>
+        </section>
+
+        {/* ── Account ── */}
+        <SectionLabel title="Account" />
+        <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm overflow-hidden">
+          <div className="divide-y divide-slate-100 dark:divide-slate-800">
+            <SettingRow
+              icon={FiLock}
+              title="Privacy Policy"
+              description="How we collect and use your data."
+              onClick={() => navigate("/privacy")}
+            >
+              <FiChevronRight className="text-slate-300" />
+            </SettingRow>
+
+            <SettingRow
+              icon={FiFileText}
+              title="Terms of Service"
+              description="The rules for using QuizBolt."
+              onClick={() => navigate("/terms")}
+            >
+              <FiChevronRight className="text-slate-300" />
+            </SettingRow>
+
+            <SettingRow
               icon={FiLogOut}
-              title="Sign out"
+              title="Sign Out"
               description="Log out of this device."
               tone="danger"
               onClick={onLogout}
@@ -497,7 +548,7 @@ const SettingsScreen = ({
 
             <SettingRow
               icon={isDeleting ? FiLoader : FiTrash2}
-              title="Delete account"
+              title="Delete Account"
               description="Permanently remove your account and data."
               tone="danger"
               onClick={() => setDeleteOverlayOpen(true)}
